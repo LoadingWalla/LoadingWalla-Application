@@ -1,24 +1,891 @@
 import * as actionTypes from './ActionTypes';
 
-export const fetchProductsRequest = () => {
-  console.log('actions');
+// Login or Signup Actions
+export const initLogin = mobile => ({
+  type: actionTypes.INIT_LOGIN,
+  mobile,
+});
+
+export const loginSuccess = payload => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_REQUEST,
+    type: actionTypes.LOGIN_SUCCESS,
+    payload,
   };
 };
 
-export const fetchProductsSuccess = products => {
-  console.log('actions', products);
+export const loginFailure = payload => ({
+  type: actionTypes.LOGIN_FAILURE,
+  payload,
+});
+
+// Verify Otp Actions
+export const initVerifyOtp = (userid, otp, lang, deviceToken) => ({
+  type: actionTypes.INIT_VERIFY_OTP,
+  userid,
+  otp,
+  lang,
+  deviceToken,
+});
+
+export const VerifyOtpSuccess = payload => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_SUCCESS,
-    payload: products,
+    type: actionTypes.VERIFY_OTP_SUCCESS,
+    payload,
   };
 };
 
-export const fetchProductsFailure = error => {
-  console.log('actions', error);
+export const VerifyOtpFailure = payload => ({
+  type: actionTypes.VERIFY_OTP_FAILURE,
+  payload,
+});
+
+// Profile Setup Actions
+export const initProfileSetup = (
+  userid,
+  name,
+  city,
+  userType,
+  profile_img,
+  remove_profile,
+) => ({
+  type: actionTypes.INIT_PROFILE_SETUP,
+  userid,
+  name,
+  city,
+  userType,
+  profile_img,
+  remove_profile,
+});
+
+export const ProfileSetupSuccess = payload => {
   return {
-    type: actionTypes.FETCH_PRODUCTS_FAILURE,
-    payload: error,
+    type: actionTypes.PROFILE_SETUP_SUCCESS,
+    payload,
   };
 };
+
+export const ProfileSetupFailure = payload => ({
+  type: actionTypes.PROFILE_SETUP_FAILURE,
+  payload,
+});
+
+// Add Lorry Actions
+export const initAddLorry = (
+  vehiclenumber,
+  vehicle,
+  vehicleType,
+  vehicleCapacity,
+  permit,
+  // selectedGPSOption
+) => ({
+  type: actionTypes.INIT_ADDLORRY,
+
+  vehiclenumber,
+  vehicle,
+  vehicleType,
+  vehicleCapacity,
+  permit,
+  // selectedGPSOption,
+});
+
+export const addLorrySuccess = payload => {
+  return {
+    type: actionTypes.ADDLORRY_SUCCESS,
+    payload,
+  };
+};
+
+export const addLorryFailure = payload => ({
+  type: actionTypes.ADDLORRY_FAILURE,
+  payload,
+});
+
+// LOCATION
+export const initLocation = location => ({
+  type: actionTypes.INIT_LOCATION,
+  location,
+});
+
+export const locationSuccess = payload => {
+  return {
+    type: actionTypes.LOCATION_SUCCESS,
+    payload,
+  };
+};
+
+export const locationFailure = payload => ({
+  type: actionTypes.LOCATION_FAILURE,
+  payload,
+});
+
+// DASHBOARD
+export const initDashboard = () => ({
+  type: actionTypes.INIT_DASHBOARD,
+});
+
+export const dashboardSuccess = payload => {
+  return {
+    type: actionTypes.DASHBOARD_SUCCESS,
+    payload,
+  };
+};
+
+export const dashboardFailure = payload => ({
+  type: actionTypes.DASHBOARD_FAILURE,
+  payload,
+});
+
+// PROFILE
+export const initProfile = () => ({
+  type: actionTypes.INIT_PROFILE,
+});
+
+export const profileSuccess = payload => {
+  // console.log(99999, payload);
+  return {
+    type: actionTypes.PROFILE_SUCCESS,
+    payload,
+  };
+};
+
+export const profileFailure = payload => ({
+  type: actionTypes.PROFILE_FAILURE,
+  payload,
+});
+
+// Language aupdate
+export const initLanguage = (langCode, langId) => ({
+  type: actionTypes.INIT_LANGUAGE,
+  langCode,
+  langId,
+});
+
+export const languageSuccess = payload => {
+  return {
+    type: actionTypes.LANGUAGE_SUCCESS,
+    payload,
+  };
+};
+
+export const languageFailure = payload => ({
+  type: actionTypes.LANGUAGE_FAILURE,
+  payload,
+});
+
+// Post load
+export const initFindLoad = (from, to, truck) => ({
+  type: actionTypes.INIT_FIND_LOAD,
+  from,
+  to,
+  truck,
+});
+
+export const findLoadSuccess = payload => {
+  return {
+    type: actionTypes.FIND_LOAD_SUCCESS,
+    payload,
+  };
+};
+export const findLoadFailure = payload => {
+  return {
+    type: actionTypes.FIND_LOAD_FAILURE,
+    payload,
+  };
+};
+
+// My Lorry
+export const initMyLorry = status => ({
+  type: actionTypes.INIT_MYLORRY,
+  status,
+});
+
+export const myLorrySuccess = payload => {
+  return {
+    type: actionTypes.MYLORRY_SUCCESS,
+    payload,
+  };
+};
+
+export const myLorryFailure = payload => ({
+  type: actionTypes.MYLORRY_FAILURE,
+  payload,
+});
+
+// My Lorry Using Id
+export const initMyLorryById = truck_id => ({
+  type: actionTypes.INIT_MYLORRY_BY_ID,
+  truck_id,
+});
+export const myLorryByIdSuccess = payload => {
+  return {
+    type: actionTypes.MYLORRY_ID_SUCCESS,
+    payload,
+  };
+};
+export const myLorryByIdFailure = payload => ({
+  type: actionTypes.MYLORRY_ID_FAILURE,
+  payload,
+});
+
+// My Load Using Id
+export const initMyLoadById = load_id => ({
+  type: actionTypes.INIT_MYLOAD_BY_ID,
+  load_id,
+});
+export const myLoadByIdSuccess = payload => {
+  // console.log(3333, payload);
+  return {
+    type: actionTypes.MYLOAD_ID_SUCCESS,
+    payload,
+  };
+};
+export const myLoadByIdFailure = payload => ({
+  type: actionTypes.MYLOAD_ID_FAILURE,
+  payload,
+});
+
+// Get Request Booking
+export const initGetRequestBooking = (load_id, truck_id, request_type) => ({
+  type: actionTypes.INIT_GET_REQUEST_BOOKING,
+  load_id,
+  truck_id,
+  request_type,
+});
+
+export const getRequestBookingSuccess = payload => {
+  return {
+    type: actionTypes.INIT_GET_REQUEST_BOOKING_SUCCESS,
+    payload,
+  };
+};
+export const getRequestBookingSuccessReceived = payload => {
+  // console.log(22222, payload);
+  return {
+    type: actionTypes.INIT_GET_REQUEST_BOOKING_SUCCESS_RECEIVED,
+    payload,
+  };
+};
+export const getRequestBookingSuccessSent = payload => {
+  return {
+    type: actionTypes.INIT_GET_REQUEST_BOOKING_SUCCESS_SENT,
+    payload,
+  };
+};
+
+export const getRequestBookingFailure = payload => ({
+  type: actionTypes.INIT_GET_REQUEST_BOOKING_FAILURE,
+  payload,
+});
+
+// My Load
+export const initMyLoad = status => ({
+  type: actionTypes.INIT_MYLOAD,
+  status,
+});
+
+export const MyLoadSuccess = payload => {
+  return {
+    type: actionTypes.MYLOAD_SUCCESS,
+    payload,
+  };
+};
+
+export const MyLoadFailure = payload => ({
+  type: actionTypes.MYLOAD_FAILURE,
+  payload,
+});
+
+// Contact us
+export const initContactus = (name, email, phone, message) => ({
+  type: actionTypes.INIT_CONTACTUS,
+  name,
+  email,
+  phone,
+  message,
+});
+
+export const contactusSuccess = payload => {
+  return {
+    type: actionTypes.CONTACTUS_SUCCESS,
+    payload,
+  };
+};
+
+export const contactusFailure = payload => ({
+  type: actionTypes.CONTACTUS_FAILURE,
+  payload,
+});
+
+// Guide
+export const initGuide = () => ({
+  type: actionTypes.INIT_GUIDE,
+});
+
+export const guideSuccess = payload => {
+  return {
+    type: actionTypes.GUIDE_SUCCESS,
+    payload,
+  };
+};
+
+export const guideFailure = payload => ({
+  type: actionTypes.GUIDE_FAILURE,
+  payload,
+});
+
+// BOOKING
+export const initBooking = status => ({
+  type: actionTypes.INIT_BOOKING,
+  status,
+});
+
+export const bookingSuccess = payload => {
+  return {
+    type: actionTypes.BOOKING_SUCCESS,
+    payload,
+  };
+};
+
+// export const pendingBookingSuccess = (payload) => {
+//   return {
+//     type: actionTypes.PENDING_BOOKING_SUCCESS,
+//     payload,
+//   };
+// };
+
+// export const ongoingBookingSuccess = (payload) => {
+//   return {
+//     type: actionTypes.ONGOING_BOOKING_SUCCESS,
+//     payload,
+//   };
+// };
+
+// export const completeBookingSuccess = (payload) => {
+//   return {
+//     type: actionTypes.COMPLETE_BOOKING_SUCCESS,
+//     payload,
+//   };
+// };
+
+export const bookingFailure = payload => ({
+  type: actionTypes.BOOKING_FAILURE,
+  payload,
+});
+
+export const initRequestBooking = (
+  loid,
+  trid,
+  offered_price,
+  price_type,
+  old_req_id,
+) => ({
+  type: actionTypes.INIT_REQUEST_BOOKING,
+  loid,
+  trid,
+  offered_price,
+  price_type,
+  old_req_id,
+});
+
+export const RequestBookingSuccess = payload => {
+  return {
+    type: actionTypes.REQUEST_BOOKING_SUCCESS,
+    payload,
+  };
+};
+
+export const RequestBookingFailure = payload => ({
+  type: actionTypes.REQUEST_BOOKING_FAILURE,
+  payload,
+});
+
+// ACCEPT BOOKING
+export const initAcceptBooking = request_id => ({
+  type: actionTypes.INIT_ACCEPT_BOOKING,
+  request_id,
+});
+
+export const AcceptBookingSuccess = payload => {
+  return {
+    type: actionTypes.ACCEPT_BOOKING_SUCCESS,
+    payload,
+  };
+};
+
+export const AcceptBookingFailure = payload => ({
+  type: actionTypes.ACCEPT_BOOKING_FAILURE,
+  payload,
+});
+
+// ACCEPT REJECT
+export const initAcceptReject = (status, bookingId) => ({
+  type: actionTypes.INIT_ACCEPT_REJECT,
+  status,
+  bookingId,
+});
+
+export const acceptRejectSuccess = payload => {
+  return {
+    type: actionTypes.ACCEPT_REJECT_SUCCESS,
+    payload,
+  };
+};
+
+export const acceptRejectFailure = payload => ({
+  type: actionTypes.ACCEPT_REJECT_FAILURE,
+  payload,
+});
+
+// NOTIFICATION
+export const initNotification = (status, bookingId) => ({
+  type: actionTypes.INIT_NOTIFICATION,
+  bookingId,
+  status,
+});
+
+export const notificationSuccess = payload => {
+  return {
+    type: actionTypes.NOTIFICATION_SUCCESS,
+    payload,
+  };
+};
+
+export const notificationFailure = payload => ({
+  type: actionTypes.NOTIFICATION_FAILURE,
+  payload,
+});
+
+// MY POST LOAD
+export const initMyPostLoad = (
+  afrom,
+  ato,
+  qty,
+  material_name,
+  truck_type,
+  price,
+  price_type,
+) => ({
+  type: actionTypes.INIT_MYPOST_LOAD,
+  afrom,
+  ato,
+  qty,
+  material_name,
+  truck_type,
+  price,
+  price_type,
+});
+
+export const myPostLoadSuccess = payload => {
+  return {
+    type: actionTypes.MYPOST_LOAD_SUCCESS,
+    payload,
+  };
+};
+
+export const myPostLoadFailure = payload => ({
+  type: actionTypes.MYPOST_LOAD_FAILURE,
+  payload,
+});
+
+// Wallet
+export const initWallet = amount => ({
+  type: actionTypes.INIT_WALLET,
+  amount,
+});
+
+export const walletSuccess = payload => {
+  return {
+    type: actionTypes.WALLET_SUCCESS,
+    payload,
+  };
+};
+
+export const walletFailure = payload => ({
+  type: actionTypes.WALLET_FAILURE,
+  payload,
+});
+
+// Get Wallet
+export const initGetWallet = amount => ({
+  type: actionTypes.INIT_GET_WALLET,
+});
+
+export const getWalletSuccess = payload => {
+  return {
+    type: actionTypes.GET_WALLET_SUCCESS,
+    payload,
+  };
+};
+
+export const getWalletFailure = payload => ({
+  type: actionTypes.GET_WALLET_FAILURE,
+  payload,
+});
+
+// Logout
+export const initLogout = amount => ({
+  type: actionTypes.INIT_LOGOUT,
+});
+
+export const logoutSuccess = payload => {
+  return {
+    type: actionTypes.LOGOUT_SUCCESS,
+    payload,
+  };
+};
+
+export const logoutFailure = payload => ({
+  type: actionTypes.LOGOUT_FAILURE,
+  payload,
+});
+
+// Load Trucks
+export const initLoadTrucks = amount => ({
+  type: actionTypes.INIT_LOAD_TRUCK,
+});
+
+export const loadTrucksSuccess = payload => {
+  return {
+    type: actionTypes.LOAD_TRUCK_SUCCESS,
+    payload,
+  };
+};
+
+export const loadTrucksFailure = payload => ({
+  type: actionTypes.LOAD_TRUCK_FAILURE,
+  payload,
+});
+
+// Rating
+export const initRating = amount => ({
+  type: actionTypes.INIT_RATING,
+});
+
+export const ratingSuccess = payload => {
+  return {
+    type: actionTypes.RATING_SUCCESS,
+    payload,
+  };
+};
+
+export const ratingFailure = payload => ({
+  type: actionTypes.RATING_FAILURE,
+  payload,
+});
+
+// Get User Profile
+export const initGetUserProfile = id => ({
+  type: actionTypes.INIT_USER_PROFILE,
+  id,
+});
+
+export const getUserProfileSuccess = payload => {
+  return {
+    type: actionTypes.USER_PROFILE_SUCCESS,
+    payload,
+  };
+};
+
+export const getUserProfileFailure = payload => ({
+  type: actionTypes.USER_PROFILE_FAILURE,
+  payload,
+});
+
+// STATUS CHANGE
+export const initStatusChange = (
+  trid,
+  location1,
+  location2,
+  status,
+  userType,
+) => ({
+  type: actionTypes.INIT_STATUS_CHANGE,
+  trid,
+  location1,
+  location2,
+  status,
+  userType,
+});
+
+export const statusChangeSuccess = payload => {
+  return {
+    type: actionTypes.STATUS_CHANGE_SUCCESS,
+    payload,
+  };
+};
+
+export const statusChangeFailure = payload => ({
+  type: actionTypes.STATUS_CHANGE_FAILURE,
+  payload,
+});
+
+// Find Lorry
+export const initFindLorry = loid => ({
+  type: actionTypes.INIT_FIND_LORRY,
+  loid,
+});
+
+export const findLorrySuccess = payload => {
+  return {
+    type: actionTypes.FIND_LORRY_SUCCESS,
+    payload,
+  };
+};
+
+export const findLorryFailure = payload => ({
+  type: actionTypes.FIND_LORRY_FAILURE,
+  payload,
+});
+
+// Modal Location From
+export const initlocationChange = location => ({
+  type: actionTypes.INIT_MODAL_LOCATION,
+  location,
+});
+
+export const initsearchFromId = location => ({
+  type: actionTypes.INIT_SEARCH_FROM_ID,
+  location,
+});
+
+export const initsearchToId = location => ({
+  type: actionTypes.INIT_SEARCH_TO_ID,
+  location,
+});
+
+export const locationChangeSuccess = payload => {
+  return {
+    type: actionTypes.MODAL_LOCATION_SUCCESS,
+    payload,
+  };
+};
+export const searchfromidSuccess = payload => {
+  return {
+    type: actionTypes.SEARCH_FROM_ID_SUCCESS,
+    payload,
+  };
+};
+export const searchtoidSuccess = payload => {
+  return {
+    type: actionTypes.SEARCH_TO_ID_SUCCESS,
+    payload,
+  };
+};
+export const modalCloseLocation = () => {
+  return {
+    type: actionTypes.MODAL_CLOSE_LOCATION,
+  };
+};
+export const locationChangeFromClear = payload => {
+  return {
+    type: actionTypes.MODAL_LOCATION_CLEAR,
+    payload,
+  };
+};
+
+// Modal Location To
+export const initlocationToChange = location => ({
+  type: actionTypes.INIT_MODAL_LOCATION_TO,
+  location,
+});
+
+export const locationChangeToSuccess = payload => {
+  return {
+    type: actionTypes.MODAL_LOCATION_TO_SUCCESS,
+    payload,
+  };
+};
+export const locationChangeToClear = payload => {
+  return {
+    type: actionTypes.MODAL_LOCATION_TO_CLEAR,
+    payload,
+  };
+};
+
+// Modal Location From
+export const initCurrentLocation = (lat, long) => ({
+  type: actionTypes.INIT_CURRENT_LOCATION,
+  lat,
+  long,
+});
+
+export const currentLocationSuccess = payload => {
+  return {
+    type: actionTypes.CURRENT_LOCATION_SUCCESS,
+    payload,
+  };
+};
+export const currentLocationFailure = payload => {
+  return {
+    type: actionTypes.CURRENT_LOCATION_FAILURE,
+    payload,
+  };
+};
+
+// Add Lorry Require Details
+export const initLorryRequire = (lat, long) => ({
+  type: actionTypes.INIT_LORRY_REQUIRE,
+});
+
+export const lorryRegireSuccess = payload => {
+  return {
+    type: actionTypes.LORRY_REQUIRE_SUCCESS,
+    payload,
+  };
+};
+export const lorryRequireFailure = payload => {
+  return {
+    type: actionTypes.LORRY_REQUIRE_FAILURE,
+    payload,
+  };
+};
+
+// Delete Lorry
+export const initDeleteLorry = (lorry_id, userType) => ({
+  type: actionTypes.INIT_DELETE_LORRY,
+  lorry_id,
+  userType,
+});
+
+export const deleteLorrySuccess = payload => {
+  return {
+    type: actionTypes.DELETE_LORRY_SUCCESS,
+    payload,
+  };
+};
+export const deleteLorryFailure = payload => {
+  return {
+    type: actionTypes.DELETE_LORRY_FAILURE,
+    payload,
+  };
+};
+
+// Cancel Booking
+export const initCancelBooking = req_id => {
+  console.log(99999, req_id);
+  return {
+    type: actionTypes.INIT_CANCEL_BOOKING,
+    req_id,
+  };
+};
+export const cancelBookingSuccess = payload => {
+  console.log('success', payload);
+  return {
+    type: actionTypes.CANCEL_BOOKING_SUCCESS,
+    payload,
+  };
+};
+export const cancelBookingFailure = payload => {
+  console.log('falil', payload);
+  return {
+    type: actionTypes.CANCEL_BOOKING_FAILURE,
+    payload,
+  };
+};
+
+// Uploading Aadhar
+export const initDocumentVerify = (
+  document_number,
+  document_type,
+  document_file,
+) => {
+  // console.log(22222222222, document_number, document_type, document_file);
+  return {
+    type: actionTypes.INIT_DOCUMENT_VERIFY,
+    document_number,
+    document_type,
+    document_file,
+  };
+};
+export const documentVerifySuccess = payload => {
+  // console.log("success", payload);
+  return {
+    type: actionTypes.DOCUMENT_UPLOAD_SUCCESS,
+    payload,
+  };
+};
+export const documentVerifyFailure = payload => {
+  // console.log("failure", payload);
+  return {
+    type: actionTypes.DOCUMENT_UPLOAD_FAILURE,
+    payload,
+  };
+};
+
+// Uploading rc
+export const initRcVerify = (truck_id, rc_document) => {
+  // console.log(22222222222, truck_id, rc_document);
+  return {
+    type: actionTypes.INIT_RC_VERIFICATION,
+    truck_id,
+    rc_document,
+  };
+};
+export const rcVerifySuccess = payload => {
+  // console.log("success", payload);
+  return {
+    type: actionTypes.RC_VERIFICATION_SUCCESS,
+    payload,
+  };
+};
+export const rcVerifyFailure = payload => {
+  // console.log("failure", payload);
+  return {
+    type: actionTypes.RC_VERIFICATION_FAILURE,
+    payload,
+  };
+};
+
+// Uploading qr-code
+export const initQrCodeVerify = (truck_id, value) => {
+  // console.log(22222222222, truck_id, value);
+  return {
+    type: actionTypes.INIT_QR_SCANNER,
+    value,
+    truck_id,
+  };
+};
+export const qrScanningSuccess = payload => {
+  // console.log("success", payload);
+  return {
+    type: actionTypes.QR_SCANNER_SUCCESS,
+    payload,
+  };
+};
+export const qrScanningFailure = payload => {
+  // console.log("failure", payload);
+  return {
+    type: actionTypes.QR_SCANNER_FAILURE,
+    payload,
+  };
+};
+
+// get document-verification
+export const initDocumentVerification = () => ({
+  type: actionTypes.INIT_DOCUMENT_VERIFICATION,
+});
+export const documentVerificationSuccess = payload => ({
+  type: actionTypes.DOCUMENT_VERIFICATION_SUCCESS,
+  payload,
+});
+export const documentVerificationFailure = payload => ({
+  type: actionTypes.DOCUMENT_VERIFICATION_FAILURE,
+  payload,
+});
+
+// Maps
+export const fetchMapDataStart = (from_id, to_id) => ({
+  type: actionTypes.FETCH_MAP_DATA_START,
+  from_id,
+  to_id,
+});
+
+export const fetchMapDataSuccess = data => ({
+  type: actionTypes.FETCH_MAP_DATA_SUCCESS,
+  payload: data,
+});
+
+export const fetchMapDataFailure = error => ({
+  type: actionTypes.FETCH_MAP_DATA_FAILURE,
+  payload: error,
+});
