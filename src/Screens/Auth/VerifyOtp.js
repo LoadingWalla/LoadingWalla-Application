@@ -1,5 +1,11 @@
 import React, {useEffect, useState, useLayoutEffect, useContext} from 'react';
-import {View, Text, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  PermissionsAndroid,
+} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import styles from './style';
@@ -19,6 +25,7 @@ import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
+import RNOtpVerify from 'react-native-otp-verify';
 
 const VerifyOtp = ({navigation, route}) => {
   const {userId, mobileNumber} = route?.params;
@@ -30,13 +37,12 @@ const VerifyOtp = ({navigation, route}) => {
   const seconds = Math.floor(delay % 60);
   const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
+  const dispatch = useDispatch();
 
   const {otpdata, otpLoading, status, dashboardStatus} = useSelector(state => {
     // console.log('Verify Otp', state.data);
     return state.data;
   });
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setDelay('299');
@@ -80,6 +86,11 @@ const VerifyOtp = ({navigation, route}) => {
     }
   }, [dashboardStatus, mobileNumber]);
 
+  const verifyOtp = async otp => {
+    let langId = await AsyncStorage.getItem('languageID');
+    dispatch(initVerifyOtp(userId, otp, langId, devicetoken));
+  };
+
   const verify = async () => {
     if (otpValue === '') {
       Toast.show('Enter OTP', Toast.LONG);
@@ -91,9 +102,9 @@ const VerifyOtp = ({navigation, route}) => {
       return;
     }
 
-    let langId = await AsyncStorage.getItem('languageID');
-    console.log('adlfdl', langId);
-    dispatch(initVerifyOtp(userId, otpValue, langId, devicetoken));
+    // let langId = await AsyncStorage.getItem('languageID');
+    // dispatch(initVerifyOtp(userId, otpValue, langId, devicetoken));
+    verifyOtp(otpValue);
   };
 
   const resendCode = () => {

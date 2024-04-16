@@ -27,7 +27,7 @@ export const TERMS_CONDITION_TITLE3 = 'Privacy Policy';
 export const ENTER_OTP_TITLE =
   'Enter the OTP you received on your phone number.';
 export const VERIFY = 'Verify';
-export const DID_NOT_RECIEVE_OTP = 'Didn’t receive OTP code?';
+export const DID_NOT_RECIEVE_OTP = 'Didn’t receive the code?';
 export const RESEND_CODE = 'Resend code';
 export const VERIFY_NUMBER_TITLE = 'Verify Phone Number';
 export const SELECT_LANGUAGE = 'Select a language';
