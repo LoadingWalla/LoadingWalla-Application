@@ -9,6 +9,8 @@ import {
   titleColor,
   back_color,
   loadingwalla,
+  black,
+  backgroundColorNew,
 } from '../../Color/color';
 export default StyleSheet.create({
   phoneContainer: {
@@ -119,22 +121,6 @@ export default StyleSheet.create({
     fontSize: 12,
     color: activate ? GradientColor3 : PrivacyPolicy,
   }),
-  otpView: {width: '100%', height: 50, maxWidth: '85%', marginTop: 40},
-  underlineStyleBase: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    fontSize: 22,
-    borderRadius: 8,
-    backgroundColor: inputColor,
-    color: 'black',
-    // borderWidth: 3,
-    borderColor: '#ddd',
-  },
-  underlineStyleHighLighted: {
-    backgroundColor: GradientColor2,
-    color: pageBackground,
-  },
   otpResendView: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -171,5 +157,35 @@ export default StyleSheet.create({
   centerItem: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonBox: {marginTop: 20, marginHorizontal: 55},
+  timer: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  otpContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  otpView: {
+    maxWidth: '85%',
+    marginTop: 40,
+    // borderWidth: 1,
+  },
+  focusStick: {backgroundColor: 'white'},
+  inputsContainer: {},
+  pinCodeContainer: {
+    width: 60,
+    height: 60,
+    fontSize: 22,
+    borderRadius: 8,
+    backgroundColor: inputColor,
+    borderWidth: 3,
+    borderColor: '#ddd',
+  },
+  pinCodeText: {color: PrivacyPolicy},
+  activePinCodeContainer: {
+    backgroundColor: GradientColor2,
+    color: pageBackground,
   },
 });

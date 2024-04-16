@@ -3,7 +3,6 @@ import {View, Text, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import styles from './style';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import '../../locales/index';
@@ -15,10 +14,11 @@ import {
 } from '../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../../Utils/Notification_helper';
-import {titleColor} from '../../Color/color';
 import BackgroundTimer from 'react-native-background-timer';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
+import {OtpInput} from 'react-native-otp-entry';
+import {backgroundColorNew} from '../../Color/color';
 
 const VerifyOtp = ({navigation, route}) => {
   const {userId, mobileNumber} = route?.params;
@@ -32,7 +32,7 @@ const VerifyOtp = ({navigation, route}) => {
   const {isConnected} = useContext(NetworkContext);
 
   const {otpdata, otpLoading, status, dashboardStatus} = useSelector(state => {
-    console.log('Verify Otp', state.data);
+    // console.log('Verify Otp', state.data);
     return state.data;
   });
 
@@ -131,29 +131,28 @@ const VerifyOtp = ({navigation, route}) => {
             </Text>
           </Text>
         </View>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <OTPInputView
-            style={styles.otpView}
-            pinCount={4}
-            autoFocus
-            autoFocusOnLoad={false}
-            onCodeChanged={code => setOtpvalue(code)}
-            // autoFocusOnLoad
-            editable
-            codeInputFieldStyle={styles.underlineStyleBase}
-            codeInputHighlightStyle={styles.underlineStyleHighLighted}
-            onCodeFilled={code => {
+        <View style={styles.otpContainer}>
+          <OtpInput
+            numberOfDigits={4}
+            focusColor={backgroundColorNew}
+            focusStickBlinkingDuration={500}
+            onTextChange={code => setOtpvalue(code)}
+            onFilled={code => {
               setCodeFill(true);
+            }}
+            theme={{
+              containerStyle: styles.otpView,
+              inputsContainerStyle: styles.inputsContainer,
+              pinCodeContainerStyle: styles.pinCodeContainer,
+              pinCodeTextStyle: styles.pinCodeText,
+              focusStickStyle: styles.focusStick,
+              focusedPinCodeContainerStyle: styles.activePinCodeContainer,
             }}
           />
           <Text style={styles.signupTopTitle}>
             Expires in{' '}
             {
-              <Text
-                style={{
-                  color: titleColor,
-                  fontFamily: 'PlusJakartaSans-Bold',
-                }}>
+              <Text style={styles.timer}>
                 {minutes.toLocaleString(undefined, {
                   minimumIntegerDigits: 2,
                 }) +
@@ -179,7 +178,7 @@ const VerifyOtp = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
 
-        <View style={{marginTop: 20, marginHorizontal: 55}}>
+        <View style={styles.buttonBox}>
           <Button
             loading={otpLoading}
             onPress={() => verify()}

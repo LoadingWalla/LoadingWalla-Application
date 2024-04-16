@@ -18,7 +18,6 @@ const Navigation = ({language}) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log('Routes run');
     const setlanguage = async () => {
       const lan = await AsyncStorage.getItem('language');
       i18n
