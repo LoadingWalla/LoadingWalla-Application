@@ -23,17 +23,18 @@ import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
 import Home from '../Screens/Details/Home';
 import {GradientColor2, tabIndicatorColor} from '../Color/color';
-import DashboardLoad from '../Screens/Home/DashboardLoad';
-import Dashboard from '../Screens/Home/Dashboard';
 import useHandleBackButton from './useHandleBackButton';
+import Dashboard from '../Screens/BottomTabs/Dashboard';
+import MyLorry from '../Screens/BottomTabs/MyLorry';
+import Booking from '../Screens/BottomTabs/Bookings/Booking';
+import Profile from '../Screens/BottomTabs/Menu/Profile';
+import DashboardLoad from '../Screens/BottomTabs/DashboardLoad';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 function getWidth() {
   const totalWidth = Dimensions.get('window').width;
-  // const padding = 10;
   const numberOfTabs = 4;
-  // return (totalWidth - padding) / numberOfTabs;
   return totalWidth / numberOfTabs;
 }
 
@@ -87,8 +88,7 @@ function BottomTabs() {
         />
         <Tab.Screen
           name={t(Constants.NAV_MY_LORRY)}
-          // component={MyLorry}
-          component={Home}
+          component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <TruckActiveIcon /> : <TruckIcon />,
@@ -101,28 +101,27 @@ function BottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: e => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 1,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />
         <Tab.Screen
           name={t(Constants.BOOKINGS)}
-          // component={Booking}
-          component={Home}
+          component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <BookingActiveIcon /> : <BookingIcon />,
@@ -134,28 +133,27 @@ function BottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: e => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 2,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />
         <Tab.Screen
           name={t(Constants.MENU)}
-          // component={Profile}
-          component={Home}
+          component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <DashboardActiveIcon /> : <DashboardIcon />,
@@ -172,21 +170,21 @@ function BottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: e => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 3,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />
@@ -248,8 +246,7 @@ function MyLoadsBottomTabs() {
         />
         <Tab.Screen
           name={t(Constants.NAV_MY_LOAD)}
-          // component={MyLorry}
-          component={Home}
+          component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <HomeActiveIcon /> : <HomeIcon />,
@@ -261,28 +258,27 @@ function MyLoadsBottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: () => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 1,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />
         <Tab.Screen
           name={t(Constants.BOOKINGS)}
-          // component={Booking}
-          component={Home}
+          component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <HomeActiveIcon /> : <HomeIcon />,
@@ -295,28 +291,27 @@ function MyLoadsBottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: e => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 2,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />
         <Tab.Screen
           name={t(Constants.MENU)}
-          // component={Profile}
-          component={Home}
+          component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <DashboardActiveIcon /> : <DashboardIcon />,
@@ -332,21 +327,21 @@ function MyLoadsBottomTabs() {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
             focus: e => {
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 3,
                 useNativeDriver: true,
-              }).start(),
-                BackHandler.addEventListener(
-                  'hardwareBackPress',
-                  handleBackButton,
-                );
+              }).start();
+              BackHandler.addEventListener(
+                'hardwareBackPress',
+                handleBackButton,
+              );
             },
           })}
         />

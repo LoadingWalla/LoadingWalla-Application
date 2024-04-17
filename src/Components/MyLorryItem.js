@@ -1,12 +1,4 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Pressable,
-  Image,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
 import * as Constants from '../Constants/Constant';
 import InnerButton from './InnerButton';
@@ -14,15 +6,11 @@ import {
   GradientColor2,
   GradientColor3,
   PrivacyPolicy,
-  inputColor,
-  textColor,
   titleColor,
   white,
 } from '../Color/color';
 import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import CheckIcon from 'react-native-vector-icons/SimpleLineIcons';
-import Button from './Button';
 import CardHeader from './CardHeader';
 import ShowPermitModal from './ShowPermitModal';
 
@@ -137,8 +125,8 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
               navigation.navigate('Request', {
                 userType: userType,
                 Owner: item,
-                [userType == '1' ? 'load_id' : 'truck_id']:
-                  userType == '1' ? item.id : item.truck_id,
+                [userType === '1' ? 'load_id' : 'truck_id']:
+                  userType === '1' ? item.id : item.truck_id,
               })
             }
           />

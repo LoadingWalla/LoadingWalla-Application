@@ -7,6 +7,7 @@ import {
   PrivacyPolicy,
   titleColor,
   GradientColor3,
+  GradientColor2,
 } from '../../Color/color';
 
 export default StyleSheet.create({
@@ -197,4 +198,97 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   btnContainer: {flexDirection: 'row', justifyContent: 'flex-end'},
+
+  ///////
+
+  Container: {flex: 1, backgroundColor: '#FFFDFD'},
+
+  button: {
+    borderRadius: 20,
+    width: '100%',
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 38,
+  },
+  buttonTitile: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
+  backgroundView2: {
+    flex: 1,
+    // padding: 10,
+    // backgroundColor: pageBackground,
+    // height: "100%",
+    justifyContent: 'center',
+  },
+  backgroundViewContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: pageBackground,
+    height: '100%',
+    justifyContent: 'center',
+  },
+
+  dashboardHeaderVerifiedTitle: {
+    fontSize: 12,
+    color: GradientColor2,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    marginLeft: 5,
+  },
+  locationInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  verifyTruck: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: '#ccc',
+    paddingVertical: 3,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    elevation: 2,
+    backgroundColor: white,
+  },
+
+  rowDirection: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  bookingItem: (selected, id) => ({
+    flex: 1,
+    margin: 10,
+    backgroundColor: selected === id ? GradientColor2 : '#000',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderColor: GradientColor2,
+  }),
+  bookingTextItem: (selected, id) => ({
+    color: selected === id ? '#fff' : '#000',
+    fontFamily:
+      selected === id ? 'PlusJakartaSans-SemiBold' : 'PlusJakartaSans-Regular',
+    fontSize: 12,
+  }),
+  tabView: {
+    flex: 1,
+    marginTop: 60,
+    paddingVertical: 10,
+  },
+
+  buttonstyle2: {
+    borderRadius: 8,
+    justifyContent: 'center',
+    padding: 14,
+  },
+  touchStyle2: {
+    marginBottom: 20,
+    width: '50%',
+    alignSelf: 'center',
+  },
 });

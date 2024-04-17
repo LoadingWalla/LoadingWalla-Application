@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { shimmerColor, white } from "../../Color/color";
+import {StyleSheet} from 'react-native';
+import {shimmerColor, white} from '../../Color/color';
 
 export default StyleSheet.create({
   mainViewShimmer: {
@@ -10,9 +10,9 @@ export default StyleSheet.create({
     marginHorizontal: 5,
     backgroundColor: white,
   },
-  borderLineShimmer: { backgroundColor: shimmerColor, height: 0.5 },
-  shimmerDirection: { marginTop: 20, flexDirection: "row" },
-  shimmerProfile: { height: 25, width: 25, borderRadius: 20 },
+  borderLineShimmer: {backgroundColor: shimmerColor, height: 0.5},
+  shimmerDirection: {marginTop: 20, flexDirection: 'row'},
+  shimmerProfile: {height: 25, width: 25, borderRadius: 20},
   shimmerNameView: {
     height: 15,
     width: 150,
@@ -20,7 +20,7 @@ export default StyleSheet.create({
     marginLeft: 10,
     borderRadius: 5,
   },
-  shimmerFlex: { flex: 1 },
+  shimmerFlex: {flex: 1},
   shimmerIconView: {
     marginTop: 10,
     height: 15,
@@ -44,15 +44,15 @@ export default StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     padding: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   shimmerItemView: {
     width: 110,
     height: 110,
     margin: 10,
     borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   shimmerCardView: {
     borderRadius: 8,
@@ -61,8 +61,8 @@ export default StyleSheet.create({
     marginTop: 20,
     backgroundColor: white,
   },
-  commonMarginTop: { marginTop: 10 },
-  shimmerUpperTextView: { height: 15, width: 75, borderRadius: 5 },
+  commonMarginTop: {marginTop: 10},
+  shimmerUpperTextView: {height: 15, width: 75, borderRadius: 5},
   shimmerLowerTextView: {
     height: 15,
     width: 150,
@@ -71,7 +71,7 @@ export default StyleSheet.create({
   },
   lorryShimmerItemView: {
     marginTop: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   lorryShimmerView: {
     borderRadius: 8,
@@ -81,7 +81,7 @@ export default StyleSheet.create({
     marginTop: 20,
     backgroundColor: white,
   },
-  dotView: { height: 10, width: 60, borderRadius: 5 },
+  dotView: {height: 10, width: 60, borderRadius: 5},
   lorryTextShimmer: {
     height: 15,
     width: 200,
@@ -93,19 +93,19 @@ export default StyleSheet.create({
     height: 40,
     width: 100,
     borderRadius: 5,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   buttonActiveView: {
     height: 50,
     width: 150,
     borderRadius: 8,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
     elevation: 2,
   },
   requestShimmer: {
     marginTop: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     borderRadius: 8,
   },
 });

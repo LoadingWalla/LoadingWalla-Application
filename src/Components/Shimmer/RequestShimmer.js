@@ -1,9 +1,9 @@
-import React from "react";
-import { View } from "react-native";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import style from "./style";
+import React from 'react';
+import {View} from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import style from './style';
 
-const RequestShimmer = ({ title }) => {
+const RequestShimmer = ({title}) => {
   return (
     <SkeletonPlaceholder>
       <View style={style.requestShimmer}>

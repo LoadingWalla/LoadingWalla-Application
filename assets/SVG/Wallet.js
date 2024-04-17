@@ -1,5 +1,5 @@
-import React from "react";
-import Svg, { Path, Mask, G } from "react-native-svg";
+import React from 'react';
+import Svg, {Path, Mask, G} from 'react-native-svg';
 const Wallet = () => {
   return (
     <Svg
@@ -7,8 +7,7 @@ const Wallet = () => {
       height="25"
       viewBox="0 0 18 17"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         fill-rule="evenodd"
         clip-rule="evenodd"
@@ -28,8 +27,7 @@ const Wallet = () => {
         x="0"
         y="0"
         width="18"
-        height="17"
-      >
+        height="17">
         <Path
           fill-rule="evenodd"
           clip-rule="evenodd"

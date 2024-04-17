@@ -42,7 +42,7 @@ const TextInputField = ({
           value={value}
           defaultValue={defaultValue}
           maxLength={isPhone ? 10 : null}
-          keyboardType={isPhone ? 'numeric' :'default'}
+          keyboardType={isPhone ? 'numeric' : 'default'}
           textAlignVertical={isMultiLine ? 'top' : 'auto'}
           multiline={isMultiLine === true ? true : false}
           placeholder={hint}

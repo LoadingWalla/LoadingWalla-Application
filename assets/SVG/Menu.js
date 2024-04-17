@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Rect, Defs, Use, Pattern, Image, Circle} from 'react-native-svg';
+import Svg, {Circle} from 'react-native-svg';
 const Menu = () => {
   return (
     <Svg

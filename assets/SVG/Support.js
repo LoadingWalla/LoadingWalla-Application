@@ -1,6 +1,6 @@
-import React from "react";
-import {} from "react-native";
-import Svg, { Rect, G, Path } from "react-native-svg";
+import React from 'react';
+import {} from 'react-native';
+import Svg, {G, Path} from 'react-native-svg';
 
 const Support = () => {
   return (
@@ -10,8 +10,7 @@ const Support = () => {
       height="25"
       viewBox="0 0 64 64"
       width="25"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlns="http://www.w3.org/2000/svg">
       <G>
         <Path
           fill="#000"

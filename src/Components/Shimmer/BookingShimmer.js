@@ -1,10 +1,10 @@
-import React from "react";
-import { View } from "react-native";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import style from "./style";
-import HeaderShimmer from "./HeaderShimmer";
+import React from 'react';
+import {View} from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import style from './style';
+import HeaderShimmer from './HeaderShimmer';
 
-const BookingShimmer = ({ title }) => {
+const BookingShimmer = ({title}) => {
   return (
     <View style={style.mainViewShimmer}>
       <HeaderShimmer />

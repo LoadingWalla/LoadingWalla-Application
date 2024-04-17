@@ -1,11 +1,10 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import style from "./style";
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-const ProfileShimmer = ({ title }) => {
+const ProfileShimmer = ({title}) => {
   return (
-    <View style={{ backgroundColor: "#FFFFFF" }}>
+    <View style={{backgroundColor: '#FFFFFF'}}>
       <SkeletonPlaceholder>
         <View style={stylesss.shimmerLocationView} />
         {/* <View>
@@ -15,16 +14,12 @@ const ProfileShimmer = ({ title }) => {
         <View style={stylesss.bannerContainer} />
         {/* <View style={stylesss.bannerContainer} /> */}
         {/* <View style={stylesss.bannerContainer} /> */}
-        <View style={{ marginBottom: 20 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+        <View style={{marginBottom: 20}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={stylesss.shimmerTextView} />
             <View style={stylesss.shimmerTextView} />
           </View>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={stylesss.shimmerTextView} />
             <View style={stylesss.shimmerTextView} />
           </View>
@@ -41,8 +36,8 @@ const stylesss = StyleSheet.create({
     height: 110,
     marginHorizontal: 10,
     borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   shimmerLocationView: {
     borderRadius: 8,
@@ -66,6 +61,6 @@ const stylesss = StyleSheet.create({
     marginHorizontal: 10,
     marginVertical: 10,
     padding: 10,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
 });
