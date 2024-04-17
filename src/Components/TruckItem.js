@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, FlatList, TouchableOpacity, Image, Text } from "react-native";
-import Background from "../Components/BackgroundGradient";
-import styleSheet from "../Screens/Details/style";
-import CheckIcon from "react-native-vector-icons/Ionicons";
+import React, {useState} from 'react';
+import {View, FlatList, TouchableOpacity, Image, Text} from 'react-native';
+import Background from '../Components/BackgroundGradient';
+import styleSheet from '../Screens/Details/style';
+import CheckIcon from 'react-native-vector-icons/Ionicons';
 
 const TruckItem = ({
   renderItem,
@@ -16,9 +16,9 @@ const TruckItem = ({
   multiple,
   isDone,
 }) => {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState('');
 
-  const GridView = ({ data, index }) => {
+  const GridView = ({data, index}) => {
     return (
       <TouchableOpacity onPress={() => click(data) || setSelected(index)}>
         {selected === index ? (
@@ -34,7 +34,7 @@ const TruckItem = ({
     );
   };
 
-  const MultipleSelectGridView = ({ data, index }) => {
+  const MultipleSelectGridView = ({data, index}) => {
     return (
       <TouchableOpacity onPress={() => click(data)}>
         {data?.isChecked ? (
@@ -63,7 +63,7 @@ const TruckItem = ({
       <View>
         {(data?.image || imageRequire) && (
           <Image
-            source={imageRequire ? { uri: data?.icon } : data?.image}
+            source={imageRequire ? {uri: data?.icon} : data?.image}
             style={styleSheet.imageStyle}
           />
         )}
@@ -71,16 +71,14 @@ const TruckItem = ({
           <Text
             style={
               data?.isChecked ? styleSheet.gridText : styleSheet.gridGreyText
-            }
-          >
+            }>
             {data?.truck_tyre || data?.type || data?.permit_name || data?.label}
           </Text>
         ) : (
           <Text
             style={
               selected === index ? styleSheet.gridText : styleSheet.gridGreyText
-            }
-          >
+            }>
             {data?.truck_tyre || data?.type || data?.permit_name || data?.label}
           </Text>
         )}
@@ -90,13 +88,13 @@ const TruckItem = ({
 
   return (
     <FlatList
-      style={[styleSheet.flatListStyle, { maxHeight: isDone ? 400 : 120 }]}
+      style={[styleSheet.flatListStyle, {maxHeight: isDone ? 400 : 120}]}
       horizontal={horizontal}
       numColumns={columns}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       data={renderItem}
-      renderItem={({ item, index }) => {
+      renderItem={({item, index}) => {
         return (
           <>
             {multiple ? (

@@ -1,10 +1,10 @@
-import React from "react";
-import { View } from "react-native";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import style from "./style";
-import HeaderShimmer from "./HeaderShimmer";
+import React from 'react';
+import {View} from 'react-native';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import style from './style';
+import HeaderShimmer from './HeaderShimmer';
 
-const DashboardShimmer = ({ title }) => {
+const DashboardShimmer = ({title}) => {
   return (
     <View>
       <SkeletonPlaceholder>
@@ -16,7 +16,7 @@ const DashboardShimmer = ({ title }) => {
           <View style={style.shimmerItemView} />
           <View style={style.shimmerItemView} />
         </View>
-        <View></View>
+        <View />
       </SkeletonPlaceholder>
       <View style={style.shimmerCardView}>
         <HeaderShimmer />

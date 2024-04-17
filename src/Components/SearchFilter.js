@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, Pressable, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {GradientColor2} from '../Color/color';
 import Location from 'react-native-vector-icons/SimpleLineIcons';
 import style from './style';
