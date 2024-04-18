@@ -8,7 +8,7 @@ import {
   titleColor,
   GradientColor3,
   GradientColor2,
-} from '../../Color/color';
+} from '../../../Color/color';
 
 export default StyleSheet.create({
   backIconView: {
@@ -198,6 +198,27 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   btnContainer: {flexDirection: 'row', justifyContent: 'flex-end'},
+  searchFilter: {
+    backgroundColor: white,
+    flexDirection: 'row',
+    elevation: 2,
+    marginTop: 18,
+    borderRadius: 8,
+    marginHorizontal: 1,
+  },
+  locationIcon: {
+    flex: 1,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  searchInput: {
+    flex: 4,
+    marginLeft: 10,
+    alignSelf: 'center',
+    color: PrivacyPolicy,
+  },
+  loactionModalStyle: {paddingHorizontal: 15},
 
   ///////
 

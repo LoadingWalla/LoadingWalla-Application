@@ -10,26 +10,29 @@ import {
   white,
 } from '../Color/color';
 import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import CheckIcon from 'react-native-vector-icons/SimpleLineIcons';
 import CardHeader from './CardHeader';
 import ShowPermitModal from './ShowPermitModal';
 
 const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
+  console.log(888888, item);
+  // console.log(3333, userType);
   const priceType =
     item?.price_type === 1 ? t(Constants.FIXED) : t(Constants.PER_TON);
   const ac_time = userType === '2' ? item?.updated : false;
 
   return (
     <View style={styles.card}>
-      <CardHeader from={item?.from} to={item?.to} icon={item?.icon} />
+      <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
       <View style={styles.horizontalLine} />
       <View>
         <View style={styles.rowdirection}>
           <View style={styles.point} />
           <Text style={styles.smallImageHeaderTitle}>
-            {userType === '1' ? 'Name from Api' : item?.vehicle_number}
+            {userType === '1'
+              ? `${Math.ceil(item?.distance)} KM`
+              : item?.vehicle_number}
           </Text>
         </View>
         <View style={styles.locationInfo}>
@@ -38,15 +41,24 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
             {userType === '2' ? (
               <TouchableOpacity
                 style={styles.rowdirection}
-                onPress={() => setModalVisible(true)}>
+                onPress={() => setModalVisible(true)}
+                // disabled={!(item?.permit.length > 1)}
+              >
                 <Text
                   style={[
                     styles.smallImageHeaderTitle,
-                    {color: '#0076FF', textDecorationLine: 'underline'},
+                    item?.permit.length > 1
+                      ? {color: '#0076FF', textDecorationLine: 'underline'}
+                      : {color: titleColor, textDecorationLine: 'none'},
                   ]}>
-                  {`${item?.permit.length} Permit Location`}
+                  {item?.permit.length === 1
+                    ? item?.permit[0].permit_name
+                    : `${item?.permit.length} Permit Location`}
                 </Text>
-                <EditIcon name="chevron-right" size={15} color={'#0076FF'} />
+
+                {item?.permit.length > 1 && (
+                  <EditIcon name="chevron-right" size={15} color={'#0076FF'} />
+                )}
                 <ShowPermitModal
                   permit={item?.permit}
                   modalVisible={modalVisible}
@@ -62,10 +74,27 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
           {userType === '2' ? (
             <TouchableOpacity
               style={styles.verifyTruck}
-              onPress={() => navigation.navigate('RC', {title: 'RC Number'})}>
-              <CheckIcon name="shield" size={15} color={GradientColor2} />
-              <Text style={styles.dashboardHeaderVerifiedTitle}>
-                Verify Truck
+              // disabled={item.verified}
+              onPress={() =>
+                navigation.navigate('RC Verification', {
+                  title: 'RC',
+                  RC: item?.vehicle_number,
+                  truck_id: item?.truck_id,
+                })
+              }>
+              <EditIcon
+                name={
+                  item?.verified
+                    ? 'shield-check-outline'
+                    : 'shield-alert-outline'
+                }
+                size={15}
+                color={item?.verified ? 'green' : GradientColor2}
+              />
+              <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
+                {item?.verified
+                  ? `${t(Constants.VERIFY)}`
+                  : t(Constants.NOT_VERIFIED)}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -76,7 +105,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
       <View style={styles.horizontalLine} />
       <View style={[styles.rowdirection, {justifyContent: 'center'}]}>
         <Text style={styles.textStyle}>
-          {userType === '1' ? item?.qty + 'Ton' : item?.truck_capacity}
+          {userType === '1' ? item?.qty + ' Ton' : item?.truck_capacity}
         </Text>
         <View style={styles.verticalLine} />
         <Text style={styles.textStyle}>
@@ -92,64 +121,100 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
         )}
       </View>
       <View style={styles.horizontalLine} />
-      <View style={styles.locationInfo}>
-        <TouchableOpacity
-          style={[
-            styles.editButtonStyle,
-            {borderColor: item.status === 1 ? '#56CA6F' : '#d73b29'},
-          ]}
-          onPress={() => openStatusModal(item)}>
+
+      {userType === '2' && item.status === 2 ? (
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <InnerButton
+            enabledStyle={{
+              justifyContent: 'center',
+              alignSelf: 'center',
+            }}
+            textStyle={{
+              color: 'blue',
+              textDecorationLine: 'underline',
+              fontSize: 14,
+              fontFamily: 'PlusJakartaSans-Bold',
+            }}
+            title={'Go to Bookings'}
+            onpressStatus={() => navigation.navigate('Bookings')}
+          />
           <Text
-            style={[
-              styles.editButtonText,
-              {color: item.status === 1 ? '#56CA6F' : '#d73b29'},
-            ]}>
-            {t(Constants.EDIT)}
+            style={{
+              color: titleColor,
+              fontSize: 14,
+              fontFamily: 'PlusJakartaSans-Bold',
+              padding: 8,
+            }}>
+            Booked
           </Text>
-          <EditIcon
-            name="pencil"
-            size={15}
-            color={item.status === 1 ? '#56CA6F' : '#d73b29'}
-          />
-        </TouchableOpacity>
-        <View style={styles.rowdirection}>
-          <InnerButton
-            enabledStyle={styles.requestButtonContainer}
-            disabledStyle={styles.requestButtonContainerDisabled}
-            textStyle={styles.gradientButtonText}
-            disableTextStyle={styles.disabledText}
-            title={t(Constants.REQUEST)}
-            count={item?.total_request}
-            disabled={item.status === 0 ? true : false}
-            navigation={() =>
-              navigation.navigate('Request', {
-                userType: userType,
-                Owner: item,
-                [userType === '1' ? 'load_id' : 'truck_id']:
-                  userType === '1' ? item.id : item.truck_id,
-              })
-            }
-          />
-          <InnerButton
-            enabledStyle={styles.findButtonContainer}
-            disabledStyle={styles.findButtonContainerDisabled}
-            textStyle={styles.findButtonText}
-            disableTextStyle={styles.findDisabledText}
-            title={
-              userType === '2'
-                ? t(Constants.FIND_LOADS)
-                : t(Constants.FIND_LORRY)
-            }
-            disabled={item.status === 0 ? true : false}
-            navigation={() =>
-              navigation.navigate('FindLoads', {
-                Owner: item,
-                userType: userType,
-              })
-            }
-          />
         </View>
-      </View>
+      ) : (
+        <>
+          <View style={styles.locationInfo}>
+            <TouchableOpacity
+              style={[
+                styles.editButtonStyle,
+                {borderColor: item.status === 1 ? '#56CA6F' : '#d73b29'},
+              ]}
+              // onPress={() => openStatusModal(item)}
+              onPress={() =>
+                navigation.navigate('StatusModal', {
+                  userType: userType,
+                  data: item,
+                })
+              }>
+              <Text
+                style={[
+                  styles.editButtonText,
+                  {color: item.status === 1 ? '#56CA6F' : '#d73b29'},
+                ]}>
+                {t(Constants.EDIT)}
+              </Text>
+              <EditIcon
+                name="pencil"
+                size={15}
+                color={item.status === 1 ? '#56CA6F' : '#d73b29'}
+              />
+            </TouchableOpacity>
+            <View style={styles.rowdirection}>
+              <InnerButton
+                enabledStyle={styles.requestButtonContainer}
+                disabledStyle={styles.requestButtonContainerDisabled}
+                textStyle={styles.gradientButtonText}
+                disableTextStyle={styles.disabledText}
+                title={t(Constants.REQUEST)}
+                count={item?.total_request}
+                // disabled={item.status === 0 ? true : false}
+                navigation={() =>
+                  navigation.navigate('Request', {
+                    userType: userType,
+                    Owner: item,
+                  })
+                }
+              />
+              <InnerButton
+                enabledStyle={styles.findButtonContainer}
+                disabledStyle={styles.findButtonContainerDisabled}
+                textStyle={styles.findButtonText}
+                disableTextStyle={styles.findDisabledText}
+                title={
+                  userType === '2'
+                    ? t(Constants.FIND_LOADS)
+                    : t(Constants.FIND_LORRY)
+                }
+                // disabled={item.status === 0 ? true : false}
+                navigation={() =>
+                  navigation.navigate('FindLoads', {
+                    Owner: item,
+                    userType: userType,
+                  })
+                }
+              />
+            </View>
+          </View>
+        </>
+      )}
+
       {ac_time && <Text style={styles.ac_time}>Updated at: {ac_time}</Text>}
     </View>
   );
@@ -239,12 +304,12 @@ const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: white,
   },
-  dashboardHeaderVerifiedTitle: {
+  dashboardHeaderVerifiedTitle: color => ({
     fontSize: 12,
-    color: GradientColor2,
+    color: color ? 'green' : GradientColor2,
     fontFamily: 'PlusJakartaSans-Bold',
     marginLeft: 5,
-  },
+  }),
   rowdirection: {flexDirection: 'row', alignItems: 'center'},
   ac_time: {
     marginTop: 5,

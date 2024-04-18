@@ -97,7 +97,7 @@ const Booking = ({navigation}) => {
           notification={() => navigation.navigate('Notification')}
           title={BookingDashUser?.name}
           isDashboard={true}
-          gotoProfile={() => navigation.navigate(Constants.PROFILE)}
+          gotoProfile={() => navigation.navigate(Constants.MENU)}
           navigate={() => navigation?.navigate('Contactus')}
           wallet={BookingDashUser?.wallet}
           verify={BookingDashUser?.verify}

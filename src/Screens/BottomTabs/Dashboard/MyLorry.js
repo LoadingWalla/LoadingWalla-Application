@@ -11,18 +11,18 @@ import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TabView, SceneMap} from 'react-native-tab-view';
-import * as Constants from '../../Constants/Constant';
-import {NetworkContext} from '../../Context/NetworkContext';
-import {initMyLoad, initMyLorry} from '../../Store/Actions/Actions';
-import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
-import {PrivacyPolicy} from '../../Color/color';
-import MyLorryItem from '../../Components/MyLorryItem';
-import StatusModal from '../../Components/StatusModal';
-import NoInternetScreen from '../Details/NoInternetScreen';
-import DashboardHeader from '../../Components/DashboardHeader';
+import * as Constants from '../../../Constants/Constant';
+import {NetworkContext} from '../../../Context/NetworkContext';
+import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
+import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
+import {PrivacyPolicy} from '../../../Color/color';
+import MyLorryItem from '../../../Components/MyLorryItem';
+import StatusModal from '../../../Components/StatusModal';
+import NoInternetScreen from '../../Details/NoInternetScreen';
+import DashboardHeader from '../../../Components/DashboardHeader';
 import style from './style';
-import Button from '../../Components/Button';
-import RenderTabBar from '../Requests/RenderTabBar';
+import Button from '../../../Components/Button';
+import RenderTabBar from '../../Requests/RenderTabBar';
 
 function getRoutesForUserType(type) {
   if (type === '1') {
@@ -257,7 +257,7 @@ const MyLorry = ({navigation}) => {
             userType === '1' ? myLoadUserData?.name : myLorryUserData?.name
           }
           isDashboard={true}
-          gotoProfile={() => navigation.navigate(Constants.PROFILE)}
+          gotoProfile={() => navigation.navigate(Constants.MENU)}
           notification={() => navigation.navigate('Notification')}
           navigate={() => navigation.navigate('Contactus')}
           onPress={() => navigation.navigate('KYC')}

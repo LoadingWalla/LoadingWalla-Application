@@ -16,6 +16,7 @@ const TextInputField = ({
   isCloseIcon,
   isText,
   onSearchPress,
+  placeholderTextColor,
   capital,
 }) => {
   return (
@@ -46,6 +47,7 @@ const TextInputField = ({
           textAlignVertical={isMultiLine ? 'top' : 'auto'}
           multiline={isMultiLine === true ? true : false}
           placeholder={hint}
+          placeholderTextColor={placeholderTextColor}
           onChangeText={e => onChangeText(e)}
         />
       )}

@@ -6,6 +6,8 @@ import * as Constants from '../Constants/Constant';
 import style from './style';
 import {useTranslation} from 'react-i18next';
 import HeaderShimmer from './Shimmer/HeaderShimmer';
+import SupportIcon from '../../assets/SVG/svg/SupportIcon';
+import BellIcon from '../../assets/SVG/svg/BellIcon';
 
 const DashboardHeader = ({
   title,
@@ -61,19 +63,14 @@ const DashboardHeader = ({
             <TouchableOpacity
               style={style.commonMargin}
               activeOpacity={0.5}
-              onPress={notification}>
-              <Icon name="bell" size={30} />
+              onPress={() => navigate()}>
+              <SupportIcon size={30} />
             </TouchableOpacity>
             <TouchableOpacity
               style={style.commonMargin}
-              onPress={() => navigate()}>
-              <Icon name="headphones-box" size={30} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigatiopnWallet()}
               activeOpacity={0.5}
-              style={style.wallet}>
-              <Icon name="wallet" size={30} />
+              onPress={notification}>
+              <BellIcon size={30} />
             </TouchableOpacity>
           </View>
         </View>

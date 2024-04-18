@@ -17,7 +17,7 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
-import {textColor} from '../../../Color/color';
+import {PrivacyPolicy, textColor} from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
 
 const ContactUs = ({navigation}) => {
@@ -178,6 +178,7 @@ const ContactUs = ({navigation}) => {
             value={name}
             hint={'Enter name'}
             onChangeText={e => onChangeName(e)}
+            placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -193,6 +194,7 @@ const ContactUs = ({navigation}) => {
             value={email}
             hint={'Enter E-mail'}
             onChangeText={e => onChangeEmail(e)}
+            placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -209,6 +211,7 @@ const ContactUs = ({navigation}) => {
             isPhone={true}
             hint={'Enter phone number'}
             onChangeText={e => onChangePhone(e)}
+            placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -225,6 +228,7 @@ const ContactUs = ({navigation}) => {
             isMultiLine={true}
             hint={'Enter message'}
             onChangeText={e => onChangeMessage(e)}
+            placeholderTextColor={PrivacyPolicy}
           />
           <Button
             onPress={() => sendMessage()}

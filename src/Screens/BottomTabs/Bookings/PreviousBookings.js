@@ -8,17 +8,17 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import {PrivacyPolicy} from '../../Color/color';
-import CardHeader from '../../Components/CardHeader';
-import {useDispatch, useSelector} from 'react-redux';
-import {initBooking} from '../../Store/Actions/Actions';
-import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
-import Lottie from 'lottie-react-native';
-import BookingShimmer from '../../Components/Shimmer/BookingShimmer';
-import * as Constants from '../../Constants/Constant';
+import {useFocusEffect} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+// import Lottie from 'lottie-react-native';
+import * as Constants from '../../../Constants/Constant';
+import {NetworkContext} from '../../../Context/NetworkContext';
+import {initBooking} from '../../../Store/Actions/Actions';
+import CardHeader from '../../../Components/CardHeader';
+import NoInternetScreen from '../../Details/NoInternetScreen';
+import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
+import {PrivacyPolicy} from '../../../Color/color';
 
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
@@ -99,12 +99,12 @@ const PreviousBookings = ({navigation, route}) => {
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
           <Text style={styles.notFoundText}>{t(Constants.NOT_FOUND)}</Text>
-          <Lottie
+          {/* <Lottie
             source={require('../../../assets/notfound.json')}
             autoPlay
             loop
             style={styles.lottieStyle}
-          />
+          /> */}
         </ScrollView>
       )}
     </View>

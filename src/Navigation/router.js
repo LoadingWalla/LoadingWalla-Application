@@ -22,13 +22,25 @@ import BookingIcon from '../../assets/SVG/svg/BookingIcon';
 import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
 import Home from '../Screens/Details/Home';
-import {GradientColor2, tabIndicatorColor} from '../Color/color';
+import {
+  GradientColor1,
+  GradientColor2,
+  GradientColor3,
+  tabIndicatorColor,
+} from '../Color/color';
 import useHandleBackButton from './useHandleBackButton';
-import Dashboard from '../Screens/BottomTabs/Dashboard';
-import MyLorry from '../Screens/BottomTabs/MyLorry';
+import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
+import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
 import Booking from '../Screens/BottomTabs/Bookings/Booking';
 import Profile from '../Screens/BottomTabs/Menu/Profile';
-import DashboardLoad from '../Screens/BottomTabs/DashboardLoad';
+import DashboardLoad from '../Screens/BottomTabs/Dashboard/DashboardLoad';
+import WhatsAppAlert from '../Screens/BottomTabs/Menu/WhatsAppAlert';
+import PreviousBookings from '../Screens/BottomTabs/Bookings/PreviousBookings';
+import LinearGradient from 'react-native-linear-gradient';
+import ContactUs from '../Screens/BottomTabs/Menu/ContactUs';
+import Notification from '../Screens/Details/Notification';
+import Search from '../Screens/BottomTabs/Dashboard/Search';
+import FindLoads from '../Screens/Home/FindLoads';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -355,7 +367,6 @@ function MyLoadsBottomTabs() {
 
 const Navigation = ({language}) => {
   const {i18n} = useTranslation();
-  // const navigation = useNavigation();
   const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
 
@@ -388,7 +399,6 @@ const Navigation = ({language}) => {
           title: Constants.SELECT_LANGUAGE,
         })}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -403,7 +413,6 @@ const Navigation = ({language}) => {
         component={Signup}
         options={{headerShown: false}}
         listeners={() => ({
-          // Onpress Update....
           focus: () => {
             Animated.spring(tabOffsetValue, {
               toValue: 0,
@@ -427,7 +436,6 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || 'Legal Policies',
         })}
         listeners={() => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -509,6 +517,513 @@ const Navigation = ({language}) => {
         component={MyLoadsBottomTabs}
         // component={LoadHome}
         options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="WhatsApp"
+        component={WhatsAppAlert}
+        options={{headerShown: true, headerTitleAlign: 'center'}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="viewDetail"
+        // component={viewDetail}
+        component={Home}
+        options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="AddLorry"
+        // component={AddLorry}
+        component={Home}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Add Truck',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="FindLoads"
+        component={FindLoads}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Results',
+          headerShadowVisible: false,
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="PostLoads"
+        // component={PostLoads}
+        component={Home}
+        options={{
+          headerShown: true,
+          title: 'Post Load +',
+          headerTitleAlign: 'center',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Notification"
+        component={Notification}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="PostSuccess"
+        // component={LoadPostSuccessfull}
+        component={Home}
+        options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="FindLoadResult"
+        // component={FindLoadResult}
+        component={Home}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          title: 'Results',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Contactus"
+        component={ContactUs}
+        options={{
+          headerShown: true,
+          title: 'Contact Us',
+          headerTitleAlign: 'center',
+          headerBackground: () => (
+            <LinearGradient
+              colors={[GradientColor1, GradientColor2, GradientColor3]}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={{flex: 1}}
+            />
+          ),
+          headerTintColor: '#FFFFFF',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Guide"
+        // component={Guide}
+        component={Home}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Help Guide',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Wallet"
+        // component={Wallet}
+        component={Home}
+        options={{headerShown: true, headerTitleAlign: 'center'}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="UserProfile"
+        // component={UserProfile}
+        component={Home}
+        options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Rating"
+        // component={Rating}
+        component={Home}
+        options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          title: 'Search Location',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Request"
+        // component={Requests}
+        component={Home}
+        options={{
+          title: 'My Requests',
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerShadowVisible: false,
+          headerTitleStyle: {
+            // fontWeight: "700",
+          },
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="KYC"
+        // component={Verification}
+        component={Home}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="RC Verification"
+        // component={RCVerification}
+        component={Home}
+        options={{headerShown: true, headerTitleAlign: 'center'}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () => {
+            const onBackPress = () => {
+              navigation.goBack();
+              return true;
+            };
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+          },
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Confirmation"
+        // component={Confirmation}
+        component={Home}
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Status"
+        // component={Status}
+        component={Home}
+        options={{
+          headerShown: false,
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Negotiation"
+        // component={Negotiation}
+        component={Home}
+        options={{
+          headerShown: false,
+          // presentation: "modal",
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      {/* This is StatusModal screen */}
+      <Stack.Screen
+        name="StatusModal"
+        // component={StatusChangeModal}
+        component={Home}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      {/* This is StatusModal screen */}
+      <Stack.Screen
+        name="QRScanner"
+        // component={QRscanner}
+        component={Home}
+        options={{headerShown: false}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Card Details"
+        component={Home}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Document Details',
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Booking Status"
+        // component={BookingStatus}
+        component={Home}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Previous Bookings"
+        component={PreviousBookings}
+        options={{headerShown: true, headerTitleAlign: 'center'}}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="verifyLoadOtp"
+        // component={OtpVerification}
+        component={Home}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Verify OTP',
+        })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>

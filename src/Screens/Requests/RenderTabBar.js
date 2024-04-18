@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
 import {TabBar} from 'react-native-tab-view';
 import {GradientColor2, pageBackground, titleColor} from '../../Color/color';

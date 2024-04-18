@@ -30,11 +30,6 @@ const WhatsAppAlert = ({navigation}) => {
   return (
     <SafeAreaView>
       <View style={[styles.backgroundView, {backgroundColor: 'white'}]}>
-        {/* <CommonToolbar
-          title={t(Constants.WHATSAPP_ALERT)}
-          isBack={true}
-          goBack={() => navigation.goBack()}
-        /> */}
         <View
           style={{
             flexDirection: 'row',

@@ -1,23 +1,23 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import Swiper from 'react-native-swiper';
-import * as Constants from '../../Constants/Constant';
+import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
-import {initDashboard} from '../../Store/Actions/Actions';
+import {initDashboard} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import style from './style';
 import Toast from 'react-native-simple-toast';
-import Banner from '../../Components/Banner';
-import DashboardHeader from '../../Components/DashboardHeader';
-import TruckItem from '../../Components/TruckItem';
-import DashboardShimmer from '../../Components/Shimmer/DashboardShimmer';
-import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
-import SearchFilter from '../../Components/SearchFilter';
-import Button from '../../Components/Button';
-import {GradientColor2} from '../../Color/color';
+import Banner from '../../../Components/Banner';
+import DashboardHeader from '../../../Components/DashboardHeader';
+import TruckItem from '../../../Components/TruckItem';
+import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
+import {NetworkContext} from '../../../Context/NetworkContext';
+import NoInternetScreen from '../../Details/NoInternetScreen';
+import SearchFilter from '../../../Components/SearchFilter';
+import Button from '../../../Components/Button';
+import {GradientColor2} from '../../../Color/color';
 
 const {height, width} = Dimensions.get('window');
 
@@ -139,7 +139,7 @@ const Dashboard = ({navigation}) => {
           notification={() => navigation.navigate('Notification')}
           isDashboard={true}
           title={DashboardUser?.name}
-          gotoProfile={() => navigation.navigate(Constants.PROFILE)}
+          gotoProfile={() => navigation.navigate(Constants.MENU)}
           navigate={() => navigation?.navigate('Contactus')}
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}

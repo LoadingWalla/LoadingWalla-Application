@@ -1,18 +1,15 @@
-import React from "react";
-import { View, FlatList, Text, TouchableOpacity } from "react-native";
-import style from "./style";
+import React from 'react';
+import {View, FlatList, Text, TouchableOpacity} from 'react-native';
+import style from './style';
 
-const LocationModal = ({ data, styles, click }) => {
-  const ItemSeperatorView = () => {
-    return <View style={style.seperatorView} />;
-  };
+const ItemSeperatorView = () => {
+  return <View style={style.seperatorView} />;
+};
 
-  const ItemView = ({ item }) => {
+const LocationModal = ({data, styles, click}) => {
+  const ItemView = ({item}) => {
     return (
-      <TouchableOpacity
-        onPress={() => click(item)}
-        // onPress={()=>click({ place_name: item?.place_name, id: item?.id })}}
-      >
+      <TouchableOpacity onPress={() => click(item)}>
         <Text style={style.searchLocationText}>{item?.place_name}</Text>
       </TouchableOpacity>
     );

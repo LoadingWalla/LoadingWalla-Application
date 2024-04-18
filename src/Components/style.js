@@ -224,6 +224,7 @@ export default StyleSheet.create({
     fontSize: 15,
     padding: 5,
     margin: 5,
+    color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-SemiBold',
   },
   notificationTitle: {
@@ -366,7 +367,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
   },
-  searchText: {fontFamily: 'PlusJakartaSans-Bold'},
+  searchText: {fontFamily: 'PlusJakartaSans-Bold', color: PrivacyPolicy},
   //
   detailItem: {
     padding: 10,

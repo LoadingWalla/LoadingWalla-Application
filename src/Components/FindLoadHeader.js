@@ -1,18 +1,18 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import {
   GradientColor2,
   PrivacyPolicy,
   pageBackground,
   titleColor,
   white,
-} from "../Color/color";
-import CommonToolbar from "./CommonToolbar";
-import CardHeader from "./CardHeader";
-import ShowPermitModal from "./ShowPermitModal";
-import CheckIcon from "react-native-vector-icons/SimpleLineIcons";
-import EditIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { useState } from "react";
+} from '../Color/color';
+import CardHeader from './CardHeader';
+import ShowPermitModal from './ShowPermitModal';
+import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../Constants/Constant';
 
 const FindLoadHeader = ({
   title,
@@ -26,14 +26,15 @@ const FindLoadHeader = ({
   navigation,
   material_name,
   qty,
+  verified,
+  id,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const {t} = useTranslation();
 
   return (
     <View style={styles.card}>
       <View style={styles.cardTop}>
-        <CommonToolbar title={title} goBack={goBack} isBack={true} />
-        {/* <View style={styles.horizontalLine} /> */}
         <View style={styles.cardHeaderView}>
           <CardHeader from={from} to={to} icon={icon} />
         </View>
@@ -43,23 +44,33 @@ const FindLoadHeader = ({
             <View style={styles.point} />
             <Text style={styles.smallImageHeaderTitle}>{fullPrice}</Text>
           </View>
-          {userType === "2" ? (
+          {userType === '2' ? (
             <View style={styles.locationInfo}>
               <View style={styles.rowdirection}>
                 <View style={styles.point} />
                 <TouchableOpacity
                   style={styles.rowdirection}
                   onPress={() => setModalVisible(true)}
-                >
+                  disabled={!(permit?.length > 1)}>
                   <Text
                     style={[
                       styles.smallImageHeaderTitle,
-                      { color: "#0076FF", textDecorationLine: "underline" },
-                    ]}
-                  >
-                    {`${permit?.length} Permit Location`}
+                      permit?.length > 1
+                        ? {color: '#0076FF', textDecorationLine: 'underline'}
+                        : {color: titleColor, textDecorationLine: 'none'},
+                    ]}>
+                    {permit?.length === 1
+                      ? permit[0].permit_name
+                      : `${permit?.length} Permit Location`}
                   </Text>
-                  <EditIcon name="chevron-right" size={15} color={"#0076FF"} />
+
+                  {permit?.length > 1 && (
+                    <EditIcon
+                      name="chevron-right"
+                      size={15}
+                      color={'#0076FF'}
+                    />
+                  )}
                   <ShowPermitModal
                     permit={permit}
                     modalVisible={modalVisible}
@@ -70,20 +81,32 @@ const FindLoadHeader = ({
 
               <TouchableOpacity
                 style={styles.verifyTruck}
+                disabled={verified}
                 onPress={() =>
-                  navigation.navigate("RC", { title: "RC Number" })
-                }
-              >
-                <CheckIcon name="shield" size={13} color={GradientColor2} />
-                <Text style={styles.dashboardHeaderVerifiedTitle}>
-                  Verify Truck
+                  navigation.navigate('RC Verification', {
+                    title: 'RC',
+                    RC: fullPrice,
+                    truck_id: id,
+                  })
+                }>
+                <EditIcon
+                  name={
+                    verified ? 'shield-check-outline' : 'shield-alert-outline'
+                  }
+                  size={15}
+                  color={verified ? 'green' : GradientColor2}
+                />
+                <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
+                  {verified
+                    ? `${t(Constants.VERIFY)}`
+                    : t(Constants.NOT_VERIFIED)}
                 </Text>
               </TouchableOpacity>
             </View>
           ) : (
             <>
               <View style={styles.horizontalLine} />
-              <View style={[styles.rowdirection, { justifyContent: "center" }]}>
+              <View style={[styles.rowdirection, {justifyContent: 'center'}]}>
                 <Text style={styles.textStyle}>{material_name}</Text>
                 <View style={styles.verticalLine} />
                 <Text style={styles.textStyle}>{qty}</Text>
@@ -93,7 +116,7 @@ const FindLoadHeader = ({
         </View>
       </View>
 
-      {userType === "2" ? (
+      {userType === '2' ? (
         <View style={styles.warning}>
           <Text style={styles.warningText}>
             Verifying your truck will help in faster load booking
@@ -111,20 +134,22 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: pageBackground,
   },
-  cardTop: { padding: 10, paddingTop: 20, backgroundColor: white },
-  cardHeaderView: { marginTop: 10 },
-  horizontalLine: { backgroundColor: "#AFAFAF", height: 1, marginVertical: 10 },
+  cardTop: {padding: 10, backgroundColor: white},
+  cardHeaderView: {
+    // marginTop: 10
+  },
+  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
   verticalLine: {
-    backgroundColor: "#AFAFAF",
+    backgroundColor: '#AFAFAF',
     width: 2,
     marginHorizontal: 15,
-    height: "100%",
+    height: '100%',
   },
-  rowdirection: { flexDirection: "row", alignItems: "center" },
+  rowdirection: {flexDirection: 'row', alignItems: 'center'},
   smallImageHeaderTitle: {
     fontSize: 15,
     color: titleColor,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   point: {
     height: 8,
@@ -135,16 +160,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   locationInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   verifyTruck: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderRadius: 20,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     paddingVertical: 3,
     paddingHorizontal: 15,
     marginRight: 10,
@@ -153,23 +178,23 @@ const styles = StyleSheet.create({
   },
   warning: {
     paddingVertical: 5,
-    alignItems: "center",
-    backgroundColor: "#ddd",
+    alignItems: 'center',
+    backgroundColor: '#ddd',
   },
   warningText: {
     color: titleColor,
     fontSize: 12,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
-  dashboardHeaderVerifiedTitle: {
+  dashboardHeaderVerifiedTitle: color => ({
     fontSize: 12,
-    color: GradientColor2,
-    fontFamily: "PlusJakartaSans-SemiBold",
+    color: color ? 'green' : GradientColor2,
+    fontFamily: 'PlusJakartaSans-Bold',
     marginLeft: 5,
-  },
+  }),
   textStyle: {
     color: PrivacyPolicy,
     fontSize: 14,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });
