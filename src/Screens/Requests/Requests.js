@@ -23,7 +23,7 @@ import {
   initGetRequestBooking,
 } from '../../Store/Actions/Actions';
 import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
-import Lottie from 'lottie-react-native';
+// import Lottie from 'lottie-react-native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import RenderTabBar from './RenderTabBar';
 import Button from '../../Components/Button';
@@ -85,7 +85,7 @@ const Requests = ({route, navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getBookingRequest(Owner?.id, Owner?.truck_id, selected);
-    }, [dispatch, Owner?.id, Owner?.truck_id, selected]),
+    }, [getBookingRequest, Owner?.id, Owner?.truck_id, selected]),
   );
 
   const onRefresh = useCallback(() => {
@@ -145,12 +145,12 @@ const Requests = ({route, navigation}) => {
                     }}>
                     {t(Constants.NOT_FOUND)}
                   </Text>
-                  <Lottie
+                  {/* <Lottie
                     source={require('../../../assets/notfound.json')}
                     autoPlay
                     loop
                     style={{height: 250, width: 250}}
-                  />
+                  /> */}
                 </View>
               </ScrollView>
             )}
@@ -217,12 +217,12 @@ const Requests = ({route, navigation}) => {
                     }}>
                     {t(Constants.NOT_FOUND)}
                   </Text>
-                  <Lottie
+                  {/* <Lottie
                     source={require('../../../assets/notfound.json')}
                     autoPlay
                     loop
                     style={{height: 250, width: 250}}
-                  />
+                  /> */}
                 </View>
               </ScrollView>
             )}

@@ -5,7 +5,7 @@ import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Animated, BackHandler, Dimensions, View} from 'react-native';
+import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -28,7 +28,6 @@ import {
   GradientColor3,
   tabIndicatorColor,
 } from '../Color/color';
-import useHandleBackButton from './useHandleBackButton';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
 import Booking from '../Screens/BottomTabs/Bookings/Booking';
@@ -41,6 +40,11 @@ import ContactUs from '../Screens/BottomTabs/Menu/ContactUs';
 import Notification from '../Screens/Details/Notification';
 import Search from '../Screens/BottomTabs/Dashboard/Search';
 import FindLoads from '../Screens/Home/FindLoads';
+import FindLoadResult from '../Screens/BottomTabs/Dashboard/FindLoadResult';
+import RCVerification from '../Screens/RC/RCVerification';
+import StatusChangeModal from '../Screens/Modals/StatusChangeModal';
+import Requests from '../Screens/Requests/Requests';
+import {useNavigation} from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,8 +56,27 @@ function getWidth() {
 
 function BottomTabs() {
   const {t} = useTranslation();
-  const handleBackButton = useHandleBackButton();
+  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
+
+  function handleBackButton() {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+        {
+          text: 'NO',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    }
+  }
+
   return (
     <View style={style.flex}>
       <Tab.Navigator
@@ -210,8 +233,27 @@ function BottomTabs() {
 
 function MyLoadsBottomTabs() {
   const {t} = useTranslation();
-  const handleBackButton = useHandleBackButton();
+  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
+
+  function handleBackButton() {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+        {
+          text: 'NO',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    }
+  }
+
   return (
     <View style={style.flex}>
       <Tab.Navigator
@@ -293,7 +335,7 @@ function MyLoadsBottomTabs() {
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon /> : <HomeIcon />,
+              focused ? <BookingActiveIcon /> : <BookingIcon />,
             headerShown: false,
             //tabBarButton: CustomTabButton,
           }}
@@ -367,8 +409,26 @@ function MyLoadsBottomTabs() {
 
 const Navigation = ({language}) => {
   const {i18n} = useTranslation();
-  const handleBackButton = useHandleBackButton();
+  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
+
+  function handleBackButton() {
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+      return true;
+    } else {
+      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+        {
+          text: 'NO',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    }
+  }
 
   useEffect(() => {
     const setlanguage = async () => {
@@ -656,8 +716,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="FindLoadResult"
-        // component={FindLoadResult}
-        component={Home}
+        component={FindLoadResult}
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
@@ -665,7 +724,6 @@ const Navigation = ({language}) => {
           title: 'Results',
         }}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -796,8 +854,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="Request"
-        // component={Requests}
-        component={Home}
+        component={Requests}
         options={{
           title: 'My Requests',
           headerShown: true,
@@ -839,8 +896,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="RC Verification"
-        // component={RCVerification}
-        component={Home}
+        component={RCVerification}
         options={{headerShown: true, headerTitleAlign: 'center'}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -925,8 +981,7 @@ const Navigation = ({language}) => {
       {/* This is StatusModal screen */}
       <Stack.Screen
         name="StatusModal"
-        // component={StatusChangeModal}
-        component={Home}
+        component={StatusChangeModal}
         options={{
           headerShown: false,
           animation: 'slide_from_bottom',

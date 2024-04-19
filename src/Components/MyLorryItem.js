@@ -16,7 +16,7 @@ import ShowPermitModal from './ShowPermitModal';
 const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  console.log(888888, item);
+  // console.log(888888, item);
   // console.log(3333, userType);
   const priceType =
     item?.price_type === 1 ? t(Constants.FIXED) : t(Constants.PER_TON);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   Modal,
   View,
@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   StyleSheet,
-} from "react-native";
-import * as Constants from "../../../Constants/Constant";
-import CommonToolbar from "../../../Components/CommonToolbar";
-import SearchFilter from "../../../Components/SearchFilter";
-import LocationModal from "../../../Components/LocationModal";
-import { useTranslation } from "react-i18next";
-import { connect } from "react-redux";
+} from 'react-native';
+import * as Constants from '../../../Constants/Constant';
+import CommonToolbar from '../../../Components/CommonToolbar';
+import SearchFilter from '../../../Components/SearchFilter';
+import LocationModal from '../../../Components/LocationModal';
+import {useTranslation} from 'react-i18next';
+import {connect} from 'react-redux';
 import {
   initLocation,
   initStatusChange,
@@ -26,20 +26,18 @@ import {
   initDeleteLorry,
   deleteLorryFailure,
   modalCloseLocation,
-} from "../../../Store/Actions/Actions";
-import Button from "../../../Components/Button";
+} from '../../../Store/Actions/Actions';
+import Button from '../../../Components/Button';
 import {
-  black,
   GradientColor2,
   PrivacyPolicy,
   seperator,
   textColor,
   titleColor,
-} from "../../../Color/color";
-import Switch from "toggle-switch-react-native";
-import AlertBox from "../../../Components/AlertBox";
-import Toast from "react-native-simple-toast";
-import ShowPermitModal from "../../../Components/ShowPermitModal";
+} from '../../../Color/color';
+import Switch from 'toggle-switch-react-native';
+import Toast from 'react-native-simple-toast';
+import ShowPermitModal from '../../../Components/ShowPermitModal';
 
 const StatusModal = ({
   navigation,
@@ -73,9 +71,9 @@ const StatusModal = ({
   modalLocationClose,
   userType,
 }) => {
-  const { t } = useTranslation();
-  const [searchFrom, setSearchFrom] = useState("");
-  const [searchTo, setSearchTo] = useState("");
+  const {t} = useTranslation();
+  const [searchFrom, setSearchFrom] = useState('');
+  const [searchTo, setSearchTo] = useState('');
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
   const [allLocation, setAllLocation] = useState([]);
@@ -95,7 +93,14 @@ const StatusModal = ({
       dismissModal();
       return;
     }
-  }, [statusChange_Status]);
+  }, [
+    clearLocationFrom,
+    clearLocationTo,
+    clearState,
+    dismissModal,
+    statusChangeData,
+    statusChange_Status,
+  ]);
 
   useEffect(() => {
     if (deleteLorryStatus === 200) {
@@ -104,7 +109,7 @@ const StatusModal = ({
       dismissModal();
       clearDeleteLorry();
     }
-  }, [deleteLorryStatus]);
+  }, [clearDeleteLorry, deleteLorryMessage, deleteLorryStatus, dismissModal]);
 
   useEffect(() => {
     setAllLocation(locationData);
@@ -113,53 +118,60 @@ const StatusModal = ({
   useEffect(() => {
     setSearchFrom(modalLocation ? modalLocation : data?.from);
     setSearchTo(modalLocationTo ? modalLocationTo : data?.to);
-  }, [modalLocation]);
+  }, [data?.from, data?.to, modalLocation, modalLocationTo]);
 
   useEffect(() => {
     setSearchFromId(searchFromId ? searchFromId : data?.from_id);
     setSearchToId(searchToId ? searchToId : data?.to_id);
-  }, [searchFromId]);
+  }, [
+    data?.from_id,
+    data?.to_id,
+    searchFromId,
+    searchToId,
+    setSearchFromId,
+    setSearchToId,
+  ]);
 
-  const closeIconClick = (closeStatus) => {
-    if (closeStatus === "from") {
-      setSearchFrom("");
+  const closeIconClick = closeStatus => {
+    if (closeStatus === 'from') {
+      setSearchFrom('');
       setLocationFrom(false);
     } else {
-      setSearchTo("");
+      setSearchTo('');
       setLocationTo(false);
     }
   };
 
   const saveChanges = () => {
-    if (searchFrom === "") {
-      Toast.show("Enter Location", Toast.LONG);
+    if (searchFrom === '') {
+      Toast.show('Enter Location', Toast.LONG);
       return;
     }
-    if (searchTo === "") {
-      Toast.show("Enter Location", Toast.LONG);
+    if (searchTo === '') {
+      Toast.show('Enter Location', Toast.LONG);
       return;
     }
     // console.log(`From: ${searchFromId} /n To: ${searchToId}`);
     statusChange(
-      userType == "1" ? data?.id : data?.truck_id,
+      userType == '1' ? data?.id : data?.truck_id,
       searchFromId,
       searchToId,
       isEnabled ? 1 : 0,
-      userType
+      userType,
     );
     // dismissModal();
   };
 
-  const navigateToSeach = (val) => {
+  const navigateToSeach = val => {
     dismissModal();
-    navigation.navigate("Search", {
-      onReturn: (item) => {
+    navigation.navigate('Search', {
+      onReturn: item => {
         showModal(true);
-        if (val === "from") {
+        if (val === 'from') {
           setModalocationFrom(item?.place_name);
           setSearchFromId(item?.id);
-          if (modalLocationTo == "Anywhere" || modalLocationTo === null) {
-            setModalocationTo(userType == "2" ? "Anywhere" : "");
+          if (modalLocationTo === 'Anywhere' || modalLocationTo === null) {
+            setModalocationTo(userType === '2' ? 'Anywhere' : '');
           }
           return;
         }
@@ -170,7 +182,7 @@ const StatusModal = ({
   };
 
   const deleteLorry = () => {
-    deleteLorryRequest(userType == "1" ? data.id : data.truck_id, userType);
+    deleteLorryRequest(userType === '1' ? data.id : data.truck_id, userType);
   };
 
   return (
@@ -181,14 +193,14 @@ const StatusModal = ({
       statusBarTranslucent={true}
       onRequestClose={() => {
         modalLocationClose();
-      }}
-    >
+      }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <CommonToolbar
             title={t(Constants.STATUS)}
             goBack={() => {
-              onClose(), modalLocationClose();
+              onClose();
+              modalLocationClose();
             }}
             isBack={true}
             isClose={true}
@@ -202,7 +214,7 @@ const StatusModal = ({
                 onColor={GradientColor2}
                 offColor={seperator}
                 size="medium"
-                onToggle={(isOn) => setIsEnabled(isOn)}
+                onToggle={isOn => setIsEnabled(isOn)}
               />
             </View>
             <View style={styles.activeContainer}>
@@ -212,52 +224,49 @@ const StatusModal = ({
                 onColor={GradientColor2}
                 offColor={seperator}
                 size="medium"
-                onToggle={(isOn) => setIsGPS(isOn)}
+                onToggle={isOn => setIsGPS(isOn)}
               />
             </View>
             <SearchFilter
               defaultValue={searchFrom}
               leftTitle={t(Constants.FROM)}
-              closeIconClick={() => closeIconClick("from")}
-              onSearchPress={() => navigateToSeach("from")}
+              closeIconClick={() => closeIconClick('from')}
+              onSearchPress={() => navigateToSeach('from')}
               placeholder={t(Constants.SELECT_LOCATION_TITLE)}
             />
             <SearchFilter
               defaultValue={searchTo}
               leftTitle={t(Constants.TO)}
-              closeIconClick={() => closeIconClick("to")}
+              closeIconClick={() => closeIconClick('to')}
               onSearchPress={() => navigateToSeach()}
               placeholder={t(Constants.SELECT_LOCATION_TITLE)}
             />
             <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 marginVertical: 20,
-              }}
-            >
+              }}>
               <TouchableOpacity //searchLoad()
                 disabled={deletelorryLoading ? true : false}
                 onPress={() => deleteLorry()}
-                style={styles.removeButton}
-              >
+                style={styles.removeButton}>
                 <Text style={styles.removeText}>
-                  {t(Constants.REMOVE)}{" "}
-                  {userType == 1 ? t(Constants.LOAD) : t(Constants.LORRY)}
+                  {t(Constants.REMOVE)}{' '}
+                  {userType === 1 ? t(Constants.LOAD) : t(Constants.LORRY)}
                 </Text>
                 {deletelorryLoading && (
                   <ActivityIndicator size="small" color={GradientColor2} />
                 )}
               </TouchableOpacity>
-              {userType === "1" ? (
+              {userType === '1' ? (
                 <></>
               ) : (
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
                   <Text style={styles.permitText}>Permit :</Text>
                   <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <Text style={styles.permitCountText}>
@@ -274,7 +283,7 @@ const StatusModal = ({
             </View>
             <Button
               onPress={() => saveChanges()}
-              title={"Save Changes"}
+              title={'Save Changes'}
               loading={statusChangeLoading}
               textStyle={styles.saveText}
               style={styles.saveButton}
@@ -287,62 +296,62 @@ const StatusModal = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  locationSearch: (location) => dispatch(initLocation(location)),
-  statusChange: (trid, location1, location2, status, userType) =>
-    dispatch(initStatusChange(trid, location1, location2, status, userType)),
-  clearState: () => dispatch(statusChangeFailure()),
-  setModalocationFrom: (location) => {
-    dispatch(initlocationChange(location));
-  },
-  setSearchFromId: (location) => {
-    dispatch(initsearchFromId(location));
-  },
-  setSearchToId: (location) => {
-    dispatch(initsearchToId(location));
-  },
-  modalLocationClose: () => {
-    dispatch(modalCloseLocation());
-  },
-  clearLocationFrom: () => dispatch(locationChangeFromClear()),
-  clearLocationTo: () => dispatch(locationChangeToClear()),
-  deleteLorryRequest: (lorry_id, userType) =>
-    dispatch(initDeleteLorry(lorry_id, userType)),
-  clearDeleteLorry: () => dispatch(deleteLorryFailure()),
-  setModalocationTo: (location) => dispatch(initlocationToChange(location)),
-});
+// const mapDispatchToProps = dispatch => ({
+//   locationSearch: location => dispatch(initLocation(location)),
+//   statusChange: (trid, location1, location2, status, userType) =>
+//     dispatch(initStatusChange(trid, location1, location2, status, userType)),
+//   clearState: () => dispatch(statusChangeFailure()),
+//   setModalocationFrom: location => {
+//     dispatch(initlocationChange(location));
+//   },
+//   setSearchFromId: location => {
+//     dispatch(initsearchFromId(location));
+//   },
+//   setSearchToId: location => {
+//     dispatch(initsearchToId(location));
+//   },
+//   modalLocationClose: () => {
+//     dispatch(modalCloseLocation());
+//   },
+//   clearLocationFrom: () => dispatch(locationChangeFromClear()),
+//   clearLocationTo: () => dispatch(locationChangeToClear()),
+//   deleteLorryRequest: (lorry_id, userType) =>
+//     dispatch(initDeleteLorry(lorry_id, userType)),
+//   clearDeleteLorry: () => dispatch(deleteLorryFailure()),
+//   setModalocationTo: location => dispatch(initlocationToChange(location)),
+// });
 
-const mapStateToProps = (state) => {
-  // console.log("StatusModal fetching Data ----->", state.data);
-  return {
-    locationData: state.data.locationData,
-    statusChangeData: state.data.statusChangeData,
-    statusChangeLoading: state.data.statusChangeLoading,
-    statusChange_Status: state.data.statusChange_Status,
-    modalLocation: state.data.modalLocation,
-    searchFromId: state.data.searchFromId,
-    searchToId: state.data.searchToId,
-    modalLocationTo: state.data.modalLocationTo,
-    deleteLorryMessage: state.data.deleteLorryMessage,
-    deleteLorryStatus: state.data.deleteLorryStatus,
-    deletelorryLoading: state.data.deletelorryLoading,
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(StatusModal);
+// const mapStateToProps = state => {
+//   // console.log("StatusModal fetching Data ----->", state.data);
+//   return {
+//     locationData: state.data.locationData,
+//     statusChangeData: state.data.statusChangeData,
+//     statusChangeLoading: state.data.statusChangeLoading,
+//     statusChange_Status: state.data.statusChange_Status,
+//     modalLocation: state.data.modalLocation,
+//     searchFromId: state.data.searchFromId,
+//     searchToId: state.data.searchToId,
+//     modalLocationTo: state.data.modalLocationTo,
+//     deleteLorryMessage: state.data.deleteLorryMessage,
+//     deleteLorryStatus: state.data.deleteLorryStatus,
+//     deletelorryLoading: state.data.deletelorryLoading,
+//   };
+// };
+export default StatusModal;
 
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -351,68 +360,68 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  body: { marginTop: 30 },
+  body: {marginTop: 30},
   modalTextView: {
     borderWidth: 1,
     borderColor: PrivacyPolicy,
     padding: 8,
     borderRadius: 5,
-    backgroundColor: "#FFC5B5",
+    backgroundColor: '#FFC5B5',
     margin: 5,
   },
   modaTtext: {
     color: titleColor,
     fontSize: 14,
-    fontWeight: "700",
-    fontFamily: "PlusJakartaSans-Bold",
+    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   button: {
     borderWidth: 1,
     padding: 10,
     margin: 10,
   },
-  horizontalLine: { backgroundColor: "#AFAFAF", height: 1, marginVertical: 10 },
+  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
   activeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     margin: 10,
   },
-  activeText: { fontSize: 18, fontWeight: "700", color: "#352422" },
-  permitText: { fontSize: 16, fontWeight: "700", color: "#352422" },
-  permitCountText: { fontSize: 16, fontWeight: "700", color: "#0089DE" },
+  activeText: {fontSize: 18, fontWeight: '700', color: '#352422'},
+  permitText: {fontSize: 16, fontWeight: '700', color: '#352422'},
+  permitCountText: {fontSize: 16, fontWeight: '700', color: '#0089DE'},
   saveText: {
     color: textColor,
-    fontWeight: "700",
+    fontWeight: '700',
     fontSize: 16,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   saveButton: {
-    flexDirection: "row",
+    flexDirection: 'row',
     borderRadius: 8,
     padding: 14,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 20,
-    width: "50%",
-    alignSelf: "center",
+    width: '50%',
+    alignSelf: 'center',
   },
   removeButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   removeText: {
     marginRight: 20,
     color: GradientColor2,
     fontSize: 16,
-    fontFamily: "PlusJakartaSans-Bold",
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   noteText: {
-    textAlign: "center",
+    textAlign: 'center',
     marginHorizontal: 30,
     fontSize: 14,
     marginBottom: 15,
     color: titleColor,
-    fontFamily: "PlusJakartaSans-SemiBold",
+    fontFamily: 'PlusJakartaSans-SemiBold',
   },
 });

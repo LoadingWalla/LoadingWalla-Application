@@ -6,7 +6,7 @@ const Button = ({style, textStyle, title, onPress, loading, touchStyle}) => {
   return (
     <TouchableOpacity
       style={touchStyle}
-      disabled={loading ? true : false}
+      // disabled={loading ? true : false}
       activeOpacity={0.5}
       onPress={onPress}>
       <Background style={style}>
