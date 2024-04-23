@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+apply plugin: 'com.google.gms.google-services'
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -71,7 +72,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 
 android {
     ndkVersion rootProject.ext.ndkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.loadingwalla"
@@ -89,6 +90,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
@@ -98,6 +107,7 @@ android {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -108,6 +118,11 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
+    implementation platform('com.google.firebase:firebase-bom:32.8.1')
+    implementation('com.google.firebase:firebase-analytics')
+    implementation project(':react-native-vector-icons')
+    implementation('com.google.android.gms:play-services-auth:21.1.0')
+
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -116,4 +131,10 @@ dependencies {
     }
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+project.ext.vectoricons = [
+    iconFontNames: [ 'PlusJakartaSans-SemiBold.ttf', 'PlusJakartaSans-Bold.ttf','PlusJakartaSans-BoldItalic.ttf','PlusJakartaSans-ExtraBold.ttf','PlusJakartaSans-ExtraBoldItalic.ttf','PlusJakartaSans-ExtraLight.ttf','PlusJakartaSans-ExtraLightItalic.ttf','PlusJakartaSans-Italic.ttf','PlusJakartaSans-Light.ttf' ]
+]
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+applyNativeModulesAppBuildGradle(project)
