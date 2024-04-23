@@ -133,6 +133,7 @@ export default StyleSheet.create({
   },
   rowDirection: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   rowDirectionShimmer: {
     flexDirection: 'row',

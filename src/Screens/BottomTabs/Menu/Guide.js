@@ -10,12 +10,13 @@ import {
   Platform,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import Arrow from 'react-native-vector-icons/Entypo';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initGuide} from '../../../Store/Actions/Actions';
-import {GradientColor2, titleColor} from '../../../Color/color';
+import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
+import UpArrow from '../../../../assets/SVG/svg/UpArrow';
+import DownArrow from '../../../../assets/SVG/svg/DownArrow';
 
 if (
   Platform.OS === 'android' &&
@@ -57,14 +58,11 @@ const Guide = ({navigation}) => {
         onPress={() => handlePress(item.id.toString())}
         style={styles.itemContainer}>
         <Text style={styles.category}>{item.title}</Text>
-        <Arrow
-          name={
-            selectedId === item.id.toString() ? 'chevron-up' : 'chevron-down'
-          }
-          size={20}
-          color={GradientColor2}
-          style={styles.arrow}
-        />
+        {selectedId === item.id.toString() ? (
+          <UpArrow size={20} color={GradientColor2} style={styles.arrow} />
+        ) : (
+          <DownArrow size={20} color={GradientColor2} style={styles.arrow} />
+        )}
         {selectedId === item.id.toString() && (
           <Text style={styles.topic}>{item.description}</Text>
         )}
@@ -127,6 +125,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
     lineHeight: 18 * 1.2,
     marginTop: 10,
+    color: PrivacyPolicy,
   },
   arrow: {
     position: 'absolute',

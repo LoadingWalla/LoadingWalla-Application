@@ -1,9 +1,9 @@
-import React from "react";
-import { View, Text } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
-import style from "./style";
+import React from 'react';
+import {View, Text} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import style from './style';
 
-const AuthHeader = ({ title, goBack }) => {
+const AuthHeader = ({title, goBack}) => {
   return (
     <View>
       <View style={style.backIconView}>

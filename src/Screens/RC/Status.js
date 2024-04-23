@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import {
   GradientColor1,
@@ -7,12 +7,12 @@ import {
   black,
   titleColor,
 } from '../../Color/color';
-import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import {useDispatch, useSelector} from 'react-redux';
 import {initMyLorryById} from '../../Store/Actions/Actions';
+import Shield from '../../../assets/SVG/svg/Shield';
+import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const Status = ({navigation, route}) => {
   const {truck_id} = route.params;
@@ -37,12 +37,9 @@ const Status = ({navigation, route}) => {
   return (
     <View style={styles.fullScreenContainer}>
       <View style={styles.mainContainer}>
-        <Icon
-          name="close"
-          size={25}
-          style={styles.closeButton}
-          onPress={() => navigation.goBack()}
-        />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <CloseCircle size={25} style={styles.closeButton} />
+        </TouchableOpacity>
         <View style={styles.container}>
           <Text
             style={[
@@ -71,16 +68,12 @@ const Status = ({navigation, route}) => {
                     <Text style={styles.truckNumber}>
                       {mySingleTruckData?.vehicle_number}
                     </Text>
-                    <EditIcon
-                      name={
-                        mySingleTruckData?.verified
-                          ? 'check-circle'
-                          : 'information-outline'
-                      }
+                    <Shield
                       size={20}
                       color={
                         mySingleTruckData?.verified ? '#119500' : '#e5b900'
                       }
+                      verified={mySingleTruckData?.verified}
                     />
                   </View>
                 </View>

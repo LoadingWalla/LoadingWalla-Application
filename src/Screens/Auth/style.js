@@ -9,8 +9,6 @@ import {
   titleColor,
   back_color,
   loadingwalla,
-  black,
-  backgroundColorNew,
 } from '../../Color/color';
 export default StyleSheet.create({
   phoneContainer: {
@@ -24,7 +22,7 @@ export default StyleSheet.create({
   signupBackground: {
     marginTop: 10,
     backgroundColor: pageBackground,
-    height: '100%',
+    flex: 1,
     // borderWidth: 1,
   },
   LoadingWalla: {

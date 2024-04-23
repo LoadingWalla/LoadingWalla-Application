@@ -1,8 +1,8 @@
 import React from 'react';
 import {Modal, View, TouchableOpacity, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {WebView} from 'react-native-webview';
 import {GradientColor2} from '../Color/color';
+import CloseCircle from '../../assets/SVG/svg/CloseCircle';
 
 const Webview = ({showWebView, closeModal, uri}) => {
   return (
@@ -12,7 +12,7 @@ const Webview = ({showWebView, closeModal, uri}) => {
           <View style={styles.modalContainer}>
             <View style={styles.alignItem}>
               <TouchableOpacity onPress={() => closeModal()}>
-                <Icon name="close-circle" color={GradientColor2} size={30} />
+                <CloseCircle color={GradientColor2} size={30} />
               </TouchableOpacity>
             </View>
             <WebView style={styles.flex} source={{uri: uri}} />

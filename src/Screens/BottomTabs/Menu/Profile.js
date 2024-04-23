@@ -30,6 +30,7 @@ import EditProfile from './EditProfile';
 import {GradientColor2, titleColor} from '../../../Color/color';
 import PercentageBar from '../../../Components/PercentageBar';
 import MenuItem from '../../../Components/MenuItem';
+import Shield from '../../../../assets/SVG/svg/Shield';
 
 const {hei, wid} = Dimensions.get('screen');
 
@@ -124,7 +125,7 @@ const Profile = ({navigation, route}) => {
       ) : (
         <View style={style.backgroundView}>
           {isBigImage && bigImage()}
-          {/* {
+          {
             <EditProfile
               defaultValue={{
                 id: Userdata?.id,
@@ -138,7 +139,7 @@ const Profile = ({navigation, route}) => {
               editStatus={event => setEditProfile(event)}
               navigation={navigation}
             />
-          } */}
+          }
           <View style={style.profileView}>
             <Pressable
               onPress={() =>
@@ -162,7 +163,6 @@ const Profile = ({navigation, route}) => {
               />
             </Pressable>
             <View style={style.verticalLine} />
-
             <View style={{flex: 1, marginLeft: 17, justifyContent: 'center'}}>
               <Text style={style.profileTitle}>{Userdata?.name}</Text>
               <Text style={style.subTitle}>
@@ -176,15 +176,13 @@ const Profile = ({navigation, route}) => {
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>
-                  <Icon
-                    name={
-                      Userdata?.verify === 1
-                        ? 'shield-check-outline'
-                        : 'shield-alert-outline'
-                    }
-                    size={16}
-                    color={Userdata?.verify ? 'green' : GradientColor2}
-                  />
+                  <TouchableOpacity>
+                    <Shield
+                      size={16}
+                      color={Userdata?.verify ? 'green' : GradientColor2}
+                      verified={Userdata?.verify}
+                    />
+                  </TouchableOpacity>
                   <Text
                     style={style.dashboardHeaderVerifiedTitle(
                       Userdata?.verify,

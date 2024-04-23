@@ -5,9 +5,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {View, TextInput, InteractionManager} from 'react-native';
-import Location from 'react-native-vector-icons/SimpleLineIcons';
-import SearchIcon from 'react-native-vector-icons/Feather';
+import {
+  View,
+  TextInput,
+  InteractionManager,
+  TouchableOpacity,
+} from 'react-native';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import {
@@ -19,6 +22,8 @@ import style from './style';
 import LocationModal from '../../../Components/LocationModal';
 import {useDispatch, useSelector} from 'react-redux';
 import {initLocation, locationFailure} from '../../../Store/Actions/Actions';
+import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
+import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 
 const Search = forwardRef(({navigation, route}, ref) => {
   const [value, setValue] = useState(null);
@@ -61,11 +66,9 @@ const Search = forwardRef(({navigation, route}, ref) => {
       <View style={{padding: 20}}>
         <View style={style.searchFilter}>
           <SearchIcon
-            style={style.locationIcon}
-            onPress={() => {}}
-            name={'search'}
             size={20}
             color={GradientColor2}
+            style={style.locationIcon}
           />
           <TextInput
             ref={txtInput}
@@ -76,13 +79,24 @@ const Search = forwardRef(({navigation, route}, ref) => {
             autoFocus={true}
             onChangeText={text => searchItem(text)}
           />
-          <Location
+          {/* <Location
             style={[style.locationIcon, {marginRight: 10}]}
             onPress={() => !!value && clearItem()}
             name={!!value && 'close'}
             size={20}
             color={GradientColor2}
-          />
+          /> */}
+          {!!value && (
+            <TouchableOpacity
+              onPress={() => !!value && clearItem()}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: 10,
+              }}>
+              <CloseCircle size={20} color={GradientColor2} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

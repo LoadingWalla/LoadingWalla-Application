@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { View, FlatList, TouchableOpacity, Image, Text } from "react-native";
-import Background from "../Components/BackgroundGradient";
-import styleSheet from "../Screens/Details/style";
-import CheckIcon from "react-native-vector-icons/Ionicons";
+import React, {useState} from 'react';
+import {View, FlatList, TouchableOpacity, Image, Text} from 'react-native';
+import Background from '../Components/BackgroundGradient';
+import styleSheet from '../Screens/Details/style';
+import CheckIcon from 'react-native-vector-icons/Ionicons';
 
 const TruckNumber = ({
   renderItem,
@@ -14,9 +14,9 @@ const TruckNumber = ({
   columns,
   isDone,
 }) => {
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState('');
 
-  const GridView = ({ data, index }) => {
+  const GridView = ({data, index}) => {
     return (
       <TouchableOpacity onPress={() => click(data) || setSelected(index)}>
         {selected === index ? (
@@ -42,16 +42,15 @@ const TruckNumber = ({
           color="#fff"
         />
       )}
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
-          source={{ uri: data?.icon }}
-          style={{ height: 30, width: 30, marginRight: 8 }}
+          source={{uri: data?.icon}}
+          style={{height: 30, width: 30, marginRight: 8}}
         />
         <Text
           style={
             selected === index ? styleSheet.gridText : styleSheet.gridGreyText
-          }
-        >
+          }>
           {data?.vehicle_number}
         </Text>
       </View>
@@ -60,13 +59,13 @@ const TruckNumber = ({
 
   return (
     <FlatList
-      style={[styleSheet.flatListStyle, { maxHeight: isDone ? 400 : 120 }]}
+      style={[styleSheet.flatListStyle, {maxHeight: isDone ? 400 : 120}]}
       horizontal={horizontal}
       numColumns={columns}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
       data={renderItem}
-      renderItem={({ item, index }) => {
+      renderItem={({item, index}) => {
         return (
           <>
             <GridView data={item} index={index} />

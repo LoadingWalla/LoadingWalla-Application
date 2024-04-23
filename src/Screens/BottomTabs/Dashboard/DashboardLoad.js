@@ -35,13 +35,6 @@ const DashboardLoad = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {
-    DashboardData,
-    DashboardBannerr,
-    DashboardSuggestData,
-    status,
-    currentLocationStatus,
-    currentLocationData,
-    profileSetupData,
     DashboardBanner,
     DashboardUser,
     locationData,

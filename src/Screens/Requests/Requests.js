@@ -31,11 +31,11 @@ import FindLoadHeader from '../../Components/FindLoadHeader';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import InnerButton from '../../Components/InnerButton';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {dialCall} from '../../Utils/DialCall';
 import {useFocusEffect} from '@react-navigation/native';
 import {useCallback} from 'react';
 import {memo} from 'react';
+import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
@@ -253,7 +253,14 @@ const Requests = ({route, navigation}) => {
       });
       clearAcceptBookingStatus();
     }
-  }, [acceptBookingStatus, navigation, clearAcceptBookingStatus]);
+  }, [
+    acceptBookingStatus,
+    navigation,
+    clearAcceptBookingStatus,
+    bookingLorrydata?.message,
+    Owner,
+    userType,
+  ]);
 
   useEffect(() => {
     if (cancelBookingStatus !== null) {
@@ -266,7 +273,14 @@ const Requests = ({route, navigation}) => {
       });
       clearCancelBookingStatus();
     }
-  }, [cancelBookingStatus, navigation, clearCancelBookingStatus]);
+  }, [
+    cancelBookingStatus,
+    navigation,
+    clearCancelBookingStatus,
+    cancelBookingMessage,
+    Owner,
+    userType,
+  ]);
 
   const RenderItem = memo(({item, key}) => {
     // console.log(7777, item);
@@ -315,7 +329,8 @@ const Requests = ({route, navigation}) => {
           </View>
           <TouchableOpacity onPress={() => dialCall()}>
             <View style={styles.CallButton}>
-              <Icon name="phone" size={20} color={GradientColor3} />
+              {/* <Icon name="phone" size={20} color={GradientColor3} /> */}
+              <PhoneCall size={20} color={GradientColor3} />
             </View>
           </TouchableOpacity>
         </View>

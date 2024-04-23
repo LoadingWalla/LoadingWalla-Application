@@ -160,4 +160,10 @@ export default StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
   },
+  label: {
+    fontWeight: '700',
+    fontSize: 18,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
 });

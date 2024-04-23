@@ -7,68 +7,43 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import * as Constants from '../../../Constants/Constant';
-import CommonToolbar from '../../../Components/CommonToolbar';
-import SearchFilter from '../../../Components/SearchFilter';
-import LocationModal from '../../../Components/LocationModal';
+import Switch from 'toggle-switch-react-native';
+import Toast from 'react-native-simple-toast';
+import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import {connect} from 'react-redux';
-import {
-  initLocation,
-  initStatusChange,
-  statusChangeFailure,
-  initlocationChange,
-  initsearchFromId,
-  initsearchToId,
-  initlocationToChange,
-  locationChangeToClear,
-  locationChangeFromClear,
-  initDeleteLorry,
-  deleteLorryFailure,
-  modalCloseLocation,
-} from '../../../Store/Actions/Actions';
-import Button from '../../../Components/Button';
+import CommonToolbar from '../../Components/CommonToolbar';
 import {
   GradientColor2,
   PrivacyPolicy,
   seperator,
   textColor,
   titleColor,
-} from '../../../Color/color';
-import Switch from 'toggle-switch-react-native';
-import Toast from 'react-native-simple-toast';
-import ShowPermitModal from '../../../Components/ShowPermitModal';
+} from '../../Color/color';
+import SearchFilter from '../../Components/SearchFilter';
+import ShowPermitModal from '../../Components/ShowPermitModal';
+import Button from '../../Components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  deleteLorryFailure,
+  initDeleteLorry,
+  initStatusChange,
+  initlocationChange,
+  initlocationToChange,
+  initsearchFromId,
+  initsearchToId,
+  locationChangeFromClear,
+  locationChangeToClear,
+  modalCloseLocation,
+  statusChangeFailure,
+} from '../../Store/Actions/Actions';
 
 const StatusModal = ({
   navigation,
   isEdit,
   dismissModal,
-  locationSearch,
-  locationData,
   data,
-  clearState,
-  statusChange,
-  statusChangeData,
-  statusChangeLoading,
-  statusChange_Status,
   onClose,
   showModal,
-  setModalocationFrom,
-  setModalocationTo,
-  modalLocation,
-  modalLocationTo,
-  setSearchFromId,
-  setSearchToId,
-  searchFromId,
-  searchToId,
-  clearLocationFrom,
-  clearLocationTo,
-  deleteLorryRequest,
-  deleteLorryStatus,
-  deleteLorryMessage,
-  clearDeleteLorry,
-  deletelorryLoading,
-  modalLocationClose,
   userType,
 }) => {
   const {t} = useTranslation();
@@ -80,24 +55,39 @@ const StatusModal = ({
   const [isEnabled, setIsEnabled] = useState(data?.status === 1 ? true : false);
   const [isGPS, setIsGPS] = useState(data?.status === 1 ? false : true);
   const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
 
-  // console.log("USERTYPE", userType);
+  const {
+    locationData,
+    statusChangeData,
+    statusChangeLoading,
+    statusChange_Status,
+    modalLocation,
+    searchFromId,
+    searchToId,
+    modalLocationTo,
+    deleteLorryMessage,
+    deleteLorryStatus,
+    deletelorryLoading,
+  } = useSelector(state => {
+    // console.log("My Lorry/Load", state.data);
+    return state.data;
+  });
 
   useEffect(() => {
     if (statusChange_Status === 200) {
       Toast.show(`${statusChangeData}`, Toast.LONG);
       // AlertBox(statusChangeData);
-      clearState();
-      clearLocationFrom();
-      clearLocationTo();
+      dispatch(statusChangeFailure());
+      dispatch(locationChangeFromClear());
+      dispatch(locationChangeToClear());
       dismissModal();
       return;
     }
   }, [
-    clearLocationFrom,
-    clearLocationTo,
-    clearState,
+    setLocationTo,
     dismissModal,
+    dispatch,
     statusChangeData,
     statusChange_Status,
   ]);
@@ -107,9 +97,15 @@ const StatusModal = ({
       Toast.show(`${deleteLorryMessage}`, Toast.LONG);
       // AlertBox(deleteLorryMessage);
       dismissModal();
-      clearDeleteLorry();
+      dispatch(deleteLorryFailure());
     }
-  }, [clearDeleteLorry, deleteLorryMessage, deleteLorryStatus, dismissModal]);
+  }, [
+    deleteLorry,
+    deleteLorryMessage,
+    deleteLorryStatus,
+    dismissModal,
+    dispatch,
+  ]);
 
   useEffect(() => {
     setAllLocation(locationData);
@@ -121,15 +117,16 @@ const StatusModal = ({
   }, [data?.from, data?.to, modalLocation, modalLocationTo]);
 
   useEffect(() => {
-    setSearchFromId(searchFromId ? searchFromId : data?.from_id);
-    setSearchToId(searchToId ? searchToId : data?.to_id);
+    dispatch(initsearchFromId(searchFromId ? searchFromId : data?.from_id));
+    dispatch(initsearchToId(searchToId ? searchToId : data?.to_id));
   }, [
     data?.from_id,
     data?.to_id,
+    dispatch,
     searchFromId,
     searchToId,
-    setSearchFromId,
-    setSearchToId,
+    setSearchFrom,
+    setSearchTo,
   ]);
 
   const closeIconClick = closeStatus => {
@@ -152,12 +149,14 @@ const StatusModal = ({
       return;
     }
     // console.log(`From: ${searchFromId} /n To: ${searchToId}`);
-    statusChange(
-      userType == '1' ? data?.id : data?.truck_id,
-      searchFromId,
-      searchToId,
-      isEnabled ? 1 : 0,
-      userType,
+    dispatch(
+      initStatusChange(
+        userType === '1' ? data?.id : data?.truck_id,
+        searchFromId,
+        searchToId,
+        isEnabled ? 1 : 0,
+        userType,
+      ),
     );
     // dismissModal();
   };
@@ -168,22 +167,33 @@ const StatusModal = ({
       onReturn: item => {
         showModal(true);
         if (val === 'from') {
-          setModalocationFrom(item?.place_name);
-          setSearchFromId(item?.id);
+          dispatch(initlocationChange(item?.place_name));
+          dispatch(initsearchFromId(item?.id));
           if (modalLocationTo === 'Anywhere' || modalLocationTo === null) {
-            setModalocationTo(userType === '2' ? 'Anywhere' : '');
+            dispatch(initlocationToChange(userType === '2' ? 'Anywhere' : ''));
           }
           return;
         }
-        setModalocationTo(item?.place_name);
-        setSearchToId(item?.id);
+        dispatch(initlocationToChange(item?.place_name));
+        dispatch(initsearchToId(item?.id));
       },
     });
   };
 
-  const deleteLorry = () => {
-    deleteLorryRequest(userType === '1' ? data.id : data.truck_id, userType);
-  };
+  // const deleteLorry = useCallback(() => {
+  //   dispatch(
+  //     initDeleteLorry(userType === '1' ? data.id : data.truck_id, userType),
+  //   );
+  // });
+  const deleteLorry = useCallback(() => {
+    const idKey = userType === '1' ? 'id' : 'truck_id';
+    const lorryId = data[idKey];
+    if (lorryId) {
+      dispatch(initDeleteLorry(lorryId, userType));
+    } else {
+      console.error('Invalid data or userType, cannot find lorry ID.');
+    }
+  }, [data, userType, dispatch]);
 
   return (
     <Modal
@@ -192,7 +202,7 @@ const StatusModal = ({
       visible={isEdit}
       statusBarTranslucent={true}
       onRequestClose={() => {
-        modalLocationClose();
+        dispatch(modalCloseLocation());
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
@@ -200,7 +210,7 @@ const StatusModal = ({
             title={t(Constants.STATUS)}
             goBack={() => {
               onClose();
-              modalLocationClose();
+              dispatch(modalCloseLocation());
             }}
             isBack={true}
             isClose={true}
@@ -296,47 +306,6 @@ const StatusModal = ({
   );
 };
 
-// const mapDispatchToProps = dispatch => ({
-//   locationSearch: location => dispatch(initLocation(location)),
-//   statusChange: (trid, location1, location2, status, userType) =>
-//     dispatch(initStatusChange(trid, location1, location2, status, userType)),
-//   clearState: () => dispatch(statusChangeFailure()),
-//   setModalocationFrom: location => {
-//     dispatch(initlocationChange(location));
-//   },
-//   setSearchFromId: location => {
-//     dispatch(initsearchFromId(location));
-//   },
-//   setSearchToId: location => {
-//     dispatch(initsearchToId(location));
-//   },
-//   modalLocationClose: () => {
-//     dispatch(modalCloseLocation());
-//   },
-//   clearLocationFrom: () => dispatch(locationChangeFromClear()),
-//   clearLocationTo: () => dispatch(locationChangeToClear()),
-//   deleteLorryRequest: (lorry_id, userType) =>
-//     dispatch(initDeleteLorry(lorry_id, userType)),
-//   clearDeleteLorry: () => dispatch(deleteLorryFailure()),
-//   setModalocationTo: location => dispatch(initlocationToChange(location)),
-// });
-
-// const mapStateToProps = state => {
-//   // console.log("StatusModal fetching Data ----->", state.data);
-//   return {
-//     locationData: state.data.locationData,
-//     statusChangeData: state.data.statusChangeData,
-//     statusChangeLoading: state.data.statusChangeLoading,
-//     statusChange_Status: state.data.statusChange_Status,
-//     modalLocation: state.data.modalLocation,
-//     searchFromId: state.data.searchFromId,
-//     searchToId: state.data.searchToId,
-//     modalLocationTo: state.data.modalLocationTo,
-//     deleteLorryMessage: state.data.deleteLorryMessage,
-//     deleteLorryStatus: state.data.deleteLorryStatus,
-//     deletelorryLoading: state.data.deletelorryLoading,
-//   };
-// };
 export default StatusModal;
 
 const styles = StyleSheet.create({

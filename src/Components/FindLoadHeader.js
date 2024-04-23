@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   GradientColor2,
   PrivacyPolicy,
@@ -9,10 +9,10 @@ import {
 } from '../Color/color';
 import CardHeader from './CardHeader';
 import ShowPermitModal from './ShowPermitModal';
-import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
+import RightArrow from '../../assets/SVG/svg/RightArrow';
+import Shield from '../../assets/SVG/svg/Shield';
 
 const FindLoadHeader = ({
   title,
@@ -51,7 +51,8 @@ const FindLoadHeader = ({
                 <TouchableOpacity
                   style={styles.rowdirection}
                   onPress={() => setModalVisible(true)}
-                  disabled={!(permit?.length > 1)}>
+                  // disabled={!(permit?.length > 1)}
+                >
                   <Text
                     style={[
                       styles.smallImageHeaderTitle,
@@ -65,11 +66,7 @@ const FindLoadHeader = ({
                   </Text>
 
                   {permit?.length > 1 && (
-                    <EditIcon
-                      name="chevron-right"
-                      size={15}
-                      color={'#0076FF'}
-                    />
+                    <RightArrow size={15} color={'#0076FF'} />
                   )}
                   <ShowPermitModal
                     permit={permit}
@@ -81,7 +78,7 @@ const FindLoadHeader = ({
 
               <TouchableOpacity
                 style={styles.verifyTruck}
-                disabled={verified}
+                // disabled={verified}
                 onPress={() =>
                   navigation.navigate('RC Verification', {
                     title: 'RC',
@@ -89,12 +86,10 @@ const FindLoadHeader = ({
                     truck_id: id,
                   })
                 }>
-                <EditIcon
-                  name={
-                    verified ? 'shield-check-outline' : 'shield-alert-outline'
-                  }
-                  size={15}
+                <Shield
                   color={verified ? 'green' : GradientColor2}
+                  size={15}
+                  verified={verified}
                 />
                 <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
                   {verified

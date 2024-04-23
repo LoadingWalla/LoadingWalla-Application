@@ -1,88 +1,82 @@
-/* eslint-disable no-extra-boolean-cast */
-/* eslint-disable curly */
-
-import React, { useContext, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import React, {useContext, useEffect, useState} from 'react';
+import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import Toast from 'react-native-simple-toast';
+import * as Constants from '../../Constants/Constant';
+import {NetworkContext} from '../../Context/NetworkContext';
+import NoInternetScreen from '../Details/NoInternetScreen';
+import SearchFilter from '../../Components/SearchFilter';
+import TextInputField from '../../Components/TextInputField';
+import TruckItem from '../../Components/TruckItem';
 import {
-  initLocation,
-  initMyPostLoad,
+  inputColor,
+  pageBackground,
+  textColor,
+  titleColor,
+} from '../../Color/color';
+import Button from '../../Components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {
   initLoadTrucks,
+  initMyPostLoad,
   myPostLoadFailure,
-} from "../../../Store/Actions/Actions";
-import * as Constants from "../../../Constants/Constant";
-import styles from "./style";
-import TextInputField from "../../../Components/TextInputField";
-import Button from "../../../Components/Button";
-import styleSheet from "../../Details/style";
-import { connect } from "react-redux";
-import TruckItem from "../../../Components/TruckItem";
-import SearchFilter from "../../../Components/SearchFilter";
-import Header from "../../../Components/Header";
-import { useTranslation } from "react-i18next";
-import LocationModal from "../../../Components/LocationModal";
-import { useEffect } from "react";
-import AlertBox from "../../../Components/AlertBox";
-import { inputColor } from "../../../Color/color";
-import Toast from "react-native-simple-toast";
-import { NetworkContext } from "../../../Context/NetworkContext";
-import NoInternetScreen from "../../Details/NoInternetScreen";
+} from '../../Store/Actions/Actions';
 
-const PostLoads = ({
-  navigation,
-  loadTruckData,
-  locationSearch,
-  locationData,
-  postLoad,
-  DashboardData,
-  truckRequest,
-  myPostLoadLoading,
-  myPostLoadStatus,
-  myPostLoadData,
-  clearPostData,
-  route,
-}) => {
+const PostLoads = ({navigation, route}) => {
   const [searchFrom, setSearchFrom] = useState(
-    !!route?.params?.from ? route?.params?.from : ""
+    !!route?.params?.from ? route?.params?.from : '',
   );
   const [searchTo, setSearchTo] = useState(
-    !!route?.params?.to ? route?.params?.to : ""
+    !!route?.params?.to ? route?.params?.to : '',
   );
 
   const [searchFromId, setSearchFromId] = useState(
-    !!route?.params?.fromId ? route?.params?.fromId : ""
+    !!route?.params?.fromId ? route?.params?.fromId : '',
   );
   const [searchToId, setSearchToId] = useState(
-    !!route?.params?.toId ? route?.params?.toId : ""
+    !!route?.params?.toId ? route?.params?.toId : '',
   );
   const [allLocation, setAllLocation] = useState([]);
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
-  const [quantity, setQuantity] = useState("");
-  const [materialName, setMaterialName] = useState("");
-  const [price, setPrice] = useState("");
-  const [weight, setWeight] = useState("");
-  const [truckItem, setTruckItem] = useState("");
-  const { isConnected } = useContext(NetworkContext);
+  const [quantity, setQuantity] = useState('');
+  const [materialName, setMaterialName] = useState('');
+  const [price, setPrice] = useState('');
+  const [weight, setWeight] = useState('');
+  const [truckItem, setTruckItem] = useState('');
+  const {isConnected} = useContext(NetworkContext);
+  const dispatch = useDispatch();
+
+  const {
+    locationData,
+    DashboardData,
+    myPostLoadLoading,
+    myPostLoadStatus,
+    myPostLoadData,
+  } = useSelector(state => {
+    // console.log("My Lorry/Load", state.data);
+    return state.data;
+  });
 
   useEffect(() => {
     setAllLocation(locationData);
   }, [locationData]);
 
   useEffect(() => {
-    truckRequest();
-  }, []);
+    dispatch(initLoadTrucks());
+  }, [dispatch]);
 
   useEffect(() => {
     if (myPostLoadStatus === 200) {
       Toast.show(`${myPostLoadData?.data?.message}`, Toast.LONG);
       // AlertBox(myPostLoadData?.data?.message);
-      clearPostData();
+      dispatch(myPostLoadFailure());
       navigation.goBack();
       return;
     }
-  }, [myPostLoadStatus]);
+  }, [dispatch, myPostLoadData?.data?.message, myPostLoadStatus, navigation]);
 
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const truckLoadCapacity = [
     {
       id: 1,
@@ -94,60 +88,62 @@ const PostLoads = ({
     },
   ];
   const postLoadSubmit = () => {
-    if (searchFrom === "") {
-      Toast.show("Enter Location", Toast.LONG);
+    if (searchFrom === '') {
+      Toast.show('Enter Location', Toast.LONG);
       return;
     }
-    if (searchTo === "") {
-      Toast.show("Enter Location", Toast.LONG);
+    if (searchTo === '') {
+      Toast.show('Enter Location', Toast.LONG);
       return;
     }
-    if (quantity === "") {
-      Toast.show("Enter quantity", Toast.LONG);
+    if (quantity === '') {
+      Toast.show('Enter quantity', Toast.LONG);
       return;
     }
-    if (materialName === "") {
-      Toast.show("Enter material name", Toast.LONG);
+    if (materialName === '') {
+      Toast.show('Enter material name', Toast.LONG);
       return;
     }
-    if (truckItem === "") {
-      Toast.show("Select truck", Toast.LONG);
+    if (truckItem === '') {
+      Toast.show('Select truck', Toast.LONG);
       return;
     }
-    if (price === "") {
-      Toast.show("Enter price", Toast.LONG);
+    if (price === '') {
+      Toast.show('Enter price', Toast.LONG);
       return;
     }
-    if (weight === "") {
-      Toast.show("Select price type", Toast.LONG);
+    if (weight === '') {
+      Toast.show('Select price type', Toast.LONG);
       return;
     }
-    postLoad(
-      searchFromId,
-      searchToId,
-      quantity,
-      materialName,
-      truckItem,
-      price,
-      weight?.id
+    dispatch(
+      initMyPostLoad(
+        searchFromId,
+        searchToId,
+        quantity,
+        materialName,
+        truckItem,
+        price,
+        weight?.id,
+      ),
     );
   };
 
-  const closeIconClick = (closeStatus) => {
-    if (closeStatus === "from") {
-      setSearchFrom("");
+  const closeIconClick = closeStatus => {
+    if (closeStatus === 'from') {
+      setSearchFrom('');
       setLocationFrom(false);
     } else {
-      setSearchTo("");
+      setSearchTo('');
       setLocationTo(false);
     }
   };
 
-  const navigateToSeach = (val) => {
-    navigation.navigate("Search", {
+  const navigateToSeach = val => {
+    navigation.navigate('Search', {
       allLocation,
-      onReturn: (item) => {
-        if (val === "from") {
+      onReturn: item => {
+        if (val === 'from') {
           setSearchFrom(item?.place_name);
           setSearchFromId(item?.id);
           return;
@@ -164,38 +160,32 @@ const PostLoads = ({
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    >
-      <View style={styles.backgroundViewContainer}>
-        {/* <FindLoadShimmer /> */}
-        {/* <Header
-          navigation={() => navigation.goBack()}
-          title={t(Constants.POST_LOADS)}
-        /> */}
+      showsHorizontalScrollIndicator={false}>
+      <View style={styleSheet.backgroundViewContainer}>
         <SearchFilter
           defaultValue={searchFrom}
           leftTitle={t(Constants.FROM)}
-          closeIconClick={() => closeIconClick("from")}
+          closeIconClick={() => closeIconClick('from')}
           placeholder={t(Constants.SELECT_LOCATION_TITLE)}
-          onSearchPress={() => navigateToSeach("from")}
+          onSearchPress={() => navigateToSeach('from')}
         />
         <SearchFilter
           defaultValue={searchTo}
           leftTitle={t(Constants.TO)}
-          closeIconClick={() => closeIconClick("to")}
+          closeIconClick={() => closeIconClick('to')}
           placeholder={t(Constants.SELECT_LOCATION_TITLE)}
           onSearchPress={() => navigateToSeach()}
         />
         <View style={styleSheet.ItemView}>
           <Text style={styleSheet.label}>{`${t(
-            Constants.QUANTITY
+            Constants.QUANTITY,
           )} (Ton)`}</Text>
           <TextInputField
             isPhone
             value={quantity}
             // onChangeText={(e) => setQuantity(e)}
-            onChangeText={(e) => {
-              const sanitizedInput = e.replace(/\s+/g, "");
+            onChangeText={e => {
+              const sanitizedInput = e.replace(/\s+/g, '');
               setQuantity(sanitizedInput);
             }}
           />
@@ -203,21 +193,21 @@ const PostLoads = ({
           <TextInputField
             value={materialName}
             // onChangeText={(e) => setMaterialName(e)}
-            onChangeText={(e) => {
-              const sanitizedInput = e.replace(/\s+/g, "");
+            onChangeText={e => {
+              const sanitizedInput = e.replace(/\s+/g, '');
               setMaterialName(sanitizedInput);
             }}
           />
           <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
           <TruckItem
-            click={(e) => setTruckItem(e?.id)}
+            click={e => setTruckItem(e?.id)}
             backgroundStyle={{
               padding: 20,
               marginRight: 10,
               marginBottom: 10,
               borderRadius: 8,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             imageRequire={true}
             horizontal={true}
@@ -228,8 +218,8 @@ const PostLoads = ({
               borderRadius: 8,
               marginRight: 10,
               marginBottom: 10,
-              justifyContent: "center",
-              alignItems: "center",
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
             renderItem={DashboardData}
           />
@@ -238,8 +228,8 @@ const PostLoads = ({
             isPhone={true}
             value={price}
             // onChangeText={(e) => setPrice(e)}
-            onChangeText={(e) => {
-              const sanitizedInput = e.replace(/\s+/g, "");
+            onChangeText={e => {
+              const sanitizedInput = e.replace(/\s+/g, '');
               setPrice(sanitizedInput);
             }}
           />
@@ -250,14 +240,14 @@ const PostLoads = ({
             horizontal={true}
             checkIcon={false}
             renderItem={truckLoadCapacity}
-            click={(e) => setWeight(e)}
+            click={e => setWeight(e)}
           />
           <Button
             loading={myPostLoadLoading}
             onPress={() => postLoadSubmit()}
             title={t(Constants.POST_LOADS)}
             textStyle={styleSheet.buttonTitile}
-            style={[styleSheet.button, { marginTop: 20 }]}
+            style={[styleSheet.button, {marginTop: 20}]}
           />
         </View>
       </View>
@@ -265,32 +255,57 @@ const PostLoads = ({
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  locationSearch: (location) => dispatch(initLocation(location)),
-  postLoad: (afrom, ato, qty, material_name, truck_type, price, price_type) =>
-    dispatch(
-      initMyPostLoad(
-        afrom,
-        ato,
-        qty,
-        material_name,
-        truck_type,
-        price,
-        price_type
-      )
-    ),
-  clearPostData: () => dispatch(myPostLoadFailure()),
-  truckRequest: () => dispatch(initLoadTrucks()),
-});
+export default PostLoads;
 
-const mapStateToProps = (state) => {
-  return {
-    locationData: state.data.locationData,
-    DashboardData: state.data.DashboardData,
-    loadTruckData: state.data.loadTruckData,
-    myPostLoadLoading: state.data.myPostLoadLoading,
-    myPostLoadStatus: state.data.myPostLoadStatus,
-    myPostLoadData: state.data.myPostLoadData,
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(PostLoads);
+const styleSheet = StyleSheet.create({
+  button: {
+    flexDirection: 'row',
+    borderRadius: 28,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonTitile: {
+    fontWeight: 'bold',
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  truckTypeItem: {
+    // width: 60,
+    height: 45,
+    paddingHorizontal: 10,
+    minWidth: 45,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f19e72',
+  },
+  TyuckTypeUnSelectItem: {
+    height: 45,
+    paddingHorizontal: 10,
+    minWidth: 45,
+    marginRight: 10,
+    marginBottom: 10,
+    backgroundColor: inputColor,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  label: {
+    fontWeight: '700',
+    fontSize: 18,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  ItemView: {marginTop: 30},
+  backgroundViewContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: pageBackground,
+    height: '100%',
+    justifyContent: 'center',
+  },
+});

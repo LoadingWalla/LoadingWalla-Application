@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './style';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
@@ -21,6 +20,7 @@ import {GradientColor3, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
+import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const RCVerification = ({navigation, route}) => {
   const {title, RC, truck_id} = route.params;
@@ -183,12 +183,9 @@ const RCVerification = ({navigation, route}) => {
               bottom: 0,
               marginTop: 200,
             }}>
-            <Icon
-              name="close-circle"
-              color="#252B41"
-              size={26}
-              onPress={() => setCameraOptions(false)}
-            />
+            <TouchableOpacity onPress={() => setCameraOptions(false)}>
+              <CloseCircle color="#252B41" size={26} />
+            </TouchableOpacity>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-around'}}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>

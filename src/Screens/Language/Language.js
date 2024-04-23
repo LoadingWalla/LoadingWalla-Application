@@ -9,13 +9,13 @@ import {
 import {useDispatch} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Background from '../../Components/BackgroundGradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initLanguage} from '../../Store/Actions/Actions';
 import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import styles from './style';
+import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 
 const Language = ({navigation, route}) => {
   const [selected, setSelected] = useState(1);
@@ -73,12 +73,7 @@ const Language = ({navigation, route}) => {
   const languageData = data => (
     <>
       {selected === data?.id && (
-        <Icon
-          style={styles.checkIconStyle}
-          name="checkmark-circle"
-          size={25}
-          color="white"
-        />
+        <CheckCircle style={styles.checkIconStyle} size={25} color="white" />
       )}
 
       <View>

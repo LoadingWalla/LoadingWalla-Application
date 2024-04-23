@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
@@ -32,6 +31,8 @@ import {
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
 import DateTimePickerButton from '../../../Components/DateTimePickerButton';
+import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
+import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 
 const EditProfile = ({
   isEdit,
@@ -201,12 +202,13 @@ const EditProfile = ({
               bottom: 0,
               marginTop: 200,
             }}>
-            <Icon
-              name="close-circle"
-              color="#252B41"
-              size={26}
-              onPress={() => setCameraOptions(false)}
-            />
+            <TouchableOpacity onPress={() => setCameraOptions(false)}>
+              <CloseCircle
+                color="#252B41"
+                size={26}
+                onPress={() => setCameraOptions(false)}
+              />
+            </TouchableOpacity>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-around'}}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
@@ -259,7 +261,7 @@ const EditProfile = ({
         <View style={style.editModalView}>
           <View style={{alignItems: 'flex-end'}}>
             <TouchableOpacity onPress={() => dismissModal()}>
-              <Icon name="close-circle" color={GradientColor2} size={30} />
+              <CloseCircle color={GradientColor2} size={30} />
             </TouchableOpacity>
           </View>
 
@@ -290,7 +292,7 @@ const EditProfile = ({
                   style={style.profileImg}
                 />
                 <View style={style.profileImgEdit}>
-                  <Icon name="camera" size={15} color="white" />
+                  <CameraIcon size={15} color="white" />
                 </View>
               </View>
             </TouchableOpacity>

@@ -9,9 +9,11 @@ import {
   titleColor,
   white,
 } from '../Color/color';
-import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CardHeader from './CardHeader';
 import ShowPermitModal from './ShowPermitModal';
+import RightArrow from '../../assets/SVG/svg/RightArrow';
+import Shield from '../../assets/SVG/svg/Shield';
+import PencilIcon from '../../assets/SVG/svg/PencilIcon';
 
 const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -57,7 +59,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                 </Text>
 
                 {item?.permit.length > 1 && (
-                  <EditIcon name="chevron-right" size={15} color={'#0076FF'} />
+                  <RightArrow size={15} color={'#0076FF'} />
                 )}
                 <ShowPermitModal
                   permit={item?.permit}
@@ -82,14 +84,10 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                   truck_id: item?.truck_id,
                 })
               }>
-              <EditIcon
-                name={
-                  item?.verified
-                    ? 'shield-check-outline'
-                    : 'shield-alert-outline'
-                }
+              <Shield
                 size={15}
                 color={item?.verified ? 'green' : GradientColor2}
+                verified={item?.verified}
               />
               <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
@@ -170,9 +168,8 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                 ]}>
                 {t(Constants.EDIT)}
               </Text>
-              <EditIcon
-                name="pencil"
-                size={15}
+              <PencilIcon
+                size={10}
                 color={item.status === 1 ? '#56CA6F' : '#d73b29'}
               />
             </TouchableOpacity>

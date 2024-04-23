@@ -1,7 +1,6 @@
-import React from "react";
-import { TouchableOpacity, Text, View } from "react-native";
-import Background from "./BackgroundGradient";
-import style from "./style";
+import React from 'react';
+import {TouchableOpacity, Text, View} from 'react-native';
+import style from './style';
 
 const InnerButton = ({
   navigation,
@@ -21,9 +20,8 @@ const InnerButton = ({
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => (navigation ? navigation() : onpressStatus())}
-          disabled={disabled}
-          style={[enabledStyle, disabled && disabledStyle]}
-        >
+          // disabled={disabled}
+          style={[enabledStyle, disabled && disabledStyle]}>
           <View style={style.gradientButtonStyle}>
             {!disabled && count > 0 ? (
               <Text style={style.countMsg}>{`${count}`}</Text>

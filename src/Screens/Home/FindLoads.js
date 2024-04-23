@@ -66,14 +66,14 @@ const FindLoads = ({navigation, route}) => {
     <View style={{flex: 1, justifyContent: 'flex-start'}}>
       <FindLoadHeader
         title={`${t(Constants.RESULTS)} (${
-          userType == '2' ? findLoadData?.length : findLorryData?.length
+          userType === '2' ? findLoadData?.length : findLorryData?.length
         })`}
         goBack={() => navigation.goBack()}
         from={Owner?.from}
         to={Owner?.to === null ? 'Anywhere' : Owner?.to}
         icon={Owner?.image}
         fullPrice={
-          userType == '2'
+          userType === '2'
             ? Owner?.vehicle_number
             : `₹ ${Owner?.price} / ${
                 Owner?.price_type === '1' ? 'Per Ton' : 'Fixed'

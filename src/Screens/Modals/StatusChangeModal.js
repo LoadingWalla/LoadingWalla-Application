@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useTranslation} from 'react-i18next';
 import Switch from 'toggle-switch-react-native';
 import Toast from 'react-native-simple-toast';
@@ -30,6 +29,7 @@ import {
 import SearchFilter from '../../Components/SearchFilter';
 import ShowPermitModal from '../../Components/ShowPermitModal';
 import Button from '../../Components/Button';
+import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const StatusChangeModal = ({navigation, route}) => {
   const {userType, data} = route?.params;
@@ -137,12 +137,9 @@ const StatusChangeModal = ({navigation, route}) => {
           <Text style={styles.headerTitle}>
             {userType === 1 ? t(Constants.LOAD) : t(Constants.LORRY)} Status
           </Text>
-          <Icon
-            name="close"
-            size={35}
-            style={styles.closeButton}
-            onPress={() => navigation.goBack()}
-          />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <CloseCircle size={35} style={styles.closeButton} />
+          </TouchableOpacity>
         </View>
         <View style={styles.centeredView}>
           <View style={styles.activeContainer}>

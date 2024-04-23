@@ -10,15 +10,17 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-simple-toast';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
-import {PrivacyPolicy, textColor} from '../../../Color/color';
+import {textColor} from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
+import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
+import EmailIcon from '../../../../assets/SVG/svg/EmailIcon';
+import WhatsAppIcon from '../../../../assets/SVG/svg/WhatsAppIcon';
 
 const ContactUs = ({navigation}) => {
   const {t} = useTranslation();
@@ -141,15 +143,15 @@ const ContactUs = ({navigation}) => {
           justifyContent: 'space-evenly',
         }}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => linking('call')}>
-          <Icon name="ios-call" size={30} color="white" />
+          <PhoneCall size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.5} onPress={() => linking('mail')}>
-          <Icon name="ios-mail" size={30} color="white" />
+          <EmailIcon size={30} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => linking('whatsapp')}
           activeOpacity={0.5}>
-          <Icon name="ios-logo-whatsapp" size={30} color="white" />
+          <WhatsAppIcon size={30} color="white" />
         </TouchableOpacity>
       </View>
       <ScrollView
@@ -178,7 +180,7 @@ const ContactUs = ({navigation}) => {
             value={name}
             hint={'Enter name'}
             onChangeText={e => onChangeName(e)}
-            placeholderTextColor={PrivacyPolicy}
+            // placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -194,7 +196,7 @@ const ContactUs = ({navigation}) => {
             value={email}
             hint={'Enter E-mail'}
             onChangeText={e => onChangeEmail(e)}
-            placeholderTextColor={PrivacyPolicy}
+            // placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -211,7 +213,7 @@ const ContactUs = ({navigation}) => {
             isPhone={true}
             hint={'Enter phone number'}
             onChangeText={e => onChangePhone(e)}
-            placeholderTextColor={PrivacyPolicy}
+            // placeholderTextColor={PrivacyPolicy}
           />
           <Text
             style={{
@@ -228,7 +230,7 @@ const ContactUs = ({navigation}) => {
             isMultiLine={true}
             hint={'Enter message'}
             onChangeText={e => onChangeMessage(e)}
-            placeholderTextColor={PrivacyPolicy}
+            // placeholderTextColor={PrivacyPolicy}
           />
           <Button
             onPress={() => sendMessage()}

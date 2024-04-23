@@ -3,6 +3,8 @@ import {View, Text, TouchableOpacity} from 'react-native';
 import {GradientColor2} from '../Color/color';
 import Location from 'react-native-vector-icons/SimpleLineIcons';
 import style from './style';
+import CloseCircle from '../../assets/SVG/svg/CloseCircle';
+import LocationIcon from '../../assets/SVG/svg/LocationIcon';
 
 const SearchFilter = ({
   onSearchPress,
@@ -26,13 +28,26 @@ const SearchFilter = ({
         </Text>
       </TouchableOpacity>
 
-      <Location
+      {/* <Location
         style={style.locationIcon}
         onPress={() => closeIconClick()}
         name={defaultValue ? 'close' : 'location-pin'}
         size={20}
         color={GradientColor2}
-      />
+      /> */}
+      <TouchableOpacity
+        onPress={() => closeIconClick()}
+        style={{justifyContent: 'center', marginRight: 10}}>
+        {defaultValue ? (
+          <CloseCircle
+            size={20}
+            color={GradientColor2}
+            style={style.locationIcon}
+          />
+        ) : (
+          <LocationIcon size={20} color={GradientColor2} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };

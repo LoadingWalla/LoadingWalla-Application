@@ -1,9 +1,8 @@
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import style from './style';
 import Location from 'react-native-vector-icons/SimpleLineIcons';
-import {GradientColor2} from '../Color/color';
+import {GradientColor2, PrivacyPolicy} from '../Color/color';
 
 const TextInputField = ({
   onChangeText,
@@ -16,7 +15,6 @@ const TextInputField = ({
   isCloseIcon,
   isText,
   onSearchPress,
-  placeholderTextColor,
   capital,
 }) => {
   return (
@@ -39,7 +37,12 @@ const TextInputField = ({
       ) : (
         <TextInput
           autoCapitalize={capital ? 'characters' : 'none'}
-          style={{flex: 6, fontFamily: 'PlusJakartaSans-Regular', fontSize: 15}}
+          style={{
+            flex: 6,
+            fontFamily: 'PlusJakartaSans-Regular',
+            fontSize: 15,
+            color: PrivacyPolicy,
+          }}
           value={value}
           defaultValue={defaultValue}
           maxLength={isPhone ? 10 : null}
@@ -47,7 +50,7 @@ const TextInputField = ({
           textAlignVertical={isMultiLine ? 'top' : 'auto'}
           multiline={isMultiLine === true ? true : false}
           placeholder={hint}
-          placeholderTextColor={placeholderTextColor}
+          placeholderTextColor={PrivacyPolicy}
           onChangeText={e => onChangeText(e)}
         />
       )}

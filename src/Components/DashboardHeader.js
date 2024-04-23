@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, Pressable} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {GradientColor2} from '../Color/color';
 import * as Constants from '../Constants/Constant';
 import style from './style';
@@ -8,6 +7,7 @@ import {useTranslation} from 'react-i18next';
 import HeaderShimmer from './Shimmer/HeaderShimmer';
 import SupportIcon from '../../assets/SVG/svg/SupportIcon';
 import BellIcon from '../../assets/SVG/svg/BellIcon';
+import Shield from '../../assets/SVG/svg/Shield';
 
 const DashboardHeader = ({
   title,
@@ -45,12 +45,10 @@ const DashboardHeader = ({
             <TouchableOpacity
               style={style.rowDirection}
               onPress={() => gotoProfile()}>
-              <Icon
-                name={
-                  verify === 1 ? 'shield-check-outline' : 'shield-alert-outline'
-                }
-                size={16}
+              <Shield
                 color={verify === 1 ? 'green' : GradientColor2}
+                size={13}
+                verified={verify}
               />
               <Text style={style.dashboardHeaderVerifiedTitle(verify)}>
                 {verify === 1

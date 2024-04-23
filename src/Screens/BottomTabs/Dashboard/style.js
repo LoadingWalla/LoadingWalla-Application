@@ -211,10 +211,11 @@ export default StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    marginHorizontal: 20,
   },
   searchInput: {
     flex: 4,
-    marginLeft: 10,
+    // marginLeft: 10,
     alignSelf: 'center',
     color: PrivacyPolicy,
   },

@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Gallery';
@@ -24,6 +23,7 @@ import {
   initDocumentVerification,
   initDocumentVerify,
 } from '../../Store/Actions/Actions';
+import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
@@ -208,12 +208,9 @@ const CardDetails = ({route, navigation}) => {
               bottom: 0,
               marginTop: 200,
             }}>
-            <Icon
-              name="close-circle"
-              color="#252B41"
-              size={26}
-              onPress={() => setCameraOptions(false)}
-            />
+            <TouchableOpacity onPress={() => setCameraOptions(false)}>
+              <CloseCircle color="#252B41" size={26} />
+            </TouchableOpacity>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-around'}}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>

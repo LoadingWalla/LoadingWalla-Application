@@ -1,9 +1,9 @@
-import React from "react";
-import { Modal, View, Text, StyleSheet } from "react-native";
-import CommonToolbar from "./CommonToolbar";
-import { PrivacyPolicy, titleColor } from "../Color/color";
+import React from 'react';
+import {Modal, View, Text, StyleSheet} from 'react-native';
+import CommonToolbar from './CommonToolbar';
+import {PrivacyPolicy, titleColor} from '../Color/color';
 
-const ShowPermitModal = ({ modalVisible, setModalVisible, permit }) => {
+const ShowPermitModal = ({modalVisible, setModalVisible, permit}) => {
   return (
     <Modal
       animationType="slide"
@@ -12,12 +12,11 @@ const ShowPermitModal = ({ modalVisible, setModalVisible, permit }) => {
       visible={modalVisible}
       onRequestClose={() => {
         setModalVisible(!modalVisible);
-      }}
-    >
+      }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <CommonToolbar
-            title={"Permit Locations"}
+            title={'Permit Locations'}
             goBack={() => {
               setModalVisible(!modalVisible);
             }}
@@ -29,8 +28,7 @@ const ShowPermitModal = ({ modalVisible, setModalVisible, permit }) => {
             {/* {permit.map((p) => ( */}
             <View
               //    key={p.id}
-              style={styles.modalTextView}
-            >
+              style={styles.modalTextView}>
               <Text style={styles.modaTtext}>All India Permit</Text>
             </View>
             {/* ))} */}
@@ -44,17 +42,17 @@ const ShowPermitModal = ({ modalVisible, setModalVisible, permit }) => {
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -64,8 +62,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   container: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     marginTop: 10,
   },
   modalTextView: {
@@ -73,14 +71,14 @@ const styles = StyleSheet.create({
     borderColor: PrivacyPolicy,
     padding: 8,
     borderRadius: 5,
-    backgroundColor: "#FFC5B5",
+    backgroundColor: '#FFC5B5',
     margin: 5,
   },
   modaTtext: {
     color: titleColor,
     fontSize: 14,
-    fontWeight: "700",
-    fontFamily: "PlusJakartaSans-Bold",
+    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   button: {
     borderWidth: 1,

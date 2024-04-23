@@ -45,6 +45,21 @@ import RCVerification from '../Screens/RC/RCVerification';
 import StatusChangeModal from '../Screens/Modals/StatusChangeModal';
 import Requests from '../Screens/Requests/Requests';
 import {useNavigation} from '@react-navigation/native';
+import ViewDetail from '../Screens/Details/ViewDetail';
+import PostLoads from '../Screens/Home/PostLoads';
+import AddLorry from '../Screens/Home/AddLorry';
+import LoadPostSuccessfull from '../Screens/Home/LoadPostSuccessfull';
+import Wallet from '../Screens/BottomTabs/Menu/Wallet';
+import Guide from '../Screens/BottomTabs/Menu/Guide';
+import Rating from '../Screens/BottomTabs/Menu/Rating';
+import Verification from '../Screens/Verification/Verification';
+import Confirmation from '../Screens/Verification/Confirmation';
+import OtpVerification from '../Screens/Verification/OtpVerification';
+import Status from '../Screens/RC/Status';
+import Negotiation from '../Screens/Modals/Negotiation';
+import QRscanner from '../Screens/RC/QRscanner';
+import CardDetails from '../Screens/RC/CardDetails';
+import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -56,7 +71,6 @@ function getWidth() {
 
 function BottomTabs() {
   const {t} = useTranslation();
-  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -113,7 +127,6 @@ function BottomTabs() {
                 handleBackButton,
               ),
             tabPress: e => {
-              const tabIndex = 0;
               Animated.spring(tabOffsetValue, {
                 toValue: getWidth() * 0,
                 useNativeDriver: true,
@@ -197,10 +210,8 @@ function BottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
-            //tabBarButton: CustomTabButton,
           }}
           listeners={({navigation, route}) => ({
-            // Onpress Update....
             blur: () => {
               Animated.spring(tabOffsetValue, {
                 toValue: 0,
@@ -233,7 +244,6 @@ function BottomTabs() {
 
 function MyLoadsBottomTabs() {
   const {t} = useTranslation();
-  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -409,7 +419,6 @@ function MyLoadsBottomTabs() {
 
 const Navigation = ({language}) => {
   const {i18n} = useTranslation();
-  // const handleBackButton = useHandleBackButton();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -546,7 +555,6 @@ const Navigation = ({language}) => {
         component={CompanyDetails}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -559,10 +567,8 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Home"
         component={BottomTabs}
-        // component={Home}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -575,10 +581,8 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="LoadHome"
         component={MyLoadsBottomTabs}
-        // component={LoadHome}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -593,7 +597,6 @@ const Navigation = ({language}) => {
         component={WhatsAppAlert}
         options={{headerShown: true, headerTitleAlign: 'center'}}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -605,11 +608,9 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="viewDetail"
-        // component={viewDetail}
-        component={Home}
+        component={ViewDetail}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
-          // Onpress Update....
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
           blur: () =>
@@ -621,8 +622,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="AddLorry"
-        // component={AddLorry}
-        component={Home}
+        component={AddLorry}
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
@@ -661,8 +661,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="PostLoads"
-        // component={PostLoads}
-        component={Home}
+        component={PostLoads}
         options={{
           headerShown: true,
           title: 'Post Load +',
@@ -700,8 +699,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="PostSuccess"
-        // component={LoadPostSuccessfull}
-        component={Home}
+        component={LoadPostSuccessfull}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -765,8 +763,7 @@ const Navigation = ({language}) => {
 
       <Stack.Screen
         name="Guide"
-        // component={Guide}
-        component={Home}
+        component={Guide}
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
@@ -785,8 +782,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="Wallet"
-        // component={Wallet}
-        component={Home}
+        component={Wallet}
         options={{headerShown: true, headerTitleAlign: 'center'}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -801,25 +797,8 @@ const Navigation = ({language}) => {
       />
 
       <Stack.Screen
-        name="UserProfile"
-        // component={UserProfile}
-        component={Home}
-        options={{headerShown: false}}
-        listeners={({navigation, route}) => ({
-          // Onpress Update....
-          focus: () =>
-            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
-          blur: () =>
-            BackHandler.removeEventListener(
-              'hardwareBackPress',
-              handleBackButton,
-            ),
-        })}
-      />
-      <Stack.Screen
         name="Rating"
-        // component={Rating}
-        component={Home}
+        component={Rating}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -877,8 +856,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="KYC"
-        // component={Verification}
-        component={Home}
+        component={Verification}
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
@@ -917,8 +895,7 @@ const Navigation = ({language}) => {
 
       <Stack.Screen
         name="Confirmation"
-        // component={Confirmation}
-        component={Home}
+        component={Confirmation}
         options={{
           headerShown: false,
           presentation: 'modal',
@@ -938,8 +915,7 @@ const Navigation = ({language}) => {
 
       <Stack.Screen
         name="Status"
-        // component={Status}
-        component={Home}
+        component={Status}
         options={{
           headerShown: false,
           presentation: 'modal',
@@ -959,8 +935,7 @@ const Navigation = ({language}) => {
 
       <Stack.Screen
         name="Negotiation"
-        // component={Negotiation}
-        component={Home}
+        component={Negotiation}
         options={{
           headerShown: false,
           // presentation: "modal",
@@ -1001,8 +976,7 @@ const Navigation = ({language}) => {
       {/* This is StatusModal screen */}
       <Stack.Screen
         name="QRScanner"
-        // component={QRscanner}
-        component={Home}
+        component={QRscanner}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1017,7 +991,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="Card Details"
-        component={Home}
+        component={CardDetails}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
@@ -1037,8 +1011,7 @@ const Navigation = ({language}) => {
 
       <Stack.Screen
         name="Booking Status"
-        // component={BookingStatus}
-        component={Home}
+        component={BookingStatus}
         options={{
           headerShown: false,
           animation: 'slide_from_bottom',
@@ -1072,8 +1045,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="verifyLoadOtp"
-        // component={OtpVerification}
-        component={Home}
+        component={OtpVerification}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',

@@ -10,10 +10,12 @@ import {
 } from '../../../Color/color';
 import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorImage from '../../../../assets/GIFs/error.gif';
-import successImage from '../../../../assets/GIFs/error.gif';
+import successImage from '../../../../assets/GIFs/success.gif';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import Button from '../../../Components/Button';
+import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
+import Shield from '../../../../assets/SVG/svg/Shield';
 
 const BookingStatus = ({navigation, route}) => {
   console.log('booking---status', route);
@@ -58,7 +60,7 @@ const BookingStatus = ({navigation, route}) => {
           justifyContent: 'center',
         }}>
         <Text style={[styles.congratsText, {color: color}]}>{message}</Text>
-        <Image source={image} style={{height: 50, width: 50}} />
+        <Image source={image} style={{height: 70, width: 70}} />
       </View>
 
       <View style={styles.cardContainer}>
@@ -75,12 +77,10 @@ const BookingStatus = ({navigation, route}) => {
                     : Owner?.vehicle_number}
                 </Text>
                 {userType === '2' && (
-                  <EditIcon
-                    name={
-                      Owner?.verified ? 'check-circle' : 'information-outline'
-                    }
+                  <Shield
                     size={20}
                     color={Owner?.verified ? '#119500' : '#e5b900'}
+                    verified={Owner?.verified}
                   />
                 )}
               </View>
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     alignItems: 'center',
+    width: '100%',
   },
   details2: {
     marginLeft: 20,
