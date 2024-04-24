@@ -16,7 +16,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Rating} from 'react-native-ratings';
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
 import {initLogout, initProfile} from '../../../Store/Actions/Actions';
@@ -27,12 +26,30 @@ import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
 import EditProfile from './EditProfile';
-import {GradientColor2, titleColor} from '../../../Color/color';
+import {GradientColor1, GradientColor2, titleColor} from '../../../Color/color';
 import PercentageBar from '../../../Components/PercentageBar';
 import MenuItem from '../../../Components/MenuItem';
 import Shield from '../../../../assets/SVG/svg/Shield';
+import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
+import AccountEditIcon from '../../../../assets/SVG/svg/AccountEditIcon';
+import WalletIcon from '../../../../assets/SVG/svg/WalletIcon';
+import UserDetailsIcon from '../../../../assets/SVG/svg/UserDetailsIcon';
+import PreviousBookingIcon from '../../../../assets/SVG/svg/PreviousBookingIcon';
+import SupportIcon2 from '../../../../assets/SVG/svg/SupportIcon2';
+import SettingIcon from '../../../../assets/SVG/svg/SettingIcon';
+import UserSummaryIcon from '../../../../assets/SVG/svg/UserSummaryIcon';
+import ContactUsIcon from '../../../../assets/SVG/svg/ContactUsIcon';
+import LanguageIcon from '../../../../assets/SVG/svg/LanguageIcon';
+import WhatsAppIcon2 from '../../../../assets/SVG/svg/WhatsAppIcon2';
+import LogoutIcon from '../../../../assets/SVG/svg/LogoutIcon';
+import RateIcon from '../../../../assets/SVG/svg/RateIcon';
+import GpsIcon from '../../../../assets/SVG/svg/GpsIcon';
+import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
+import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
+import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 
-const {hei, wid} = Dimensions.get('screen');
+const hei = Dimensions.get('window').height;
+const wid = Dimensions.get('window').width;
 
 const Profile = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -59,13 +76,11 @@ const Profile = ({navigation, route}) => {
     return (
       <Modal animationType="slide" transparent={true} visible={isBigImage}>
         <View style={style.bigImageStyle}>
-          <Icon
-            style={style.closeIcon}
-            name="close-circle"
-            color={'white'}
-            size={30}
+          <TouchableOpacity
             onPress={() => setBigImage(!isBigImage)}
-          />
+            style={style.closeIcon}>
+            <CloseCircle size={30} color={'white'} />
+          </TouchableOpacity>
           <View style={style.imageContainer}>
             <Image
               style={{height: hei / 2.5, width: wid}}
@@ -159,7 +174,7 @@ const Profile = ({navigation, route}) => {
                     ? {uri: Userdata?.profile_img}
                     : require('../../../../assets/placeholder.png')
                 }
-                resizeMode={'contain'}
+                resizeMode={'cover'}
               />
             </Pressable>
             <View style={style.verticalLine} />
@@ -209,7 +224,7 @@ const Profile = ({navigation, route}) => {
                 activeOpacity={0.5}
                 onPress={() => setEditProfile(true)}
                 style={style.editProfile}>
-                <Icon name="account-edit" size={20} color={GradientColor2} />
+                <AccountEditIcon size={20} color={GradientColor2} />
               </TouchableOpacity>
             </View>
           </View>
@@ -232,14 +247,14 @@ const Profile = ({navigation, route}) => {
               <TouchableOpacity
                 style={style.buttonContainer}
                 onPress={() => navigation.navigate('Wallet')}>
-                <Icon name="database" size={25} color={'#F0C200'} />
+                <WalletIcon size={25} color={'#F0C200'} />
                 <Text style={style.buttonText}>My wallet</Text>
               </TouchableOpacity>
             </View>
 
             <View style={style.section}>
               <View style={style.sectionHeader}>
-                <Icon name="account-supervisor" size={25} color={titleColor} />
+                <UserDetailsIcon size={25} color={titleColor} />
                 <Text style={style.sectionHeaderText}>User Details</Text>
               </View>
               <View style={style.userDetails}>
@@ -248,7 +263,7 @@ const Profile = ({navigation, route}) => {
                   onPress={() => {
                     alert('Sorry for inconvenience! We are Working');
                   }}
-                  Icon={'book-account-outline'}
+                  Icon={<UserSummaryIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -258,7 +273,9 @@ const Profile = ({navigation, route}) => {
                       Owner: Userdata,
                     })
                   }
-                  Icon={'page-previous-outline'}
+                  Icon={
+                    <PreviousBookingIcon size={30} color={GradientColor1} />
+                  }
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -266,29 +283,21 @@ const Profile = ({navigation, route}) => {
                   onPress={() => {
                     alert('Sorry for inconvenience! We are Working');
                   }}
-                  Icon={'crosshairs-gps'}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={'Fastag Settings'}
-                  onPress={() => {
-                    alert('Sorry for inconvenience! We are Working');
-                  }}
-                  Icon={'boom-gate-outline'}
+                  Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>
             </View>
 
             <View style={style.section}>
               <View style={style.sectionHeader}>
-                <Icon name="face-agent" size={25} color={titleColor} />
+                <SupportIcon2 size={25} color={titleColor} />
                 <Text style={style.sectionHeaderText}>Support</Text>
               </View>
               <View style={style.userDetails}>
                 <MenuItem
                   title={t(Constants.CONTACT_US)}
                   onPress={() => navigation.navigate('Contactus')}
-                  Icon={'card-account-phone-outline'}
+                  Icon={<ContactUsIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -299,7 +308,7 @@ const Profile = ({navigation, route}) => {
                       uri: uriTermsCondition3,
                     });
                   }}
-                  Icon={'palette-swatch-outline'}
+                  Icon={<TermsIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -310,13 +319,13 @@ const Profile = ({navigation, route}) => {
                       uri: uriTermsCondition2,
                     });
                   }}
-                  Icon={'account-lock-outline'}
+                  Icon={<PolicyIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
                   title={t(Constants.HELP_GUIDE)}
                   onPress={() => navigation.navigate('Guide')}
-                  Icon={'help'}
+                  Icon={<HelpIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -326,14 +335,14 @@ const Profile = ({navigation, route}) => {
                       'Sorry for inconvenience! We are in Developing version',
                     );
                   }}
-                  Icon={'star-outline'}
+                  Icon={<RateIcon size={30} color={GradientColor1} />}
                 />
               </View>
             </View>
 
             <View style={style.section}>
               <View style={style.sectionHeader}>
-                <Icon name="cogs" size={25} color={titleColor} />
+                <SettingIcon size={25} color={titleColor} />
                 <Text style={style.sectionHeaderText}>Settings</Text>
               </View>
               <View style={style.userDetails}>
@@ -342,7 +351,7 @@ const Profile = ({navigation, route}) => {
                   onPress={() =>
                     navigation.navigate('Language', {fromMenu: true})
                   }
-                  Icon={'translate'}
+                  Icon={<LanguageIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
@@ -350,13 +359,13 @@ const Profile = ({navigation, route}) => {
                   onPress={() =>
                     navigation.navigate('WhatsApp', {fromMenu: true})
                   }
-                  Icon={'whatsapp'}
+                  Icon={<WhatsAppIcon2 size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
                   title={t(Constants.LOGOUT)}
                   onPress={() => logout()}
-                  Icon={'logout'}
+                  Icon={<LogoutIcon size={30} color={GradientColor1} />}
                 />
               </View>
             </View>

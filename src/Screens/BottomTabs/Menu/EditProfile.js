@@ -288,7 +288,7 @@ const EditProfile = ({
                               : defaultValue?.profileImg,
                         }
                   }
-                  resizeMode={'contain'}
+                  resizeMode={'cover'}
                   style={style.profileImg}
                 />
                 <View style={style.profileImgEdit}>

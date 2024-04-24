@@ -109,7 +109,7 @@ export const WHEEL = 'Wheel';
 export const NOT_FOUND = 'Not found';
 export const STATUS = 'Status';
 
-export const HELP_GUIDE = 'Help Guide';
+export const HELP_GUIDE = 'Help Guide(FAQs)';
 export const HELP_GUIDE_DES = 'A help guide for you to get loads etc.';
 export const LANGUAGE = 'Language';
 export const LANGUAGE_DES = 'Change the language from here';
@@ -138,7 +138,6 @@ export const PHONE_NUMBER = 'Phone Number';
 export const MESSAGE = 'Message';
 export const CANCEL = 'Cancel';
 export const OK = 'Ok';
-//
 export const WHATSAPP_ALERT = 'WhatsApp Alerts';
 export const WHATSAPP_ALERT_DES = 'Allow WhatsApp Alerts for better Usage';
 export const WHATSAPP_ALERT_CHECK = 'I agree to enable WhatsApp alerts';
@@ -162,4 +161,4 @@ export const RECEIVED_REQUEST = 'Received Requests';
 export const SENT_REQUEST = 'Sent Requests';
 export const REMOVE = 'Remove';
 export const NEED_HELP = 'Need help?';
-export const NAV_HOME = 'Home';
+export const NAV_HOME = 'Market';

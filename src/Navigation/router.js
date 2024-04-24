@@ -21,7 +21,6 @@ import BookingActiveIcon from '../../assets/SVG/svg/BookingActiveIcon';
 import BookingIcon from '../../assets/SVG/svg/BookingIcon';
 import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
-import Home from '../Screens/Details/Home';
 import {
   GradientColor1,
   GradientColor2,

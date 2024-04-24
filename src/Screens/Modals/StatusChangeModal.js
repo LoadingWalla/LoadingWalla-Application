@@ -137,8 +137,10 @@ const StatusChangeModal = ({navigation, route}) => {
           <Text style={styles.headerTitle}>
             {userType === 1 ? t(Constants.LOAD) : t(Constants.LORRY)} Status
           </Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <CloseCircle size={35} style={styles.closeButton} />
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.closeButton}>
+            <CloseCircle size={35} color={GradientColor2} />
           </TouchableOpacity>
         </View>
         <View style={styles.centeredView}>

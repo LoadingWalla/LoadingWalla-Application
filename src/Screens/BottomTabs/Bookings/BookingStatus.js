@@ -14,7 +14,6 @@ import successImage from '../../../../assets/GIFs/success.gif';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import Button from '../../../Components/Button';
-import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import Shield from '../../../../assets/SVG/svg/Shield';
 
 const BookingStatus = ({navigation, route}) => {
