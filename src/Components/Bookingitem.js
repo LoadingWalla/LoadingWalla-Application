@@ -1,6 +1,5 @@
-
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import InnerButton from './InnerButton';
 import * as Constants from '../Constants/Constant';
@@ -9,7 +8,6 @@ import {
   GradientColor2,
   GradientColor3,
   PrivacyPolicy,
-  textColor,
   titleColor,
   white,
 } from '../Color/color';
@@ -18,8 +16,6 @@ import CardHeader from './CardHeader';
 const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
   const {t} = useTranslation();
   const navigation = useNavigation();
-
-  // console.log("BookingTtem", detail);
 
   return (
     <View style={styles.card}>
@@ -50,22 +46,19 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
       </View>
       <View style={styles.horizontalLine} />
       {buttonStatus === 'ongoing' ? (
-        <InnerButton
-          enabledStyle={{
-            justifyContent: 'center',
-            alignSelf: 'center',
-          }}
-          textStyle={{
-            color: 'blue',
-            textDecorationLine: 'underline',
-            fontSize: 14,
-            fontFamily: 'PlusJakartaSans-Bold',
-          }}
-          title={'View Details'}
-          onpressStatus={() =>
-            navigation.navigate('viewDetail', {item: detail})
-          }
-        />
+        <TouchableOpacity
+          style={{alignItems: 'center'}}
+          onPress={() => navigation.navigate('viewDetail', {item: detail})}>
+          <Text
+            style={{
+              fontSize: 15,
+              fontFamily: 'PlusJakartaSans-Bold',
+              color: 'blue',
+              textDecorationLine: 'underline',
+            }}>
+            View Details
+          </Text>
+        </TouchableOpacity>
       ) : (
         <View style={styles.buttonContainer}>
           <InnerButton
@@ -192,7 +185,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   textStyle: {
-    color: textColor,
+    color: PrivacyPolicy,
     fontSize: 13,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',

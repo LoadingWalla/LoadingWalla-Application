@@ -59,6 +59,7 @@ import Negotiation from '../Screens/Modals/Negotiation';
 import QRscanner from '../Screens/RC/QRscanner';
 import CardDetails from '../Screens/RC/CardDetails';
 import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
+import Inconvenience from '../Screens/Details/Inconvenience';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1045,6 +1046,25 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="verifyLoadOtp"
         component={OtpVerification}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Verify OTP',
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="Inconvenience"
+        component={Inconvenience}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',

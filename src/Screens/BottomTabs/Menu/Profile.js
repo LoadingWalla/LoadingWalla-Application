@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -222,9 +222,8 @@ const Profile = ({navigation, route}) => {
             <View>
               <TouchableOpacity
                 activeOpacity={0.5}
-                onPress={() => setEditProfile(true)}
-                style={style.editProfile}>
-                <AccountEditIcon size={20} color={GradientColor2} />
+                onPress={() => setEditProfile(true)}>
+                <AccountEditIcon size={30} color={GradientColor2} />
               </TouchableOpacity>
             </View>
           </View>
@@ -260,9 +259,7 @@ const Profile = ({navigation, route}) => {
               <View style={style.userDetails}>
                 <MenuItem
                   title={'User Summary'}
-                  onPress={() => {
-                    alert('Sorry for inconvenience! We are Working');
-                  }}
+                  onPress={() => navigation.navigate('Inconvenience')}
                   Icon={<UserSummaryIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
@@ -280,9 +277,7 @@ const Profile = ({navigation, route}) => {
                 <View style={style.horizontalLine} />
                 <MenuItem
                   title={'Truck GPS Settings'}
-                  onPress={() => {
-                    alert('Sorry for inconvenience! We are Working');
-                  }}
+                  onPress={() => navigation.navigate('Inconvenience')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>
