@@ -21,7 +21,7 @@ const Status = ({navigation, route}) => {
 
   const {mySingleLoding, mySingleStatus, mySingleTruckData, mySingleUserData} =
     useSelector(state => {
-      // console.log("My Lorry/Load", state.data);
+      console.log('My Lorry/Load', state.data);
       return state.data;
     });
 
@@ -37,8 +37,10 @@ const Status = ({navigation, route}) => {
   return (
     <View style={styles.fullScreenContainer}>
       <View style={styles.mainContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <CloseCircle size={25} style={styles.closeButton} />
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => navigation.goBack()}>
+          <CloseCircle size={25} />
         </TouchableOpacity>
         <View style={styles.container}>
           <Text
@@ -59,7 +61,10 @@ const Status = ({navigation, route}) => {
               <View style={styles.childCard}>
                 <View>
                   <Image
-                    source={{uri: mySingleTruckData?.image}}
+                    // source={{uri: mySingleTruckData?.image}}
+                    source={{
+                      uri: 'https://loadingwalla.com/public/truck_tyre/6%20Tyre.png',
+                    }}
                     style={styles.image}
                   />
                 </View>
@@ -311,6 +316,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
+    color: PrivacyPolicy,
   },
   boldText: {
     color: black,

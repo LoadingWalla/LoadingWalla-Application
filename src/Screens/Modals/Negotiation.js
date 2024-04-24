@@ -43,7 +43,7 @@ const Negotiation = ({navigation, route}) => {
     requestSendStatus,
     requestLorrydata,
   } = useSelector(state => {
-    // console.log("confirmation987", state.data);
+    console.log('confirmation987', state.data);
     return state.data;
   });
 

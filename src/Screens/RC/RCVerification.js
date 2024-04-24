@@ -225,7 +225,10 @@ const RCVerification = ({navigation, route}) => {
             paddingVertical: 3,
             backgroundColor: '#FFF',
           }}>
-          <Text>{`RC verification for truck no. `}</Text>
+          <Text
+            style={{
+              color: titleColor,
+            }}>{`RC verification for truck no. `}</Text>
           <Text style={styles.label}>{RC}</Text>
         </View>
         <View style={{marginTop: 20, flex: 1}}>
