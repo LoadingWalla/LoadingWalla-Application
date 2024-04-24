@@ -160,9 +160,4 @@ export default StyleSheet.create({
     marginLeft: 10,
   },
   flexDirection: {flexDirection: 'row'},
-  editProfile: {
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: GradientColor2,
-  },
 });

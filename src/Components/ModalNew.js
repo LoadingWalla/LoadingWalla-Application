@@ -1,21 +1,13 @@
-import React, { useState, useRef } from "react";
-import {
-  Button,
-  Dimensions,
-  StyleSheet,
-  View,
-  Text,
-  PanResponder,
-  ScrollView,
-} from "react-native";
-import Modal from "react-native-modal";
-import { useTranslation } from "react-i18next";
-import * as Constants from "../Constants/Constant";
+import React, {useState, useRef} from 'react';
+import {Dimensions, StyleSheet, View, Text, PanResponder} from 'react-native';
+import Modal from 'react-native-modal';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../Constants/Constant';
 
-const ModalNew = ({ isVisible, onClose, onBackdropPress, item }) => {
-  const screenHeight = Dimensions.get("window").height;
+const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
+  const screenHeight = Dimensions.get('window').height;
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   const panResponder = useRef(
     PanResponder.create({
@@ -35,7 +27,7 @@ const ModalNew = ({ isVisible, onClose, onBackdropPress, item }) => {
           onCloseModal();
         }
       },
-    })
+    }),
   ).current;
 
   const onCloseModal = () => {
@@ -51,8 +43,7 @@ const ModalNew = ({ isVisible, onClose, onBackdropPress, item }) => {
       onBackdropPress={onBackdropPress}
       style={isFullScreen ? styles.fullScreenModal : styles.modal}
       backdropOpacity={0}
-      {...panResponder.panHandlers}
-    >
+      {...panResponder.panHandlers}>
       <View
         style={[
           styles.modalContent,
@@ -62,103 +53,94 @@ const ModalNew = ({ isVisible, onClose, onBackdropPress, item }) => {
             // borderTopRightRadius: isFullScreen ? 0 : 25,
             // borderTopLeftRadius: isFullScreen ? 0 : 25,
           },
-        ]}
-      >
+        ]}>
         <View style={styles.modalTopLine} />
-        <View style={{ padding: 10 }}>
-          <View style={{ marginVertical: 10 }}>
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              <Text style={{ minWidth: 50 }}>{t(Constants.FROM)}</Text>
-              <View style={{ flex: 1 }}>
+        <View style={{padding: 10}}>
+          <View style={{marginVertical: 10}}>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              <Text style={{minWidth: 50}}>{t(Constants.FROM)}</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.from}</Text>
               </View>
             </View>
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <Text style={{ minWidth: 50 }}>{t(Constants.TO)}</Text>
-              <View style={{ flex: 1 }}>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <Text style={{minWidth: 50}}>{t(Constants.TO)}</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.to}</Text>
               </View>
             </View>
           </View>
 
-          <View style={{ marginTop: 15 }}>
-            <Text
-              style={{ fontSize: 16, color: "#352422", fontWeight: "bold" }}
-            >
+          <View style={{marginTop: 15}}>
+            <Text style={{fontSize: 16, color: '#352422', fontWeight: 'bold'}}>
               Lorry Detail
             </Text>
             <View
-              style={{ flexDirection: "row", marginTop: 10, flexWrap: "wrap" }}
-            >
-              <Text style={{ minWidth: 120 }}>Lorry Owner Name</Text>
-              <View style={{ flex: 1 }}>
+              style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+              <Text style={{minWidth: 120}}>Lorry Owner Name</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.lorryOwner}</Text>
               </View>
             </View>
             <View
-              style={{ flexDirection: "row", marginTop: 10, flexWrap: "wrap" }}
-            >
-              <Text style={{ minWidth: 120 }}>Lorry Number</Text>
-              <View style={{ flex: 1 }}>
+              style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+              <Text style={{minWidth: 120}}>Lorry Number</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>
                   : {item.item.vehicle_number}
                 </Text>
               </View>
             </View>
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <View style={{ flex: 4 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ minWidth: 40 }}>{t(Constants.CAPACITY)}</Text>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <View style={{flex: 4}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{minWidth: 40}}>{t(Constants.CAPACITY)}</Text>
                   <Text style={styles.textStyle}>: 2000 Ton</Text>
                 </View>
               </View>
-              <View style={{ flex: 3 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ minWidth: 40 }}>Truck Type</Text>
+              <View style={{flex: 3}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{minWidth: 40}}>Truck Type</Text>
                   <Text style={styles.textStyle}>: 6 Tyer/Half</Text>
                 </View>
               </View>
             </View>
           </View>
 
-          <View style={{ marginTop: 25 }}>
-            <Text
-              style={{ fontSize: 16, color: "#352422", fontWeight: "bold" }}
-            >
+          <View style={{marginTop: 25}}>
+            <Text style={{fontSize: 16, color: '#352422', fontWeight: 'bold'}}>
               Load Detail
             </Text>
             <View
-              style={{ flexDirection: "row", marginTop: 10, flexWrap: "wrap" }}
-            >
-              <Text style={{ minWidth: 120 }}>Load Owner Name</Text>
-              <View style={{ flex: 1 }}>
+              style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+              <Text style={{minWidth: 120}}>Load Owner Name</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.name}</Text>
               </View>
             </View>
             <View
-              style={{ flexDirection: "row", marginTop: 10, flexWrap: "wrap" }}
-            >
-              <Text style={{ minWidth: 120 }}>Load Name</Text>
-              <View style={{ flex: 1 }}>
+              style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+              <Text style={{minWidth: 120}}>Load Name</Text>
+              <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>
                   : {item.item.material_name}
                 </Text>
               </View>
             </View>
-            <View style={{ flexDirection: "row", marginTop: 10 }}>
-              <View style={{ flex: 4 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ minWidth: 40 }}>{t(Constants.QUANTITY)}</Text>
+            <View style={{flexDirection: 'row', marginTop: 10}}>
+              <View style={{flex: 4}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{minWidth: 40}}>{t(Constants.QUANTITY)}</Text>
                   <Text style={styles.textStyle}>: {item.item.qty} Ton</Text>
                 </View>
               </View>
-              <View style={{ flex: 3 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ minWidth: 40 }}>{t(Constants.PRICE)}</Text>
+              <View style={{flex: 3}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={{minWidth: 40}}>{t(Constants.PRICE)}</Text>
                   <Text style={styles.textStyle}>
                     : {item.item.price}
-                    {"/"}
-                    {item.item.price_type == 2 ? "Fixed" : "Per Ton"}
+                    {'/'}
+                    {item.item.price_type === 2 ? 'Fixed' : 'Per Ton'}
                   </Text>
                 </View>
               </View>
@@ -172,10 +154,10 @@ const ModalNew = ({ isVisible, onClose, onBackdropPress, item }) => {
 
 const styles = StyleSheet.create({
   modal: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
-    top: "50%",
-    width: "100%",
+    top: '50%',
+    width: '100%',
     margin: 0,
   },
   fullScreenModal: {
@@ -183,7 +165,7 @@ const styles = StyleSheet.create({
     margin: 0,
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     padding: 20,
     // justifyContent: "space-between",
     // alignItems: "center",
@@ -192,23 +174,23 @@ const styles = StyleSheet.create({
   },
   modalTopLine: {
     height: 5,
-    backgroundColor: "#E2E2E2",
-    width: "30%",
-    position: "absolute",
+    backgroundColor: '#E2E2E2',
+    width: '30%',
+    position: 'absolute',
     borderRadius: 50,
     top: 0,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginVertical: 10,
   },
   modalBottom: {
-    width: "100%",
-    position: "absolute",
+    width: '100%',
+    position: 'absolute',
     bottom: 10,
   },
   textStyle: {
-    color: "#352422",
+    color: '#352422',
     fontSize: 14,
-    fontFamily: "PlusJakartaSans-SemiBold",
+    fontFamily: 'PlusJakartaSans-SemiBold',
     // alignSelf: "center",
     // flex: 1,
   },
