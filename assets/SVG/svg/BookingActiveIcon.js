@@ -1,13 +1,12 @@
-import {View, Text} from 'react-native';
 import React from 'react';
-import Svg, {Path, G, Circle} from 'react-native-svg';
+import Svg, {Path, G} from 'react-native-svg';
 
-const BookingActiveIcon = () => {
+const BookingActiveIcon = ({size}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      width="17.307"
-      height="17.514"
+      width={size}
+      height={size}
       viewBox="0 0 17.307 17.514">
       <G
         id="Group_8207"

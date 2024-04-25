@@ -20,7 +20,7 @@ const InnerButton = ({
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => (navigation ? navigation() : onpressStatus())}
-          // disabled={disabled}
+          disabled={disabled}
           style={[enabledStyle, disabled && disabledStyle]}>
           <View style={style.gradientButtonStyle}>
             {!disabled && count > 0 ? (

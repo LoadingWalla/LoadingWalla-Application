@@ -1,15 +1,14 @@
-import {View, Text} from 'react-native';
 import React from 'react';
-import Svg, {Path, G, Circle} from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 
-const TruckIcon = () => {
+const TruckIcon = ({size}) => {
   return (
     <Svg
       id="Group_8205"
       data-name="Group 8205"
       xmlns="http://www.w3.org/2000/svg"
-      width="24.344"
-      height="17.06"
+      width={size}
+      height={size}
       viewBox="0 0 24.344 17.06">
       <Path
         id="Path_37430"

@@ -1,12 +1,12 @@
 import React from 'react';
-import Svg, {Path, G, Circle} from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 
-const DashboardActiveIcon = () => {
+const DashboardActiveIcon = ({size}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      width="18.332"
-      height="18.332"
+      width={size}
+      height={size}
       viewBox="0 0 18.332 18.332">
       <Path
         id="Icon_material-dashboard"
