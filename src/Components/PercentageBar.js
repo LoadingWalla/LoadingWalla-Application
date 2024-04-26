@@ -28,7 +28,8 @@ const PercentageBar = ({
     <TouchableOpacity
       style={[styles.barContainer, {height, borderColor: barColor}]}
       onPress={() => navigation.navigate('KYC')}
-      disabled={verify}>
+      // disabled={verify}
+    >
       <View style={[styles.backgroundBar, {backgroundColor, height}]} />
       <View
         style={[
