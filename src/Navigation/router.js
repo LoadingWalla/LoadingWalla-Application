@@ -60,6 +60,8 @@ import QRscanner from '../Screens/RC/QRscanner';
 import CardDetails from '../Screens/RC/CardDetails';
 import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
 import Inconvenience from '../Screens/Details/Inconvenience';
+import LoadIcon from '../../assets/SVG/svg/LoadIcon';
+import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,8 +100,8 @@ function BottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 55,
-            padding: 2,
+            height: 65,
+            // height: 55,
           },
           tabBarLabelStyle: {
             fontSize: 12,
@@ -112,7 +114,7 @@ function BottomTabs() {
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon /> : <HomeIcon />,
+              focused ? <HomeActiveIcon size={25} /> : <HomeIcon size={25} />,
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({
@@ -139,7 +141,7 @@ function BottomTabs() {
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <TruckActiveIcon /> : <TruckIcon />,
+              focused ? <TruckActiveIcon size={30} /> : <TruckIcon size={30} />,
             headerShown: false,
             // tabBarButton: CustomTabButton,
           }}
@@ -172,7 +174,11 @@ function BottomTabs() {
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <BookingActiveIcon /> : <BookingIcon />,
+              focused ? (
+                <BookingActiveIcon size={25} />
+              ) : (
+                <BookingIcon size={25} />
+              ),
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({
@@ -204,7 +210,11 @@ function BottomTabs() {
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <DashboardActiveIcon /> : <DashboardIcon />,
+              focused ? (
+                <DashboardActiveIcon size={25} />
+              ) : (
+                <DashboardIcon size={25} />
+              ),
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
@@ -271,7 +281,8 @@ function MyLoadsBottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 55,
+            height: 65,
+            // height: 55,
           },
           tabBarLabelStyle: {
             fontSize: 12,
@@ -284,7 +295,7 @@ function MyLoadsBottomTabs() {
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon /> : <HomeIcon />,
+              focused ? <HomeActiveIcon size={25} /> : <HomeIcon size={25} />,
             headerShown: false,
             //tabBarButton: CustomTabButton,
           }}
@@ -313,7 +324,7 @@ function MyLoadsBottomTabs() {
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon /> : <HomeIcon />,
+              focused ? <LoadActiveIcon size={30} /> : <LoadIcon size={30} />,
             headerShown: false,
             // tabBarButton: CustomTabButton,
           }}
@@ -345,7 +356,11 @@ function MyLoadsBottomTabs() {
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <BookingActiveIcon /> : <BookingIcon />,
+              focused ? (
+                <BookingActiveIcon size={25} />
+              ) : (
+                <BookingIcon size={25} />
+              ),
             headerShown: false,
             //tabBarButton: CustomTabButton,
           }}
@@ -378,7 +393,11 @@ function MyLoadsBottomTabs() {
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <DashboardActiveIcon /> : <DashboardIcon />,
+              focused ? (
+                <DashboardActiveIcon size={25} />
+              ) : (
+                <DashboardIcon size={25} />
+              ),
             headerShown: true,
             headerTitleAlign: 'center',
             headerStyle: {
@@ -1068,7 +1087,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Verify OTP',
+          title: route.params?.headerTitle || null,
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

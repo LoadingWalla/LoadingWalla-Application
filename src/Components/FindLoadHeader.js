@@ -51,8 +51,7 @@ const FindLoadHeader = ({
                 <TouchableOpacity
                   style={styles.rowdirection}
                   onPress={() => setModalVisible(true)}
-                  // disabled={!(permit?.length > 1)}
-                >
+                  disabled={!(permit?.length > 1)}>
                   <Text
                     style={[
                       styles.smallImageHeaderTitle,
@@ -78,7 +77,7 @@ const FindLoadHeader = ({
 
               <TouchableOpacity
                 style={styles.verifyTruck}
-                // disabled={verified}
+                disabled={verified === 0 ? true : false}
                 onPress={() =>
                   navigation.navigate('RC Verification', {
                     title: 'RC',

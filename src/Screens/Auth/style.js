@@ -141,7 +141,7 @@ export default StyleSheet.create({
   },
   Container: {
     backgroundColor: '#FFFDFD',
-    padding: 10,
+    padding: 20,
     flex: 1,
   },
   SignupImage: {

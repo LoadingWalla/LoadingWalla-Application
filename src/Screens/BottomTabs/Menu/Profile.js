@@ -259,7 +259,11 @@ const Profile = ({navigation, route}) => {
               <View style={style.userDetails}>
                 <MenuItem
                   title={'User Summary'}
-                  onPress={() => navigation.navigate('Inconvenience')}
+                  onPress={() =>
+                    navigation.navigate('Inconvenience', {
+                      headerTitle: 'User Summary',
+                    })
+                  }
                   Icon={<UserSummaryIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
@@ -277,7 +281,11 @@ const Profile = ({navigation, route}) => {
                 <View style={style.horizontalLine} />
                 <MenuItem
                   title={'Truck GPS Settings'}
-                  onPress={() => navigation.navigate('Inconvenience')}
+                  onPress={() =>
+                    navigation.navigate('Inconvenience', {
+                      headerTitle: 'Truck GPS Settings',
+                    })
+                  }
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>

@@ -44,8 +44,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
               <TouchableOpacity
                 style={styles.rowdirection}
                 onPress={() => setModalVisible(true)}
-                // disabled={!(item?.permit.length > 1)}
-              >
+                disabled={!(item?.permit.length > 1)}>
                 <Text
                   style={[
                     styles.smallImageHeaderTitle,
@@ -76,7 +75,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
           {userType === '2' ? (
             <TouchableOpacity
               style={styles.verifyTruck}
-              // disabled={item.verified}
+              disabled={item.verified === 0 ? false : true}
               onPress={() =>
                 navigation.navigate('RC Verification', {
                   title: 'RC',
@@ -95,9 +94,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                   : t(Constants.NOT_VERIFIED)}
               </Text>
             </TouchableOpacity>
-          ) : (
-            ''
-          )}
+          ) : null}
         </View>
       </View>
       <View style={styles.horizontalLine} />
@@ -154,7 +151,6 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                 styles.editButtonStyle,
                 {borderColor: item.status === 1 ? '#56CA6F' : '#d73b29'},
               ]}
-              // onPress={() => openStatusModal(item)}
               onPress={() =>
                 navigation.navigate('StatusModal', {
                   userType: userType,
@@ -181,7 +177,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                 disableTextStyle={styles.disabledText}
                 title={t(Constants.REQUEST)}
                 count={item?.total_request}
-                // disabled={item.status === 0 ? true : false}
+                disabled={item.status === 0 ? true : false}
                 navigation={() =>
                   navigation.navigate('Request', {
                     userType: userType,
@@ -199,7 +195,7 @@ const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
                     ? t(Constants.FIND_LOADS)
                     : t(Constants.FIND_LORRY)
                 }
-                // disabled={item.status === 0 ? true : false}
+                disabled={item.status === 0 ? true : false}
                 navigation={() =>
                   navigation.navigate('FindLoads', {
                     Owner: item,
