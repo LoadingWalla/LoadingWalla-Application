@@ -1,8 +1,8 @@
 import React from 'react';
 import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import style from './style';
-import Location from 'react-native-vector-icons/SimpleLineIcons';
 import {GradientColor2, PrivacyPolicy} from '../Color/color';
+import CloseCircle from '../../assets/SVG/svg/CloseCircle';
 
 const TextInputField = ({
   onChangeText,
@@ -55,15 +55,13 @@ const TextInputField = ({
         />
       )}
 
-      {isCloseIcon && (
-        <Location
+      {isCloseIcon && defaultValue ? (
+        <TouchableOpacity
           style={style.locationIcon}
-          onPress={() => closeIconClick()}
-          name={defaultValue ? 'close' : ''}
-          size={20}
-          color={GradientColor2}
-        />
-      )}
+          onPress={() => closeIconClick()}>
+          <CloseCircle size={20} color={GradientColor2} />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

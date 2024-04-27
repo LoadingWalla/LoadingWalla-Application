@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, FlatList, TouchableOpacity, Image, Text} from 'react-native';
 import Background from '../Components/BackgroundGradient';
 import styleSheet from '../Screens/Details/style';
-import CheckIcon from 'react-native-vector-icons/Ionicons';
+import CheckCircle from '../../assets/SVG/svg/CheckCircle';
 
 const TruckItem = ({
   renderItem,
@@ -53,12 +53,13 @@ const TruckItem = ({
   const selectOwnerLorry = (data, index) => (
     <>
       {selected === index && checkIcon && (
-        <CheckIcon
-          style={styleSheet.checkIconStyle}
-          name="checkmark-circle"
-          size={20}
-          color="#fff"
-        />
+        // <CheckIcon
+        //   style={styleSheet.checkIconStyle}
+        //   name="checkmark-circle"
+        //   size={20}
+        //   color="#fff"
+        // />
+        <CheckCircle style={styleSheet.checkIconStyle} size={20} color="#fff" />
       )}
       <View>
         {(data?.image || imageRequire) && (
