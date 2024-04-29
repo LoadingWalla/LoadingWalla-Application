@@ -2,6 +2,7 @@ import React, {
   useState,
   useEffect,
   useContext,
+  useMemo,
   useCallback,
   useRef,
 } from 'react';
@@ -20,11 +21,17 @@ import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useFocusEffect} from '@react-navigation/native';
+import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
-import {PrivacyPolicy} from '../../../Color/color';
+import {
+  GradientColor2,
+  PrivacyPolicy,
+  pageBackground,
+  titleColor,
+} from '../../../Color/color';
 import MyLorryItem from '../../../Components/MyLorryItem';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
@@ -91,39 +98,24 @@ function MyTabBar({state, navigation, position, tabs}) {
   );
 }
 
-const TABS = [{title: 'Active'}, {title: 'Inactive'}];
-// function getRoutesForUserType(type) {
-//   const baseTabs = [{title: 'Active'}, {title: 'Inactive'}];
-
-//   let suffix = '';
-//   if (type === '1') {
-//     suffix = 'Load';
-//   } else if (type === '2') {
-//     suffix = 'Truck';
-//   }
-
-//   if (!suffix) {
-//     return [];
-//   }
-
-//   // Return the tabs with the titles updated to include the suffix
-//   return baseTabs.map(tab => ({title: `${tab.title} ${suffix}`}));
-// }
+const TABS = [{title: 'Active Load'}, {title: 'Inactive Load'}];
 
 const renderCustomTabView = props => <MyTabBar {...props} tabs={TABS} />;
-// const renderCustomTabView = (props, userType) => {
-//   const tabs = getRoutesForUserType(userType);
-//   return <MyTabBar {...props} tabs={tabs} />;
-// };
 
-// function getRoutesForUserType(type) {
-//   if (type === '1') {
-//     return [{title: 'Active Load'}, {title: 'Inactive Load'}];
-//   } else if (type === '2') {
-//     return [{title: 'Active Truck'}, {title: 'Inactive Truck'}];
-//   }
-//   return [];
-// }
+function getRoutesForUserType(type) {
+  if (type === '1') {
+    return [
+      {key: 'active', title: 'Active Load'},
+      {key: 'inactive', title: 'Inactive Load'},
+    ];
+  } else if (type === '2') {
+    return [
+      {key: 'active', title: 'Active Truck'},
+      {key: 'inactive', title: 'Inactive Truck'},
+    ];
+  }
+  return [];
+}
 
 const MyLorry = ({navigation}) => {
   const dispatch = useDispatch();
@@ -229,6 +221,7 @@ const MyLorry = ({navigation}) => {
               item={item}
               userType={userType}
               t={t}
+              openStatusModal={openStatusModal}
               navigation={navigation}
               selected={selected}
             />
@@ -270,6 +263,11 @@ const MyLorry = ({navigation}) => {
   function keyExtractor(item) {
     return userType === '1' ? item?.id : item?.truck_id;
   }
+
+  const openStatusModal = item => {
+    setStatusData(item);
+    setShowStatus(true);
+  };
 
   useEffect(() => {
     switch (index) {
