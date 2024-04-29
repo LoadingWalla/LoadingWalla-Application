@@ -5,14 +5,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  RefreshControl,
-  Image,
-} from 'react-native';
+import {View, Text, ScrollView, FlatList, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +17,6 @@ import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
 import MyLorryItem from '../../../Components/MyLorryItem';
-import StatusModal from '../../../Components/StatusModal';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import style from './style';
@@ -138,10 +130,12 @@ const MyLorry = ({navigation}) => {
               }}>
               {t(Constants.NOT_FOUND)}
             </Text>
-            <Image
-              source={require('../../../../assets/inconvience.png')}
+            {/* <Lottie
+              source={require('../../../../assets/notfound.json')}
+              autoPlay
+              loop
               style={{height: 250, width: 250}}
-            />
+            /> */}
           </View>
         </ScrollView>
       );
@@ -200,36 +194,9 @@ const MyLorry = ({navigation}) => {
     return userType === '1' ? item?.id : item?.truck_id;
   }
 
-  const dismissModal = () => {
-    if (userType === '1') {
-      dispatch(initMyLoad(selected));
-    } else {
-      dispatch(initMyLorry(selected));
-    }
-    setShowStatus(false);
-  };
-
-  const onClose = () => {
-    setShowStatus(false);
-  };
-
   const openStatusModal = item => {
     setStatusData(item);
     setShowStatus(true);
-  };
-
-  const statusModal = () => {
-    return (
-      <StatusModal
-        navigation={navigation}
-        showModal={e => setShowStatus(e)}
-        dismissModal={() => dismissModal()}
-        isEdit={isStatus}
-        data={statusData}
-        userType={userType}
-        onClose={() => onClose()}
-      />
-    );
   };
 
   useEffect(() => {
@@ -275,7 +242,6 @@ const MyLorry = ({navigation}) => {
           }
         />
       </View>
-      {isStatus && statusModal()}
       <View style={style.tabView}>
         <TabView
           navigationState={{index, routes}}
