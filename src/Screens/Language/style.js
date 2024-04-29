@@ -224,7 +224,7 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   gridText: {
-    fontSize: 12,
+    fontSize: 16,
     color: 'white',
     textAlign: 'center',
     // marginTop: 5,
@@ -232,7 +232,7 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   gridGreyText: {
-    fontSize: 12,
+    fontSize: 16,
     color: titleColor,
     // marginTop: 5,
     // paddingBottom: 5,

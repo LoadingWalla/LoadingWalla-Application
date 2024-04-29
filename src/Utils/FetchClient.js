@@ -2,8 +2,7 @@ import axios from 'axios';
 import * as URL from './Url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {navigate} from '../Navigation/NavigationService';
-import {Alert} from 'react-native';
-// import Snackbar from 'react-native-snackbar';
+import Snackbar from 'react-native-snackbar';
 
 const instanceFunction = instanceObj => {
   // Set the AUTH token for any request
@@ -22,7 +21,7 @@ const instanceFunction = instanceObj => {
   // Add a response interceptor
   instanceObj.interceptors.response.use(
     function (response) {
-      console.log('fetch client', response.status);
+      // console.log("fetch client", response.status);
       // Any status code that lie within the range of 2xx will come here
       let respObj = {
         data: response.data ? response.data : [],
@@ -38,23 +37,22 @@ const instanceFunction = instanceObj => {
     async function (error) {
       // console.log('5454545', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        console.log('Connection is slow.');
-        Alert.alert('Slow Connection');
-        // Snackbar.show({
-        //   text: 'Slow Internet Connection.',
-        //   duration: Snackbar.LENGTH_INDEFINITE,
-        //   fontFamily: 'PlusJakartaSans-SemiBold',
-        //   textColor: '#000000',
-        //   // marginBottom: 10,
-        //   backgroundColor: '#FFD7CC',
-        //   action: {
-        //     text: 'Retry',
-        //     textColor: '#FF0402',
-        //     onPress: () => {
-        //       /* Do something. */
-        //     },
-        //   },
-        // });
+        // console.log('Connection is slow.');
+        Snackbar.show({
+          text: 'Slow Internet Connection.',
+          duration: Snackbar.LENGTH_INDEFINITE,
+          fontFamily: 'PlusJakartaSans-SemiBold',
+          textColor: '#000000',
+          // marginBottom: 10,
+          backgroundColor: '#FFD7CC',
+          action: {
+            text: 'Retry',
+            textColor: '#FF0402',
+            onPress: () => {
+              /* Do something. */
+            },
+          },
+        });
       } else if (error.response && error.response.status === 401) {
         // }else if (error.response.status === 401 || error.response.status === 403){
         // Existing 401 handling code

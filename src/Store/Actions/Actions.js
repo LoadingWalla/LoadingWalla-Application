@@ -161,6 +161,7 @@ export const initLanguage = (langCode, langId) => ({
 });
 
 export const languageSuccess = payload => {
+  // console.log('language12Actions', payload);
   return {
     type: actionTypes.LANGUAGE_SUCCESS,
     payload,

@@ -5,7 +5,14 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {View, Text, ScrollView, FlatList, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  RefreshControl,
+  Image,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -131,12 +138,10 @@ const MyLorry = ({navigation}) => {
               }}>
               {t(Constants.NOT_FOUND)}
             </Text>
-            {/* <Lottie
-              source={require('../../../../assets/notfound.json')}
-              autoPlay
-              loop
+            <Image
+              source={require('../../../../assets/inconvience.png')}
               style={{height: 250, width: 250}}
-            /> */}
+            />
           </View>
         </ScrollView>
       );
