@@ -13,7 +13,6 @@ const DashboardHeader = ({
   title,
   navigate,
   notification,
-  navigatiopnWallet,
   img,
   isSmallImage,
   gotoProfile,

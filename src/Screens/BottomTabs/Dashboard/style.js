@@ -300,7 +300,9 @@ export default StyleSheet.create({
   tabView: {
     flex: 1,
     marginTop: 60,
-    paddingVertical: 10,
+    // paddingVertical: 10,
+    // borderWidth: 1,
+    backgroundColor: '#FFFDFD',
   },
 
   buttonstyle2: {
@@ -312,5 +314,29 @@ export default StyleSheet.create({
     marginBottom: 20,
     width: '50%',
     alignSelf: 'center',
+  },
+
+  // MyTabBar
+  tabsContainer: {
+    flexDirection: 'row',
+    margin: 10,
+    backgroundColor: '#E2E2E2',
+    borderRadius: 8,
+    padding: 3,
+    // borderWidth: 1,
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    gap: 8,
+    // borderWidth: 1,
+  },
+  tabBgColor: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    // borderWidth: 1,
   },
 });

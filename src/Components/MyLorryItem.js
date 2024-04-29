@@ -15,7 +15,7 @@ import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
 import PencilIcon from '../../assets/SVG/svg/PencilIcon';
 
-const MyLorryItem = ({item, userType, t, openStatusModal, navigation}) => {
+const MyLorryItem = ({item, userType, t, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   // console.log(888888, item);

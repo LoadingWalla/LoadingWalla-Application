@@ -2,15 +2,24 @@ import React, {
   useState,
   useEffect,
   useContext,
-  useMemo,
   useCallback,
+  useRef,
 } from 'react';
-import {View, Text, ScrollView, FlatList, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  Animated,
+  I18nManager,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {useFocusEffect} from '@react-navigation/native';
-import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
@@ -21,22 +30,100 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import style from './style';
 import Button from '../../../Components/Button';
-import RenderTabBar from '../../Requests/RenderTabBar';
 
-function getRoutesForUserType(type) {
-  if (type === '1') {
-    return [
-      {key: 'active', title: 'Active Load'},
-      {key: 'inactive', title: 'Inactive Load'},
-    ];
-  } else if (type === '2') {
-    return [
-      {key: 'active', title: 'Active Truck'},
-      {key: 'inactive', title: 'Inactive Truck'},
-    ];
-  }
-  return [];
+const Tab = createMaterialTopTabNavigator();
+
+function MyTabBar({state, navigation, position, tabs}) {
+  const layoutWidth = useRef(0);
+  return (
+    <View
+      style={style.tabsContainer}
+      onLayout={e => (layoutWidth.current = e.nativeEvent.layout.width)}>
+      {state.routes.map((route, index) => {
+        const isFocused = state.index === index;
+        const onPress = () =>
+          !isFocused && navigation.navigate({name: route.name, merge: true});
+
+        const inputRange = state.routes.map((_, i) => i);
+        const translateX = (isText = false) =>
+          Animated.multiply(
+            position.interpolate({
+              inputRange,
+              outputRange: inputRange.map(i => {
+                const diff = i - index;
+                const x = layoutWidth.current / tabs.length;
+                const value = diff > 0 ? x : diff < 0 ? -x : 0;
+                return !isText ? value : -value;
+              }),
+            }),
+            I18nManager.isRTL ? -1 : 1,
+          );
+
+        return (
+          <TouchableOpacity
+            key={`${route.name}_${index}`}
+            style={{flex: 1, overflow: 'hidden'}}
+            onPress={onPress}>
+            <View style={[style.iconTextContainer]}>
+              <Text style={{color: 'grey'}}>{route.name}</Text>
+            </View>
+
+            <Animated.View
+              style={[
+                style.tabBgColor,
+                {
+                  overflow: 'hidden',
+                  transform: [{translateX: translateX()}],
+                },
+              ]}>
+              <Animated.View
+                style={[
+                  style.iconTextContainer,
+                  {transform: [{translateX: translateX()}]},
+                ]}>
+                <Text style={{color: 'black'}}>{route.name}</Text>
+              </Animated.View>
+            </Animated.View>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
 }
+
+const TABS = [{title: 'Active'}, {title: 'Inactive'}];
+// function getRoutesForUserType(type) {
+//   const baseTabs = [{title: 'Active'}, {title: 'Inactive'}];
+
+//   let suffix = '';
+//   if (type === '1') {
+//     suffix = 'Load';
+//   } else if (type === '2') {
+//     suffix = 'Truck';
+//   }
+
+//   if (!suffix) {
+//     return [];
+//   }
+
+//   // Return the tabs with the titles updated to include the suffix
+//   return baseTabs.map(tab => ({title: `${tab.title} ${suffix}`}));
+// }
+
+const renderCustomTabView = props => <MyTabBar {...props} tabs={TABS} />;
+// const renderCustomTabView = (props, userType) => {
+//   const tabs = getRoutesForUserType(userType);
+//   return <MyTabBar {...props} tabs={tabs} />;
+// };
+
+// function getRoutesForUserType(type) {
+//   if (type === '1') {
+//     return [{title: 'Active Load'}, {title: 'Inactive Load'}];
+//   } else if (type === '2') {
+//     return [{title: 'Active Truck'}, {title: 'Inactive Truck'}];
+//   }
+//   return [];
+// }
 
 const MyLorry = ({navigation}) => {
   const dispatch = useDispatch();
@@ -57,11 +144,8 @@ const MyLorry = ({navigation}) => {
     myLorryUserData,
     myLoadUserData,
   } = useSelector(state => {
-    // console.log("My Lorry/Load", state.data);
     return state.data;
   });
-
-  const routes = useMemo(() => getRoutesForUserType(userType), [userType]);
 
   useFocusEffect(
     useCallback(() => {
@@ -130,12 +214,6 @@ const MyLorry = ({navigation}) => {
               }}>
               {t(Constants.NOT_FOUND)}
             </Text>
-            {/* <Lottie
-              source={require('../../../../assets/notfound.json')}
-              autoPlay
-              loop
-              style={{height: 250, width: 250}}
-            /> */}
           </View>
         </ScrollView>
       );
@@ -151,7 +229,6 @@ const MyLorry = ({navigation}) => {
               item={item}
               userType={userType}
               t={t}
-              openStatusModal={openStatusModal}
               navigation={navigation}
               selected={selected}
             />
@@ -194,11 +271,6 @@ const MyLorry = ({navigation}) => {
     return userType === '1' ? item?.id : item?.truck_id;
   }
 
-  const openStatusModal = item => {
-    setStatusData(item);
-    setShowStatus(true);
-  };
-
   useEffect(() => {
     switch (index) {
       case 0:
@@ -224,7 +296,6 @@ const MyLorry = ({navigation}) => {
               ? myLoadUserData?.profile_img
               : myLorryUserData?.profile_img
           }
-          navigatiopnWallet={() => navigation.navigate('Wallet')}
           title={
             userType === '1' ? myLoadUserData?.name : myLorryUserData?.name
           }
@@ -234,24 +305,16 @@ const MyLorry = ({navigation}) => {
           navigate={() => navigation.navigate('Contactus')}
           onPress={() => navigation.navigate('KYC')}
           loading={userType === '1' ? myLoadLoding : myLorryLoding}
-          wallet={
-            userType === '1' ? myLoadUserData?.wallet : myLorryUserData?.wallet
-          }
           verify={
             userType === '1' ? myLoadUserData?.verify : myLorryUserData?.verify
           }
         />
       </View>
       <View style={style.tabView}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={SceneMap({
-            active: ActiveTab,
-            inactive: InactiveTab,
-          })}
-          onIndexChange={setIndex}
-          renderTabBar={RenderTabBar}
-        />
+        <Tab.Navigator tabBar={renderCustomTabView}>
+          <Tab.Screen name={TABS[0].title} component={ActiveTab} />
+          <Tab.Screen name={TABS[1].title} component={InactiveTab} />
+        </Tab.Navigator>
       </View>
 
       <Button
