@@ -16,6 +16,7 @@ import CardHeader from './CardHeader';
 const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
   const {t} = useTranslation();
   const navigation = useNavigation();
+  console.log(909080980, detail);
 
   return (
     <View style={styles.card}>

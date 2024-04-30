@@ -6,12 +6,12 @@ import {
   Animated,
   BackHandler,
   Easing,
+  Image,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import Lottie from 'lottie-react-native';
 import style from './style';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
@@ -217,13 +217,11 @@ const FindLoadResult = ({navigation, route}) => {
         />
       ) : (
         <View style={style.lottieView}>
-          <Text style={style.lottieText}>{t(Constants.NOT_FOUND)}</Text>
-          {/* <Lottie
-            source={require('../../../../assets/notfound.json')}
-            autoPlay
-            loop
-            style={style.lottie}
-          /> */}
+          <Image
+            source={require('../../../../assets/GIFs/NoLoadFound.gif')}
+            resizeMode="cover"
+            style={{flex: 1}}
+          />
         </View>
       )}
     </View>

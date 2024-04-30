@@ -5,7 +5,14 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {View, Text, ScrollView, FlatList, RefreshControl} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  RefreshControl,
+  Image,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -121,22 +128,21 @@ const MyLorry = ({navigation}) => {
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              marginTop: 50,
+              backgroundColor: '#FFFDFD',
+              height: 500,
             }}>
-            <Text
+            <Image
+              source={
+                userType === '1'
+                  ? require('../../../../assets/GIFs/NoLoadFound.gif')
+                  : require('../../../../assets/GIFs/NoTruckFound.gif')
+              }
+              resizeMode="contain"
               style={{
-                fontSize: 18,
-                color: PrivacyPolicy,
-                fontFamily: 'PlusJakartaSans-Medium',
-              }}>
-              {t(Constants.NOT_FOUND)}
-            </Text>
-            {/* <Lottie
-              source={require('../../../../assets/notfound.json')}
-              autoPlay
-              loop
-              style={{height: 250, width: 250}}
-            /> */}
+                flex: 1,
+                width: '100%',
+              }}
+            />
           </View>
         </ScrollView>
       );

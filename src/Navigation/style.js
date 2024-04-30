@@ -11,7 +11,7 @@ export default StyleSheet.create({
     height: 3,
     backgroundColor: GradientColor2,
     position: 'absolute',
-    bottom: 65,
+    bottom: 55,
     borderRadius: 20,
     transform: [{translateX: offsetValue}],
   }),

@@ -6,6 +6,7 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -23,8 +24,6 @@ import BookingItem from '../../../Components/Bookingitem';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
-import {PrivacyPolicy} from '../../../Color/color';
-// import Lottie from 'lottie-react-native';
 
 const Booking = ({navigation}) => {
   const {t} = useTranslation();
@@ -39,7 +38,10 @@ const Booking = ({navigation}) => {
     BookingDashUser,
     BookingStatus,
     accept_rejectStatus,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log('My Bookings', state.data);
+    return state.data;
+  });
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -126,31 +128,19 @@ const Booking = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text
+            <View
               style={{
-                fontSize: 18,
-                color: PrivacyPolicy,
-                fontFamily: 'PlusJakartaSans-Medium',
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              {t(Constants.NOT_FOUND)}
-            </Text>
-            {/* <Lottie
-              source={require('../../../assets/notfound.json')}
-              autoPlay
-              loop
-              style={{height: 250, width: 250}}
-            /> */}
+              <Image
+                source={require('../../../../assets/GIFs/Nothing.gif')}
+                resizeMode="contain"
+              />
+            </View>
             <TouchableOpacity
-              style={{
-                borderWidth: 1,
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                borderRadius: 8,
-                fontSize: 18,
-                color: PrivacyPolicy,
-                borderColor: PrivacyPolicy,
-                fontFamily: 'PlusJakartaSans-Medium',
-              }}
+              style={style.previousBooking}
               onPress={() =>
                 navigation.navigate('Previous Bookings', {
                   Owner: BookingDashUser,

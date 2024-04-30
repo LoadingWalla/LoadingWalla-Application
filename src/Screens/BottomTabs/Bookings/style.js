@@ -153,4 +153,14 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     zIndex: 9999,
   },
+  previousBooking: {
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 8,
+    fontSize: 18,
+    color: PrivacyPolicy,
+    borderColor: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
 });

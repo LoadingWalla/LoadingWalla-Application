@@ -139,8 +139,8 @@ export default StyleSheet.create({
   lottieView: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
     flex: 1,
+    backgroundColor: '#FFFDFD',
   },
   lottieText: {
     fontSize: 18,
