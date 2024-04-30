@@ -15,8 +15,6 @@ import CommonToolbar from '../../Components/CommonToolbar';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {GradientColor1, titleColor, white} from '../../Color/color';
 import Button from '../../Components/Button';
 import {
@@ -24,6 +22,8 @@ import {
   fetchMapDataStart,
   initAcceptReject,
 } from '../../Store/Actions/Actions';
+import ExitFullScreen from '../../../assets/SVG/svg/ExitFullScreen';
+import FullScreenIcon from '../../../assets/SVG/svg/FullScreenIcon';
 const blueDot = require('../../../assets/dot.png');
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
@@ -220,9 +220,9 @@ const ViewDetail = ({navigation, route}) => {
           style={styles.fullScreenButton}
           onPress={toggleFullScreen}>
           {isFullScreen ? (
-            <Icon2 name="fullscreen-exit" size={20} />
+            <ExitFullScreen size={20} />
           ) : (
-            <Icon name="scan-outline" size={20} />
+            <FullScreenIcon size={20} />
           )}
         </TouchableOpacity>
       </View>

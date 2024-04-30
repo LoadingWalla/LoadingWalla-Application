@@ -8,16 +8,16 @@ import {
   textColor,
   titleColor,
 } from '../../../Color/color';
-import EditIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorImage from '../../../../assets/GIFs/error.gif';
 import successImage from '../../../../assets/GIFs/success.gif';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
+import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
 
 const BookingStatus = ({navigation, route}) => {
-  console.log('booking---status', route);
+  // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
   const {isConnected} = useContext(NetworkContext);
 
@@ -129,15 +129,19 @@ const BookingStatus = ({navigation, route}) => {
                     ? renter?.material_name
                     : renter?.vehicle_number}
                 </Text>
-                {userType === '1' && (
-                  <EditIcon
-                    name={
-                      renter?.verified ? 'check-circle' : 'information-outline'
-                    }
-                    size={20}
+                {userType === '1' && renter?.verified ? (
+                  // <EditIcon
+                  //   name={
+                  //     renter?.verified ? 'check-circle' : 'information-outline'
+                  //   }
+                  //   size={20}
+                  //   color={renter?.verified ? '#119500' : '#e5b900'}
+                  // />
+                  <CheckCircle
                     color={renter?.verified ? '#119500' : '#e5b900'}
+                    size={20}
                   />
-                )}
+                ) : null}
               </View>
               <Text style={styles.truckType}>
                 {userType === '1'
