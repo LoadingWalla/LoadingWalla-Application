@@ -24,6 +24,7 @@ import BookingItem from '../../../Components/Bookingitem';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
+import {PrivacyPolicy} from '../../../Color/color';
 
 const Booking = ({navigation}) => {
   const {t} = useTranslation();
@@ -39,7 +40,7 @@ const Booking = ({navigation}) => {
     BookingStatus,
     accept_rejectStatus,
   } = useSelector(state => {
-    console.log('My Bookings', state.data);
+    // console.log('My Bookings', state.data);
     return state.data;
   });
 
@@ -146,7 +147,7 @@ const Booking = ({navigation}) => {
                   Owner: BookingDashUser,
                 })
               }>
-              <Text>Go to Previous Booking</Text>
+              <Text style={{color: PrivacyPolicy}}>Go to Previous Booking</Text>
             </TouchableOpacity>
           </ScrollView>
         )}

@@ -56,24 +56,16 @@ const TextInputField = ({
       )}
 
       {isCloseIcon && defaultValue ? (
-        // <Location
-        //   style={style.locationIcon}
-        //   onPress={() => closeIconClick()}
-        //   name={defaultValue ? 'close' : ''}
-        //   size={20}
-        //   color={GradientColor2}
-        // />
-        <CloseCircle />
-      ) : null}
-      {/* {isCloseIcon && (
-        <Location
-          style={style.locationIcon}
+        <TouchableOpacity
           onPress={() => closeIconClick()}
-          name={defaultValue ? 'close' : ''}
-          size={20}
-          color={GradientColor2}
-        />
-      )} */}
+          style={style.locationIcon}>
+          <CloseCircle
+            size={20}
+            color={GradientColor2}
+            style={style.locationIcon}
+          />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

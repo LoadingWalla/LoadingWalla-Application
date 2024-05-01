@@ -367,6 +367,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    // borderWidth: 1,
   },
   searchText: {fontFamily: 'PlusJakartaSans-Bold', color: PrivacyPolicy},
   //

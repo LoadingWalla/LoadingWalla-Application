@@ -79,13 +79,6 @@ const Search = forwardRef(({navigation, route}, ref) => {
             autoFocus={true}
             onChangeText={text => searchItem(text)}
           />
-          {/* <Location
-            style={[style.locationIcon, {marginRight: 10}]}
-            onPress={() => !!value && clearItem()}
-            name={!!value && 'close'}
-            size={20}
-            color={GradientColor2}
-          /> */}
           {!!value && (
             <TouchableOpacity
               onPress={() => !!value && clearItem()}

@@ -1,3 +1,4 @@
+import '../../locales/index';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -63,7 +64,7 @@ const ViewDetail = ({navigation, route}) => {
     user_type,
   } = route.params.item;
   const {Owner} = route.params;
-  console.log(98798798, Owner);
+  // console.log(98798798, Owner);
 
   const {t} = useTranslation();
   const mapRef = useRef(null);

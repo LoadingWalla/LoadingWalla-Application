@@ -21,7 +21,7 @@ const instanceFunction = instanceObj => {
   // Add a response interceptor
   instanceObj.interceptors.response.use(
     function (response) {
-      // console.log("fetch client", response.status);
+      console.log('fetch client', response.status);
       // Any status code that lie within the range of 2xx will come here
       let respObj = {
         data: response.data ? response.data : [],
@@ -35,7 +35,7 @@ const instanceFunction = instanceObj => {
     //     return error.response;
     //   }
     async function (error) {
-      // console.log('5454545', error);
+      console.log('5454545', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         // console.log('Connection is slow.');
         Snackbar.show({
@@ -59,6 +59,16 @@ const instanceFunction = instanceObj => {
         await AsyncStorage.removeItem('UserType');
         await AsyncStorage.removeItem('auth-token');
         navigate('Signup');
+      } else if (error.response && error.response.status === 500) {
+        // Internal server error
+        // Handle 500 error here
+        Snackbar.show({
+          text: 'Internal Server Error.',
+          duration: Snackbar.LENGTH_LONG,
+          fontFamily: 'PlusJakartaSans-SemiBold',
+          textColor: '#000000',
+          backgroundColor: '#FFD7CC',
+        });
       }
       return Promise.reject(error);
     },
