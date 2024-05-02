@@ -206,6 +206,12 @@ const CompanyDetails = ({navigation, route}) => {
     }
   };
 
+  const handleNameChange = text => {
+    // Remove non-alphabet characters using regex
+    const updatedText = text.replace(/[^a-zA-Z]/g, '');
+    setname(updatedText);
+  };
+
   const navigateToSeach = val => {
     navigation.navigate('Search', {
       onReturn: item => {
@@ -322,7 +328,7 @@ const CompanyDetails = ({navigation, route}) => {
             <Text style={styleSheet.label}>{t(Constants.NAME)}</Text>
             <TextInputField
               isCloseIcon={false}
-              onChangeText={e => setname(e)}
+              onChangeText={handleNameChange}
             />
             <Text style={styleSheet.label}>{t(Constants.ENTER_CITY_NAME)}</Text>
             {/* <TextInputField

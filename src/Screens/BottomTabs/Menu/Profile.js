@@ -181,11 +181,7 @@ const Profile = ({navigation, route}) => {
             <View style={{flex: 1, marginLeft: 17, justifyContent: 'center'}}>
               <Text style={style.profileTitle}>{Userdata?.name}</Text>
               <Text style={style.subTitle}>
-                {Userdata?.user_type === 1
-                  ? 'Load Owner'
-                  : Userdata?.user_type === 2
-                  ? 'Truck Owner'
-                  : 'Transpoter'}
+                {Userdata?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
               </Text>
               <Text style={style.subTitle}>{Userdata?.city}</Text>
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>

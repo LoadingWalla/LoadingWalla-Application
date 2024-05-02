@@ -57,9 +57,13 @@ const TextInputField = ({
 
       {isCloseIcon && defaultValue ? (
         <TouchableOpacity
-          style={style.locationIcon}
-          onPress={() => closeIconClick()}>
-          <CloseCircle size={20} color={GradientColor2} />
+          onPress={() => closeIconClick()}
+          style={style.locationIcon}>
+          <CloseCircle
+            size={20}
+            color={GradientColor2}
+            style={style.locationIcon}
+          />
         </TouchableOpacity>
       ) : null}
     </View>

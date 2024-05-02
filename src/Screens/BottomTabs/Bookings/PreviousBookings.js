@@ -11,7 +11,6 @@ import {
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-// import Lottie from 'lottie-react-native';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initBooking} from '../../../Store/Actions/Actions';

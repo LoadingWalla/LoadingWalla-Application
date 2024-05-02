@@ -1,3 +1,4 @@
+import '../../locales/index';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -22,7 +23,7 @@ import {
   fetchMapDataStart,
   initAcceptReject,
 } from '../../Store/Actions/Actions';
-import ExitFullScreenIcon from '../../../assets/SVG/svg/ExitFullScreenIcon';
+import ExitFullScreen from '../../../assets/SVG/svg/ExitFullScreen';
 import FullScreenIcon from '../../../assets/SVG/svg/FullScreenIcon';
 const blueDot = require('../../../assets/dot.png');
 
@@ -63,7 +64,7 @@ const ViewDetail = ({navigation, route}) => {
     user_type,
   } = route.params.item;
   const {Owner} = route.params;
-  console.log(98798798, Owner);
+  // console.log(98798798, Owner);
 
   const {t} = useTranslation();
   const mapRef = useRef(null);
@@ -220,9 +221,9 @@ const ViewDetail = ({navigation, route}) => {
           style={styles.fullScreenButton}
           onPress={toggleFullScreen}>
           {isFullScreen ? (
-            <ExitFullScreenIcon name="fullscreen-exit" size={20} />
+            <ExitFullScreen size={20} />
           ) : (
-            <FullScreenIcon name="scan-outline" size={20} />
+            <FullScreenIcon size={20} />
           )}
         </TouchableOpacity>
       </View>

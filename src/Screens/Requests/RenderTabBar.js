@@ -17,10 +17,8 @@ const RenderTabBar = props => {
         backgroundColor: pageBackground,
         borderColor: GradientColor2,
         borderRadius: 7,
-        marginLeft: 5,
-        marginRight: 5,
         elevation: 2,
-        marginBottom: 10,
+        margin: 10,
       }}
       pressColor={'#F7F7F7'}
       renderLabel={({route, focused, color}) => {

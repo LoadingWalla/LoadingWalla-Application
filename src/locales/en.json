@@ -124,6 +124,7 @@
     "Negotiate": "Negotiate",
     "Received Requests": "Received Requests",
     "Sent Requests": "Sent Requests",
-    "Remove": "Remove"
+    "Remove": "Remove",
+    "Select a language, this can be changed later in settings.": "Select a language, this can be changed later in settings."
   }
 }

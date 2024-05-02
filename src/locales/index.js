@@ -8,9 +8,9 @@ i18n.use(initReactI18next).init({
   lng: 'en',
   fallbackLng: 'en',
   resources: {
-    en: en,
-    hi: hi,
-    pn: pn,
+    en: {translation: en},
+    hi: {translation: hi},
+    pn: {translation: pn},
   },
   interpolation: {
     escapeValue: false, // react already safes from xss

@@ -100,13 +100,17 @@ function BottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 65,
-            // height: 55,
+            // height: 65,
+            height: 55,
+            // borderWidth: 1,
+            // borderColor: 'red',
           },
           tabBarLabelStyle: {
             fontSize: 12,
             marginBottom: 10,
             fontFamily: 'PlusJakartaSans-Regular',
+            alignItems: 'center',
+            justifyContent: 'center',
           },
         })}>
         <Tab.Screen
@@ -114,7 +118,7 @@ function BottomTabs() {
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={25} /> : <HomeIcon size={25} />,
+              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({
@@ -141,7 +145,7 @@ function BottomTabs() {
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <TruckActiveIcon size={30} /> : <TruckIcon size={30} />,
+              focused ? <TruckActiveIcon size={25} /> : <TruckIcon size={25} />,
             headerShown: false,
             // tabBarButton: CustomTabButton,
           }}
@@ -175,9 +179,9 @@ function BottomTabs() {
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <BookingActiveIcon size={25} />
+                <BookingActiveIcon size={20} />
               ) : (
-                <BookingIcon size={25} />
+                <BookingIcon size={20} />
               ),
             headerShown: false,
           }}
@@ -211,9 +215,9 @@ function BottomTabs() {
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <DashboardActiveIcon size={25} />
+                <DashboardActiveIcon size={20} />
               ) : (
-                <DashboardIcon size={25} />
+                <DashboardIcon size={20} />
               ),
             headerShown: true,
             headerTitleAlign: 'center',
@@ -281,8 +285,8 @@ function MyLoadsBottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 65,
-            // height: 55,
+            // height: 65,
+            height: 55,
           },
           tabBarLabelStyle: {
             fontSize: 12,
@@ -295,7 +299,7 @@ function MyLoadsBottomTabs() {
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={25} /> : <HomeIcon size={25} />,
+              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
             //tabBarButton: CustomTabButton,
           }}
@@ -324,7 +328,7 @@ function MyLoadsBottomTabs() {
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <LoadActiveIcon size={30} /> : <LoadIcon size={30} />,
+              focused ? <LoadActiveIcon size={20} /> : <LoadIcon size={20} />,
             headerShown: false,
             // tabBarButton: CustomTabButton,
           }}
@@ -357,9 +361,9 @@ function MyLoadsBottomTabs() {
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <BookingActiveIcon size={25} />
+                <BookingActiveIcon size={20} />
               ) : (
-                <BookingIcon size={25} />
+                <BookingIcon size={20} />
               ),
             headerShown: false,
             //tabBarButton: CustomTabButton,
@@ -394,9 +398,9 @@ function MyLoadsBottomTabs() {
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <DashboardActiveIcon size={25} />
+                <DashboardActiveIcon size={20} />
               ) : (
-                <DashboardIcon size={25} />
+                <DashboardIcon size={20} />
               ),
             headerShown: true,
             headerTitleAlign: 'center',

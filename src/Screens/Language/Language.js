@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import Background from '../../Components/BackgroundGradient';
@@ -16,13 +16,42 @@ import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
+import {useTranslation} from 'react-i18next';
+
+const GridView = ({data, index, selected, onPress}) => (
+  <TouchableOpacity onPress={() => onPress(data, index)}>
+    {selected === data?.id ? (
+      <Background style={styles.gridbox}>
+        <CheckCircle style={styles.checkIconStyle} size={25} color="white" />
+        <View>
+          <Text style={[styles.gridText]}>{data?.languageName}</Text>
+        </View>
+        <Text style={styles.gridText}>{data?.language}</Text>
+      </Background>
+    ) : (
+      <View style={styles.gridGreyBox}>
+        <View>
+          <Text style={[styles.gridGreyText]}>{data?.languageName}</Text>
+        </View>
+        <Text style={styles.gridGreyText}>{data?.language}</Text>
+      </View>
+    )}
+  </TouchableOpacity>
+);
 
 const Language = ({navigation, route}) => {
+  const {params} = route;
+  const {t, i18n} = useTranslation();
+  // console.log(t(Constants.SELECT_LANGUAGE_TITLE));
+
   const [selected, setSelected] = useState(1);
   const {isConnected} = useContext(NetworkContext);
-  const {params} = route;
   const dispatch = useDispatch();
-  // const language = useSelector(state => state.language);
+
+  const {language} = useSelector(state => {
+    // console.log('language Screen', state.data);
+    return state.data;
+  });
 
   const languages = [
     {
@@ -55,43 +84,10 @@ const Language = ({navigation, route}) => {
     },
   ];
 
-  useEffect(() => {
-    const getLanguageId = async () => {
-      let langId = await AsyncStorage.getItem('languageID');
-      setSelected(langId || 1);
-    };
-    getLanguageId();
-  }, []);
-
-  const selectLanguage = async (data, index) => {
+  const selectLanguage = data => {
     setSelected(data?.langId);
-    dispatch(initLanguage(data?.code, data?.langId));
-    await AsyncStorage.setItem('languageID', JSON.stringify(data?.langId));
-    await AsyncStorage.setItem('language', data?.code);
+    i18n.changeLanguage(data.code);
   };
-
-  const languageData = data => (
-    <>
-      {selected === data?.id && (
-        <CheckCircle style={styles.checkIconStyle} size={25} color="white" />
-      )}
-
-      <View>
-        <Text
-          style={[
-            selected === data?.id ? styles.gridText : styles.gridGreyText,
-            {fontSize: 16},
-          ]}>
-          {data?.languageName}
-        </Text>
-      </View>
-
-      <Text
-        style={selected === data?.id ? styles.gridText : styles.gridGreyText}>
-        {data?.language}
-      </Text>
-    </>
-  );
 
   const navigate = () => {
     if (params?.fromMenu) {
@@ -101,16 +97,6 @@ const Language = ({navigation, route}) => {
     }
   };
 
-  const GridView = ({data, index}) => (
-    <TouchableOpacity onPress={() => selectLanguage(data, index)}>
-      {selected === data?.id ? (
-        <Background style={styles.gridbox}>{languageData(data)}</Background>
-      ) : (
-        <View style={styles.gridGreyBox}>{languageData(data)}</View>
-      )}
-    </TouchableOpacity>
-  );
-
   if (!isConnected) {
     return <NoInternetScreen navigation={navigation} />;
   }
@@ -118,20 +104,27 @@ const Language = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.part1}>
         <Text style={styles.languageTitle}>
-          {Constants.SELECT_LANGUAGE_TITLE}
+          {t(Constants.SELECT_LANGUAGE_TITLE)}
         </Text>
       </View>
       <View style={styles.part2}>
         <FlatList
           data={languages}
-          renderItem={({item, index}) => <GridView data={item} index={index} />}
+          renderItem={({item, index}) => (
+            <GridView
+              data={item}
+              index={index}
+              selected={selected}
+              onPress={selectLanguage}
+            />
+          )}
           numColumns={2}
         />
       </View>
       <View style={styles.part3}>
         <Button
           onPress={() => navigate()}
-          title={Constants.CONTINUE}
+          title={t(Constants.CONTINUE)}
           textStyle={styles.buttonTitile}
           style={styles.button}
         />

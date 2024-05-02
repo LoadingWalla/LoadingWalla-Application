@@ -17,8 +17,9 @@ import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
 import Information from '../../../../assets/SVG/svg/Information';
 
+
 const BookingStatus = ({navigation, route}) => {
-  console.log('booking---status', route);
+  // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
   const {isConnected} = useContext(NetworkContext);
 
