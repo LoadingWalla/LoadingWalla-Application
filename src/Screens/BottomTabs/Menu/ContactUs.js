@@ -6,6 +6,7 @@ import {
   ScrollView,
   Linking,
   Platform,
+  StatusBar,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
@@ -135,6 +136,7 @@ const ContactUs = ({navigation}) => {
   }
   return (
     <Background style={{flex: 1}}>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
       <View
         style={{
           flexDirection: 'row',

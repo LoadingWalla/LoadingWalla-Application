@@ -14,7 +14,7 @@ import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import {GradientColor3, PrivacyPolicy} from '../../Color/color';
+import {GradientColor3} from '../../Color/color';
 import {
   AcceptBookingFailure,
   cancelBookingFailure,
@@ -23,7 +23,6 @@ import {
   initGetRequestBooking,
 } from '../../Store/Actions/Actions';
 import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
-// import Lottie from 'lottie-react-native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import RenderTabBar from './RenderTabBar';
 import Button from '../../Components/Button';
@@ -36,6 +35,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useCallback} from 'react';
 import {memo} from 'react';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
+import NotFound from '../../Components/NotFound';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
@@ -131,27 +131,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 50,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: PrivacyPolicy,
-                      fontFamily: 'PlusJakartaSans-Medium',
-                    }}>
-                    {t(Constants.NOT_FOUND)}
-                  </Text>
-                  {/* <Lottie
-                    source={require('../../../assets/notfound.json')}
-                    autoPlay
-                    loop
-                    style={{height: 250, width: 250}}
-                  /> */}
-                </View>
+                <NotFound imageName="noTruckFound" />
               </ScrollView>
             )}
           </>
@@ -163,6 +143,11 @@ const Requests = ({route, navigation}) => {
       getRequestBookingdataReceived,
       refreshing,
       onRefresh,
+      cancelBookingRequest,
+      acceptBookingRequest,
+      selected,
+      getBookingRequest,
+      Owner,
     ],
   );
 
@@ -203,27 +188,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 50,
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: PrivacyPolicy,
-                      fontFamily: 'PlusJakartaSans-Medium',
-                    }}>
-                    {t(Constants.NOT_FOUND)}
-                  </Text>
-                  {/* <Lottie
-                    source={require('../../../assets/notfound.json')}
-                    autoPlay
-                    loop
-                    style={{height: 250, width: 250}}
-                  /> */}
-                </View>
+                <NotFound imageName="noTruckFound" />
               </ScrollView>
             )}
           </>
@@ -235,6 +200,11 @@ const Requests = ({route, navigation}) => {
       getRequestBookingdataSent,
       refreshing,
       onRefresh,
+      cancelBookingRequest,
+      acceptBookingRequest,
+      selected,
+      getBookingRequest,
+      Owner,
     ],
   );
 
@@ -345,18 +315,9 @@ const Requests = ({route, navigation}) => {
           {selected === 1 ? (
             <Button
               onPress={() => {
-                // if (selected === 1) {
                 acceptBookingRequest(item?.id);
                 getBookingRequest(Owner?.id, Owner?.truck_id, selected);
-                // } else {
-                //   navigation.navigate("Negotiation", {
-                //     item: item,
-                //     // owner: owner,
-                //     userType: userType,
-                //   });
-                // }
               }}
-              // title={selected === 1 ? "Accept" : "Revalue"}
               title={'Accept'}
               textStyle={styles.textStyle}
               style={styles.buttonStyle}
@@ -374,7 +335,7 @@ const Requests = ({route, navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
+      style={{flex: 1, backgroundColor: '#FFFDFD'}}>
       <FindLoadHeader
         title={'My Requests'}
         goBack={() => navigation.goBack()}

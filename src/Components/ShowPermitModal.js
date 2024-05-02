@@ -25,13 +25,11 @@ const ShowPermitModal = ({modalVisible, setModalVisible, permit}) => {
             modal={true}
           />
           <View style={styles.container}>
-            {/* {permit.map((p) => ( */}
-            <View
-              //    key={p.id}
-              style={styles.modalTextView}>
-              <Text style={styles.modaTtext}>All India Permit</Text>
-            </View>
-            {/* ))} */}
+            {permit?.map(p => (
+              <View key={p?.id} style={styles.modalTextView}>
+                <Text style={styles.modaTtext}>{p?.permit_name}</Text>
+              </View>
+            ))}
           </View>
         </View>
       </View>
@@ -47,11 +45,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    margin: 20,
+    margin: 30,
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
+    justifyContent: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

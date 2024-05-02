@@ -126,7 +126,7 @@ export default FindLoadHeader;
 const styles = StyleSheet.create({
   card: {
     elevation: 5,
-    backgroundColor: pageBackground,
+    backgroundColor: '#FFFDFD',
   },
   cardTop: {padding: 10, backgroundColor: white},
   cardHeaderView: {

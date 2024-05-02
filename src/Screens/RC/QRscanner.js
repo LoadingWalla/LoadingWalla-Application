@@ -69,7 +69,6 @@ const QRscanner = ({route, navigation}) => {
       {qrCodeLoading && (
         <View style={styles.modalBackground}>
           <ActivityIndicator animating={true} size="large" />
-          <Text>Loading...</Text>
         </View>
       )}
       <Camera

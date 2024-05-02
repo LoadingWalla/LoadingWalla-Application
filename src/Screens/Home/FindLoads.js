@@ -1,8 +1,7 @@
 import React, {useContext, useEffect, useRef} from 'react';
-import {View, Text, FlatList, Animated, Easing} from 'react-native';
+import {View, Text, FlatList, Animated, Easing, Image} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
-// import Lottie from 'lottie-react-native';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
 import {initFindLoad, initFindLorry} from '../../Store/Actions/Actions';
@@ -12,6 +11,7 @@ import NoInternetScreen from '../Details/NoInternetScreen';
 import FindLoadHeader from '../../Components/FindLoadHeader';
 import {PrivacyPolicy} from '../../Color/color';
 import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
+import NotFound from '../../Components/NotFound';
 
 const FindLoads = ({navigation, route}) => {
   // console.log(22222, route.params);
@@ -63,7 +63,12 @@ const FindLoads = ({navigation, route}) => {
   }
 
   return (
-    <View style={{flex: 1, justifyContent: 'flex-start'}}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'flex-start',
+        backgroundColor: '#FFFDFD',
+      }}>
       <FindLoadHeader
         title={`${t(Constants.RESULTS)} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length
@@ -96,27 +101,7 @@ const FindLoads = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
         />
       ) : (
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 50,
-          }}>
-          <Text
-            style={{
-              fontSize: 18,
-              color: PrivacyPolicy,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}>
-            {t(Constants.NOT_FOUND)}
-          </Text>
-          {/* <Lottie
-            source={require('../../../../assets/notfound.json')}
-            autoPlay
-            loop
-            style={{height: 250, width: 250}}
-          /> */}
-        </View>
+        <NotFound imageName="noLoadFound" />
       )}
     </View>
   );

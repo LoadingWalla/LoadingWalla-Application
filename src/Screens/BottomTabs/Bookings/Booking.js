@@ -25,6 +25,7 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
+import NotFound from '../../../Components/NotFound';
 
 const Booking = ({navigation}) => {
   const {t} = useTranslation();
@@ -129,17 +130,8 @@ const Booking = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={require('../../../../assets/GIFs/Nothing.gif')}
-                resizeMode="contain"
-              />
-            </View>
+            <NotFound imageName="noBookings" />
+
             <TouchableOpacity
               style={style.previousBooking}
               onPress={() =>

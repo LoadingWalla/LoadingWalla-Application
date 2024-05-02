@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {titleColor} from '../Color/color';
+import {GradientColor1, titleColor} from '../Color/color';
 import styles from './style';
 import CloseCircle from '../../assets/SVG/svg/CloseCircle';
 import GoBackIcon from '../../assets/SVG/svg/GoBackIcon';
@@ -11,7 +11,7 @@ const CommonToolbar = ({title, goBack, isBack, color, isClose, modal}) => {
       {isBack ? (
         <TouchableOpacity style={styles.backIconView} onPress={() => goBack()}>
           {isClose ? (
-            <CloseCircle size={30} color={titleColor} />
+            <CloseCircle size={30} color={GradientColor1} />
           ) : (
             <GoBackIcon size={30} color={titleColor} />
           )}

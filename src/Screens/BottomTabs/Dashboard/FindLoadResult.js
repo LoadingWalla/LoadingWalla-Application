@@ -23,6 +23,7 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 import SearchFilter from '../../../Components/SearchFilter';
 import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';
+import NotFound from '../../../Components/NotFound';
 
 const FindLoadResult = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -216,13 +217,7 @@ const FindLoadResult = ({navigation, route}) => {
           renderItem={({item}) => renderItem(item)}
         />
       ) : (
-        <View style={style.lottieView}>
-          <Image
-            source={require('../../../../assets/GIFs/NoLoadFound.gif')}
-            resizeMode="cover"
-            style={{flex: 1}}
-          />
-        </View>
+        <NotFound imageName="noLoadFound" />
       )}
     </View>
   );

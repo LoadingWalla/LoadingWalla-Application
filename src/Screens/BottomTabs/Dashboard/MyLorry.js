@@ -30,6 +30,7 @@ import style from './style';
 import Button from '../../../Components/Button';
 import RenderTabBar from '../../Requests/RenderTabBar';
 import MyTabBar from '../../Requests/MyTabBar';
+import NotFound from '../../../Components/NotFound';
 
 function getRoutesForUserType(type) {
   if (type === '1') {
@@ -124,26 +125,9 @@ const MyLorry = ({navigation}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#FFFDFD',
-              height: 500,
-            }}>
-            <Image
-              source={
-                userType === '1'
-                  ? require('../../../../assets/GIFs/NoLoadFound.gif')
-                  : require('../../../../assets/GIFs/NoTruckFound.gif')
-              }
-              resizeMode="contain"
-              style={{
-                flex: 1,
-                width: '100%',
-              }}
-            />
-          </View>
+          <NotFound
+            imageName={userType === '1' ? 'noLoadFound' : 'noTruckFound'}
+          />
         </ScrollView>
       );
     }

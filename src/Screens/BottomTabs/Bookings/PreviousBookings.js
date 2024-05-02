@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
+  Image,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
@@ -18,6 +19,7 @@ import CardHeader from '../../../Components/CardHeader';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
+import NotFound from '../../../Components/NotFound';
 
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
@@ -97,13 +99,7 @@ const PreviousBookings = ({navigation, route}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <Text style={styles.notFoundText}>{t(Constants.NOT_FOUND)}</Text>
-          {/* <Lottie
-            source={require('../../../assets/notfound.json')}
-            autoPlay
-            loop
-            style={styles.lottieStyle}
-          /> */}
+          <NotFound imageName="noPreviousBookings" />
         </ScrollView>
       )}
     </View>
@@ -115,6 +111,7 @@ export default PreviousBookings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFDFD',
   },
   card: {
     borderRadius: 8,
