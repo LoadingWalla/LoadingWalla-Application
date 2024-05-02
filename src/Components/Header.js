@@ -7,13 +7,9 @@ const Header = ({title, navigation}) => {
   return (
     <View style={style.headerView}>
       <View style={style.backIconView}>
-        {/* <Icon
+        <TouchableOpacity
           onPress={() => navigation()}
-          name="arrow-back-sharp"
-          size={30}
-          color="#000"
-        /> */}
-        <TouchableOpacity onPress={() => navigation()}>
+          style={style.backIconView}>
           <GoBackIcon size={30} color="#000" />
         </TouchableOpacity>
       </View>

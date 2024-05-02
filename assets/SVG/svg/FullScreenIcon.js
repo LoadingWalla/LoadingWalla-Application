@@ -1,6 +1,7 @@
 import React from 'react';
 import {Path, Svg} from 'react-native-svg';
 
+
 const FullScreenIcon = ({size, color, style}) => {
   return (
     <Svg

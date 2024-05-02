@@ -15,6 +15,8 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
+import Information from '../../../../assets/SVG/svg/Information';
+
 
 const BookingStatus = ({navigation, route}) => {
   // console.log('booking---status', route);
@@ -130,18 +132,10 @@ const BookingStatus = ({navigation, route}) => {
                     : renter?.vehicle_number}
                 </Text>
                 {userType === '1' && renter?.verified ? (
-                  // <EditIcon
-                  //   name={
-                  //     renter?.verified ? 'check-circle' : 'information-outline'
-                  //   }
-                  //   size={20}
-                  //   color={renter?.verified ? '#119500' : '#e5b900'}
-                  // />
-                  <CheckCircle
-                    color={renter?.verified ? '#119500' : '#e5b900'}
-                    size={20}
-                  />
-                ) : null}
+                  <CheckCircle size={20} color={'#119500'} />
+                ) : (
+                  <Information size={20} color={'#e5b900'} />
+                )}
               </View>
               <Text style={styles.truckType}>
                 {userType === '1'
