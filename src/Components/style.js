@@ -23,7 +23,7 @@ export default StyleSheet.create({
   backIconView: {
     width: 38,
     height: 38,
-    elevation: 2,
+    // elevation: 2,
     margin: 1,
     backgroundColor: 'white',
     borderRadius: 8,

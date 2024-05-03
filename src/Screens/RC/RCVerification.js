@@ -14,7 +14,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import styles from './style';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
-import Cammera from '../../../assets/SVG/Gallery';
+import Cammera from '../../../assets/SVG/Camera';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import {GradientColor3, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
@@ -108,7 +108,6 @@ const RCVerification = ({navigation, route}) => {
         width: 960,
         height: 1280,
         cropping: true,
-        cropperCircleOverlay: true,
         compressImageQuality: 1,
         hideBottomControls: true,
       });
@@ -137,7 +136,7 @@ const RCVerification = ({navigation, route}) => {
 
   const uploadRC = async () => {
     if (!rcFrontImage || !rcBackImage) {
-      alert('Please select both front and back images.');
+      Alert.alert('Please select both front and back images.');
       return;
     }
     // rcUploadRequest(truck_id, [rcFrontImage, rcBackImage]);

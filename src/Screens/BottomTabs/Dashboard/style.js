@@ -141,6 +141,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     backgroundColor: '#FFFDFD',
+    overflow: 'hidden',
   },
   lottieText: {
     fontSize: 18,

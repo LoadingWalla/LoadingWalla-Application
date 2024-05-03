@@ -489,6 +489,9 @@ const Navigation = ({language}) => {
           headerShown: route?.params?.fromMenu ? true : false,
           headerTitleAlign: 'center',
           title: Constants.SELECT_LANGUAGE,
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         })}
         listeners={({navigation, route}) => ({
           focus: () =>
@@ -526,6 +529,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: route.params?.headerTitle || 'Legal Policies',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         })}
         listeners={() => ({
           focus: () =>
@@ -546,6 +552,9 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: 'Verify Phone Number',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={() => ({
           // Onpress Update....
@@ -618,7 +627,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="WhatsApp"
         component={WhatsAppAlert}
-        options={{headerShown: true, headerTitleAlign: 'center'}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),
@@ -650,6 +665,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: 'Add Truck',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -670,6 +688,9 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           title: 'Results',
           headerShadowVisible: false,
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -689,6 +710,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           title: 'Post Load +',
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -708,6 +732,9 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -743,6 +770,10 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: 'Results',
+          animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           focus: () =>
@@ -762,6 +793,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           title: 'Contact Us',
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
           headerBackground: () => (
             <LinearGradient
               colors={[GradientColor1, GradientColor2, GradientColor3]}
@@ -791,6 +825,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: 'Help Guide',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -806,7 +843,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Wallet"
         component={Wallet}
-        options={{headerShown: true, headerTitleAlign: 'center'}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>
@@ -842,6 +885,9 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: 'Search Location',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -863,7 +909,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           headerTitleStyle: {
-            // fontWeight: "700",
+            fontFamily: 'PlusJakartaSans-Bold',
           },
         }}
         listeners={({navigation, route}) => ({
@@ -883,6 +929,9 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -898,7 +947,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="RC Verification"
         component={RCVerification}
-        options={{headerShown: true, headerTitleAlign: 'center'}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () => {
@@ -923,6 +978,9 @@ const Navigation = ({language}) => {
           headerShown: false,
           presentation: 'modal',
           animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1019,6 +1077,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: 'Document Details',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1054,7 +1115,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Previous Bookings"
         component={PreviousBookings}
-        options={{headerShown: true, headerTitleAlign: 'center'}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>
@@ -1073,6 +1140,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: 'Verify OTP',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1092,6 +1162,9 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: route.params?.headerTitle || null,
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

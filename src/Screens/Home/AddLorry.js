@@ -17,7 +17,6 @@ import {
   GradientColor2,
   PrivacyPolicy,
   inputColor,
-  pageBackground,
   seperator,
   textColor,
   titleColor,
@@ -64,14 +63,10 @@ const AddLorry = ({navigation, route}) => {
     loading,
     status,
     addLorryStatus,
-    DashboardData,
     truckTypeData,
     permitData,
     wheeldata,
-    deletelorryLoading,
     statusChangeLoading,
-    modalLocation,
-    modalLocationTo,
     statusChange_Status,
     statusChangeData,
   } = useSelector(state => {
@@ -524,29 +519,29 @@ const AddLorry = ({navigation, route}) => {
               }}>
               {t(Constants.NOTE)}
             </Text>
+            <View
+              style={{
+                alignItems: 'center',
+                marginVertical: 20,
+              }}>
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                style={{
+                  borderColor: PrivacyPolicy,
+                }}>
+                <Text
+                  style={{
+                    color: PrivacyPolicy,
+                    fontFamily: 'PlusJakartaSans-SemiBold',
+                    textDecorationLine: 'underline',
+                  }}>
+                  Skip
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </ScrollView>
-      <View
-        style={{
-          alignItems: 'center',
-          marginBottom: 20,
-        }}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            borderColor: PrivacyPolicy,
-          }}>
-          <Text
-            style={{
-              color: PrivacyPolicy,
-              fontFamily: 'PlusJakartaSans-SemiBold',
-              textDecorationLine: 'underline',
-            }}>
-            Skip
-          </Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -560,7 +555,7 @@ const styleSheet = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    borderRadius: 28,
+    borderRadius: 8,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
