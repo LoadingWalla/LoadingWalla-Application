@@ -109,7 +109,7 @@ export const WHEEL = 'Wheel';
 export const NOT_FOUND = 'Not found';
 export const STATUS = 'Status';
 
-export const HELP_GUIDE = 'Help Guide(FAQs)';
+export const HELP_GUIDE = 'Help Guide (FAQs)';
 export const HELP_GUIDE_DES = 'A help guide for you to get loads etc.';
 export const LANGUAGE = 'Language';
 export const LANGUAGE_DES = 'Change the language from here';

@@ -27,7 +27,8 @@ const SearchFilter = ({
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => closeIconClick()}
+        // onPress={() => closeIconClick()}
+        onPress={() => (defaultValue ? closeIconClick() : onSearchPress())}
         style={{justifyContent: 'center', marginRight: 10}}>
         {defaultValue ? (
           <CloseCircle
