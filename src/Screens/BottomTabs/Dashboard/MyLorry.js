@@ -133,10 +133,11 @@ const MyLorry = ({navigation}) => {
     }
 
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, paddingHorizontal: 5}}>
         <FlatList
           keyExtractor={keyExtractor}
           data={relevantData}
+          showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
             <MyLorryItem
               item={item}

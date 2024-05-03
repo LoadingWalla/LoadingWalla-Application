@@ -16,7 +16,7 @@ import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import NoInternetScreen from '../Details/NoInternetScreen';
-import {GradientColor3, titleColor} from '../../Color/color';
+import {GradientColor3, PrivacyPolicy, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
@@ -221,13 +221,14 @@ const RCVerification = ({navigation, route}) => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            paddingVertical: 3,
-            backgroundColor: '#FFF',
+            paddingVertical: 10,
+            backgroundColor: '#FFEBE6',
           }}>
           <Text
             style={{
               color: titleColor,
-            }}>{`RC verification for truck no. `}</Text>
+              fontFamily: 'PlusJakartaSans-SemiBold',
+            }}>{`RC verification for truck no. : `}</Text>
           <Text style={styles.label}>{RC}</Text>
         </View>
         <View style={{marginTop: 20, flex: 1}}>

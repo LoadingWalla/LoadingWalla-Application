@@ -100,7 +100,6 @@ export default StyleSheet.create({
     color: '#888',
   },
   label: {
-    // fontWeight: '700',
     fontSize: 15,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',

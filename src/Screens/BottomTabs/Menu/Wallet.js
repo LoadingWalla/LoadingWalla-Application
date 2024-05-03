@@ -20,6 +20,7 @@ import {
 } from '../../../Store/Actions/Actions';
 import {
   GradientColor3,
+  PrivacyPolicy,
   pageBackground,
   textColor,
   titleColor,
@@ -131,6 +132,7 @@ const Wallet = ({navigation}) => {
             placeholder="Enter amount"
             style={styles.textInput}
             keyboardType="numeric"
+            placeholderTextColor={PrivacyPolicy}
           />
         </View>
 
@@ -177,6 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   texts: {
+    color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Regular',
     fontSize: 12,
   },
@@ -192,6 +195,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   topupWallet: {
+    color: PrivacyPolicy,
     marginTop: 10,
     marginBottom: 10,
     fontSize: 12,
