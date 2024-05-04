@@ -35,7 +35,7 @@ export default StyleSheet.create({
   },
   MainContainer: {
     flex: 1,
-    // backgroundColor: pageBackground,
+    backgroundColor: '#FFFDFD',
     // padding: 20,
   },
   findLocationBox: {

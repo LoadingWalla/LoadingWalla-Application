@@ -665,6 +665,7 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           title: 'Add Truck',
+          animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

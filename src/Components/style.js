@@ -340,6 +340,7 @@ export default StyleSheet.create({
     elevation: 2,
     marginTop: 18,
     borderRadius: 8,
+    marginHorizontal: 5,
   },
   searchLeftText: {
     flex: 1,
