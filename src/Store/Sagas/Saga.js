@@ -750,7 +750,7 @@ export function* deleteLorryRequest({lorry_id, userType}) {
 
 // Saga Cancel Booking
 export function* cancelBookingRequest({req_id}) {
-  // console.log("Saga req_id", typeof req_id);
+  // console.log('Saga req_id', typeof req_id);
   try {
     let data = yield API.post('cancel-booking', {req_id});
     // console.log("API response------MYLOAD", data);

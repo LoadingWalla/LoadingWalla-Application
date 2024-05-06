@@ -37,6 +37,7 @@ import {
   initlocationToChange,
   statusChangeFailure,
 } from '../../Store/Actions/Actions';
+import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
 
 const AddLorry = ({navigation, route}) => {
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -69,6 +70,7 @@ const AddLorry = ({navigation, route}) => {
     statusChangeLoading,
     statusChange_Status,
     statusChangeData,
+    requireLorryLoading,
   } = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
     return state.data;
@@ -331,217 +333,224 @@ const AddLorry = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styleSheet.MainContainer}>
-      <ScrollView
-        style={{
-          padding: 15,
-          backgroundColor: 'white',
-          flex: 1,
-        }}
-        contentContainerStyle={{paddingBottom: 20}}
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        {seeMore()}
-        {viewIndex === 0 ? (
-          <View>
-            <Text style={styleSheet.label}>{t(Constants.VEHICLE_NUMBER)}</Text>
-            <TextInputField
-              value={removeEmojis(vehicleNumber).toUpperCase()}
-              hint={'XX 00 XX 0000'}
-              onChangeText={e => {
-                let input = e.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                if (input.length > 2) {
-                  input = input.substring(0, 2) + ' ' + input.substring(2);
-                }
-                if (input.length > 5) {
-                  input = input.substring(0, 5) + ' ' + input.substring(5);
-                }
-                if (input.length > 8) {
-                  input = input.substring(0, 8) + ' ' + input.substring(8);
-                }
-                input = input.substring(0, 13);
-                setVehicleNumber(input);
-              }}
-            />
-            <Text style={styleSheet.label}>{t(Constants.TRUCK_TYPE)}</Text>
-            <TruckItem
-              click={e => setVehicle(e?.id)}
-              backgroundStyle={{
-                padding: 20,
-                borderRadius: 8,
-                marginRight: 10,
-                marginBottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#f19e72',
-              }}
-              imageRequire={true}
-              horizontal={true}
-              checkIcon={true}
-              unseleckBackground={{
-                padding: 20,
-                backgroundColor: inputColor,
-                borderRadius: 8,
-                marginRight: 10,
-                marginBottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              renderItem={wheeldata}
-            />
-            <Text style={styleSheet.label}>{t(Constants.BODY_TYPE)}</Text>
-            <TruckItem
-              backgroundStyle={styleSheet.truckTypeItem}
-              unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
-              horizontal={true}
-              checkIcon={false}
-              renderItem={truckTypeData}
-              click={e => setVehicleType(e?.id)}
-            />
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styleSheet.label}>{'Permit'}</Text>
-              <TouchableOpacity onPress={() => setSeeMore(true)}>
-                <Text
-                  style={{
-                    color: GradientColor2,
-                    fontWeight: '500',
-                    fontSize: 15,
-                    fontFamily: 'PlusJakartaSans-Medium',
-                  }}>
-                  See More
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <TruckItem
-              backgroundStyle={styleSheet.truckTypeItem}
-              unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
-              horizontal={true}
-              checkIcon={false}
-              multiple={true}
-              renderItem={mPermitData?.slice(0, 10)}
-              click={e => handleChange(e)}
-            />
-
+      {requireLorryLoading ? (
+        <AddLorryShimmer />
+      ) : (
+        <ScrollView
+          style={{
+            padding: 15,
+            backgroundColor: 'white',
+            flex: 1,
+          }}
+          contentContainerStyle={{paddingBottom: 20}}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
+          {seeMore()}
+          {viewIndex === 0 ? (
             <View>
-              <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
-              <View style={{marginTop: 15, marginLeft: 15}}>
-                <RadioButton
-                  label="Get a Free GPS Tracker"
-                  onPress={() => setSelectedGPSOption('1')}
-                  selected={selectedGPSOption === '1'}
-                />
-                <RadioButton
-                  label="Already have GPS Tracker"
-                  onPress={() => setSelectedGPSOption('0')}
-                  selected={selectedGPSOption === '0'}
-                />
-                {/* <RadioButton
+              <Text style={styleSheet.label}>
+                {t(Constants.VEHICLE_NUMBER)}
+              </Text>
+              <TextInputField
+                value={removeEmojis(vehicleNumber).toUpperCase()}
+                hint={'XX 00 XX 0000'}
+                onChangeText={e => {
+                  let input = e.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                  if (input.length > 2) {
+                    input = input.substring(0, 2) + ' ' + input.substring(2);
+                  }
+                  if (input.length > 5) {
+                    input = input.substring(0, 5) + ' ' + input.substring(5);
+                  }
+                  if (input.length > 8) {
+                    input = input.substring(0, 8) + ' ' + input.substring(8);
+                  }
+                  input = input.substring(0, 13);
+                  setVehicleNumber(input);
+                }}
+              />
+              <Text style={styleSheet.label}>{t(Constants.TRUCK_TYPE)}</Text>
+              <TruckItem
+                click={e => setVehicle(e?.id)}
+                backgroundStyle={{
+                  padding: 20,
+                  borderRadius: 8,
+                  marginRight: 10,
+                  marginBottom: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: '#f19e72',
+                }}
+                imageRequire={true}
+                horizontal={true}
+                checkIcon={true}
+                unseleckBackground={{
+                  padding: 20,
+                  backgroundColor: inputColor,
+                  borderRadius: 8,
+                  marginRight: 10,
+                  marginBottom: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                renderItem={wheeldata}
+              />
+              <Text style={styleSheet.label}>{t(Constants.BODY_TYPE)}</Text>
+              <TruckItem
+                backgroundStyle={styleSheet.truckTypeItem}
+                unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+                horizontal={true}
+                checkIcon={false}
+                renderItem={truckTypeData}
+                click={e => setVehicleType(e?.id)}
+              />
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styleSheet.label}>{'Permit'}</Text>
+                <TouchableOpacity onPress={() => setSeeMore(true)}>
+                  <Text
+                    style={{
+                      color: GradientColor2,
+                      fontWeight: '500',
+                      fontSize: 15,
+                      fontFamily: 'PlusJakartaSans-Medium',
+                    }}>
+                    See More
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <TruckItem
+                backgroundStyle={styleSheet.truckTypeItem}
+                unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+                horizontal={true}
+                checkIcon={false}
+                multiple={true}
+                renderItem={mPermitData?.slice(0, 10)}
+                click={e => handleChange(e)}
+              />
+
+              <View>
+                <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
+                <View style={{marginTop: 15, marginLeft: 15}}>
+                  <RadioButton
+                    label="Get GPS Tracker Now"
+                    onPress={() => setSelectedGPSOption('1')}
+                    selected={selectedGPSOption === '1'}
+                  />
+                  <RadioButton
+                    label="Already have GPS Tracker"
+                    onPress={() => setSelectedGPSOption('0')}
+                    selected={selectedGPSOption === '0'}
+                  />
+                  {/* <RadioButton
                   label="Remind me later"
                   onPress={() => setSelectedGPSOption("2")}
                   selected={selectedGPSOption === "2"}
                 /> */}
+                </View>
               </View>
-            </View>
 
-            <Button
-              loading={loading}
-              touchStyle={styleSheet.touchStyle}
-              onPress={() => {
-                addLorry();
-              }}
-              title={t(Constants.SAVE_PROCEED)}
-              textStyle={styleSheet.buttonTitile}
-              style={styleSheet.button}
-            />
-          </View>
-        ) : (
-          <View style={{marginTop: 30, padding: 20}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={{fontSize: 18, fontWeight: '700', color: '#352422'}}>
-                {t(Constants.ACTIVE)}
-              </Text>
-              <Switch
-                isOn={isEnabled}
-                onColor={GradientColor2}
-                offColor={seperator}
-                labelStyle={{color: 'black', fontWeight: '900'}}
-                size="medium"
-                onToggle={isOn => setIsEnabled(isOn)}
+              <Button
+                loading={loading}
+                touchStyle={styleSheet.touchStyle}
+                onPress={() => {
+                  addLorry();
+                }}
+                title={t(Constants.SAVE_PROCEED)}
+                textStyle={styleSheet.buttonTitile}
+                style={styleSheet.button}
               />
             </View>
-            <SearchFilter
-              defaultValue={searchFrom}
-              leftTitle={t(Constants.FROM)}
-              closeIconClick={() => closeIconClick('from')}
-              onSearchPress={() => navigateToSeach('from')}
-              placeholder={t(Constants.SELECT_LOCATION_TITLE)}
-            />
-            <SearchFilter
-              defaultValue={searchTo}
-              leftTitle={t(Constants.TO)}
-              closeIconClick={() => closeIconClick('to')}
-              onSearchPress={() => navigateToSeach('to')}
-              placeholder={t(Constants.SELECT_LOCATION_TITLE)}
-            />
-            <Button //searchLoad()
-              onPress={() => saveChanges()}
-              title={'Save'}
-              loading={statusChangeLoading}
-              textStyle={{
-                color: textColor,
-                fontWeight: '700',
-                fontSize: 16,
-                fontFamily: 'PlusJakartaSans-Bold',
-              }}
-              style={{
-                flexDirection: 'row',
-                borderRadius: 28,
-                height: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: 20,
-              }}
-            />
-            <Text
-              style={{
-                marginLeft: 30,
-                marginRight: 30,
-                fontWeight: '400',
-                fontSize: 15,
-                textAlign: 'center',
-                marginBottom: 15,
-                color: titleColor,
-              }}>
-              {t(Constants.NOTE)}
-            </Text>
-            <View
-              style={{
-                alignItems: 'center',
-                marginVertical: 20,
-              }}>
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
+          ) : (
+            <View style={{marginTop: 30, padding: 20}}>
+              <View
                 style={{
-                  borderColor: PrivacyPolicy,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}>
                 <Text
-                  style={{
-                    color: PrivacyPolicy,
-                    fontFamily: 'PlusJakartaSans-SemiBold',
-                    textDecorationLine: 'underline',
-                  }}>
-                  Skip
+                  style={{fontSize: 18, fontWeight: '700', color: '#352422'}}>
+                  {t(Constants.ACTIVE)}
                 </Text>
-              </TouchableOpacity>
+                <Switch
+                  isOn={isEnabled}
+                  onColor={GradientColor2}
+                  offColor={seperator}
+                  labelStyle={{color: 'black', fontWeight: '900'}}
+                  size="medium"
+                  onToggle={isOn => setIsEnabled(isOn)}
+                />
+              </View>
+              <SearchFilter
+                defaultValue={searchFrom}
+                leftTitle={t(Constants.FROM)}
+                closeIconClick={() => closeIconClick('from')}
+                onSearchPress={() => navigateToSeach('from')}
+                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+              />
+              <SearchFilter
+                defaultValue={searchTo}
+                leftTitle={t(Constants.TO)}
+                closeIconClick={() => closeIconClick('to')}
+                onSearchPress={() => navigateToSeach('to')}
+                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+              />
+              <Button //searchLoad()
+                onPress={() => saveChanges()}
+                title={'Save'}
+                loading={statusChangeLoading}
+                textStyle={{
+                  color: textColor,
+                  fontWeight: '700',
+                  fontSize: 16,
+                  fontFamily: 'PlusJakartaSans-Bold',
+                }}
+                style={{
+                  flexDirection: 'row',
+                  borderRadius: 8,
+                  height: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: 20,
+                }}
+              />
+              <Text
+                style={{
+                  marginLeft: 30,
+                  marginRight: 30,
+                  fontWeight: '400',
+                  fontSize: 15,
+                  textAlign: 'center',
+                  marginBottom: 15,
+                  color: titleColor,
+                }}>
+                {t(Constants.NOTE)}
+              </Text>
+              <View
+                style={{
+                  alignItems: 'center',
+                  marginVertical: 20,
+                }}>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={{
+                    borderColor: PrivacyPolicy,
+                  }}>
+                  <Text
+                    style={{
+                      color: PrivacyPolicy,
+                      fontFamily: 'PlusJakartaSans-SemiBold',
+                      textDecorationLine: 'underline',
+                    }}>
+                    Skip
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

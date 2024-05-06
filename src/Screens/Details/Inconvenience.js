@@ -1,11 +1,6 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {
-  GradientColor1,
-  GradientColor2,
-  PrivacyPolicy,
-  backgroundColorNew,
-} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 
 const Inconvenience = ({navigation}) => {
   return (
@@ -45,6 +40,12 @@ const styles = StyleSheet.create({
     backgroundColor: backgroundColorNew,
     borderRadius: 5,
     bottom: 20,
+    width: '90%',
   },
-  txt: {color: '#FFFFFF', fontFamily: 'PlusJakartaSans-SemiBold', fontSize: 16},
+  txt: {
+    color: '#FFFFFF',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });

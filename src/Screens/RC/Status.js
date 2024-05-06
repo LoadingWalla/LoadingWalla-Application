@@ -21,7 +21,7 @@ const Status = ({navigation, route}) => {
 
   const {mySingleLoding, mySingleStatus, mySingleTruckData, mySingleUserData} =
     useSelector(state => {
-      console.log('My Lorry/Load', state.data);
+      // console.log('My Lorry/Load', state.data.mySingleTruckData);
       return state.data;
     });
 
@@ -39,10 +39,19 @@ const Status = ({navigation, route}) => {
       <View style={styles.mainContainer}>
         <TouchableOpacity
           style={styles.closeButton}
-          onPress={() => navigation.goBack()}>
+          // onPress={() => navigation.goBack()}>
+          onPress={() => navigation.navigate('My Truck')}>
           <CloseCircle size={25} />
         </TouchableOpacity>
         <View style={styles.container}>
+          <Image
+            source={require('../../../assets/GIFs/success.gif')}
+            resizeMode="contain"
+            style={{
+              height: 200,
+              width: 200,
+            }}
+          />
           <Text
             style={[
               styles.congratsText,
@@ -108,7 +117,8 @@ const Status = ({navigation, route}) => {
                 </Text>
               )}
               <TouchableOpacity
-                style={styles.buttonstyle}
+                style={styles.buttonstyle(mySingleTruckData?.status)}
+                disabled={mySingleTruckData?.status === 0}
                 onPress={() => {
                   navigation.navigate('FindLoads', {
                     Owner: mySingleTruckData,
@@ -221,15 +231,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  buttonstyle: {
-    backgroundColor: GradientColor3,
+  buttonstyle: status => ({
+    backgroundColor: status ? GradientColor3 : PrivacyPolicy,
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
     alignSelf: 'center',
-  },
+  }),
 
   card: {
     backgroundColor: '#fff',

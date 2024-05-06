@@ -109,6 +109,7 @@ const initialState = {
   cancelBookingMessage: null,
   cancelBookingLoading: false,
   addLorryStatus: null,
+  requireLorryLoading: false,
   bookingLorrydata: null,
   acceptBookingStatus: null,
   bookingPending: [],
@@ -887,6 +888,7 @@ const reducer = (state = initialState, action) => {
         permitData: [],
         wheeldata: [],
         addLorryStatus: null,
+        requireLorryLoading: true,
       };
     case actionTypes.LORRY_REQUIRE_SUCCESS:
       return updateState(state, {
@@ -894,6 +896,7 @@ const reducer = (state = initialState, action) => {
         permitData: payload?.data?.permit,
         wheeldata: payload?.data?.wheel,
         addLorryStatus: payload?.data?.status,
+        requireLorryLoading: false,
       });
     case actionTypes.LORRY_REQUIRE_FAILURE:
       return updateState(state, {
@@ -901,6 +904,7 @@ const reducer = (state = initialState, action) => {
         permitData: [],
         wheeldata: [],
         addLorryStatus: null,
+        requireLorryLoading: false,
       });
 
     case actionTypes.INIT_DELETE_LORRY:

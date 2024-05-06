@@ -159,7 +159,12 @@ const ContactUs = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
-        style={{flex: 1}}>
+        style={{
+          flex: 1,
+          // backgroundColor: '#FFFFFF',
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 20,
+        }}>
         <View
           style={{
             backgroundColor: 'white',
@@ -246,11 +251,11 @@ const ContactUs = ({navigation}) => {
             }}
             style={{
               flexDirection: 'row',
-              borderRadius: 28,
+              borderRadius: 8,
               height: 50,
               alignItems: 'center',
               justifyContent: 'center',
-              margin: 20,
+              marginVertical: 20,
             }}
           />
         </View>

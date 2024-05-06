@@ -886,6 +886,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: 'Search Location',
+          animation: 'slide_from_right',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
