@@ -26,6 +26,7 @@ import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 
 const Search = forwardRef(({navigation, route}, ref) => {
+  console.log(423423, route);
   const [value, setValue] = useState(null);
   const txtInput = useRef('');
   const {isConnected} = useContext(NetworkContext);
@@ -41,7 +42,7 @@ const Search = forwardRef(({navigation, route}, ref) => {
 
   const searchItem = item => {
     setValue(item);
-    dispatch(initLocation(item));
+    dispatch(initLocation(item, route?.params?.locId));
   };
 
   const clearItem = () => {
@@ -61,7 +62,7 @@ const Search = forwardRef(({navigation, route}, ref) => {
     <View
       style={{
         backgroundColor: pageBackground,
-        height: '100%',
+        flex: 1,
       }}>
       <View style={{padding: 20}}>
         <View style={style.searchFilter}>
