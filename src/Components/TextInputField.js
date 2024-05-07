@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextInput, Text, View, TouchableOpacity} from 'react-native';
 import style from './style';
-import {GradientColor2, PrivacyPolicy} from '../Color/color';
+import {GradientColor2, PrivacyPolicy, titleColor} from '../Color/color';
 import CloseCircle from '../../assets/SVG/svg/CloseCircle';
 
 const TextInputField = ({
@@ -29,7 +29,7 @@ const TextInputField = ({
               fontSize: 15,
               flex: 1,
               height: 25,
-              color: 'black',
+              color: titleColor,
             }}>
             {defaultValue}
           </Text>
@@ -41,7 +41,8 @@ const TextInputField = ({
             flex: 6,
             fontFamily: 'PlusJakartaSans-Regular',
             fontSize: 15,
-            color: PrivacyPolicy,
+            // color: PrivacyPolicy,
+            color: titleColor,
           }}
           value={value}
           defaultValue={defaultValue}

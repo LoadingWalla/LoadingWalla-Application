@@ -47,6 +47,7 @@ import GpsIcon from '../../../../assets/SVG/svg/GpsIcon';
 import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
+import RightArrow from '../../../../assets/SVG/svg/RightArrow';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
@@ -61,7 +62,7 @@ const Profile = ({navigation, route}) => {
 
   const {Userdata, UserVerifyPercentage, profileLoading} = useSelector(
     state => {
-      // console.log("profile Data", state.data);
+      console.log('profile Data', state.data);
       return state.data;
     },
   );
@@ -183,7 +184,7 @@ const Profile = ({navigation, route}) => {
               <Text style={style.subTitle}>
                 {Userdata?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
               </Text>
-              <Text style={style.subTitle}>{Userdata?.city}</Text>
+              {/* <Text style={style.subTitle}>{Userdata?.city}</Text> */}
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>
@@ -231,7 +232,7 @@ const Profile = ({navigation, route}) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: 10,
+                marginBottom: 15,
               }}>
               <PercentageBar
                 navigation={navigation}
@@ -244,6 +245,15 @@ const Profile = ({navigation, route}) => {
                 onPress={() => navigation.navigate('Wallet')}>
                 <WalletIcon size={25} color={'#F0C200'} />
                 <Text style={style.buttonText}>My wallet</Text>
+                <View
+                  style={{
+                    marginLeft: 'auto',
+                    elevation: 1,
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: 10,
+                  }}>
+                  <RightArrow size={20} color={GradientColor1} />
+                </View>
               </TouchableOpacity>
             </View>
 

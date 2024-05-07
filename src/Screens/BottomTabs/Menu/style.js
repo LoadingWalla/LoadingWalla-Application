@@ -116,6 +116,7 @@ export default StyleSheet.create({
     fontWeight: '700',
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
+    marginLeft: 10,
   },
   buttonView: {
     flexDirection: 'row',

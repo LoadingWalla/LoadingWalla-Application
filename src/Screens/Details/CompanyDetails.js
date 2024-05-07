@@ -151,10 +151,10 @@ const CompanyDetails = ({navigation, route}) => {
       Toast.show('Enter Full name', Toast.LONG);
       return;
     }
-    if (city === '') {
-      Toast.show('Enter city', Toast.LONG);
-      return;
-    }
+    // if (city === '') {
+    //   Toast.show('Enter city', Toast.LONG);
+    //   return;
+    // }
     if (type === '') {
       Toast.show('Select Profile Type', Toast.LONG);
       return;
@@ -280,7 +280,6 @@ const CompanyDetails = ({navigation, route}) => {
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Cammera />
-
                   <Text style={styleSheet.CameraText}>Camera</Text>
                 </View>
               </TouchableOpacity>
@@ -340,18 +339,18 @@ const CompanyDetails = ({navigation, route}) => {
               isCloseIcon={false}
               onChangeText={handleNameChange}
             />
-            <Text style={styleSheet.label}>{t(Constants.ENTER_CITY_NAME)}</Text>
+            {/* <Text style={styleSheet.label}>{t(Constants.ENTER_CITY_NAME)}</Text> */}
             {/* <TextInputField
               isCloseIcon={false}
               onChangeText={(e) => setCity(e)}
             /> */}
-            <TextInputField
+            {/* <TextInputField
               isText={true}
               defaultValue={city}
               isCloseIcon={true}
               onSearchPress={() => navigateToSeach()}
               closeIconClick={() => closeIconClick()}
-            />
+            /> */}
             <Text style={styleSheet.label}>{t(Constants.iam)}</Text>
             <FlatList
               style={styleSheet.flatListStyle}

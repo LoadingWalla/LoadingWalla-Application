@@ -374,6 +374,7 @@ export default StyleSheet.create({
   //
   detailItem: {
     padding: 10,
+    marginBottom: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -381,8 +382,7 @@ export default StyleSheet.create({
   detailText: {
     fontSize: 16,
     color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-SemiBold',
     marginLeft: 10,
   },
   flexDirection: {flexDirection: 'row'},
