@@ -25,8 +25,8 @@ const DashboardLoad = ({navigation}) => {
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
-  const [searchFromId, setSearchFromId] = useState('');
-  const [searchToId, setSearchToId] = useState('');
+  const [searchFromId, setSearchFromId] = useState(0);
+  const [searchToId, setSearchToId] = useState(0);
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
   const user = useRef('');
@@ -127,6 +127,7 @@ const DashboardLoad = ({navigation}) => {
   const navigateToSeach = val => {
     navigation.navigate('Search', {
       allLocation,
+      locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
         if (val === 'from') {
           setSearchFrom(item?.place_name);

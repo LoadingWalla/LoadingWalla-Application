@@ -26,8 +26,8 @@ const Dashboard = ({navigation}) => {
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
-  const [searchFromId, setSearchFromId] = useState('');
-  const [searchToId, setSearchToId] = useState('');
+  const [searchFromId, setSearchFromId] = useState(0);
+  const [searchToId, setSearchToId] = useState(0);
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
   const [truckItem, setTruckItem] = useState('');
@@ -66,6 +66,24 @@ const Dashboard = ({navigation}) => {
       dispatch(initDashboard());
     }, [dispatch]),
   );
+
+  const navigateToSeach = val => {
+    navigation.navigate('Search', {
+      allLocation,
+      locId: val === 'from' ? searchToId : searchFromId,
+      onReturn: item => {
+        if (val === 'from') {
+          setSearchFromId(item.id);
+          setSearchFrom(item?.place_name);
+          setSearchTo('Anywhere');
+          setSearchToId(0);
+          return;
+        }
+        setSearchTo(item?.place_name);
+        setSearchToId(item?.id);
+      },
+    });
+  };
 
   useEffect(() => {
     setAllLocation(locationData);
@@ -109,23 +127,6 @@ const Dashboard = ({navigation}) => {
       setSearchTo('');
       setLocationTo(false);
     }
-  };
-
-  const navigateToSeach = val => {
-    navigation.navigate('Search', {
-      allLocation,
-      onReturn: item => {
-        if (val === 'from') {
-          setSearchFrom(item?.place_name);
-          setSearchFromId(item?.id);
-          setSearchTo('Anywhere');
-          setSearchToId('');
-          return;
-        }
-        setSearchTo(item?.place_name);
-        setSearchToId(item?.id);
-      },
-    });
   };
 
   if (!isConnected) {
