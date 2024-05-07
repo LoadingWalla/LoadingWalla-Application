@@ -24,14 +24,13 @@ import Cammera from '../../../../assets/SVG/Camera';
 import {
   GradientColor2,
   PrivacyPolicy,
-  black,
   inputColor,
   textColor,
   titleColor,
 } from '../../../Color/color';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
-import DateTimePickerButton from '../../../Components/DateTimePickerButton';
+// import DateTimePickerButton from '../../../Components/DateTimePickerButton';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 
@@ -45,17 +44,18 @@ const EditProfile = ({
   const [isCameraOptions, setCameraOptions] = useState(false);
   const [profilePic, setProfilePic] = useState('');
   const [name, setname] = useState(defaultValue?.name);
-  const [city, setCity] = useState(defaultValue?.city);
-  const [dob, setDob] = useState(
-    defaultValue?.dob ? new Date(defaultValue.dob) : new Date(),
-  );
+  // const [city, setCity] = useState(defaultValue?.city);
+  // const [dob, setDob] = useState(
+  //   defaultValue?.dob ? new Date(defaultValue.dob) : new Date(),
+  // );
 
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {profileSetupLoading, profileSetupStatus} = useSelector(
-    state => state.data,
-  );
+  const {profileSetupLoading, profileSetupStatus} = useSelector(state => {
+    console.log('Edit profile', state.data);
+    return state.data;
+  });
 
   const onClickProfile = async () => {
     setCameraOptions(true);
@@ -66,7 +66,13 @@ const EditProfile = ({
       editStatus(profileSetupLoading);
       dispatch(ProfileSetupFailure());
     }
-  }, [profileSetupStatus, dispatch, editStatus, profileSetupLoading]);
+  }, [
+    profileSetupStatus,
+    dispatch,
+    editStatus,
+    profileSetupLoading,
+    navigation,
+  ]);
 
   const profileSetup = async removeImage => {
     const id = defaultValue?.id;
@@ -82,15 +88,15 @@ const EditProfile = ({
     // if (city === '') {
     //   return AlertBox('Enter City');
     // }
-    if (dob === '') {
-      return AlertBox('Enter DOB');
-    }
-    // console.log(88888, city);
+    // if (dob === '') {
+    //   return AlertBox('Enter DOB');
+    // }
+    console.log(88888);
     dispatch(
       initProfileSetup(
         id,
         name || defaultValue?.name,
-        city || defaultValue?.city,
+        defaultValue?.city,
         userType,
         profilePic || defaultValue?.profileImg,
         false,

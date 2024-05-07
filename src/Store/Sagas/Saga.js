@@ -99,7 +99,15 @@ export function* profileSetup({
   profile_img,
   remove_profile,
 }) {
-  // console.log("Remove Image ID", profile_img);
+  console.log(
+    'Remove Image ID',
+    userid,
+    name,
+    city,
+    userType,
+    profile_img,
+    remove_profile,
+  );
   try {
     let param = new FormData();
     if (remove_profile) {
@@ -119,7 +127,7 @@ export function* profileSetup({
 
     try {
       let data = yield multiPartApi.post('profile-setup', param);
-      // console.log("API response", data);
+      console.log('API response', data);
       if (data?.data?.status === 200) {
         yield put(actions.ProfileSetupSuccess(data));
       } else {

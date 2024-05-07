@@ -118,7 +118,7 @@ function BottomTabs() {
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
+              focused ? <HomeActiveIcon size={25} /> : <HomeIcon size={25} />,
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({

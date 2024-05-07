@@ -70,7 +70,7 @@ const Profile = ({navigation, route}) => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(initProfile());
-    }, []),
+    }, [dispatch]),
   );
 
   const bigImage = () => {
