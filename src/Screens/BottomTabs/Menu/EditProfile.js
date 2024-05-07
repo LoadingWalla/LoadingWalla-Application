@@ -343,7 +343,7 @@ export default EditProfile;
 const style = StyleSheet.create({
   button: {
     flexDirection: 'row',
-    borderRadius: 28,
+    borderRadius: 8,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,6 +1,7 @@
 import React from 'react';
-import {TouchableOpacity, Text, View} from 'react-native';
+import {TouchableOpacity, Text, View, ActivityIndicator} from 'react-native';
 import style from './style';
+import {GradientColor2} from '../Color/color';
 
 const InnerButton = ({
   navigation,
@@ -13,6 +14,7 @@ const InnerButton = ({
   disabledStyle,
   textStyle,
   disableTextStyle,
+  loading,
 }) => {
   return (
     <>
@@ -23,12 +25,22 @@ const InnerButton = ({
           disabled={disabled}
           style={[enabledStyle, disabled && disabledStyle]}>
           <View style={style.gradientButtonStyle}>
-            {!disabled && count > 0 ? (
-              <Text style={style.countMsg}>{`${count}`}</Text>
-            ) : null}
-            <Text style={[textStyle, disabled && disableTextStyle]}>
-              {title}
-            </Text>
+            {loading ? (
+              <ActivityIndicator
+                style={style.indicatorStyle}
+                size="small"
+                color={GradientColor2}
+              />
+            ) : (
+              <>
+                {!disabled && count > 0 && (
+                  <Text style={style.countMsg}>{count}</Text>
+                )}
+                <Text style={[textStyle, disabled && disableTextStyle]}>
+                  {title}
+                </Text>
+              </>
+            )}
           </View>
         </TouchableOpacity>
       ) : (

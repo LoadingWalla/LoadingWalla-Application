@@ -445,7 +445,7 @@ const AddLorry = ({navigation, route}) => {
                 <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
                 <View style={{marginTop: 15, marginLeft: 15}}>
                   <RadioButton
-                    label="Get a Free GPS Tracker"
+                    label="Get GPS Tracker Now"
                     onPress={() => setSelectedGPSOption('1')}
                     selected={selectedGPSOption === '1'}
                   />
@@ -519,7 +519,7 @@ const AddLorry = ({navigation, route}) => {
                 }}
                 style={{
                   flexDirection: 'row',
-                  borderRadius: 28,
+                  borderRadius: 8,
                   height: 50,
                   alignItems: 'center',
                   justifyContent: 'center',

@@ -30,12 +30,12 @@ import FindLoadHeader from '../../Components/FindLoadHeader';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import InnerButton from '../../Components/InnerButton';
-import {dialCall} from '../../Utils/DialCall';
 import {useFocusEffect} from '@react-navigation/native';
 import {useCallback} from 'react';
 import {memo} from 'react';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import NotFound from '../../Components/NotFound';
+import {DialCall} from '../../Utils/DialCall';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
@@ -54,6 +54,7 @@ const Requests = ({route, navigation}) => {
     acceptBookingStatus,
     cancelBookingStatus,
     cancelBookingMessage,
+    cancelBookingLoading,
     bookingLorrydata,
   } = useSelector(state => {
     // console.log("My Requests", state.data.acceptBookingStatus);
@@ -109,7 +110,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                {getRequestBookingdataReceived.map((item, idx) => (
+                {getRequestBookingdataReceived?.map((item, idx) => (
                   <RenderItem
                     key={idx}
                     item={item}
@@ -166,7 +167,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                {getRequestBookingdataSent.map((item, idx) => (
+                {getRequestBookingdataSent?.map((item, idx) => (
                   <RenderItem
                     key={idx}
                     item={item}
@@ -297,9 +298,8 @@ const Requests = ({route, navigation}) => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => dialCall()}>
+          <TouchableOpacity onPress={() => DialCall()}>
             <View style={styles.CallButton}>
-              {/* <Icon name="phone" size={20} color={GradientColor3} /> */}
               <PhoneCall size={20} color={GradientColor3} />
             </View>
           </TouchableOpacity>
@@ -310,6 +310,7 @@ const Requests = ({route, navigation}) => {
             enabledStyle={styles.declineButton}
             textStyle={styles.declineButtonText}
             title={selected === 2 ? 'Delete' : 'Decline'}
+            loading={cancelBookingLoading}
             onpressStatus={() => cancelBookingRequest(item?.id)}
           />
           {selected === 1 ? (

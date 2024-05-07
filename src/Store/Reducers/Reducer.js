@@ -110,6 +110,7 @@ const initialState = {
   cancelBookingMessage: null,
   cancelBookingLoading: false,
   addLorryStatus: null,
+  requireLorryLoading: false,
   bookingLorrydata: null,
   acceptBookingStatus: null,
   bookingPending: [],

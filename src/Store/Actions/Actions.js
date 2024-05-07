@@ -763,21 +763,21 @@ export const deleteLorryFailure = payload => {
 
 // Cancel Booking
 export const initCancelBooking = req_id => {
-  console.log(99999, req_id);
+  // console.log(99999, req_id);
   return {
     type: actionTypes.INIT_CANCEL_BOOKING,
     req_id,
   };
 };
 export const cancelBookingSuccess = payload => {
-  console.log('success', payload);
+  // console.log('success', payload);
   return {
     type: actionTypes.CANCEL_BOOKING_SUCCESS,
     payload,
   };
 };
 export const cancelBookingFailure = payload => {
-  console.log('falil', payload);
+  // console.log('falil', payload);
   return {
     type: actionTypes.CANCEL_BOOKING_FAILURE,
     payload,

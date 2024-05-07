@@ -23,12 +23,14 @@ import {
   GradientColor3,
   PrivacyPolicy,
   pageBackground,
+  textColor,
   titleColor,
 } from '../../Color/color';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import Button from '../../Components/Button';
 
 const Negotiation = ({navigation, route}) => {
-  console.log('negotiation screen', route);
+  // console.log('negotiation screen', route);
   const {item, owner, userType} = route?.params; // this should be on top
   const {t} = useTranslation();
   const dispatch = useDispatch();
@@ -41,9 +43,10 @@ const Negotiation = ({navigation, route}) => {
     myLoadTruckData,
     findLorryData,
     requestSendStatus,
+    loading,
     requestLorrydata,
   } = useSelector(state => {
-    console.log('confirmation987', state.data);
+    console.log('confirmation987', state.data.requestSendStatus);
     return state.data;
   });
 
@@ -63,28 +66,39 @@ const Negotiation = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (requestSendStatus != null) {
+    if (requestSendStatus !== null) {
       navigation.navigate('Booking Status', {
         status: requestSendStatus,
         Owner: owner,
         userType: userType,
-        messages: requestLorrydata.message,
+        messages: requestLorrydata?.message,
         renter: item,
       });
     }
     dispatch(RequestBookingFailure());
-  }, [navigation, dispatch]);
+  }, [
+    dispatch,
+    item,
+    navigation,
+    owner,
+    requestLorrydata?.message,
+    requestSendStatus,
+    userType,
+  ]);
 
   return (
     <KeyboardAvoidingView
       style={styles.fullScreenContainer}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={styles.screenModalView}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.closeButton}>
-          <CloseCircle size={30} color={GradientColor2} />
-        </TouchableOpacity>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Negotiation</Text>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.closeButton}>
+            <CloseCircle size={30} color={GradientColor2} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.centeredView}>
           <View style={styles.container}>
             <View style={styles.locationCard}>
@@ -144,11 +158,12 @@ const Negotiation = ({navigation, route}) => {
                 title={'Cancel'}
                 navigation={() => navigation.goBack()}
               />
-              <InnerButton
-                enabledStyle={styles.findButtonContainer}
-                textStyle={styles.findButtonText}
+              <Button //searchLoad()
+                onPress={() => saveChanges()}
                 title={'Send'}
-                navigation={() => saveChanges()}
+                loading={loading}
+                textStyle={styles.btnTextStyle}
+                style={styles.buttonStyle}
               />
             </View>
           </View>
@@ -266,12 +281,15 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
-  findButtonContainer: {
-    marginLeft: 20,
-    borderWidth: 2,
+  buttonStyle: {
+    flexDirection: 'row',
     borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 9,
     backgroundColor: GradientColor3,
-    borderColor: GradientColor3,
   },
   findButtonText: {
     fontSize: 13,
@@ -285,5 +303,28 @@ const styles = StyleSheet.create({
     top: 10,
     zIndex: 10,
     color: titleColor,
+  },
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  headerTitle: {
+    color: titleColor,
+    fontSize: 20,
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  btnTextStyle: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });

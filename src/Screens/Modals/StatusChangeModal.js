@@ -108,10 +108,12 @@ const StatusChangeModal = ({navigation, route}) => {
   // console.log(`OutFrom: ${searchFromId} /n To: ${searchToId}`);
 
   const saveChanges = () => {
-    if (searchFrom === '') {
+    // console.log(`OutFrom: ${searchFrom} /n To: ${searchTo}`);
+    if (searchFrom === '' || searchFrom === null) {
       Toast.show('Enter Location', Toast.LONG);
       return;
     }
+
     if (searchTo === '') {
       Toast.show('Enter Location', Toast.LONG);
       return;
@@ -140,7 +142,7 @@ const StatusChangeModal = ({navigation, route}) => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.closeButton}>
-            <CloseCircle size={35} color={GradientColor2} />
+            <CloseCircle size={30} color={GradientColor2} />
           </TouchableOpacity>
         </View>
         <View style={styles.centeredView}>
@@ -274,7 +276,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: titleColor,
-    fontSize: 22,
+    fontSize: 20,
     textAlign: 'center',
     justifyContent: 'center',
     fontFamily: 'PlusJakartaSans-Bold',
