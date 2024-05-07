@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {titleColor} from '../Color/color';
+import {GradientColor1, titleColor} from '../Color/color';
+import RightArrow from '../../assets/SVG/svg/RightArrow';
 
 const PercentageBar = ({
   navigation,
@@ -28,8 +29,7 @@ const PercentageBar = ({
     <TouchableOpacity
       style={[styles.barContainer, {height, borderColor: barColor}]}
       onPress={() => navigation.navigate('KYC')}
-      // disabled={verify}
-    >
+      disabled={verify === 1}>
       <View style={[styles.backgroundBar, {backgroundColor, height}]} />
       <View
         style={[
@@ -38,14 +38,18 @@ const PercentageBar = ({
         ]}
       />
       <Text style={styles.barText}>{`${percentage}% Complete`}</Text>
+      <View style={styles.arrowView}>
+        <RightArrow size={20} color={GradientColor1} />
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   barContainer: {
+    flexDirection: 'row',
     width: '48%',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     borderRadius: 5,
     overflow: 'hidden',
     position: 'relative',
@@ -65,13 +69,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   barText: {
-    width: '100%',
     fontSize: 16,
     position: 'absolute',
     textAlign: 'center',
     color: titleColor,
     fontWeight: '700',
     fontFamily: 'PlusJakartaSans-Bold',
+    zIndex: 1,
+    marginStart: 15,
+  },
+  arrowView: {
+    marginLeft: 'auto',
+    elevation: 1,
+    borderWidth: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    right: 10,
   },
 });
 

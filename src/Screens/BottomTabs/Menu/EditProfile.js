@@ -23,6 +23,7 @@ import Gallery from '../../../../assets/SVG/Gallery';
 import Cammera from '../../../../assets/SVG/Camera';
 import {
   GradientColor2,
+  PrivacyPolicy,
   black,
   inputColor,
   textColor,
@@ -78,9 +79,9 @@ const EditProfile = ({
     if (name === '') {
       return AlertBox('Enter Name');
     }
-    if (city === '') {
-      return AlertBox('Enter City');
-    }
+    // if (city === '') {
+    //   return AlertBox('Enter City');
+    // }
     if (dob === '') {
       return AlertBox('Enter DOB');
     }
@@ -302,16 +303,16 @@ const EditProfile = ({
                 defaultValue={defaultValue?.name}
                 onChangeText={e => setname(e)}
               />
-              <Text style={style.label}>{'DOB'}</Text>
+              {/* <Text style={style.label}>{'DOB'}</Text>
               <DateTimePickerButton
                 initialDate={dob}
                 onDateChange={e => setDob(e)}
-              />
-              <Text style={style.label}>{t(Constants.ENTER_CITY_NAME)}</Text>
+              /> */}
+              {/* <Text style={style.label}>{t(Constants.ENTER_CITY_NAME)}</Text>
               <TextInputField
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
-              />
+              /> */}
               <Text style={style.label}>Mobile number</Text>
               <Text
                 style={{
@@ -319,7 +320,7 @@ const EditProfile = ({
                   marginTop: 12,
                   borderRadius: 8,
                   padding: 15,
-                  color: black,
+                  color: PrivacyPolicy,
                 }}>
                 {defaultValue?.mobile}
               </Text>

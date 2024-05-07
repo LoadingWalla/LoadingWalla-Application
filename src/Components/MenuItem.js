@@ -1,22 +1,44 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import style from './style';
-import {GradientColor1} from '../Color/color';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {GradientColor1, titleColor} from '../Color/color';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 
 const MenuItem = ({title, onPress, Icon}) => {
-  // const CustomIcon = Icon;
-
   return (
     <View>
-      <TouchableOpacity style={style.detailItem} onPress={() => onPress()}>
-        <View style={style.flexDirection}>
-          {Icon}
-          <Text style={style.detailText}>{title}</Text>
+      <TouchableOpacity style={styles.detailItem} onPress={() => onPress()}>
+        <View style={styles.iconView}>
+          <View>{Icon}</View>
+          <Text style={styles.detailText}>{title}</Text>
         </View>
-        <RightArrow size={20} color={GradientColor1} />
+        <View style={styles.arrowView}>
+          <RightArrow size={20} color={GradientColor1} />
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 export default MenuItem;
+
+const styles = StyleSheet.create({
+  detailItem: {
+    padding: 10,
+    marginBottom: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  detailText: {
+    fontSize: 16,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    marginLeft: 10,
+  },
+  iconView: {flexDirection: 'row', alignItems: 'center'},
+  arrowView: {
+    elevation: 1,
+    borderWidth: 0,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+  },
+});

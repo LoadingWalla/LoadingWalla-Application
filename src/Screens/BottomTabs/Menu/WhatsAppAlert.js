@@ -21,7 +21,7 @@ const WhatsAppAlert = ({navigation}) => {
   const toggleSwitch = () => {
     const newSwitchState = !switchOn;
     setSwitchOn(newSwitchState);
-    Alert.alert('Switch on : ' + newSwitchState);
+    Alert.alert(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
   };
 
   if (!isConnected) {
