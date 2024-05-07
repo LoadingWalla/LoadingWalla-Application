@@ -15,6 +15,7 @@ import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import * as Constants from '../../Constants/Constant';
 import Background from '../../Components/BackgroundGradient';
 import Camera from '../../../assets/SVG/Camera';
@@ -192,17 +193,26 @@ const CompanyDetails = ({navigation, route}) => {
   const takePhoto = async () => {
     setCameraOptions(false);
     try {
-      const data = await Camera();
-      if (data.didCancel) {
-      } else if (data.error) {
-      } else if (data.customButton) {
-      } else if (data.errorCode) {
-      } else {
-        setProfilePic(data?.assets[0]);
-        return profilePic;
-      }
+      const image = await ImagePicker.openCamera({
+        width: 960,
+        height: 1280,
+        cropping: true,
+        cropperCircleOverlay: true,
+        compressImageQuality: 1,
+        hideBottomControls: true,
+      });
+      // console.log(image);
+      const profilePicData = {
+        fileName: image.filename || image.path.split('/').pop(),
+        fileSize: image.size || null,
+        height: image.height,
+        type: image.mime,
+        uri: image.path,
+        width: image.width,
+      };
+      setProfilePic(profilePicData);
     } catch (e) {
-      console.error('Edit Profile Error', e);
+      console.error('Take photo error', e);
     }
   };
 

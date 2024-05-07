@@ -53,12 +53,6 @@ const TruckItem = ({
   const selectOwnerLorry = (data, index) => (
     <>
       {selected === index && checkIcon && (
-        // <CheckIcon
-        //   style={styleSheet.checkIconStyle}
-        //   name="checkmark-circle"
-        //   size={20}
-        //   color="#fff"
-        // />
         <CheckCircle style={styleSheet.checkIconStyle} size={20} color="#fff" />
       )}
       <View>

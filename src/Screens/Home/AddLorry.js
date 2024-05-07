@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import Switch from 'toggle-switch-react-native';
@@ -70,7 +71,7 @@ const AddLorry = ({navigation, route}) => {
     statusChangeLoading,
     statusChange_Status,
     statusChangeData,
-    requireLorryLoading,
+    lorryRequireLoading,
   } = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
     return state.data;
@@ -235,6 +236,16 @@ const AddLorry = ({navigation, route}) => {
       return;
     }
 
+    console.log(
+      97879879,
+      vehicleNumber,
+      vehicle,
+      vehicleType,
+      permitRes,
+      JSON.stringify(permitRes),
+      selectedGPSOption,
+    );
+
     dispatch(
       initAddLorry(
         vehicleNumber,
@@ -333,7 +344,7 @@ const AddLorry = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styleSheet.MainContainer}>
-      {requireLorryLoading ? (
+      {lorryRequireLoading ? (
         <AddLorryShimmer />
       ) : (
         <ScrollView

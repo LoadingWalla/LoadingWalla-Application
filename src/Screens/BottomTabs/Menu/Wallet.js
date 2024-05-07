@@ -64,7 +64,7 @@ const Wallet = ({navigation}) => {
       Toast.show('Add amount', Toast.LONG);
       return;
     }
-    if (amount < 100) {
+    if (amount < 1) {
       Toast.show('Enter minimum amount 100', Toast.LONG);
       return;
     }
@@ -77,7 +77,8 @@ const Wallet = ({navigation}) => {
       description: 'Credits towards consultation',
       image: getWallletData?.profile_img,
       currency: 'INR',
-      key: 'rzp_test_saNeTWFs98DyuF', // Your api key
+      // key: 'rzp_test_saNeTWFs98DyuF',
+      key: 'rzp_live_ryn4MzwhQI4eE3',
       amount: amount * 100,
       name: getWallletData?.name,
       prefill: {
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Regular',
     fontSize: 15,
     width: '100%',
+    color: PrivacyPolicy,
   },
   rupeeSymbol: {
     fontSize: 18,

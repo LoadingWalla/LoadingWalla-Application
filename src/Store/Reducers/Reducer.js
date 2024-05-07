@@ -102,6 +102,7 @@ const initialState = {
   truckTypeData: [],
   permitData: [],
   wheeldata: [],
+  lorryRequireLoading: false,
   deleteLorryStatus: null,
   deleteLorryMessage: null,
   deletelorryLoading: false,
@@ -888,7 +889,7 @@ const reducer = (state = initialState, action) => {
         permitData: [],
         wheeldata: [],
         addLorryStatus: null,
-        requireLorryLoading: true,
+        lorryRequireLoading: true,
       };
     case actionTypes.LORRY_REQUIRE_SUCCESS:
       return updateState(state, {
@@ -896,7 +897,7 @@ const reducer = (state = initialState, action) => {
         permitData: payload?.data?.permit,
         wheeldata: payload?.data?.wheel,
         addLorryStatus: payload?.data?.status,
-        requireLorryLoading: false,
+        lorryRequireLoading: false,
       });
     case actionTypes.LORRY_REQUIRE_FAILURE:
       return updateState(state, {
@@ -904,7 +905,7 @@ const reducer = (state = initialState, action) => {
         permitData: [],
         wheeldata: [],
         addLorryStatus: null,
-        requireLorryLoading: false,
+        lorryRequireLoading: false,
       });
 
     case actionTypes.INIT_DELETE_LORRY:
