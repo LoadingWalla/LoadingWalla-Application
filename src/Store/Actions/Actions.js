@@ -101,9 +101,10 @@ export const addLorryFailure = payload => ({
 });
 
 // LOCATION
-export const initLocation = location => ({
+export const initLocation = (location, id) => ({
   type: actionTypes.INIT_LOCATION,
   location,
+  id,
 });
 
 export const locationSuccess = payload => {

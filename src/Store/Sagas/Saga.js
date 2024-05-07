@@ -137,9 +137,10 @@ export function* profileSetup({
 }
 
 // Saga Location
-export function* location({location}) {
+export function* location({location, id}) {
+  console.log('searchsaga', location, id);
   try {
-    const data = yield API.get(`locationlat?search=${location}`);
+    const data = yield API.get(`locationlat?search=${location}&id=${id}`);
     // console.log("API response", data);
     if (data?.data?.status === 200) {
       yield put(actions.locationSuccess(data));

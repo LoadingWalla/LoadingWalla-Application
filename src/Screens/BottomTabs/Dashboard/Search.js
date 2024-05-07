@@ -24,6 +24,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLocation, locationFailure} from '../../../Store/Actions/Actions';
 import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Search = forwardRef(({navigation, route}, ref) => {
   const [value, setValue] = useState(null);
@@ -33,15 +34,48 @@ const Search = forwardRef(({navigation, route}, ref) => {
 
   const locationData = useSelector(state => state.data.locationData);
 
-  const goBack = item => {
-    route.params.onReturn(item);
-    navigation.goBack();
-    dispatch(locationFailure());
+  // const goBack = item => {
+  //   route.params.onReturn(item);
+  //   navigation.goBack();
+  //   dispatch(locationFailure());
+  // };
+
+  const goBack = async item => {
+    try {
+      await AsyncStorage.setItem('locId', item.id.toString());
+      // console.log('Location ID saved:', item.id);
+      route.params.onReturn(item);
+      navigation.goBack();
+      dispatch(locationFailure());
+      setTimeout(async () => {
+        await AsyncStorage.removeItem('locId');
+        console.log('Location ID removed from AsyncStorage');
+      }, 60000);
+    } catch (error) {
+      console.error('Failed to save location ID:', error);
+    }
   };
 
-  const searchItem = item => {
-    setValue(item);
-    dispatch(initLocation(item));
+  // const searchItem = item => {
+  //   setValue(item);
+  //   dispatch(initLocation(item));
+  // };
+
+  const searchItem = async item => {
+    try {
+      const storedId = await AsyncStorage.getItem('locId');
+      if (storedId) {
+        // console.log('Retrieved ID from AsyncStorage:', storedId);
+        setValue(item);
+        dispatch(initLocation(item, storedId));
+      } else {
+        // console.log('No ID found in AsyncStorage');
+        setValue(item);
+        dispatch(initLocation(item));
+      }
+    } catch (error) {
+      console.error('Error retrieving ID from AsyncStorage:', error);
+    }
   };
 
   const clearItem = () => {
@@ -61,7 +95,7 @@ const Search = forwardRef(({navigation, route}, ref) => {
     <View
       style={{
         backgroundColor: pageBackground,
-        height: '100%',
+        flex: 1,
       }}>
       <View style={{padding: 20}}>
         <View style={style.searchFilter}>
