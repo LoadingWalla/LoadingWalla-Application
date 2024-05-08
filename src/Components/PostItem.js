@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import style from './style';
 import CardHeader from './CardHeader';
@@ -8,7 +7,6 @@ import InnerButton from './InnerButton';
 import {useNavigation} from '@react-navigation/native';
 
 const PostItem = ({navigate, call, item, owner, userType}) => {
-  const {t} = useTranslation();
   const navigation = useNavigation();
 
   return (
@@ -50,7 +48,7 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
         <InnerButton
           enabledStyle={style.requestButtonContainer}
           textStyle={style.gradientButtonText}
-          title={t(Constants.REQUEST)}
+          title={Constants.REQUEST}
           navigation={() =>
             navigation.navigate('Negotiation', {
               item: item,

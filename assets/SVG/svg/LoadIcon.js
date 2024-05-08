@@ -4,36 +4,36 @@ import {ClipPath, Defs, G, Mask, Path, Rect, Svg} from 'react-native-svg';
 const LoadIcon = ({size}) => {
   return (
     <Svg
-      id="Layer_1"
-      data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
-      height={size}
       width={size}
-      viewBox="0 0 24 24">
-      <Path
-        stroke-width="0"
-        d="m20.97,3.03c-.66-.66-1.54-1.03-2.47-1.03H5.5c-.93,0-1.81.36-2.47,1.03s-1.03,1.54-1.03,2.47v13c0,.93.36,1.81,1.03,2.47s1.54,1.03,2.47,1.03h13c.93,0,1.81-.36,2.47-1.03s1.03-1.54,1.03-2.47V5.5c0-.93-.36-1.81-1.03-2.47Zm-7.97.97v4h-2V4h2Zm7,14.5c0,.4-.16.78-.44,1.06s-.66.44-1.06.44H5.5c-.4,0-.78-.16-1.06-.44s-.44-.66-.44-1.06V5.5c0-.4.16-.78.44-1.06s.66-.44,1.06-.44h3.5v4c0,.53.21,1.04.59,1.41s.88.59,1.41.59h2c.53,0,1.04-.21,1.41-.59s.59-.88.59-1.41V4h3.5c.4,0,.78.16,1.06.44s.44.66.44,1.06v13Z"
-      />
-      <Rect
-        fill="#231f20"
-        stroke-width="0"
-        x="8.8"
-        y="13.92"
-        width="6.4"
-        height="1.69"
-        rx=".85"
-        ry=".85"
-      />
-      <Rect
-        fill="#231f20"
-        stroke-width="0"
-        x="9.58"
-        y="16.37"
-        width="6.4"
-        height="1.69"
-        rx=".85"
-        ry=".85"
-      />
+      height={size}
+      viewBox="0 0 14 14"
+      fill="none">
+      <G clip-Path="url(#clip0_4_28)">
+        <Path
+          d="M12.5 0.5H1.5C0.947715 0.5 0.5 0.947715 0.5 1.5V12.5C0.5 13.0523 0.947715 13.5 1.5 13.5H12.5C13.0523 13.5 13.5 13.0523 13.5 12.5V1.5C13.5 0.947715 13.0523 0.5 12.5 0.5Z"
+          stroke="#363636"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M9 0.5V5.5C9 5.63261 8.94732 5.75979 8.85355 5.85355C8.75979 5.94732 8.63261 6 8.5 6H5.5C5.36739 6 5.24021 5.94732 5.14645 5.85355C5.05268 5.75979 5 5.63261 5 5.5V0.5"
+          stroke="#363636"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M8.5 11H11"
+          stroke="#363636"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_4_28">
+          <Rect width="14" height="14" fill="white" />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 };

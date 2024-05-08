@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
@@ -76,15 +75,14 @@ const PostLoads = ({navigation, route}) => {
     }
   }, [dispatch, myPostLoadData?.data?.message, myPostLoadStatus, navigation]);
 
-  const {t} = useTranslation();
   const truckLoadCapacity = [
     {
       id: 1,
-      label: t(Constants.FIXED),
+      label: Constants.FIXED,
     },
     {
       id: 2,
-      label: t(Constants.PER_TON),
+      label: Constants.PER_TON,
     },
   ];
   const postLoadSubmit = () => {
@@ -164,22 +162,20 @@ const PostLoads = ({navigation, route}) => {
       <View style={styleSheet.backgroundViewContainer}>
         <SearchFilter
           defaultValue={searchFrom}
-          leftTitle={t(Constants.FROM)}
+          leftTitle={Constants.FROM}
           closeIconClick={() => closeIconClick('from')}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+          placeholder={Constants.SELECT_LOCATION_TITLE}
           onSearchPress={() => navigateToSeach('from')}
         />
         <SearchFilter
           defaultValue={searchTo}
-          leftTitle={t(Constants.TO)}
+          leftTitle={Constants.TO}
           closeIconClick={() => closeIconClick('to')}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+          placeholder={Constants.SELECT_LOCATION_TITLE}
           onSearchPress={() => navigateToSeach()}
         />
         <View style={styleSheet.ItemView}>
-          <Text style={styleSheet.label}>{`${t(
-            Constants.QUANTITY,
-          )} (Ton)`}</Text>
+          <Text style={styleSheet.label}>{`${Constants.QUANTITY} (Ton)`}</Text>
           <TextInputField
             isPhone
             value={quantity}
@@ -189,7 +185,7 @@ const PostLoads = ({navigation, route}) => {
               setQuantity(sanitizedInput);
             }}
           />
-          <Text style={styleSheet.label}>{t(Constants.MATERIAL_NAME)}</Text>
+          <Text style={styleSheet.label}>{Constants.MATERIAL_NAME}</Text>
           <TextInputField
             value={materialName}
             // onChangeText={(e) => setMaterialName(e)}
@@ -198,7 +194,7 @@ const PostLoads = ({navigation, route}) => {
               setMaterialName(sanitizedInput);
             }}
           />
-          <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
+          <Text style={styleSheet.label}>{Constants.SELECT_TRUCK}</Text>
           <TruckItem
             click={e => setTruckItem(e?.id)}
             backgroundStyle={{
@@ -223,7 +219,7 @@ const PostLoads = ({navigation, route}) => {
             }}
             renderItem={DashboardData}
           />
-          <Text style={styleSheet.label}>{t(Constants.PRICE)}</Text>
+          <Text style={styleSheet.label}>{Constants.PRICE}</Text>
           <TextInputField
             isPhone={true}
             value={price}
@@ -245,7 +241,7 @@ const PostLoads = ({navigation, route}) => {
           <Button
             loading={myPostLoadLoading}
             onPress={() => postLoadSubmit()}
-            title={t(Constants.POST_LOADS)}
+            title={Constants.POST_LOADS}
             textStyle={styleSheet.buttonTitile}
             style={[styleSheet.button, {marginTop: 20}]}
           />

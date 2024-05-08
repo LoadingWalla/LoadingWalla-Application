@@ -5,7 +5,6 @@ import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {initDashboard} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import style from './style';
 import Toast from 'react-native-simple-toast';
@@ -22,7 +21,6 @@ import {GradientColor2} from '../../../Color/color';
 const {height, width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
-  const {t} = useTranslation();
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
@@ -179,25 +177,25 @@ const Dashboard = ({navigation}) => {
                   </Swiper>
                 )}
                 <Text style={style.locationTitle}>
-                  {t(Constants.SELECT_LOCATION)}
+                  {Constants.SELECT_LOCATION}
                 </Text>
                 <SearchFilter
                   defaultValue={searchFrom}
-                  leftTitle={t(Constants.FROM)}
+                  leftTitle={Constants.FROM}
                   onSearchPress={() => navigateToSeach('from')}
                   closeIconClick={() => closeIconClick('from')}
-                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                  placeholder={Constants.SELECT_LOCATION_TITLE}
                 />
                 <SearchFilter
                   onSearchPress={() => navigateToSeach()}
                   defaultValue={searchTo}
-                  leftTitle={t(Constants.TO)}
+                  leftTitle={Constants.TO}
                   closeIconClick={() => closeIconClick('to')}
-                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                  placeholder={Constants.SELECT_LOCATION_TITLE}
                 />
                 <View style={{marginTop: 30}}>
                   <Text style={style.locationTitle}>
-                    {t(Constants.TRUCK_TYPE)}
+                    {Constants.TRUCK_TYPE}
                   </Text>
                   <TruckItem
                     click={e => setTruckItem(e?.id)}
@@ -213,8 +211,8 @@ const Dashboard = ({navigation}) => {
                   onPress={() => searchLoad()}
                   title={
                     user.current === '1'
-                      ? t(Constants.FIND_LORRY)
-                      : t(Constants.FIND_LOADS)
+                      ? Constants.FIND_LORRY
+                      : Constants.FIND_LOADS
                   }
                   textStyle={style.buttonTextStyle}
                   style={style.buttonstyle}

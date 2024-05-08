@@ -1,7 +1,6 @@
 import React, {useContext} from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from '../Details/NoInternetScreen';
@@ -10,7 +9,6 @@ import PostItem from '../../Components/PostItem';
 import Button from '../../Components/Button';
 
 const LoadPostSuccessfull = ({navigation}) => {
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
 
   if (!isConnected) {
@@ -20,10 +18,10 @@ const LoadPostSuccessfull = ({navigation}) => {
     <View style={[styles.backgroundView, {backgroundColor: '#E7E7E7'}]}>
       <Header
         navigation={() => navigation.goBack()}
-        title={t(Constants.POSTED_SUCCESS)}
+        title={Constants.POSTED_SUCCESS}
       />
       <View>
-        <Text style={styles.label}>{t(Constants.POST_LOOK)}</Text>
+        <Text style={styles.label}>{Constants.POST_LOOK}</Text>
         <View style={{marginTop: 18}}>
           <PostItem />
         </View>

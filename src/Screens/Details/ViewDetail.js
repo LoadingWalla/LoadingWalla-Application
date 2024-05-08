@@ -13,7 +13,6 @@ import {
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import CommonToolbar from '../../Components/CommonToolbar';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {GradientColor1, titleColor, white} from '../../Color/color';
@@ -66,7 +65,6 @@ const ViewDetail = ({navigation, route}) => {
   const {Owner} = route.params;
   // console.log(98798798, Owner);
 
-  const {t} = useTranslation();
   const mapRef = useRef(null);
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
@@ -244,7 +242,7 @@ const ViewDetail = ({navigation, route}) => {
             <View style={{marginVertical: 10}}>
               <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                 <Text style={{minWidth: 50, color: titleColor}}>
-                  {t(Constants.FROM)}
+                  {Constants.FROM}
                 </Text>
                 <View style={{flex: 1}}>
                   <Text style={styles.textStyle}>: {from}</Text>
@@ -252,7 +250,7 @@ const ViewDetail = ({navigation, route}) => {
               </View>
               <View style={{flexDirection: 'row', marginTop: 10}}>
                 <Text style={{minWidth: 50, color: titleColor}}>
-                  {t(Constants.TO)}
+                  {Constants.TO}
                 </Text>
                 <View style={{flex: 1}}>
                   <Text style={styles.textStyle}>: {to}</Text>
@@ -290,7 +288,7 @@ const ViewDetail = ({navigation, route}) => {
                 <View style={{flex: 0.5}}>
                   <View style={{flexDirection: 'row'}}>
                     <Text style={{minWidth: 40, color: titleColor}}>
-                      {t(Constants.QUANTITY)}
+                      {Constants.QUANTITY}
                     </Text>
                     <Text style={styles.textStyle}>: {qty} Ton</Text>
                   </View>
@@ -298,7 +296,7 @@ const ViewDetail = ({navigation, route}) => {
                 <View style={{flex: 0.5}}>
                   <View style={{flexDirection: 'row'}}>
                     <Text style={{minWidth: 40, color: titleColor}}>
-                      {t(Constants.PRICE)}
+                      {Constants.PRICE}
                     </Text>
                     <Text style={styles.textStyle}>
                       : {price}

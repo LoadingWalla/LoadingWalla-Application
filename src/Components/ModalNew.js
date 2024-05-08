@@ -1,13 +1,11 @@
 import React, {useState, useRef} from 'react';
 import {Dimensions, StyleSheet, View, Text, PanResponder} from 'react-native';
 import Modal from 'react-native-modal';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 
 const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
   const screenHeight = Dimensions.get('window').height;
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const {t} = useTranslation();
 
   const panResponder = useRef(
     PanResponder.create({
@@ -58,13 +56,13 @@ const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
         <View style={{padding: 10}}>
           <View style={{marginVertical: 10}}>
             <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              <Text style={{minWidth: 50}}>{t(Constants.FROM)}</Text>
+              <Text style={{minWidth: 50}}>{Constants.FROM}</Text>
               <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.from}</Text>
               </View>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
-              <Text style={{minWidth: 50}}>{t(Constants.TO)}</Text>
+              <Text style={{minWidth: 50}}>{Constants.TO}</Text>
               <View style={{flex: 1}}>
                 <Text style={styles.textStyle}>: {item.item.to}</Text>
               </View>
@@ -94,7 +92,7 @@ const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <View style={{flex: 4}}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={{minWidth: 40}}>{t(Constants.CAPACITY)}</Text>
+                  <Text style={{minWidth: 40}}>{Constants.CAPACITY}</Text>
                   <Text style={styles.textStyle}>: 2000 Ton</Text>
                 </View>
               </View>
@@ -130,13 +128,13 @@ const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
             <View style={{flexDirection: 'row', marginTop: 10}}>
               <View style={{flex: 4}}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={{minWidth: 40}}>{t(Constants.QUANTITY)}</Text>
+                  <Text style={{minWidth: 40}}>{Constants.QUANTITY}</Text>
                   <Text style={styles.textStyle}>: {item.item.qty} Ton</Text>
                 </View>
               </View>
               <View style={{flex: 3}}>
                 <View style={{flexDirection: 'row'}}>
-                  <Text style={{minWidth: 40}}>{t(Constants.PRICE)}</Text>
+                  <Text style={{minWidth: 40}}>{Constants.PRICE}</Text>
                   <Text style={styles.textStyle}>
                     : {item.item.price}
                     {'/'}

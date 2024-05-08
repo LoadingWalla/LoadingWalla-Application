@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useContext, useState} from 'react';
 import {
   View,
@@ -10,11 +11,12 @@ import {
   Modal,
   Pressable,
   Alert,
+  Platform,
+  Linking,
 } from 'react-native';
 import style from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {Rating} from 'react-native-ratings';
-import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
@@ -48,29 +50,28 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
+import InAppReview from 'react-native-in-app-review';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
 
 const Profile = ({navigation, route}) => {
-  const {t} = useTranslation();
   const [isEditProfile, setEditProfile] = useState(false);
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
-  const {Userdata, UserVerifyPercentage, profileLoading} = useSelector(
-    state => {
-      console.log('profile Data', state.data);
+  const {Userdata, UserVerifyPercentage, profileLoading, profileSetupData} =
+    useSelector(state => {
+      // console.log('profile Data', state.data);
       return state.data;
-    },
-  );
+    });
 
   useFocusEffect(
     React.useCallback(() => {
       dispatch(initProfile());
-    }, [dispatch]),
+    }, [dispatch, profileSetupData]),
   );
 
   const bigImage = () => {
@@ -100,8 +101,8 @@ const Profile = ({navigation, route}) => {
 
   const logout = () => {
     Alert.alert(
-      t(Constants.LOGOUT),
-      t(Constants.LOGOUT_CONFIRM),
+      Constants.LOGOUT,
+      Constants.LOGOUT_CONFIRM,
       [
         {
           text: 'Cancel',
@@ -128,6 +129,41 @@ const Profile = ({navigation, route}) => {
       {cancelable: false},
     );
   };
+
+  const handleRateUs = () => {
+    if (Platform.OS === 'android') {
+      const url =
+        'https://play.google.com/store/apps/details?id=com.loadingwalla';
+
+      Linking.canOpenURL(url)
+        .then(supported => {
+          if (supported) {
+            Linking.openURL(url);
+          } else {
+            console.log("Don't know how to open URI: " + url);
+          }
+        })
+        .catch(err => console.error('An error occurred', err));
+    } else {
+      console.log('This feature is only available on Android.');
+    }
+  };
+  // const handleRateUs = () => {
+  //   if (InAppReview.isAvailable()) {
+  //     InAppReview.RequestInAppReview()
+  //       .then(hasFlowFinishedSuccessfully => {
+  //         console.log(
+  //           'In-app review finished with success:',
+  //           hasFlowFinishedSuccessfully,
+  //         );
+  //       })
+  //       .catch(error => {
+  //         console.error('In-app review flow failed', error);
+  //       });
+  //   } else {
+  //     console.log('In-app review not available');
+  //   }
+  // };
 
   if (!isConnected) {
     return <NoInternetScreen navigation={navigation} />;
@@ -200,8 +236,8 @@ const Profile = ({navigation, route}) => {
                       Userdata?.verify,
                     )}>
                     {Userdata?.verify === 1
-                      ? `${t(Constants.VERIFY)}`
-                      : t(Constants.NOT_VERIFIED)}
+                      ? `${Constants.VERIFY}`
+                      : Constants.NOT_VERIFIED}
                   </Text>
                 </View>
                 <View style={style.verticalLine} />
@@ -220,6 +256,7 @@ const Profile = ({navigation, route}) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => setEditProfile(true)}>
+                {/* onPress={() => navigation.navigate('Edit Profile')} */}
                 <AccountEditIcon size={30} color={GradientColor2} />
               </TouchableOpacity>
             </View>
@@ -304,13 +341,13 @@ const Profile = ({navigation, route}) => {
               </View>
               <View style={style.userDetails}>
                 <MenuItem
-                  title={t(Constants.CONTACT_US)}
+                  title={Constants.CONTACT_US}
                   onPress={() => navigation.navigate('Contactus')}
                   Icon={<ContactUsIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.TERMS_CONDITION_TITLE2)}
+                  title={Constants.TERMS_CONDITION_TITLE2}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
                       headerTitle: 'Terms and Conditions',
@@ -321,7 +358,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.TERMS_CONDITION_TITLE3)}
+                  title={Constants.TERMS_CONDITION_TITLE3}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
                       headerTitle: 'Privacy Policy',
@@ -332,18 +369,14 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.HELP_GUIDE)}
+                  title={Constants.HELP_GUIDE}
                   onPress={() => navigation.navigate('Guide')}
                   Icon={<HelpIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.RATE_US_ON_PLAY_STORE)}
-                  onPress={() => {
-                    alert(
-                      'Sorry for inconvenience! We are in Developing version',
-                    );
-                  }}
+                  title={Constants.RATE_US_ON_PLAY_STORE}
+                  onPress={handleRateUs}
                   Icon={<RateIcon size={30} color={GradientColor1} />}
                 />
               </View>
@@ -356,7 +389,7 @@ const Profile = ({navigation, route}) => {
               </View>
               <View style={style.userDetails}>
                 <MenuItem
-                  title={t(Constants.LANGUAGE)}
+                  title={Constants.LANGUAGE}
                   onPress={() =>
                     navigation.navigate('Language', {fromMenu: true})
                   }
@@ -364,7 +397,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.WHATSAPP_ALERT)}
+                  title={Constants.WHATSAPP_ALERT}
                   onPress={() =>
                     navigation.navigate('WhatsApp', {fromMenu: true})
                   }
@@ -372,7 +405,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={t(Constants.LOGOUT)}
+                  title={Constants.LOGOUT}
                   onPress={() => logout()}
                   Icon={<LogoutIcon size={30} color={GradientColor1} />}
                 />

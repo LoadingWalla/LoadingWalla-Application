@@ -14,7 +14,7 @@ const AccountEditIcon = ({size, color}) => {
           <Path
             id="Ellipse 56"
             d="M9.5 19C14.7467 19 19 14.7467 19 9.5C19 4.25329 14.7467 0 9.5 0C4.25329 0 0 4.25329 0 9.5C0 14.7467 4.25329 19 9.5 19Z"
-            fill="#FFE4DD"
+            fill="#f0f0f0"
           />
         </G>
         <Path

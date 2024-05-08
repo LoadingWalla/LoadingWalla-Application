@@ -9,7 +9,6 @@ import {
   RefreshControl,
   Image,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
@@ -24,7 +23,6 @@ import NotFound from '../../../Components/NotFound';
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
   console.log(989898, Owner);
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);

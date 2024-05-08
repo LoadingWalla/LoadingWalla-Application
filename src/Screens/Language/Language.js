@@ -16,7 +16,6 @@ import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
-import {useTranslation} from 'react-i18next';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
@@ -41,8 +40,7 @@ const GridView = ({data, index, selected, onPress}) => (
 
 const Language = ({navigation, route}) => {
   const {params} = route;
-  const {t, i18n} = useTranslation();
-  // console.log(t(Constants.SELECT_LANGUAGE_TITLE));
+  // console.log(Constants.SELECT_LANGUAGE_TITLE);
 
   const [selected, setSelected] = useState(1);
   const {isConnected} = useContext(NetworkContext);
@@ -86,7 +84,7 @@ const Language = ({navigation, route}) => {
 
   const selectLanguage = data => {
     setSelected(data?.langId);
-    i18n.changeLanguage(data.code);
+    // i18n.changeLanguage(data.code);
   };
 
   const navigate = () => {
@@ -104,7 +102,7 @@ const Language = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.part1}>
         <Text style={styles.languageTitle}>
-          {t(Constants.SELECT_LANGUAGE_TITLE)}
+          {Constants.SELECT_LANGUAGE_TITLE}
         </Text>
       </View>
       <View style={styles.part2}>
@@ -124,7 +122,7 @@ const Language = ({navigation, route}) => {
       <View style={styles.part3}>
         <Button
           onPress={() => navigate()}
-          title={t(Constants.CONTINUE)}
+          title={Constants.CONTINUE}
           textStyle={styles.buttonTitile}
           style={styles.button}
         />

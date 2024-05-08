@@ -11,7 +11,6 @@ const RenderTabBar = props => {
         backgroundColor: GradientColor2,
         height: 3,
         borderRadius: 10,
-        marginHorizontal: 3,
       }}
       style={{
         backgroundColor: pageBackground,
@@ -24,8 +23,7 @@ const RenderTabBar = props => {
       renderLabel={({route, focused, color}) => {
         let labelStyle = {
           color: titleColor,
-          fontWeight: '700',
-          fontFamily: 'PlusJakartaSans-Medium',
+          fontFamily: 'PlusJakartaSans-Bold',
           fontSize: 16,
         };
 

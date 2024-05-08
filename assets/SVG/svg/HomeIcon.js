@@ -1,24 +1,33 @@
 import React from 'react';
-import Svg, {Path, G} from 'react-native-svg';
+import Svg, {Path, G, Defs, ClipPath, Rect} from 'react-native-svg';
 
 const HomeIcon = ({size}) => {
   return (
     <Svg
-      id="Layer_1"
-      data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      viewBox="0 0 24 24">
-      <G id="layer2">
+      viewBox="0 0 14 14"
+      fill="none">
+      <G clip-path="url(#clip0_5_94)">
         <Path
-          id="rect843"
-          class="cls-1"
-          d="m11.99,1.21c-.23,0-.46.1-.62.26L1.48,11.36c-.35.35-.35.92,0,1.27.17.17.4.26.64.26h1.8v7.19c0,1.48,1.22,2.7,2.7,2.7h2.7c.5,0,.9-.4.9-.9v-4.49h3.6v4.49c0,.5.4.9.9.9h2.7c1.48,0,2.77-1.21,2.7-2.74v.05s0-6.29,0-6.29v-.9h1.8c.5,0,.9-.4.9-.9,0-.24-.09-.47-.26-.64L12.64,1.48c-.17-.17-.41-.27-.65-.26Zm.01,2.17l7.72,7.72h-.53c-.5,0-.9.4-.9.9v8.09s0,.03,0,.05c.02.46-.39.85-.9.85h-1.8v-4.49c0-.5-.4-.9-.9-.9h-5.39c-.5,0-.9.4-.9.9v4.49h-1.8c-.51,0-.9-.39-.9-.9v-8.09c0-.5-.4-.9-.9-.9h-.53l7.72-7.72Z"
-          vector-effect="none"
-          stroke-width="0"
+          d="M13.5 6.94C13.501 6.8012 13.473 6.66372 13.4179 6.53632C13.3628 6.40892 13.2818 6.29438 13.18 6.2L7.00002 0.5L0.820023 6.2C0.718248 6.29438 0.637236 6.40892 0.582143 6.53632C0.52705 6.66372 0.499084 6.8012 0.500023 6.94V12.5C0.500023 12.7652 0.60538 13.0196 0.792916 13.2071C0.980452 13.3946 1.23481 13.5 1.50002 13.5H12.5C12.7652 13.5 13.0196 13.3946 13.2071 13.2071C13.3947 13.0196 13.5 12.7652 13.5 12.5V6.94Z"
+          stroke="#363636"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M7 13.5V9.5"
+          stroke="#363636"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         />
       </G>
+      <Defs>
+        <ClipPath id="clip0_5_94">
+          <Rect width="14" height="14" fill="white" />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 };

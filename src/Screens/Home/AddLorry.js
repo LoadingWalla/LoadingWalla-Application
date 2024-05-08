@@ -9,7 +9,6 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
 import Switch from 'toggle-switch-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
@@ -57,7 +56,6 @@ const AddLorry = ({navigation, route}) => {
   const [userType, setUserType] = useState(null);
   const [selectedGPSOption, setSelectedGPSOption] = useState('1');
 
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const {
@@ -359,9 +357,7 @@ const AddLorry = ({navigation, route}) => {
           {seeMore()}
           {viewIndex === 0 ? (
             <View>
-              <Text style={styleSheet.label}>
-                {t(Constants.VEHICLE_NUMBER)}
-              </Text>
+              <Text style={styleSheet.label}>{Constants.VEHICLE_NUMBER}</Text>
               <TextInputField
                 value={removeEmojis(vehicleNumber).toUpperCase()}
                 hint={'XX 00 XX 0000'}
@@ -380,7 +376,7 @@ const AddLorry = ({navigation, route}) => {
                   setVehicleNumber(input);
                 }}
               />
-              <Text style={styleSheet.label}>{t(Constants.TRUCK_TYPE)}</Text>
+              <Text style={styleSheet.label}>{Constants.TRUCK_TYPE}</Text>
               <TruckItem
                 click={e => setVehicle(e?.id)}
                 backgroundStyle={{
@@ -406,7 +402,7 @@ const AddLorry = ({navigation, route}) => {
                 }}
                 renderItem={wheeldata}
               />
-              <Text style={styleSheet.label}>{t(Constants.BODY_TYPE)}</Text>
+              <Text style={styleSheet.label}>{Constants.BODY_TYPE}</Text>
               <TruckItem
                 backgroundStyle={styleSheet.truckTypeItem}
                 unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
@@ -468,7 +464,7 @@ const AddLorry = ({navigation, route}) => {
                 onPress={() => {
                   addLorry();
                 }}
-                title={t(Constants.SAVE_PROCEED)}
+                title={Constants.SAVE_PROCEED}
                 textStyle={styleSheet.buttonTitile}
                 style={styleSheet.button}
               />
@@ -482,7 +478,7 @@ const AddLorry = ({navigation, route}) => {
                 }}>
                 <Text
                   style={{fontSize: 18, fontWeight: '700', color: '#352422'}}>
-                  {t(Constants.ACTIVE)}
+                  {Constants.ACTIVE}
                 </Text>
                 <Switch
                   isOn={isEnabled}
@@ -495,17 +491,17 @@ const AddLorry = ({navigation, route}) => {
               </View>
               <SearchFilter
                 defaultValue={searchFrom}
-                leftTitle={t(Constants.FROM)}
+                leftTitle={Constants.FROM}
                 closeIconClick={() => closeIconClick('from')}
                 onSearchPress={() => navigateToSeach('from')}
-                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                placeholder={Constants.SELECT_LOCATION_TITLE}
               />
               <SearchFilter
                 defaultValue={searchTo}
-                leftTitle={t(Constants.TO)}
+                leftTitle={Constants.TO}
                 closeIconClick={() => closeIconClick('to')}
                 onSearchPress={() => navigateToSeach('to')}
-                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                placeholder={Constants.SELECT_LOCATION_TITLE}
               />
               <Button //searchLoad()
                 onPress={() => saveChanges()}
@@ -536,7 +532,7 @@ const AddLorry = ({navigation, route}) => {
                   marginBottom: 15,
                   color: titleColor,
                 }}>
-                {t(Constants.NOTE)}
+                {Constants.NOTE}
               </Text>
               <View
                 style={{

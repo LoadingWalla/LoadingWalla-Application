@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import {Modal, View, Text, TextInput, StyleSheet} from 'react-native';
 import * as Constants from '../Constants/Constant';
 import CommonToolbar from './CommonToolbar';
-import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import {initMyLorry, initRequestBooking} from '../Store/Actions/Actions';
 import {GradientColor3, PrivacyPolicy, titleColor, white} from '../Color/color';
@@ -20,7 +19,6 @@ const Negotiative = ({
   const [offered_price, setOffered_price] = useState(
     item?.user_type === 2 ? owner?.price : item?.price,
   );
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const {myLorryTruckData, myLoadTruckData, findLorryData} = useSelector(
@@ -57,7 +55,7 @@ const Negotiative = ({
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <CommonToolbar
-            title={t(Constants.NEGOTITATED_PRICE)}
+            title={Constants.NEGOTITATED_PRICE}
             goBack={() => onClose()}
             isBack={true}
             isClose={true}
@@ -76,9 +74,7 @@ const Negotiative = ({
               </View>
             </View>
             <View>
-              <Text style={styles.priceText}>
-                {t(Constants.MY_NEGOTITATON)}
-              </Text>
+              <Text style={styles.priceText}>{Constants.MY_NEGOTITATON}</Text>
               <View style={styles.priceInputContainer}>
                 <View style={styles.priceInput}>
                   <Text style={styles.rupeeText}>{'Price (₹) |'}</Text>
@@ -92,8 +88,8 @@ const Negotiative = ({
                 <View style={styles.priceType}>
                   <Text style={styles.rupeeText}>
                     {item?.price_type === '1'
-                      ? t(Constants.FIXED)
-                      : t(Constants.PER_TON)}
+                      ? Constants.FIXED
+                      : Constants.PER_TON}
                   </Text>
                 </View>
               </View>
