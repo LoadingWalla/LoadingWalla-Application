@@ -3,7 +3,6 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
 import Language from '../Screens/Language/Language';
@@ -62,6 +61,7 @@ import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
 import Inconvenience from '../Screens/Details/Inconvenience';
 import LoadIcon from '../../assets/SVG/svg/LoadIcon';
 import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
+import EditProfileScreen from '../Screens/Details/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -72,7 +72,6 @@ function getWidth() {
 }
 
 function BottomTabs() {
-  const {t} = useTranslation();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -111,10 +110,11 @@ function BottomTabs() {
             fontFamily: 'PlusJakartaSans-Regular',
             alignItems: 'center',
             justifyContent: 'center',
+            // borderWidth: 1,
           },
         })}>
         <Tab.Screen
-          name={t(Constants.NAV_HOME)}
+          name={Constants.NAV_HOME}
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -141,7 +141,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.NAV_MY_LORRY)}
+          name={Constants.NAV_MY_LORRY}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -174,12 +174,12 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.BOOKINGS)}
+          name={Constants.BOOKINGS}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <BookingActiveIcon size={20} />
+                <BookingActiveIcon size={23} />
               ) : (
                 <BookingIcon size={20} />
               ),
@@ -210,7 +210,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name={Constants.MENU}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -257,7 +257,6 @@ function BottomTabs() {
 }
 
 function MyLoadsBottomTabs() {
-  const {t} = useTranslation();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -295,7 +294,7 @@ function MyLoadsBottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={t(Constants.NAV_DASHBOARD)}
+          name={Constants.NAV_DASHBOARD}
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -324,7 +323,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.NAV_MY_LOAD)}
+          name={Constants.NAV_MY_LOAD}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -356,7 +355,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.BOOKINGS)}
+          name={Constants.BOOKINGS}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -393,7 +392,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name={Constants.MENU}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -441,7 +440,7 @@ function MyLoadsBottomTabs() {
 }
 
 const Navigation = ({language}) => {
-  const {i18n} = useTranslation();
+  // const {i18n} = useTranslation();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
 
@@ -462,18 +461,18 @@ const Navigation = ({language}) => {
     }
   }
 
-  useEffect(() => {
-    const setlanguage = async () => {
-      const lan = await AsyncStorage.getItem('language');
-      i18n
-        .changeLanguage(
-          language === null ? lan : language === lan ? lan : language,
-        )
-        .then(() => {})
-        .catch(err => console.error(err));
-    };
-    setlanguage();
-  }, [i18n, language]);
+  // useEffect(() => {
+  //   const setlanguage = async () => {
+  //     const lan = await AsyncStorage.getItem('language');
+  //     i18n
+  //       .changeLanguage(
+  //         language === null ? lan : language === lan ? lan : language,
+  //       )
+  //       .then(() => {})
+  //       .catch(err => console.error(err));
+  //   };
+  //   setlanguage();
+  // }, [i18n, language]);
 
   return (
     <Stack.Navigator initialRouteName="Splash">
@@ -1115,6 +1114,26 @@ const Navigation = ({language}) => {
             ),
         })}
       />
+
+      {/* <Stack.Screen
+        name="Edit Profile"
+        component={EditProfileScreen}
+        options={{
+          headerShown: true,
+          animation: 'ios',
+          // presentation: 'transparentModal',
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      /> */}
       <Stack.Screen
         name="Previous Bookings"
         component={PreviousBookings}

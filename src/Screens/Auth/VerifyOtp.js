@@ -12,7 +12,6 @@ import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import '../../locales/index';
-import {useTranslation} from 'react-i18next';
 import {
   initVerifyOtp,
   VerifyOtpFailure,
@@ -35,7 +34,6 @@ const VerifyOtp = ({navigation, route}) => {
   const [delay, setDelay] = useState('');
   const minutes = Math.floor(delay / 60);
   const seconds = Math.floor(delay % 60);
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
@@ -134,7 +132,7 @@ const VerifyOtp = ({navigation, route}) => {
       <View style={[styles.signupBackground, {marginTop: 0}]}>
         <View style={styles.otpResendView}>
           <Text style={styles.signupTopTitle}>
-            {`${t(Constants.ENTER_OTP_TITLE)} ${mobileNumber} `}
+            {`${Constants.ENTER_OTP_TITLE} ${mobileNumber} `}
             <Text
               onPress={() => navigation.replace('Signup')}
               style={styles.policyLinkTitle(true)}>
@@ -177,14 +175,14 @@ const VerifyOtp = ({navigation, route}) => {
         </View>
         <View style={styles.otpResendView}>
           <Text style={styles.policyTitle}>
-            {t(Constants.DID_NOT_RECIEVE_OTP)}{' '}
+            {Constants.DID_NOT_RECIEVE_OTP}{' '}
           </Text>
           <TouchableOpacity
             activeOpacity={0.5}
             disabled={minutes < 4 ? false : true}
             onPress={() => (minutes < 4 ? resendCode() : {})}>
             <Text style={styles.policyLinkTitle(minutes < 4 ? true : false)}>
-              {t(Constants.RESEND_CODE)}
+              {Constants.RESEND_CODE}
             </Text>
           </TouchableOpacity>
         </View>
@@ -193,7 +191,7 @@ const VerifyOtp = ({navigation, route}) => {
           <Button
             loading={otpLoading}
             onPress={() => verify()}
-            title={t(Constants.VERIFY)}
+            title={Constants.VERIFY}
             textStyle={styles.buttonTitile}
             style={styles.button}
           />

@@ -1,12 +1,9 @@
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {PrivacyPolicy, titleColor} from '../Color/color';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 
 const CardHeader = ({from, to, icon}) => {
-  const {t} = useTranslation();
-
   return (
     <View style={styles.headerView}>
       <Pressable onPress={() => {}}>
@@ -19,12 +16,12 @@ const CardHeader = ({from, to, icon}) => {
       <View style={styles.routeInfo}>
         <View style={styles.routeTextContainer}>
           <View style={styles.dot} />
-          <Text style={styles.textHeading}>{t(Constants.FROM)}</Text>
+          <Text style={styles.textHeading}>{Constants.FROM}</Text>
           <Text style={styles.routeText}>: {from}</Text>
         </View>
         <View style={styles.routeTextContainer}>
           <View style={styles.square} />
-          <Text style={styles.textHeading}>{t(Constants.TO)}</Text>
+          <Text style={styles.textHeading}>{Constants.TO}</Text>
           <Text style={styles.routeText}>: {to ? to : 'Anywhere'}</Text>
         </View>
       </View>

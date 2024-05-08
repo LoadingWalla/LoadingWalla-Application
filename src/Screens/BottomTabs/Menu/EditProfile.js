@@ -9,7 +9,6 @@ import {
   Alert,
   StyleSheet,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
@@ -24,14 +23,13 @@ import Cammera from '../../../../assets/SVG/Camera';
 import {
   GradientColor2,
   PrivacyPolicy,
-  black,
   inputColor,
   textColor,
   titleColor,
 } from '../../../Color/color';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
-import DateTimePickerButton from '../../../Components/DateTimePickerButton';
+// import DateTimePickerButton from '../../../Components/DateTimePickerButton';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 
@@ -45,17 +43,17 @@ const EditProfile = ({
   const [isCameraOptions, setCameraOptions] = useState(false);
   const [profilePic, setProfilePic] = useState('');
   const [name, setname] = useState(defaultValue?.name);
-  const [city, setCity] = useState(defaultValue?.city);
-  const [dob, setDob] = useState(
-    defaultValue?.dob ? new Date(defaultValue.dob) : new Date(),
-  );
+  // const [city, setCity] = useState(defaultValue?.city);
+  // const [dob, setDob] = useState(
+  //   defaultValue?.dob ? new Date(defaultValue.dob) : new Date(),
+  // );
 
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {profileSetupLoading, profileSetupStatus} = useSelector(
-    state => state.data,
-  );
+  const {profileSetupLoading, profileSetupStatus} = useSelector(state => {
+    console.log('Edit profile', state.data);
+    return state.data;
+  });
 
   const onClickProfile = async () => {
     setCameraOptions(true);
@@ -66,7 +64,13 @@ const EditProfile = ({
       editStatus(profileSetupLoading);
       dispatch(ProfileSetupFailure());
     }
-  }, [profileSetupStatus, dispatch, editStatus, profileSetupLoading]);
+  }, [
+    profileSetupStatus,
+    dispatch,
+    editStatus,
+    profileSetupLoading,
+    navigation,
+  ]);
 
   const profileSetup = async removeImage => {
     const id = defaultValue?.id;
@@ -82,15 +86,15 @@ const EditProfile = ({
     // if (city === '') {
     //   return AlertBox('Enter City');
     // }
-    if (dob === '') {
-      return AlertBox('Enter DOB');
-    }
-    // console.log(88888, city);
+    // if (dob === '') {
+    //   return AlertBox('Enter DOB');
+    // }
+    // console.log(88888);
     dispatch(
       initProfileSetup(
         id,
         name || defaultValue?.name,
-        city || defaultValue?.city,
+        defaultValue?.city,
         userType,
         profilePic || defaultValue?.profileImg,
         false,
@@ -125,8 +129,10 @@ const EditProfile = ({
         height: 1280,
         cropping: true,
         cropperCircleOverlay: true,
-        compressImageQuality: 1,
+        compressImageQuality: 0.8,
         hideBottomControls: true,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
       });
       // console.log(image);
       const profilePicData = {
@@ -151,8 +157,10 @@ const EditProfile = ({
         height: 1280,
         cropping: true,
         cropperCircleOverlay: true,
-        compressImageQuality: 1,
+        compressImageQuality: 0.8,
         hideBottomControls: true,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
       });
       const profilePicData = {
         fileName: image.filename || image.path.split('/').pop(),
@@ -181,7 +189,7 @@ const EditProfile = ({
         onRequestClose={() => {}}>
         <View
           style={{
-            backgroundColor: 'rgba(0,0,0, 0.5)',
+            backgroundColor: 'rgba(0,0,0, 0.9)',
             flex: 1,
           }}>
           <View
@@ -269,9 +277,7 @@ const EditProfile = ({
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <Text style={style.editProfileTitle}>
-              {t(Constants.EDIT_PROFILE)}
-            </Text>
+            <Text style={style.editProfileTitle}>{Constants.EDIT_PROFILE}</Text>
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => onClickProfile()}>
@@ -298,7 +304,7 @@ const EditProfile = ({
               </View>
             </TouchableOpacity>
             <View style={style.paddingStyle}>
-              <Text style={style.label}>{t(Constants.NAME)}</Text>
+              <Text style={style.label}>{Constants.NAME}</Text>
               <TextInputField
                 defaultValue={defaultValue?.name}
                 onChangeText={e => setname(e)}
@@ -308,7 +314,7 @@ const EditProfile = ({
                 initialDate={dob}
                 onDateChange={e => setDob(e)}
               /> */}
-              {/* <Text style={style.label}>{t(Constants.ENTER_CITY_NAME)}</Text>
+              {/* <Text style={style.label}>{(Constants.ENTER_CITY_NAME)}</Text>
               <TextInputField
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
@@ -328,7 +334,7 @@ const EditProfile = ({
             <Button
               loading={profileSetupLoading}
               onPress={() => profileSetup(false)}
-              title={t(Constants.UPDATE)}
+              title={Constants.UPDATE}
               textStyle={style.buttonTitile}
               style={[style.button, {margin: 20}]}
             />

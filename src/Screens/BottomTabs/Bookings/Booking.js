@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Constants from '../../../Constants/Constant';
 import style from './style';
@@ -28,7 +27,6 @@ import {PrivacyPolicy} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 
 const Booking = ({navigation}) => {
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);

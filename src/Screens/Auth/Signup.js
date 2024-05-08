@@ -11,7 +11,6 @@ import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
-import {useTranslation} from 'react-i18next';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
 import {
@@ -30,7 +29,6 @@ import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 const Signup = ({navigation, route}) => {
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
-  const {t} = useTranslation();
   const screenHeight = Dimensions.get('window').height;
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
@@ -105,22 +103,20 @@ const Signup = ({navigation, route}) => {
             <View></View>
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
               <Text style={{color: GradientColor2, fontWeight: '500'}}>
-                {t(Constants.NEED_HELP)}
+                {Constants.NEED_HELP}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.WelcomeTruckTitle}>
-              <Text style={styles.LoadingWalla}>
-                {t(Constants.LOADING_WALLA)}
-              </Text>{' '}
-              {t(Constants.WELCOME_TO_TRUCK)}
+              <Text style={styles.LoadingWalla}>{Constants.LOADING_WALLA}</Text>{' '}
+              {Constants.WELCOME_TO_TRUCK}
             </Text>
           </View>
           <Text style={styles.signupTopTitle}>
-            {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
+            {Constants.ENTER_MOBILE_NUMBER_TITLE}
           </Text>
-          <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
+          <Text style={styles.label}>{Constants.MOBILE_NUMBER}</Text>
           <PhoneInput
             defaultCode="IN"
             layout="first"
@@ -129,7 +125,7 @@ const Signup = ({navigation, route}) => {
               placeholderTextColor: PrivacyPolicy,
             }}
             withShadow
-            placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
+            placeholder={Constants.ENTER_MOBILE_NUMBER}
             // autoFocus={true}
             containerStyle={styles.phoneContainer}
             textContainerStyle={styles.textInput}
@@ -166,11 +162,11 @@ const Signup = ({navigation, route}) => {
                 style={styles.checkBoxStyle}
               />
               <Text style={{color: PrivacyPolicy}}>
-                {t(Constants.WHATSAPP_ALERT_CHECK)}
+                {Constants.WHATSAPP_ALERT_CHECK}
               </Text>
             </View>
             <Text style={styles.policyTitle}>
-              {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
+              {Constants.TERMS_CONDITION_TITLE1}{' '}
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -179,7 +175,7 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
+                  {Constants.TERMS_CONDITION_TITLE2}{' '}
                 </Text>
               </TouchableOpacity>
               <Text> {' and '} </Text>
@@ -191,7 +187,7 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {t(Constants.TERMS_CONDITION_TITLE3)}
+                  {Constants.TERMS_CONDITION_TITLE3}
                 </Text>
               </TouchableOpacity>
             </Text>
@@ -200,7 +196,7 @@ const Signup = ({navigation, route}) => {
           <Button
             loading={loading}
             onPress={() => sendOtp()}
-            title={t(Constants.SEND_OTP)}
+            title={Constants.SEND_OTP}
             textStyle={styles.buttonTitile}
             style={styles.button}
           />

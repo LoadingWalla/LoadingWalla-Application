@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -11,14 +12,12 @@ import {
   BackHandler,
   StyleSheet,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import ImagePicker from 'react-native-image-crop-picker';
 import * as Constants from '../../Constants/Constant';
 import Background from '../../Components/BackgroundGradient';
-import Camera from '../../../assets/SVG/Camera';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import TextInputField from '../../Components/TextInputField';
@@ -48,7 +47,6 @@ const CompanyDetails = ({navigation, route}) => {
   const [profilePic, setProfilePic] = useState('');
   const [isCameraOptions, setCameraOptions] = useState(false);
   const dispatch = useDispatch();
-  const {t} = useTranslation();
 
   const vehicleTypes = [
     {
@@ -307,7 +305,7 @@ const CompanyDetails = ({navigation, route}) => {
           <View style={styleSheet.signupBackground}>
             {chooseOptions()}
             <Text style={styleSheet.WelcomeTruckTitle}>
-              {t(Constants.TELL_US_ABOUT)}
+              {Constants.TELL_US_ABOUT}
             </Text>
             <View style={[styleSheet.profileImgContainer]}>
               <Image
@@ -334,12 +332,12 @@ const CompanyDetails = ({navigation, route}) => {
         </TouchableOpacity>
         <View style={{marginBottom: 30}}>
           <View style={styleSheet.paddingStyle}>
-            <Text style={styleSheet.label}>{t(Constants.NAME)}</Text>
+            <Text style={styleSheet.label}>{Constants.NAME}</Text>
             <TextInputField
               isCloseIcon={false}
               onChangeText={handleNameChange}
             />
-            {/* <Text style={styleSheet.label}>{t(Constants.ENTER_CITY_NAME)}</Text> */}
+            {/* <Text style={styleSheet.label}>{(Constants.ENTER_CITY_NAME)}</Text> */}
             {/* <TextInputField
               isCloseIcon={false}
               onChangeText={(e) => setCity(e)}
@@ -351,7 +349,7 @@ const CompanyDetails = ({navigation, route}) => {
               onSearchPress={() => navigateToSeach()}
               closeIconClick={() => closeIconClick()}
             /> */}
-            <Text style={styleSheet.label}>{t(Constants.iam)}</Text>
+            <Text style={styleSheet.label}>{Constants.iam}</Text>
             <FlatList
               style={styleSheet.flatListStyle}
               horizontal
@@ -366,7 +364,7 @@ const CompanyDetails = ({navigation, route}) => {
           <Button
             loading={profileSetupLoading}
             onPress={() => profileSetup()}
-            title={t(Constants.CONTINUE)}
+            title={Constants.CONTINUE}
             textStyle={styleSheet.buttonTitile}
             style={styleSheet.button}
             touchStyle={styleSheet.touchStyle}

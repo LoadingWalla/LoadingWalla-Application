@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useRef} from 'react';
 import {View, Text, FlatList, Animated, Easing, Image} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import {useSelector, useDispatch} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
@@ -18,7 +17,6 @@ const FindLoads = ({navigation, route}) => {
   const {Owner, userType} = route?.params;
   const animationProgress = useRef(new Animated.Value(0));
   const {isConnected} = useContext(NetworkContext);
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const {findLoadData, findLoadLoading, findLorryData, findLorryLoading} =
@@ -70,7 +68,7 @@ const FindLoads = ({navigation, route}) => {
         backgroundColor: '#FFFDFD',
       }}>
       <FindLoadHeader
-        title={`${t(Constants.RESULTS)} (${
+        title={`${Constants.RESULTS} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length
         })`}
         goBack={() => navigation.goBack()}

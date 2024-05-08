@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   TouchableOpacity,
   View,
@@ -13,7 +14,6 @@ import React, {useState, useEffect, useContext} from 'react';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import {GradientColor3} from '../../Color/color';
 import {
   AcceptBookingFailure,
@@ -36,11 +36,11 @@ import {memo} from 'react';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import NotFound from '../../Components/NotFound';
 import {DialCall} from '../../Utils/DialCall';
+import AlertBox from '../../Components/AlertBox';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
   const dispatch = useDispatch();
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const [selected, setSelected] = useState(1);
   const [index, setIndex] = useState(0);
@@ -86,7 +86,13 @@ const Requests = ({route, navigation}) => {
   useFocusEffect(
     useCallback(() => {
       getBookingRequest(Owner?.id, Owner?.truck_id, selected);
-    }, [getBookingRequest, Owner?.id, Owner?.truck_id, selected]),
+    }, [
+      getBookingRequest,
+      Owner?.id,
+      Owner?.truck_id,
+      selected,
+      cancelBookingStatus,
+    ]),
   );
 
   const onRefresh = useCallback(() => {
@@ -235,23 +241,10 @@ const Requests = ({route, navigation}) => {
 
   useEffect(() => {
     if (cancelBookingStatus !== null) {
-      navigation.navigate('Confirmation', {
-        status: cancelBookingStatus,
-        messages: cancelBookingMessage,
-        fromRequest: true,
-        Owner: Owner,
-        userType: userType,
-      });
+      AlertBox(cancelBookingMessage);
       clearCancelBookingStatus();
     }
-  }, [
-    cancelBookingStatus,
-    navigation,
-    clearCancelBookingStatus,
-    cancelBookingMessage,
-    Owner,
-    userType,
-  ]);
+  }, [cancelBookingMessage, cancelBookingStatus, clearCancelBookingStatus]);
 
   const RenderItem = memo(({item, key}) => {
     // console.log(7777, item);
@@ -362,8 +355,8 @@ const Requests = ({route, navigation}) => {
           navigationState={{
             index,
             routes: [
-              {key: 'received', title: t(Constants.RECEIVED_REQUEST)},
-              {key: 'sent', title: t(Constants.SENT_REQUEST)},
+              {key: 'received', title: Constants.RECEIVED_REQUEST},
+              {key: 'sent', title: Constants.SENT_REQUEST},
             ],
           }}
           renderScene={SceneMap({received: ReceiveTab, sent: SentTab})}

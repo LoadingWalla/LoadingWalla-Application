@@ -1,15 +1,8 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useState} from 'react';
-import {
-  GradientColor2,
-  PrivacyPolicy,
-  pageBackground,
-  titleColor,
-  white,
-} from '../Color/color';
+import {GradientColor2, PrivacyPolicy, titleColor, white} from '../Color/color';
 import CardHeader from './CardHeader';
 import ShowPermitModal from './ShowPermitModal';
-import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
@@ -30,7 +23,6 @@ const FindLoadHeader = ({
   id,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const {t} = useTranslation();
 
   return (
     <View style={styles.card}>
@@ -91,9 +83,7 @@ const FindLoadHeader = ({
                   verified={verified}
                 />
                 <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
-                  {verified
-                    ? `${t(Constants.VERIFY)}`
-                    : t(Constants.NOT_VERIFIED)}
+                  {verified ? `${Constants.VERIFY}` : Constants.NOT_VERIFIED}
                 </Text>
               </TouchableOpacity>
             </View>

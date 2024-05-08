@@ -7,7 +7,6 @@ import {
   FlatList,
   StyleSheet,
 } from 'react-native';
-import {useTranslation} from 'react-i18next';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../../Constants/Constant';
@@ -30,7 +29,6 @@ import NoInternetScreen from '../../Details/NoInternetScreen';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(0);
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
@@ -121,10 +119,10 @@ const Wallet = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.texts}>{t(Constants.BALANCE)}</Text>
+        <Text style={styles.texts}>{Constants.BALANCE}</Text>
         <Text style={styles.walletText}>₹ {getWallletData?.wallet}</Text>
         <View style={styles.horizontalLine} />
-        <Text style={styles.topupWallet}>{t(Constants.TOPUP_WALLET)}</Text>
+        <Text style={styles.topupWallet}>{Constants.TOPUP_WALLET}</Text>
         <View style={styles.inputContainer}>
           <Text style={styles.rupeeSymbol}>₹</Text>
           <TextInput
@@ -154,7 +152,7 @@ const Wallet = ({navigation}) => {
 
         <Button
           onPress={() => addAmount()}
-          title={t(Constants.PROCEED_TO_TOPUP)}
+          title={Constants.PROCEED_TO_TOPUP}
           loading={walletLoading}
           textStyle={styles.textStyle}
           style={styles.buttonStyle}

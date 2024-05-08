@@ -2,7 +2,6 @@ import React, {useContext} from 'react';
 import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import {NetworkContext} from '../../Context/NetworkContext';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,7 +14,6 @@ import UploadIcon from '../../../assets/SVG/svg/UploadIcon';
 
 const Verification = ({navigation, route}) => {
   const {isConnected} = useContext(NetworkContext);
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const {getDocumentData, getDocumentLoading, getDocumentStatus} = useSelector(

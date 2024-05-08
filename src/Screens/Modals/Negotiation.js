@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import * as Constants from '../../Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   RequestBookingFailure,
@@ -32,7 +31,6 @@ import Button from '../../Components/Button';
 const Negotiation = ({navigation, route}) => {
   // console.log('negotiation screen', route);
   const {item, owner, userType} = route?.params; // this should be on top
-  const {t} = useTranslation();
   const dispatch = useDispatch();
   const [offered_price, setOffered_price] = useState(
     userType === '1' ? owner?.price : item?.price,
@@ -120,16 +118,14 @@ const Negotiation = ({navigation, route}) => {
                     ? item?.truck_type
                     : `₹ ${item?.price} / ${
                         item?.price_type === '1'
-                          ? t(Constants.FIXED)
-                          : t(Constants.PER_TON)
+                          ? Constants.FIXED
+                          : Constants.PER_TON
                       }`}
                 </Text>
               </View>
             </View>
             <View>
-              <Text style={styles.priceText}>
-                {t(Constants.MY_NEGOTITATON)}
-              </Text>
+              <Text style={styles.priceText}>{Constants.MY_NEGOTITATON}</Text>
               <View style={styles.priceInputContainer}>
                 <View style={styles.priceInput}>
                   <Text style={styles.rupeeText}>{'Price (₹) |'}</Text>
@@ -144,8 +140,8 @@ const Negotiation = ({navigation, route}) => {
                 <View style={styles.priceType}>
                   <Text style={styles.rupeeText}>
                     {item?.price_type === '1'
-                      ? t(Constants.FIXED)
-                      : t(Constants.PER_TON)}
+                      ? Constants.FIXED
+                      : Constants.PER_TON}
                   </Text>
                 </View>
               </View>

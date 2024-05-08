@@ -3,7 +3,6 @@ import {View, Text, TouchableOpacity, Image, Pressable} from 'react-native';
 import {GradientColor2} from '../Color/color';
 import * as Constants from '../Constants/Constant';
 import style from './style';
-import {useTranslation} from 'react-i18next';
 import HeaderShimmer from './Shimmer/HeaderShimmer';
 import SupportIcon from '../../assets/SVG/svg/SupportIcon';
 import BellIcon from '../../assets/SVG/svg/BellIcon';
@@ -19,8 +18,6 @@ const DashboardHeader = ({
   loading,
   verify,
 }) => {
-  const {t} = useTranslation();
-
   return (
     <>
       {loading === true ? (
@@ -50,9 +47,7 @@ const DashboardHeader = ({
                 verified={verify}
               />
               <Text style={style.dashboardHeaderVerifiedTitle(verify)}>
-                {verify === 1
-                  ? `${t(Constants.VERIFY)}`
-                  : t(Constants.NOT_VERIFIED)}
+                {verify === 1 ? `${Constants.VERIFY}` : Constants.NOT_VERIFIED}
               </Text>
             </TouchableOpacity>
           </Pressable>

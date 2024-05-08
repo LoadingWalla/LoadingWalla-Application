@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Constants from '../../../Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import {useFocusEffect} from '@react-navigation/native';
 import style from './style';
 import Toast from 'react-native-simple-toast';
@@ -21,7 +20,6 @@ import {initDashboard, myPostLoadFailure} from '../../../Store/Actions/Actions';
 const {width} = Dimensions.get('window');
 
 const DashboardLoad = ({navigation}) => {
-  const {t} = useTranslation();
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
@@ -196,23 +194,23 @@ const DashboardLoad = ({navigation}) => {
                 <SearchFilter
                   onSearchPress={() => navigateToSeach('from')}
                   defaultValue={searchFrom}
-                  leftTitle={t(Constants.FROM)}
+                  leftTitle={Constants.FROM}
                   closeIconClick={() => closeIconClick('from')}
-                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                  placeholder={Constants.SELECT_LOCATION_TITLE}
                 />
                 <SearchFilter
                   onSearchPress={() => navigateToSeach()}
                   defaultValue={searchTo}
-                  leftTitle={t(Constants.TO)}
+                  leftTitle={Constants.TO}
                   closeIconClick={() => closeIconClick('to')}
-                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+                  placeholder={Constants.SELECT_LOCATION_TITLE}
                 />
                 <Button
                   onPress={() => continueSearch()}
                   title={
                     user.current === '1'
-                      ? t(Constants.CONTINUE)
-                      : t(Constants.FIND_LORRY)
+                      ? Constants.CONTINUE
+                      : Constants.FIND_LORRY
                   }
                   loading={findLoadLoading}
                   touchStyle={style.touchStyle}

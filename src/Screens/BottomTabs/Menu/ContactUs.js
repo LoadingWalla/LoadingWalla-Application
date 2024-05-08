@@ -7,24 +7,31 @@ import {
   Linking,
   Platform,
   StatusBar,
+  StyleSheet,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import Toast from 'react-native-simple-toast';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
-import {textColor} from '../../../Color/color';
+import {
+  GradientColor1,
+  GradientColor2,
+  GradientColor3,
+  backgroundColorNew,
+  textColor,
+} from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
 import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
 import EmailIcon from '../../../../assets/SVG/svg/EmailIcon';
 import WhatsAppIcon from '../../../../assets/SVG/svg/WhatsAppIcon';
+import AlertBox from '../../../Components/AlertBox';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ContactUs = ({navigation}) => {
-  const {t} = useTranslation();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -46,6 +53,7 @@ const ContactUs = ({navigation}) => {
       setPhone('');
       setMessage('');
       Toast.show(`${contactusData}`, Toast.LONG);
+      // AlertBox(contactusData);
       dispatch(contactusFailure());
     }
   }, [contactusData, contactusStatus, dispatch]);
@@ -122,9 +130,9 @@ const ContactUs = ({navigation}) => {
         //phoneNumber = `telprompt:${phone}`;
       }
       Linking.openURL(whatsappNumber)
-        .then(res => alert(JSON.stringify(res)))
+        .then(res => console.log('opened whatsapp', res))
         .catch(err => {
-          Toast.show("WhatsApp doesn't exist", Toast.LONG);
+          Toast.show("WhatsApp doesn't exist or Not insatlled", Toast.LONG);
         });
 
       return;
@@ -136,7 +144,11 @@ const ContactUs = ({navigation}) => {
   }
   return (
     <Background style={{flex: 1}}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
+      {/* <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={backgroundColorNew}
+      /> */}
+      <GradientStatusBar />
       <View
         style={{
           flexDirection: 'row',
@@ -161,9 +173,9 @@ const ContactUs = ({navigation}) => {
         showsHorizontalScrollIndicator={false}
         style={{
           flex: 1,
-          // backgroundColor: '#FFFFFF',
-          // borderTopLeftRadius: 20,
-          // borderTopRightRadius: 20,
+          backgroundColor: '#FFFFFF',
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
         }}>
         <View
           style={{
@@ -181,7 +193,7 @@ const ContactUs = ({navigation}) => {
               marginTop: 20,
               fontFamily: 'PlusJakartaSans-Medium',
             }}>
-            {t(Constants.NAME)}
+            {Constants.NAME}
           </Text>
           <TextInputField
             value={name}
@@ -197,7 +209,7 @@ const ContactUs = ({navigation}) => {
               marginTop: 20,
               fontFamily: 'PlusJakartaSans-Medium',
             }}>
-            {t(Constants.E_MAIL)}
+            {Constants.E_MAIL}
           </Text>
           <TextInputField
             value={email}
@@ -213,7 +225,7 @@ const ContactUs = ({navigation}) => {
               marginTop: 20,
               fontFamily: 'PlusJakartaSans-Medium',
             }}>
-            {t(Constants.PHONE_NUMBER)}
+            {Constants.PHONE_NUMBER}
           </Text>
           <TextInputField
             value={phone}
@@ -230,7 +242,7 @@ const ContactUs = ({navigation}) => {
               marginTop: 20,
               fontFamily: 'PlusJakartaSans-Medium',
             }}>
-            {t(Constants.MESSAGE)}
+            {Constants.MESSAGE}
           </Text>
           <TextInputField
             value={message}
@@ -239,7 +251,7 @@ const ContactUs = ({navigation}) => {
             onChangeText={e => onChangeMessage(e)}
             // placeholderTextColor={PrivacyPolicy}
           />
-          <Button
+          {/* <Button
             onPress={() => sendMessage()}
             title={'Send message'}
             loading={contactusLoading}
@@ -257,11 +269,58 @@ const ContactUs = ({navigation}) => {
               justifyContent: 'center',
               marginVertical: 20,
             }}
-          />
+          /> */}
         </View>
+        <Button
+          onPress={() => sendMessage()}
+          title={'Send message'}
+          loading={contactusLoading}
+          textStyle={{
+            fontWeight: 'bold',
+            color: textColor,
+            fontSize: 16,
+            fontFamily: 'PlusJakartaSans-Medium',
+          }}
+          style={{
+            flexDirection: 'row',
+            borderRadius: 8,
+            height: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: 20,
+          }}
+        />
       </ScrollView>
     </Background>
   );
 };
 
 export default ContactUs;
+
+const GradientStatusBar = () => {
+  return (
+    <View style={stylesStatusbar.statusBar}>
+      <LinearGradient
+        colors={[GradientColor1, GradientColor2, GradientColor3]}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
+        style={stylesStatusbar.gradient}
+      />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+    </View>
+  );
+};
+
+const stylesStatusbar = StyleSheet.create({
+  statusBar: {
+    height: StatusBar.currentHeight,
+    width: '100%',
+  },
+  gradient: {
+    flex: 1,
+  },
+});

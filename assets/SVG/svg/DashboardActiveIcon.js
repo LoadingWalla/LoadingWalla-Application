@@ -1,5 +1,5 @@
 import React from 'react';
-import Svg, {Path} from 'react-native-svg';
+import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg';
 
 const DashboardActiveIcon = ({size}) => {
   return (
@@ -7,16 +7,43 @@ const DashboardActiveIcon = ({size}) => {
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
-      viewBox="0 0 18.332 18.332">
-      <Path
-        id="Icon_material-dashboard"
-        data-name="Icon material-dashboard"
-        d="M4.5,14.129h7.7V4.5H4.5Zm0,7.7h7.7V16.055H4.5Zm9.629,0h7.7V12.2h-7.7Zm0-17.332v5.777h7.7V4.5Z"
-        transform="translate(-4 -4)"
-        fill="#e63e00"
-        stroke="#e63e00"
-        stroke-width="1"
-      />
+      viewBox="0 0 14 14"
+      fill="none">
+      <G clip-Path="url(#clip0_5_58)">
+        <Path
+          d="M5.28095 8.23096H1.13137C0.861757 8.23096 0.643188 8.44953 0.643188 8.71914V12.8687C0.643188 13.1383 0.861757 13.3569 1.13137 13.3569H5.28095C5.55057 13.3569 5.76914 13.1383 5.76914 12.8687V8.71914C5.76914 8.44953 5.55057 8.23096 5.28095 8.23096Z"
+          fill="#EF4D23"
+          stroke="#EF4D23"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M12.8687 8.23096H8.71908C8.44946 8.23096 8.2309 8.44953 8.2309 8.71914V12.8687C8.2309 13.1383 8.44946 13.3569 8.71908 13.3569H12.8687C13.1383 13.3569 13.3568 13.1383 13.3568 12.8687V8.71914C13.3568 8.44953 13.1383 8.23096 12.8687 8.23096Z"
+          fill="#EF4D23"
+          stroke="#EF4D23"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M5.28095 0.643066H1.13137C0.861757 0.643066 0.643188 0.861635 0.643188 1.13125V5.28083C0.643188 5.55045 0.861757 5.76902 1.13137 5.76902H5.28095C5.55057 5.76902 5.76914 5.55045 5.76914 5.28083V1.13125C5.76914 0.861635 5.55057 0.643066 5.28095 0.643066Z"
+          fill="#EF4D23"
+          stroke="#EF4D23"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M8.14561 3.58439C7.84502 3.5321 7.84502 3.10059 8.14561 3.0483C9.23458 2.85885 10.1007 2.0294 10.3371 0.949642L10.3552 0.866874C10.4202 0.569797 10.8432 0.567948 10.9108 0.864446L10.9328 0.960901C11.178 2.03557 12.0443 2.85801 13.1303 3.04693C13.4324 3.09949 13.4324 3.5332 13.1303 3.58576C12.0443 3.77469 11.178 4.59713 10.9328 5.67179L10.9108 5.76825C10.8432 6.06475 10.4202 6.0629 10.3552 5.76582L10.3371 5.68305C10.1007 4.60329 9.23458 3.77385 8.14561 3.58439Z"
+          fill="#EF4D23"
+          stroke="#EF4D23"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_5_58">
+          <Rect width="14" height="14" fill="white" />
+        </ClipPath>
+      </Defs>
     </Svg>
   );
 };

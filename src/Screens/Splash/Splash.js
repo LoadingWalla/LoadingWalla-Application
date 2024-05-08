@@ -29,7 +29,8 @@ const Splash = ({navigation: {replace}}) => {
         if (newUser === '1') {
           replace('companyDetails', {userId});
         } else {
-          replace('Language');
+          // replace('Language');
+          replace('Signup');
         }
       }, 3000);
     };

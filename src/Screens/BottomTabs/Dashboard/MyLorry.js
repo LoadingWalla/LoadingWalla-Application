@@ -5,16 +5,8 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  RefreshControl,
-  Image,
-} from 'react-native';
+import {View, ScrollView, FlatList, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TabView, SceneMap} from 'react-native-tab-view';
@@ -22,14 +14,12 @@ import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
-import {PrivacyPolicy} from '../../../Color/color';
 import MyLorryItem from '../../../Components/MyLorryItem';
 import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import style from './style';
 import Button from '../../../Components/Button';
 import RenderTabBar from '../../Requests/RenderTabBar';
-import MyTabBar from '../../Requests/MyTabBar';
 import NotFound from '../../../Components/NotFound';
 
 function getRoutesForUserType(type) {
@@ -49,7 +39,6 @@ function getRoutesForUserType(type) {
 
 const MyLorry = ({navigation}) => {
   const dispatch = useDispatch();
-  const {t} = useTranslation();
   const {isConnected} = useContext(NetworkContext);
   const [userType, setUserType] = useState('');
   const [isStatus, setShowStatus] = useState(false);
@@ -142,7 +131,7 @@ const MyLorry = ({navigation}) => {
             <MyLorryItem
               item={item}
               userType={userType}
-              t={t}
+              // t={t}
               openStatusModal={openStatusModal}
               navigation={navigation}
               selected={selected}
@@ -248,9 +237,7 @@ const MyLorry = ({navigation}) => {
 
       <Button
         title={
-          userType === '1'
-            ? t(Constants.POST_LOADS)
-            : t(Constants.ADD_NEW_LORRY)
+          userType === '1' ? Constants.POST_LOADS : Constants.ADD_NEW_LORRY
         }
         textStyle={style.buttonTextStyle}
         style={style.buttonstyle}
@@ -282,7 +269,6 @@ export default MyLorry;
 //   I18nManager,
 // } from 'react-native';
 // import {useDispatch, useSelector} from 'react-redux';
-// import {useTranslation} from 'react-i18next';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 // import {useFocusEffect} from '@react-navigation/native';
@@ -384,7 +370,6 @@ export default MyLorry;
 
 // const MyLorry = ({navigation}) => {
 //   const dispatch = useDispatch();
-//   const {t} = useTranslation();
 //   const {isConnected} = useContext(NetworkContext);
 //   const [userType, setUserType] = useState('');
 //   const [isStatus, setShowStatus] = useState(false);
@@ -469,7 +454,7 @@ export default MyLorry;
 //                 color: PrivacyPolicy,
 //                 fontFamily: 'PlusJakartaSans-Medium',
 //               }}>
-//               {t(Constants.NOT_FOUND)}
+//               {(Constants.NOT_FOUND)}
 //             </Text>
 //           </View>
 //         </ScrollView>
@@ -583,8 +568,8 @@ export default MyLorry;
 //       <Button
 //         title={
 //           userType === '1'
-//             ? t(Constants.POST_LOADS)
-//             : t(Constants.ADD_NEW_LORRY)
+//             ? (Constants.POST_LOADS)
+//             : (Constants.ADD_NEW_LORRY)
 //         }
 //         textStyle={style.buttonTextStyle}
 //         style={style.buttonstyle}

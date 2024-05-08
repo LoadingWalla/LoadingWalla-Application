@@ -13,7 +13,7 @@ import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
-import Cammera from '../../../assets/SVG/Gallery';
+import Cammera from '../../../assets/SVG/Camera';
 import NoInternetScreen from '../Details/NoInternetScreen';
 import Button from '../../Components/Button';
 import {GradientColor3} from '../../Color/color';
@@ -81,6 +81,10 @@ const CardDetails = ({route, navigation}) => {
         width: 300,
         height: 400,
         cropping: true,
+        compressImageQuality: 0.8,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
+        hideBottomControls: true,
       });
       // console.log(image);
       const documentData = {
@@ -105,12 +109,14 @@ const CardDetails = ({route, navigation}) => {
     setCameraOptions(false);
     try {
       const image = await ImagePicker.openPicker({
-        width: 960,
-        height: 1280,
+        width: 300,
+        height: 400,
         cropping: true,
-        cropperCircleOverlay: true,
-        compressImageQuality: 1,
+        cropperCircleOverlay: false,
+        compressImageQuality: 0.8,
         hideBottomControls: true,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
       });
       const documentData = {
         fileName: image.filename || image.path.split('/').pop(),

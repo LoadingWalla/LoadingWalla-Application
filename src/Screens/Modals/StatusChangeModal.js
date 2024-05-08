@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useTranslation} from 'react-i18next';
 import Switch from 'toggle-switch-react-native';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
@@ -34,7 +33,6 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 const StatusChangeModal = ({navigation, route}) => {
   const {userType, data} = route?.params;
   // console.log(9898989, route.params);
-  const {t} = useTranslation();
   const dispatch = useDispatch();
 
   const [searchFrom, setSearchFrom] = useState(data?.from);
@@ -137,7 +135,7 @@ const StatusChangeModal = ({navigation, route}) => {
       <View style={styles.screenModalView}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>
-            {userType === 1 ? t(Constants.LOAD) : t(Constants.LORRY)} Status
+            {userType === 1 ? Constants.LOAD : Constants.LORRY} Status
           </Text>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -147,7 +145,7 @@ const StatusChangeModal = ({navigation, route}) => {
         </View>
         <View style={styles.centeredView}>
           <View style={styles.activeContainer}>
-            <Text style={styles.activeText}>{t(Constants.ACTIVE)}</Text>
+            <Text style={styles.activeText}>{Constants.ACTIVE}</Text>
             <Switch
               isOn={isEnabled}
               onColor={GradientColor2}
@@ -168,17 +166,17 @@ const StatusChangeModal = ({navigation, route}) => {
           </View>
           <SearchFilter
             defaultValue={searchFrom}
-            leftTitle={t(Constants.FROM)}
+            leftTitle={Constants.FROM}
             closeIconClick={() => closeIconClick('from')}
             onSearchPress={() => navigateToSeach('from')}
-            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+            placeholder={Constants.SELECT_LOCATION_TITLE}
           />
           <SearchFilter
             defaultValue={searchTo}
-            leftTitle={t(Constants.TO)}
+            leftTitle={Constants.TO}
             closeIconClick={() => closeIconClick('to')}
             onSearchPress={() => navigateToSeach()}
-            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+            placeholder={Constants.SELECT_LOCATION_TITLE}
           />
           <View
             style={{
@@ -192,8 +190,8 @@ const StatusChangeModal = ({navigation, route}) => {
               onPress={deleteLorry}
               style={styles.removeButton}>
               <Text style={styles.removeText}>
-                {t(Constants.REMOVE)}{' '}
-                {userType === 1 ? t(Constants.LOAD) : t(Constants.LORRY)}
+                {Constants.REMOVE}{' '}
+                {userType === 1 ? Constants.LOAD : Constants.LORRY}
               </Text>
               {deletelorryLoading && (
                 <ActivityIndicator size="small" color={GradientColor2} />
@@ -239,7 +237,7 @@ const StatusChangeModal = ({navigation, route}) => {
             textStyle={styles.saveText}
             style={styles.saveButton}
           />
-          <Text style={styles.noteText}>{t(Constants.NOTE)}</Text>
+          <Text style={styles.noteText}>{Constants.NOTE}</Text>
         </View>
       </View>
     </KeyboardAvoidingView>

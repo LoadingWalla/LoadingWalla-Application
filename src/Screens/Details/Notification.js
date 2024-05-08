@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
-import {useTranslation} from 'react-i18next';
 import {NetworkContext} from '../../Context/NetworkContext';
 import NoInternetScreen from './NoInternetScreen';
 import {pageBackground} from '../../Color/color';
@@ -10,7 +9,6 @@ import {initNotification} from '../../Store/Actions/Actions';
 
 const Notification = ({navigation, NotificationLoading, route}) => {
   console.log('Notification', route.params);
-  const {t} = useTranslation();
   const [notificationList, setNotificationList] = useState([]);
   const {isConnected} = useContext(NetworkContext);
 

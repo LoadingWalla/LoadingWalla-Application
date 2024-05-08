@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
-import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import style from './style';
 import * as Constants from '../../../Constants/Constant';
@@ -26,7 +25,6 @@ import Button from '../../../Components/Button';
 import NotFound from '../../../Components/NotFound';
 
 const FindLoadResult = ({navigation, route}) => {
-  const {t} = useTranslation();
   const user = useRef('');
   const animationProgress = useRef(new Animated.Value(0));
   const [searchFrom, setSearchFrom] = useState(route?.params?.searchFrom);
@@ -177,10 +175,10 @@ const FindLoadResult = ({navigation, route}) => {
       <View style={style.findLocationBox}>
         <SearchFilter
           defaultValue={searchFrom}
-          leftTitle={t(Constants.FROM)}
+          leftTitle={Constants.FROM}
           closeIconClick={() => closeIconClick('from')}
           onSearchPress={() => navigateToSeach('from')}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+          placeholder={Constants.SELECT_LOCATION_TITLE}
         />
         {showLocationFrom === true && (
           <LocationModal
@@ -190,10 +188,10 @@ const FindLoadResult = ({navigation, route}) => {
         )}
         <SearchFilter
           defaultValue={searchTo}
-          leftTitle={t(Constants.TO)}
+          leftTitle={Constants.TO}
           closeIconClick={() => closeIconClick('to')}
           onSearchPress={() => navigateToSeach()}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+          placeholder={Constants.SELECT_LOCATION_TITLE}
         />
         {showLocationTo === true && (
           <LocationModal
@@ -203,7 +201,7 @@ const FindLoadResult = ({navigation, route}) => {
         )}
         <Button
           onPress={() => searchLoad()}
-          title={t(Constants.FIND_LOADS)}
+          title={Constants.FIND_LOADS}
           loading={findLoadLoading}
           textStyle={style.buttonTextStyle}
           style={style.findBtnStyle}

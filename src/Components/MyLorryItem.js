@@ -21,7 +21,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
   // console.log(888888, item);
   // console.log(3333, userType);
   const priceType =
-    item?.price_type === 1 ? t(Constants.FIXED) : t(Constants.PER_TON);
+    item?.price_type === 1 ? Constants.FIXED : Constants.PER_TON;
   const ac_time = userType === '2' ? item?.updated : false;
 
   return (
@@ -90,8 +90,8 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
               />
               <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
-                  ? `${t(Constants.VERIFY)}`
-                  : t(Constants.NOT_VERIFIED)}
+                  ? `${Constants.VERIFY}`
+                  : Constants.NOT_VERIFIED}
               </Text>
             </TouchableOpacity>
           ) : null}
@@ -162,7 +162,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                   styles.editButtonText,
                   {color: item.status === 1 ? '#56CA6F' : '#d73b29'},
                 ]}>
-                {t(Constants.EDIT)}
+                {Constants.EDIT}
               </Text>
               <PencilIcon
                 size={10}
@@ -175,7 +175,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                 disabledStyle={styles.requestButtonContainerDisabled}
                 textStyle={styles.gradientButtonText}
                 disableTextStyle={styles.disabledText}
-                title={t(Constants.REQUEST)}
+                title={Constants.REQUEST}
                 count={item?.total_request}
                 disabled={item.status === 0 ? true : false}
                 navigation={() =>
@@ -191,9 +191,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                 textStyle={styles.findButtonText}
                 disableTextStyle={styles.findDisabledText}
                 title={
-                  userType === '2'
-                    ? t(Constants.FIND_LOADS)
-                    : t(Constants.FIND_LORRY)
+                  userType === '2' ? Constants.FIND_LOADS : Constants.FIND_LORRY
                 }
                 disabled={item.status === 0 ? true : false}
                 navigation={() =>
