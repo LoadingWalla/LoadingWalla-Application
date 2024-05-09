@@ -8,7 +8,6 @@ import {
   titleColor,
 } from '../../Color/color';
 import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {useDispatch, useSelector} from 'react-redux';
 import {initMyLorryById} from '../../Store/Actions/Actions';
 import Shield from '../../../assets/SVG/svg/Shield';
@@ -31,9 +30,6 @@ const Status = ({navigation, route}) => {
     dispatch(initMyLorryById(truck_id));
   }, [dispatch, truck_id]);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={styles.fullScreenContainer}>
       <View style={styles.mainContainer}>

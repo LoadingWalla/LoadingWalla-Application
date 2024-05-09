@@ -3,7 +3,6 @@ import {View, Text} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import Header from '../../Components/Header';
 import PostItem from '../../Components/PostItem';
 import Button from '../../Components/Button';
@@ -11,9 +10,6 @@ import Button from '../../Components/Button';
 const LoadPostSuccessfull = ({navigation}) => {
   const {isConnected} = useContext(NetworkContext);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={[styles.backgroundView, {backgroundColor: '#E7E7E7'}]}>
       <Header

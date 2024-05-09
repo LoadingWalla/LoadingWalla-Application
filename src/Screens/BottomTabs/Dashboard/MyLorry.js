@@ -15,7 +15,6 @@ import {NetworkContext} from '../../../Context/NetworkContext';
 import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 import MyLorryItem from '../../../Components/MyLorryItem';
-import NoInternetScreen from '../../Details/NoInternetScreen';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import style from './style';
 import Button from '../../../Components/Button';
@@ -193,9 +192,6 @@ const MyLorry = ({navigation}) => {
     }
   }, [index]);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={style.Container}>
       <View style={style.DashboardHeaderView}>
@@ -284,7 +280,7 @@ export default MyLorry;
 //   titleColor,
 // } from '../../../Color/color';
 // import MyLorryItem from '../../../Components/MyLorryItem';
-// import NoInternetScreen from '../../Details/NoInternetScreen';
+//
 // import DashboardHeader from '../../../Components/DashboardHeader';
 // import style from './style';
 // import Button from '../../../Components/Button';

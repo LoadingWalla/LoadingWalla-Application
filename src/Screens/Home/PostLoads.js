@@ -3,7 +3,6 @@ import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import SearchFilter from '../../Components/SearchFilter';
 import TextInputField from '../../Components/TextInputField';
 import TruckItem from '../../Components/TruckItem';
@@ -153,9 +152,6 @@ const PostLoads = ({navigation, route}) => {
     });
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

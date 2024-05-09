@@ -18,7 +18,7 @@ import {initFindLoad} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 import InnerButton from '../../../Components/InnerButton';
 import {DialCall} from '../../../Utils/DialCall';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import SearchFilter from '../../../Components/SearchFilter';
 import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';
@@ -167,9 +167,6 @@ const FindLoadResult = ({navigation, route}) => {
     );
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={style.MainContainer}>
       <View style={style.findLocationBox}>

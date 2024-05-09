@@ -7,7 +7,6 @@ import {NetworkContext} from '../../Context/NetworkContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {initDocumentVerification} from '../../Store/Actions/Actions';
 import {titleColor} from '../../Color/color';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import Button from '../../Components/Button';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import UploadIcon from '../../../assets/SVG/svg/UploadIcon';
@@ -113,9 +112,6 @@ const Verification = ({navigation, route}) => {
     );
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={styles.container}>
       <FlatList

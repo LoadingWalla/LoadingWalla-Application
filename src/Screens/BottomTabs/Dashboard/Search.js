@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import {
   GradientColor2,
   PrivacyPolicy,
@@ -55,9 +55,7 @@ const Search = forwardRef(({navigation, route}, ref) => {
     });
   }, []);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <View
       style={{

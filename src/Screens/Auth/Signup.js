@@ -23,7 +23,6 @@ import Toast from 'react-native-simple-toast';
 import {Dimensions} from 'react-native';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Button from '../../Components/Button';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 
 const Signup = ({navigation, route}) => {
@@ -84,9 +83,6 @@ const Signup = ({navigation, route}) => {
     dispatch(initLogin(mobileNumber));
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <KeyboardAvoidingView
       style={styles.Container}

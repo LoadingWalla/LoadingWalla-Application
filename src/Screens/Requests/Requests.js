@@ -27,7 +27,6 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import RenderTabBar from './RenderTabBar';
 import Button from '../../Components/Button';
 import FindLoadHeader from '../../Components/FindLoadHeader';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import InnerButton from '../../Components/InnerButton';
 import {useFocusEffect} from '@react-navigation/native';
@@ -321,10 +320,6 @@ const Requests = ({route, navigation}) => {
       </View>
     );
   });
-
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
 
   return (
     <KeyboardAvoidingView

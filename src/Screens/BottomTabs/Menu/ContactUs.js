@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
 import Toast from 'react-native-simple-toast';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
@@ -139,9 +139,6 @@ const ContactUs = ({navigation}) => {
     }
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <Background style={{flex: 1}}>
       {/* <StatusBar

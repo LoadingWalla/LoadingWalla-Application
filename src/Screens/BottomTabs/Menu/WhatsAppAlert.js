@@ -4,7 +4,7 @@ import Switch from 'toggle-switch-react-native';
 import styles from './style';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import {
   GradientColor2,
   pageBackground,
@@ -22,9 +22,7 @@ const WhatsAppAlert = ({navigation}) => {
     Alert.alert(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <SafeAreaView>
       <View style={[styles.backgroundView, {backgroundColor: 'white'}]}>

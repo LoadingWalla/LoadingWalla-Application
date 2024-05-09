@@ -15,7 +15,7 @@ import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initBooking} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
@@ -74,9 +74,7 @@ const PreviousBookings = ({navigation, route}) => {
     );
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
 
   return (
     <View style={styles.container}>

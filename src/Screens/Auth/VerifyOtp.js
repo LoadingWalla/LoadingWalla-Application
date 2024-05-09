@@ -20,7 +20,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
@@ -124,9 +123,6 @@ const VerifyOtp = ({navigation, route}) => {
     };
   }, [delay]);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <KeyboardAvoidingView style={styles.Container}>
       <View style={[styles.signupBackground, {marginTop: 0}]}>

@@ -11,7 +11,7 @@ import {
 import ErrorImage from '../../../../assets/GIFs/error.gif';
 import successImage from '../../../../assets/GIFs/success.gif';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
@@ -48,9 +48,7 @@ const BookingStatus = ({navigation, route}) => {
   };
   const {message, image, color} = getStatusContent();
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <View style={styles.container}>
       <View

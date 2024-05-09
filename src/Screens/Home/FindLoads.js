@@ -6,7 +6,6 @@ import {NetworkContext} from '../../Context/NetworkContext';
 import {initFindLoad, initFindLorry} from '../../Store/Actions/Actions';
 import PostItem from '../../Components/PostItem';
 import {DialCall} from '../../Utils/DialCall';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import FindLoadHeader from '../../Components/FindLoadHeader';
 import {PrivacyPolicy} from '../../Color/color';
 import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
@@ -55,10 +54,6 @@ const FindLoads = ({navigation, route}) => {
 
   const dataToShow = userType === '1' ? findLorryData : findLoadData;
   const isLoading = userType === '1' ? findLorryLoading : findLoadLoading;
-
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
 
   return (
     <View

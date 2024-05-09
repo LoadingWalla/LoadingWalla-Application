@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {initGuide} from '../../../Store/Actions/Actions';
 import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
 import UpArrow from '../../../../assets/SVG/svg/UpArrow';
 import DownArrow from '../../../../assets/SVG/svg/DownArrow';
@@ -70,10 +70,6 @@ const Guide = ({navigation}) => {
     ),
     [selectedId, handlePress],
   );
-
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
 
   if (guideLoading) {
     return <GuideShimmer />;

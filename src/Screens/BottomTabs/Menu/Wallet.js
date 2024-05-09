@@ -25,7 +25,7 @@ import {
   titleColor,
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(0);
@@ -113,9 +113,7 @@ const Wallet = ({navigation}) => {
     setAmount(newamt);
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.box}>

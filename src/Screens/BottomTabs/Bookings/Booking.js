@@ -20,7 +20,7 @@ import {
   initBooking,
 } from '../../../Store/Actions/Actions';
 import BookingItem from '../../../Components/Bookingitem';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
@@ -86,9 +86,7 @@ const Booking = ({navigation}) => {
     />
   );
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
 
   return (
     <View style={style.Container}>

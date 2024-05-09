@@ -13,7 +13,6 @@ import Background from '../../Components/BackgroundGradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initLanguage} from '../../Store/Actions/Actions';
 import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 
@@ -95,9 +94,6 @@ const Language = ({navigation, route}) => {
     }
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.part1}>

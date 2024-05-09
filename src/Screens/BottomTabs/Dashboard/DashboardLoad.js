@@ -12,7 +12,7 @@ import Swiper from 'react-native-swiper';
 import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
 import {GradientColor2} from '../../../Color/color';
 import DashboardHeader from '../../../Components/DashboardHeader';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import {NetworkContext} from '../../../Context/NetworkContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {initDashboard, myPostLoadFailure} from '../../../Store/Actions/Actions';
@@ -138,9 +138,7 @@ const DashboardLoad = ({navigation}) => {
     });
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <>
       <View style={style.DashboardHeaderView}>
