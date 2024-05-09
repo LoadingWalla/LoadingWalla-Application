@@ -91,7 +91,7 @@ export const ADD_PAYMENT_METHOD_START =
   'Add a payment method to start receiving payments.';
 export const NO_PAYMENT = 'No Payment Method';
 export const FIXED = 'Fixed';
-export const PER_TON = 'Per Ton';
+export const PER_TON = 'Per Truck';
 export const FULL = 'Full';
 export const HALF = 'Half';
 export const TONNE = 'Tonne(s)';

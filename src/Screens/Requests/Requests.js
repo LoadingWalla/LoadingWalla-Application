@@ -276,7 +276,7 @@ const Requests = ({route, navigation}) => {
                 {' '}
                 :{' '}
                 {`₹ ${item?.price} / ${
-                  item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+                  item?.price_type === 1 ? 'Per Truck' : 'Fixed'
                 }`}{' '}
               </Text>
             </View>
@@ -286,7 +286,7 @@ const Requests = ({route, navigation}) => {
                 {' '}
                 :{' '}
                 {`₹ ${item?.offered_price} / ${
-                  item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+                  item?.price_type === 1 ? 'Per Truck' : 'Fixed'
                 }`}{' '}
               </Text>
             </View>
@@ -340,7 +340,7 @@ const Requests = ({route, navigation}) => {
           userType === '2'
             ? Owner?.vehicle_number
             : `₹ ${Owner?.price} / ${
-                Owner?.price_type === '1' ? 'Per Ton' : 'Fixed'
+                Owner?.price_type === '1' ? 'Per Truck' : 'Fixed'
               }`
         }
         userType={userType}

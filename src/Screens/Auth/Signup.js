@@ -30,6 +30,7 @@ const Signup = ({navigation, route}) => {
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
+  // console.log(77777777777, screenHeight);
   const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
@@ -134,22 +135,24 @@ const Signup = ({navigation, route}) => {
             }}
           />
 
-          <View
-            style={{
-              justifyContent: 'center',
-              height: 0.45 * screenHeight,
-            }}>
-            <Image
+          {screenHeight >= 650 && (
+            <View
               style={{
-                width: '100%',
-                height: '100%',
-                resizeMode: 'contain',
-              }}
-              source={{
-                uri: 'https://loadingwalla.com/public/LoadingWalla2-03.png',
-              }}
-            />
-          </View>
+                justifyContent: 'center',
+                height: 0.45 * screenHeight,
+              }}>
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  resizeMode: 'contain',
+                }}
+                source={{
+                  uri: 'https://loadingwalla.com/public/LoadingWalla2-03.png',
+                }}
+              />
+            </View>
+          )}
         </View>
 
         <View style={{backgroundColor: pageBackground}}>

@@ -30,10 +30,10 @@ const PostLoads = ({navigation, route}) => {
   );
 
   const [searchFromId, setSearchFromId] = useState(
-    !!route?.params?.fromId ? route?.params?.fromId : '',
+    !!route?.params?.fromId ? route?.params?.fromId : 0,
   );
   const [searchToId, setSearchToId] = useState(
-    !!route?.params?.toId ? route?.params?.toId : '',
+    !!route?.params?.toId ? route?.params?.toId : 0,
   );
   const [allLocation, setAllLocation] = useState([]);
   const [showLocationFrom, setLocationFrom] = useState(false);
@@ -140,6 +140,7 @@ const PostLoads = ({navigation, route}) => {
   const navigateToSeach = val => {
     navigation.navigate('Search', {
       allLocation,
+      locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
         if (val === 'from') {
           setSearchFrom(item?.place_name);

@@ -79,7 +79,7 @@ const FindLoads = ({navigation, route}) => {
           userType === '2'
             ? Owner?.vehicle_number
             : `₹ ${Owner?.price} / ${
-                Owner?.price_type === '1' ? 'Per Ton' : 'Fixed'
+                Owner?.price_type === '1' ? 'Per Truck' : 'Fixed'
               }`
         }
         userType={userType}

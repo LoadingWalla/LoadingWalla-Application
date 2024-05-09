@@ -138,7 +138,7 @@ const ModalNew = ({isVisible, onClose, onBackdropPress, item}) => {
                   <Text style={styles.textStyle}>
                     : {item.item.price}
                     {'/'}
-                    {item.item.price_type === 2 ? 'Fixed' : 'Per Ton'}
+                    {item.item.price_type === 2 ? 'Fixed' : 'Per Truck'}
                   </Text>
                 </View>
               </View>

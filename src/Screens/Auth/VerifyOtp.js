@@ -38,7 +38,7 @@ const VerifyOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const {otpdata, otpLoading, status, dashboardStatus} = useSelector(state => {
-    // console.log('Verify Otp', state.data);
+    console.log('Verify Otp', state.data);
     return state.data;
   });
 

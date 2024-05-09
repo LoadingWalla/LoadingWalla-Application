@@ -284,7 +284,7 @@ const ViewDetail = ({navigation, route}) => {
                   <Text style={styles.textStyle}>: {material_name}</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'row', marginTop: 10}}>
+              {/* <View style={{flexDirection: 'row', marginTop: 10}}>
                 <View style={{flex: 0.5}}>
                   <View style={{flexDirection: 'row'}}>
                     <Text style={{minWidth: 40, color: titleColor}}>
@@ -293,17 +293,27 @@ const ViewDetail = ({navigation, route}) => {
                     <Text style={styles.textStyle}>: {qty} Ton</Text>
                   </View>
                 </View>
-                <View style={{flex: 0.5}}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={{minWidth: 40, color: titleColor}}>
-                      {Constants.PRICE}
-                    </Text>
-                    <Text style={styles.textStyle}>
-                      : {price}
-                      {'/'}
-                      {price_type === 2 ? 'Fixed' : 'Per Ton'}
-                    </Text>
-                  </View>
+              </View> */}
+              <View
+                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+                <Text style={{minWidth: 120, color: titleColor}}>
+                  {Constants.QUANTITY}
+                </Text>
+                <View style={{flex: 1}}>
+                  <Text style={styles.textStyle}>: {qty} Ton</Text>
+                </View>
+              </View>
+              <View
+                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
+                <Text style={{minWidth: 120, color: titleColor}}>
+                  {Constants.PRICE}
+                </Text>
+                <View style={{flex: 1}}>
+                  <Text style={styles.textStyle}>
+                    : ₹ {price}
+                    {'/'}
+                    {price_type === 2 ? 'Fixed' : 'Per Truck'}
+                  </Text>
                 </View>
               </View>
               <View

@@ -112,7 +112,7 @@ const Confirmation = ({navigation, route}) => {
                     <Text style={styles.textStyle}>
                       {selectedData.wheel ||
                         `₹ ${selectedData.price} / ${
-                          selectedData.price_type === 2 ? 'Fixed' : 'Per Ton'
+                          selectedData.price_type === 2 ? 'Fixed' : 'Per Truck'
                         }`}
                     </Text>
                   </View>

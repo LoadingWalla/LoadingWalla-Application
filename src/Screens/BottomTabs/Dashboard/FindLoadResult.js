@@ -142,7 +142,7 @@ const FindLoadResult = ({navigation, route}) => {
           <View style={style.point} />
           <Text style={style.smallImageHeaderTitle}>
             {`₹ ${item?.price} / ${
-              item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+              item?.price_type === 1 ? 'Per Truck' : 'Fixed'
             }`}
           </Text>
         </View>

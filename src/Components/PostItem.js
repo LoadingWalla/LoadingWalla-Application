@@ -24,7 +24,7 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
         <Text style={style.smallImageHeaderTitle}>
           {item?.user_type
             ? `₹ ${item?.price} / ${
-                item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+                item?.price_type === 1 ? 'Per Truck' : 'Fixed'
               }`
             : item?.vehicle_number}
         </Text>

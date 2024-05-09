@@ -88,7 +88,7 @@ const BookingStatus = ({navigation, route}) => {
                 {userType === '2'
                   ? `${Owner?.truck_type} Body`
                   : `₹ ${Owner?.price} / ${
-                      Owner?.price_type === '2' ? 'Fixed' : 'Per Ton'
+                      Owner?.price_type === '2' ? 'Fixed' : 'Per Truck'
                     }`}
               </Text>
             </View>
@@ -140,7 +140,7 @@ const BookingStatus = ({navigation, route}) => {
                 {userType === '1'
                   ? `${renter?.truck_type} Body`
                   : `₹ ${renter?.price} / ${
-                      renter?.price_type === '2' ? 'Fixed' : 'Per Ton'
+                      renter?.price_type === '2' ? 'Fixed' : 'Per Truck'
                     }`}
               </Text>
             </View>
