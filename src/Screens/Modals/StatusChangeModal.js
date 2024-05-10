@@ -155,8 +155,7 @@ const StatusChangeModal = ({navigation, route}) => {
               onToggle={isOn => setIsEnabled(isOn)}
             />
           </View>
-          {/* {userType === '1' && ( */}
-          <View style={styles.activeContainer}>
+          {/* <View style={styles.activeContainer}>
             <Text style={styles.activeText}>Enable GPS Activity</Text>
             <Switch
               isOn={isGPS}
@@ -165,8 +164,7 @@ const StatusChangeModal = ({navigation, route}) => {
               size="medium"
               onToggle={isOn => setIsGPS(isOn)}
             />
-          </View>
-          {/* )} */}
+          </View> */}
           <SearchFilter
             defaultValue={searchFrom}
             leftTitle={Constants.FROM}

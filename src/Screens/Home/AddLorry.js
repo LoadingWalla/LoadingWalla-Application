@@ -438,7 +438,7 @@ const AddLorry = ({navigation, route}) => {
                 click={e => handleChange(e)}
               />
 
-              <View>
+              {/* <View>
                 <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
                 <View style={{marginTop: 15, marginLeft: 15}}>
                   <RadioButton
@@ -451,13 +451,8 @@ const AddLorry = ({navigation, route}) => {
                     onPress={() => setSelectedGPSOption('0')}
                     selected={selectedGPSOption === '0'}
                   />
-                  {/* <RadioButton
-                  label="Remind me later"
-                  onPress={() => setSelectedGPSOption("2")}
-                  selected={selectedGPSOption === "2"}
-                /> */}
                 </View>
-              </View>
+              </View> */}
 
               <Button
                 loading={loading}

@@ -20,7 +20,7 @@ const NoInternetScreen = ({navigation}) => {
       {!isConnected && (
         <SafeAreaView style={styles.container}>
           <View style={styles.subContainer}>
-            <NoInternetIcon />
+            <NoInternetIcon size={30} />
             <View>
               <Text style={styles.text}>No Internet</Text>
               <Text style={styles.bottomText}>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    backgroundColor: 'red',
+    backgroundColor: '#FFD7CC',
   },
   subContainer: {
     justifyContent: 'flex-start',
@@ -50,11 +50,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
   },
-  text: {color: '#FFFFFF'},
+  text: {color: '#000000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 18},
   bottomText: {
     opacity: 0.8,
     marginTop: 3,
-    color: '#FFFFFF',
+    color: '#000000',
+    fontFamily: 'PlusJakartaSans-Regular',
+    fontSize: 16,
   },
 });
 
