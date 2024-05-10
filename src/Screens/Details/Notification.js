@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
 import {NetworkContext} from '../../Context/NetworkContext';
-import NoInternetScreen from './NoInternetScreen';
 import {pageBackground} from '../../Color/color';
 import NotificationShimmer from '../../Components/Shimmer/NotificationShimmer';
 import CommonItem from '../../Components/CommonItem';
@@ -12,9 +11,6 @@ const Notification = ({navigation, NotificationLoading, route}) => {
   const [notificationList, setNotificationList] = useState([]);
   const {isConnected} = useContext(NetworkContext);
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <View style={{paddingHorizontal: 20, backgroundColor: pageBackground}}>
       {NotificationLoading ? (

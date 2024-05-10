@@ -50,8 +50,8 @@ const AddLorry = ({navigation, route}) => {
   const [isEnabled, setIsEnabled] = useState(true);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState();
-  const [searchFromId, setSearchFromId] = useState('');
-  const [searchToId, setSearchToId] = useState();
+  const [searchFromId, setSearchFromId] = useState(0);
+  const [searchToId, setSearchToId] = useState(0);
   const [truckId, setTruchId] = useState('');
   const [userType, setUserType] = useState(null);
   const [selectedGPSOption, setSelectedGPSOption] = useState('1');
@@ -117,6 +117,7 @@ const AddLorry = ({navigation, route}) => {
 
   const navigateToSeach = val => {
     navigation.navigate('Search', {
+      locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
         if (val === 'from') {
           dispatch(initlocationChange(item?.place_name));
@@ -234,15 +235,15 @@ const AddLorry = ({navigation, route}) => {
       return;
     }
 
-    console.log(
-      97879879,
-      vehicleNumber,
-      vehicle,
-      vehicleType,
-      permitRes,
-      JSON.stringify(permitRes),
-      selectedGPSOption,
-    );
+    // console.log(
+    //   97879879,
+    //   vehicleNumber,
+    //   vehicle,
+    //   vehicleType,
+    //   permitRes,
+    //   JSON.stringify(permitRes),
+    //   selectedGPSOption,
+    // );
 
     dispatch(
       initAddLorry(
@@ -437,7 +438,7 @@ const AddLorry = ({navigation, route}) => {
                 click={e => handleChange(e)}
               />
 
-              <View>
+              {/* <View>
                 <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
                 <View style={{marginTop: 15, marginLeft: 15}}>
                   <RadioButton
@@ -450,13 +451,8 @@ const AddLorry = ({navigation, route}) => {
                     onPress={() => setSelectedGPSOption('0')}
                     selected={selectedGPSOption === '0'}
                   />
-                  {/* <RadioButton
-                  label="Remind me later"
-                  onPress={() => setSelectedGPSOption("2")}
-                  selected={selectedGPSOption === "2"}
-                /> */}
                 </View>
-              </View>
+              </View> */}
 
               <Button
                 loading={loading}

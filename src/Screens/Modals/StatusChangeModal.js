@@ -32,7 +32,7 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const StatusChangeModal = ({navigation, route}) => {
   const {userType, data} = route?.params;
-  // console.log(9898989, route.params);
+  console.log(9898989, route.params);
   const dispatch = useDispatch();
 
   const [searchFrom, setSearchFrom] = useState(data?.from);
@@ -55,11 +55,12 @@ const StatusChangeModal = ({navigation, route}) => {
 
   const navigateToSeach = val => {
     navigation.navigate('Search', {
+      locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
         if (val === 'from') {
           setSearchFrom(item?.place_name);
           setSearchFromId(item?.id);
-          setSearchTo(userType === '2' ? 'Anywhere' : '');
+          setSearchTo(userType === '2' ? 'Anywhere' : 0);
           return;
         }
         setSearchTo(item?.place_name);
@@ -135,7 +136,7 @@ const StatusChangeModal = ({navigation, route}) => {
       <View style={styles.screenModalView}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>
-            {userType === 1 ? Constants.LOAD : Constants.LORRY} Status
+            {userType === '1' ? Constants.LOAD : Constants.LORRY} Status
           </Text>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -154,7 +155,7 @@ const StatusChangeModal = ({navigation, route}) => {
               onToggle={isOn => setIsEnabled(isOn)}
             />
           </View>
-          <View style={styles.activeContainer}>
+          {/* <View style={styles.activeContainer}>
             <Text style={styles.activeText}>Enable GPS Activity</Text>
             <Switch
               isOn={isGPS}
@@ -163,7 +164,7 @@ const StatusChangeModal = ({navigation, route}) => {
               size="medium"
               onToggle={isOn => setIsGPS(isOn)}
             />
-          </View>
+          </View> */}
           <SearchFilter
             defaultValue={searchFrom}
             leftTitle={Constants.FROM}
@@ -191,7 +192,7 @@ const StatusChangeModal = ({navigation, route}) => {
               style={styles.removeButton}>
               <Text style={styles.removeText}>
                 {Constants.REMOVE}{' '}
-                {userType === 1 ? Constants.LOAD : Constants.LORRY}
+                {userType === '1' ? Constants.LOAD : Constants.LORRY}
               </Text>
               {deletelorryLoading && (
                 <ActivityIndicator size="small" color={GradientColor2} />

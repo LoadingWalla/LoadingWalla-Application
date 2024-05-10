@@ -11,7 +11,7 @@ import {
 import ErrorImage from '../../../../assets/GIFs/error.gif';
 import successImage from '../../../../assets/GIFs/success.gif';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
@@ -48,9 +48,7 @@ const BookingStatus = ({navigation, route}) => {
   };
   const {message, image, color} = getStatusContent();
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <View style={styles.container}>
       <View
@@ -88,7 +86,7 @@ const BookingStatus = ({navigation, route}) => {
                 {userType === '2'
                   ? `${Owner?.truck_type} Body`
                   : `₹ ${Owner?.price} / ${
-                      Owner?.price_type === '2' ? 'Fixed' : 'Per Ton'
+                      Owner?.price_type === '2' ? 'Fixed' : 'Per Truck'
                     }`}
               </Text>
             </View>
@@ -140,7 +138,7 @@ const BookingStatus = ({navigation, route}) => {
                 {userType === '1'
                   ? `${renter?.truck_type} Body`
                   : `₹ ${renter?.price} / ${
-                      renter?.price_type === '2' ? 'Fixed' : 'Per Ton'
+                      renter?.price_type === '2' ? 'Fixed' : 'Per Truck'
                     }`}
               </Text>
             </View>

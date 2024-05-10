@@ -25,7 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {uriTermsCondition2, uriTermsCondition3} from '../../../Utils/Url';
 import * as Constants from '../../../Constants/Constant';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
 import EditProfile from './EditProfile';
 import {GradientColor1, GradientColor2, titleColor} from '../../../Color/color';
@@ -165,9 +165,7 @@ const Profile = ({navigation, route}) => {
   //   }
   // };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <KeyboardAvoidingView>
       {profileLoading ? (

@@ -14,9 +14,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import Button from '../../Components/Button';
-import {GradientColor3} from '../../Color/color';
+import {GradientColor3, PrivacyPolicy} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   documentVerifyFailure,
@@ -240,10 +239,6 @@ const CardDetails = ({route, navigation}) => {
     );
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
@@ -259,7 +254,9 @@ const CardDetails = ({route, navigation}) => {
               : '22AAAAA0000A1Z5'
           }
           value={aadhaarNumber}
+          placeholderTextColor={PrivacyPolicy}
           onChangeText={setAadhaarNumber}
+          maxLength={20}
           keyboardType={
             documentTypeMapping[from.from] === 'adhaar_card'
               ? 'numeric'

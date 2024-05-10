@@ -15,7 +15,6 @@ import styles from './style';
 import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {GradientColor3, PrivacyPolicy, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
@@ -208,9 +207,6 @@ const RCVerification = ({navigation, route}) => {
     );
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <KeyboardAvoidingView style={styles.container}>
       {chooseOptions()}

@@ -27,7 +27,6 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import RenderTabBar from './RenderTabBar';
 import Button from '../../Components/Button';
 import FindLoadHeader from '../../Components/FindLoadHeader';
-import NoInternetScreen from '../Details/NoInternetScreen';
 import {NetworkContext} from '../../Context/NetworkContext';
 import InnerButton from '../../Components/InnerButton';
 import {useFocusEffect} from '@react-navigation/native';
@@ -276,7 +275,7 @@ const Requests = ({route, navigation}) => {
                 {' '}
                 :{' '}
                 {`₹ ${item?.price} / ${
-                  item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+                  item?.price_type === 1 ? 'Per Truck' : 'Fixed'
                 }`}{' '}
               </Text>
             </View>
@@ -286,7 +285,7 @@ const Requests = ({route, navigation}) => {
                 {' '}
                 :{' '}
                 {`₹ ${item?.offered_price} / ${
-                  item?.price_type === 1 ? 'Per Ton' : 'Fixed'
+                  item?.price_type === 1 ? 'Per Truck' : 'Fixed'
                 }`}{' '}
               </Text>
             </View>
@@ -322,10 +321,6 @@ const Requests = ({route, navigation}) => {
     );
   });
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -340,7 +335,7 @@ const Requests = ({route, navigation}) => {
           userType === '2'
             ? Owner?.vehicle_number
             : `₹ ${Owner?.price} / ${
-                Owner?.price_type === '1' ? 'Per Ton' : 'Fixed'
+                Owner?.price_type === '1' ? 'Per Truck' : 'Fixed'
               }`
         }
         userType={userType}

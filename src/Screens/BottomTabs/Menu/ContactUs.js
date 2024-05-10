@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
 import Toast from 'react-native-simple-toast';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
@@ -139,9 +139,6 @@ const ContactUs = ({navigation}) => {
     }
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
   return (
     <Background style={{flex: 1}}>
       {/* <StatusBar
@@ -168,23 +165,18 @@ const ContactUs = ({navigation}) => {
           <WhatsAppIcon size={30} color="white" />
         </TouchableOpacity>
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
+      <View
         style={{
           flex: 1,
           backgroundColor: '#FFFFFF',
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
+          borderTopLeftRadius: 25,
+          borderTopRightRadius: 25,
+          paddingTop: 20,
         }}>
-        <View
-          style={{
-            backgroundColor: 'white',
-            padding: 20,
-            width: '100%',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          style={{paddingHorizontal: 20}}>
           <Text
             style={{
               fontWeight: '700',
@@ -270,27 +262,27 @@ const ContactUs = ({navigation}) => {
               marginVertical: 20,
             }}
           /> */}
-        </View>
-        <Button
-          onPress={() => sendMessage()}
-          title={'Send message'}
-          loading={contactusLoading}
-          textStyle={{
-            fontWeight: 'bold',
-            color: textColor,
-            fontSize: 16,
-            fontFamily: 'PlusJakartaSans-Medium',
-          }}
-          style={{
-            flexDirection: 'row',
-            borderRadius: 8,
-            height: 50,
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: 20,
-          }}
-        />
-      </ScrollView>
+          <Button
+            onPress={() => sendMessage()}
+            title={'Send message'}
+            loading={contactusLoading}
+            textStyle={{
+              fontWeight: 'bold',
+              color: textColor,
+              fontSize: 16,
+              fontFamily: 'PlusJakartaSans-Medium',
+            }}
+            style={{
+              flexDirection: 'row',
+              borderRadius: 8,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: 20,
+            }}
+          />
+        </ScrollView>
+      </View>
     </Background>
   );
 };

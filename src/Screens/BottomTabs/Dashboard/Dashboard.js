@@ -13,7 +13,7 @@ import DashboardHeader from '../../../Components/DashboardHeader';
 import TruckItem from '../../../Components/TruckItem';
 import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
 import {NetworkContext} from '../../../Context/NetworkContext';
-import NoInternetScreen from '../../Details/NoInternetScreen';
+
 import SearchFilter from '../../../Components/SearchFilter';
 import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
@@ -127,9 +127,7 @@ const Dashboard = ({navigation}) => {
     }
   };
 
-  if (!isConnected) {
-    return <NoInternetScreen navigation={navigation} />;
-  }
+  
   return (
     <>
       <View style={style.DashboardHeaderView}>

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -32,6 +33,7 @@ import Button from '../../../Components/Button';
 // import DateTimePickerButton from '../../../Components/DateTimePickerButton';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
+import Toast from 'react-native-simple-toast';
 
 const EditProfile = ({
   isEdit,
@@ -50,10 +52,11 @@ const EditProfile = ({
 
   const dispatch = useDispatch();
 
-  const {profileSetupLoading, profileSetupStatus} = useSelector(state => {
-    console.log('Edit profile', state.data);
-    return state.data;
-  });
+  const {profileSetupLoading, profileSetupStatus, profileSetupData} =
+    useSelector(state => {
+      console.log('Edit profile', state.data);
+      return state.data;
+    });
 
   const onClickProfile = async () => {
     setCameraOptions(true);
@@ -62,6 +65,7 @@ const EditProfile = ({
   useEffect(() => {
     if (profileSetupStatus === 200) {
       editStatus(profileSetupLoading);
+      Toast.show(`${profileSetupData.message}`, Toast.LONG);
       dispatch(ProfileSetupFailure());
     }
   }, [
