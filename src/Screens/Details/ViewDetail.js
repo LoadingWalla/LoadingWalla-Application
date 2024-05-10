@@ -1,4 +1,3 @@
-import '../../locales/index';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,

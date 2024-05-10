@@ -11,7 +11,6 @@ import Button from '../../Components/Button';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
-import '../../locales/index';
 import {
   initVerifyOtp,
   VerifyOtpFailure,

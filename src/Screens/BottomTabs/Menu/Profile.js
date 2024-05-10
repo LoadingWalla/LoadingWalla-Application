@@ -165,7 +165,6 @@ const Profile = ({navigation, route}) => {
   //   }
   // };
 
-  
   return (
     <KeyboardAvoidingView>
       {profileLoading ? (
@@ -319,7 +318,7 @@ const Profile = ({navigation, route}) => {
                     <PreviousBookingIcon size={30} color={GradientColor1} />
                   }
                 />
-                <View style={style.horizontalLine} />
+                {/* <View style={style.horizontalLine} />
                 <MenuItem
                   title={'Truck GPS Settings'}
                   onPress={() =>
@@ -328,7 +327,7 @@ const Profile = ({navigation, route}) => {
                     })
                   }
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
-                />
+                /> */}
               </View>
             </View>
 
