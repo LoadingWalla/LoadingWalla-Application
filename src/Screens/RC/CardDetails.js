@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
-import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import Button from '../../Components/Button';
@@ -26,7 +25,6 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
-  const {isConnected} = useContext(NetworkContext);
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [aadhaarFrontImage, setAadhaarFrontImage] = useState(null);
   const [aadhaarBackImage, setAadhaarBackImage] = useState(null);

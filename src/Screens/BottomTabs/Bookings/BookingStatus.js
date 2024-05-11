@@ -10,7 +10,6 @@ import {
 } from '../../../Color/color';
 import ErrorImage from '../../../../assets/GIFs/error.gif';
 import successImage from '../../../../assets/GIFs/success.gif';
-import {NetworkContext} from '../../../Context/NetworkContext';
 
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
@@ -20,7 +19,6 @@ import Information from '../../../../assets/SVG/svg/Information';
 const BookingStatus = ({navigation, route}) => {
   // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
-  const {isConnected} = useContext(NetworkContext);
 
   const getStatusContent = () => {
     if (status >= 500) {
@@ -48,7 +46,6 @@ const BookingStatus = ({navigation, route}) => {
   };
   const {message, image, color} = getStatusContent();
 
-  
   return (
     <View style={styles.container}>
       <View

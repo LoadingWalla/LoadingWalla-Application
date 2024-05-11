@@ -12,7 +12,6 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
 import Toast from 'react-native-simple-toast';
-import {NetworkContext} from '../../../Context/NetworkContext';
 
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
@@ -36,7 +35,6 @@ const ContactUs = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {contactusData, contactusLoading, contactusStatus} = useSelector(

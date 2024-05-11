@@ -21,7 +21,6 @@ import {
 } from '../../Color/color';
 import Toast from 'react-native-simple-toast';
 import {Dimensions} from 'react-native';
-import {NetworkContext} from '../../Context/NetworkContext';
 import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 
@@ -30,7 +29,6 @@ const Signup = ({navigation, route}) => {
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
   // console.log(77777777777, screenHeight);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {data, loading, dashboardStatus} = useSelector(state => {

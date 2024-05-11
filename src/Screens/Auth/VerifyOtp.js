@@ -19,7 +19,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
-import {NetworkContext} from '../../Context/NetworkContext';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
 import RNOtpVerify from 'react-native-otp-verify';
@@ -32,7 +31,6 @@ const VerifyOtp = ({navigation, route}) => {
   const [delay, setDelay] = useState('');
   const minutes = Math.floor(delay / 60);
   const seconds = Math.floor(delay % 60);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {otpdata, otpLoading, status, dashboardStatus} = useSelector(state => {

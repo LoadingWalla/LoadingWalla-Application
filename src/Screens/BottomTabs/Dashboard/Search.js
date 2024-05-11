@@ -11,7 +11,6 @@ import {
   InteractionManager,
   TouchableOpacity,
 } from 'react-native';
-import {NetworkContext} from '../../../Context/NetworkContext';
 
 import {
   GradientColor2,
@@ -29,7 +28,6 @@ const Search = forwardRef(({navigation, route}, ref) => {
   console.log(423423, route);
   const [value, setValue] = useState(null);
   const txtInput = useRef('');
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const locationData = useSelector(state => state.data.locationData);
@@ -55,7 +53,6 @@ const Search = forwardRef(({navigation, route}, ref) => {
     });
   }, []);
 
-  
   return (
     <View
       style={{

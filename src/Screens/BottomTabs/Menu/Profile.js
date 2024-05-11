@@ -24,7 +24,6 @@ import {initLogout, initProfile} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {uriTermsCondition2, uriTermsCondition3} from '../../../Utils/Url';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 
 import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
 import EditProfile from './EditProfile';
@@ -59,7 +58,6 @@ const Profile = ({navigation, route}) => {
   const [isEditProfile, setEditProfile] = useState(false);
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {Userdata, UserVerifyPercentage, profileLoading, profileSetupData} =

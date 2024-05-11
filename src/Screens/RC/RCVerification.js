@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './style';
-import {NetworkContext} from '../../Context/NetworkContext';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import {GradientColor3, PrivacyPolicy, titleColor} from '../../Color/color';
@@ -23,7 +22,6 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const RCVerification = ({navigation, route}) => {
   const {title, RC, truck_id} = route.params;
-  const {isConnected} = useContext(NetworkContext);
   const [rcFrontImage, setRcFrontImage] = useState(null);
   const [rcBackImage, setRcBackImage] = useState(null);
   const [currentSide, setCurrentSide] = useState(null);

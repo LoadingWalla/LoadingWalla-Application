@@ -12,8 +12,6 @@ import Banner from '../../../Components/Banner';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import TruckItem from '../../../Components/TruckItem';
 import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
-import {NetworkContext} from '../../../Context/NetworkContext';
-
 import SearchFilter from '../../../Components/SearchFilter';
 import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
@@ -31,7 +29,6 @@ const Dashboard = ({navigation}) => {
   const [truckItem, setTruckItem] = useState('');
   const user = useRef('');
   const handleNavigate = useRef(false);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {
@@ -127,7 +124,6 @@ const Dashboard = ({navigation}) => {
     }
   };
 
-  
   return (
     <>
       <View style={style.DashboardHeaderView}>
