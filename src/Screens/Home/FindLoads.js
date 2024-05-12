@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef} from 'react';
 import {View, Text, FlatList, Animated, Easing, Image} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
-import {NetworkContext} from '../../Context/NetworkContext';
 import {initFindLoad, initFindLorry} from '../../Store/Actions/Actions';
 import PostItem from '../../Components/PostItem';
 import {DialCall} from '../../Utils/DialCall';
@@ -15,7 +14,6 @@ const FindLoads = ({navigation, route}) => {
   // console.log(22222, route.params);
   const {Owner, userType} = route?.params;
   const animationProgress = useRef(new Animated.Value(0));
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {findLoadData, findLoadLoading, findLorryData, findLorryLoading} =

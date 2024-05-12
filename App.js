@@ -3,7 +3,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import Navigation from './src/Navigation/router';
 import {Provider} from 'react-redux';
 import store from './src/Store';
-import {NetworkProvider} from './src/Context/NetworkContext';
 import {StatusBar} from 'react-native';
 import {foregroundNotification} from './src/Utils/Notification_helper';
 import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
@@ -15,13 +14,11 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <NetworkProvider>
-        <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
-        <NavigationContainer>
-          <Navigation />
-          <NoInternetScreen />
-        </NavigationContainer>
-      </NetworkProvider>
+      <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
+      <NavigationContainer>
+        <Navigation />
+        <NoInternetScreen />
+      </NavigationContainer>
     </Provider>
   );
 };

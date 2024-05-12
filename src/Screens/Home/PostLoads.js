@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
-import {NetworkContext} from '../../Context/NetworkContext';
 import SearchFilter from '../../Components/SearchFilter';
 import TextInputField from '../../Components/TextInputField';
 import TruckItem from '../../Components/TruckItem';
@@ -42,7 +41,6 @@ const PostLoads = ({navigation, route}) => {
   const [price, setPrice] = useState('');
   const [weight, setWeight] = useState('');
   const [truckItem, setTruckItem] = useState('');
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {

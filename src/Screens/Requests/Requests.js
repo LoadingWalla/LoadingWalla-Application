@@ -27,7 +27,6 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import RenderTabBar from './RenderTabBar';
 import Button from '../../Components/Button';
 import FindLoadHeader from '../../Components/FindLoadHeader';
-import {NetworkContext} from '../../Context/NetworkContext';
 import InnerButton from '../../Components/InnerButton';
 import {useFocusEffect} from '@react-navigation/native';
 import {useCallback} from 'react';
@@ -39,8 +38,8 @@ import AlertBox from '../../Components/AlertBox';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
+  console.log(3456789, Owner);
   const dispatch = useDispatch();
-  const {isConnected} = useContext(NetworkContext);
   const [selected, setSelected] = useState(1);
   const [index, setIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -56,7 +55,7 @@ const Requests = ({route, navigation}) => {
     cancelBookingLoading,
     bookingLorrydata,
   } = useSelector(state => {
-    // console.log("My Requests", state.data.acceptBookingStatus);
+    // console.log('My Requests', state.data.acceptBookingStatus);
     return state.data;
   });
 

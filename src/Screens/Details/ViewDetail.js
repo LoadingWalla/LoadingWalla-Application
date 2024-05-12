@@ -1,4 +1,3 @@
-import '../../locales/index';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -114,11 +113,11 @@ const ViewDetail = ({navigation, route}) => {
   const handleAcceptBooking = () => {
     route?.params?.userType === '1'
       ? dispatch(initAcceptReject('complete', id))
-      : navigation.navigate('verifyLoadOtp');
+      : navigation.navigate('completeBooking');
   };
 
   const handleRating = () => {
-    alert('We are working on it ');
+    navigation.navigate('Inconvenience');
   };
 
   const handlePressAction =

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
-import {NetworkContext} from '../../Context/NetworkContext';
 import {pageBackground} from '../../Color/color';
 import NotificationShimmer from '../../Components/Shimmer/NotificationShimmer';
 import CommonItem from '../../Components/CommonItem';
@@ -9,7 +8,6 @@ import {initNotification} from '../../Store/Actions/Actions';
 const Notification = ({navigation, NotificationLoading, route}) => {
   console.log('Notification', route.params);
   const [notificationList, setNotificationList] = useState([]);
-  const {isConnected} = useContext(NetworkContext);
 
   return (
     <View style={{paddingHorizontal: 20, backgroundColor: pageBackground}}>

@@ -7,7 +7,6 @@ import {
   black,
   titleColor,
 } from '../../Color/color';
-import {NetworkContext} from '../../Context/NetworkContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {initMyLorryById} from '../../Store/Actions/Actions';
 import Shield from '../../../assets/SVG/svg/Shield';
@@ -15,7 +14,6 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const Status = ({navigation, route}) => {
   const {truck_id} = route.params;
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {mySingleLoding, mySingleStatus, mySingleTruckData, mySingleUserData} =

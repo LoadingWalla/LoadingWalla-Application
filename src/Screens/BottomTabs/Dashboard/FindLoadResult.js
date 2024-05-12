@@ -13,7 +13,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import style from './style';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {initFindLoad} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 import InnerButton from '../../../Components/InnerButton';
@@ -33,7 +32,6 @@ const FindLoadResult = ({navigation, route}) => {
   const [searchToId, setSearchToId] = useState(route?.params?.searchToId);
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {findLoadData, findLoadLoading, findLoadStatus} = useSelector(state => {

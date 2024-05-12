@@ -12,7 +12,6 @@ import {
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {initBooking} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 
@@ -23,7 +22,6 @@ import NotFound from '../../../Components/NotFound';
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
   console.log(989898, Owner);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -73,8 +71,6 @@ const PreviousBookings = ({navigation, route}) => {
       </View>
     );
   };
-
-  
 
   return (
     <View style={styles.container}>

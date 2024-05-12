@@ -52,7 +52,6 @@ import Guide from '../Screens/BottomTabs/Menu/Guide';
 import Rating from '../Screens/BottomTabs/Menu/Rating';
 import Verification from '../Screens/Verification/Verification';
 import Confirmation from '../Screens/Verification/Confirmation';
-import OtpVerification from '../Screens/Verification/OtpVerification';
 import Status from '../Screens/RC/Status';
 import Negotiation from '../Screens/Modals/Negotiation';
 import QRscanner from '../Screens/RC/QRscanner';
@@ -61,7 +60,7 @@ import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
 import Inconvenience from '../Screens/Details/Inconvenience';
 import LoadIcon from '../../assets/SVG/svg/LoadIcon';
 import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
-import EditProfileScreen from '../Screens/Details/EditProfileScreen';
+import CompleteBooking from '../Screens/Verification/CompleteBooking';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1156,12 +1155,12 @@ const Navigation = ({language}) => {
         })}
       />
       <Stack.Screen
-        name="verifyLoadOtp"
-        component={OtpVerification}
+        name="completeBooking"
+        component={CompleteBooking}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Verify OTP',
+          title: 'Complete Booking',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

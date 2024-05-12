@@ -3,7 +3,6 @@ import {View, SafeAreaView, Text, Alert} from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import styles from './style';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 
 import {
   GradientColor2,
@@ -14,7 +13,6 @@ import {
 
 const WhatsAppAlert = ({navigation}) => {
   const [switchOn, setSwitchOn] = useState(true);
-  const {isConnected} = useContext(NetworkContext);
 
   const toggleSwitch = () => {
     const newSwitchState = !switchOn;
@@ -22,7 +20,6 @@ const WhatsAppAlert = ({navigation}) => {
     Alert.alert(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
   };
 
-  
   return (
     <SafeAreaView>
       <View style={[styles.backgroundView, {backgroundColor: 'white'}]}>

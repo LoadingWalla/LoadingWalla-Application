@@ -12,7 +12,6 @@ import Button from '../../Components/Button';
 import Background from '../../Components/BackgroundGradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initLanguage} from '../../Store/Actions/Actions';
-import {NetworkContext} from '../../Context/NetworkContext';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 
@@ -42,7 +41,6 @@ const Language = ({navigation, route}) => {
   // console.log(Constants.SELECT_LANGUAGE_TITLE);
 
   const [selected, setSelected] = useState(1);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {language} = useSelector(state => {

@@ -10,7 +10,6 @@ import {
   Platform,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {initGuide} from '../../../Store/Actions/Actions';
 import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
 
@@ -27,7 +26,6 @@ if (
 
 const Guide = ({navigation}) => {
   const [selectedId, setSelectedId] = useState(null);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {guideData, guideStatus, guideLoading} = useSelector(state => ({

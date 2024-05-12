@@ -10,7 +10,6 @@ import {
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   initGetWallet,
@@ -26,15 +25,13 @@ import {
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
 
-
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(0);
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
 
   const {wallletData, walletStatus, walletLoading, getWallletData} =
     useSelector(state => {
-      // console.log("My Lorry/Load", state.data);
+      console.log('My Lorry/Load', state.data);
       return state.data;
     });
 
@@ -113,7 +110,6 @@ const Wallet = ({navigation}) => {
     setAmount(newamt);
   };
 
-  
   return (
     <View style={styles.container}>
       <View style={styles.box}>

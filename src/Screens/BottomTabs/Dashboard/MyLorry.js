@@ -11,7 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Constants from '../../../Constants/Constant';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 import MyLorryItem from '../../../Components/MyLorryItem';
@@ -38,7 +37,6 @@ function getRoutesForUserType(type) {
 
 const MyLorry = ({navigation}) => {
   const dispatch = useDispatch();
-  const {isConnected} = useContext(NetworkContext);
   const [userType, setUserType] = useState('');
   const [isStatus, setShowStatus] = useState(false);
   const [statusData, setStatusData] = useState(null);
@@ -270,7 +268,6 @@ export default MyLorry;
 // import {useFocusEffect} from '@react-navigation/native';
 // import {TabView, SceneMap} from 'react-native-tab-view';
 // import * as Constants from '../../../Constants/Constant';
-// import {NetworkContext} from '../../../Context/NetworkContext';
 // import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 // import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 // import {
@@ -366,7 +363,6 @@ export default MyLorry;
 
 // const MyLorry = ({navigation}) => {
 //   const dispatch = useDispatch();
-//   const {isConnected} = useContext(NetworkContext);
 //   const [userType, setUserType] = useState('');
 //   const [isStatus, setShowStatus] = useState(false);
 //   const [statusData, setStatusData] = useState(null);

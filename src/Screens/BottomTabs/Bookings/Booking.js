@@ -13,7 +13,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Constants from '../../../Constants/Constant';
 import style from './style';
-import {NetworkContext} from '../../../Context/NetworkContext';
 import {
   acceptRejectFailure,
   initAcceptReject,
@@ -27,7 +26,6 @@ import {PrivacyPolicy} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 
 const Booking = ({navigation}) => {
-  const {isConnected} = useContext(NetworkContext);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   const [userType, setUserType] = useState();
@@ -85,8 +83,6 @@ const Booking = ({navigation}) => {
       Owner={BookingDashUser}
     />
   );
-
-  
 
   return (
     <View style={style.Container}>

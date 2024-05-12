@@ -69,7 +69,7 @@ const FindLoadHeader = ({
 
               <TouchableOpacity
                 style={styles.verifyTruck}
-                disabled={verified === 0 ? true : false}
+                disabled={verified === 0 ? false : true}
                 onPress={() =>
                   navigation.navigate('RC Verification', {
                     title: 'RC',
