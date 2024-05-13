@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -59,6 +59,7 @@ const Profile = ({navigation, route}) => {
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
+  const isFirstRun = useRef(true);
 
   const {
     DashboardUser,
@@ -72,8 +73,12 @@ const Profile = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(initProfile());
-    }, [dispatch, profileSetupData]),
+      // Condition to check if it's the first time or when profileSetupData changes
+      if (isFirstRun.current || profileSetupData) {
+        dispatch(initProfile());
+        isFirstRun.current = false; // After the first run, set this to false
+      }
+    }, [dispatch, profileSetupData]), // Dependency array includes profileSetupData
   );
 
   const bigImage = () => {

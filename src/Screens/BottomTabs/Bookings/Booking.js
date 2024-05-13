@@ -89,18 +89,6 @@ const Booking = ({navigation}) => {
   return (
     <View style={style.Container}>
       <View style={style.DashboardHeaderView}>
-        {/* <DashboardHeader
-          img={BookingDashUser?.profile_img}
-          navigatiopnWallet={() => navigation.navigate('Wallet')}
-          notification={() => navigation.navigate('Notification')}
-          title={BookingDashUser?.name}
-          isDashboard={true}
-          gotoProfile={() => navigation.navigate(Constants.MENU)}
-          navigate={() => navigation?.navigate('Contactus')}
-          wallet={BookingDashUser?.wallet}
-          verify={BookingDashUser?.verify}
-          loading={BookingLoading}
-        /> */}
         <DashboardHeader
           img={DashboardUser?.profile_img}
           navigatiopnWallet={() => navigation.navigate('Wallet')}
