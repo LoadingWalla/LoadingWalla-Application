@@ -60,11 +60,15 @@ const Profile = ({navigation, route}) => {
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
 
-  const {Userdata, UserVerifyPercentage, profileLoading, profileSetupData} =
-    useSelector(state => {
-      // console.log('profile Data', state.data);
-      return state.data;
-    });
+  const {
+    DashboardUser,
+    UserVerifyPercentage,
+    profileLoading,
+    profileSetupData,
+  } = useSelector(state => {
+    // console.log('profile Data', state.data);
+    return state.data;
+  });
 
   useFocusEffect(
     React.useCallback(() => {
@@ -85,8 +89,8 @@ const Profile = ({navigation, route}) => {
             <Image
               style={{height: hei / 2.5, width: wid}}
               source={
-                Userdata?.profile_img
-                  ? {uri: Userdata?.profile_img}
+                DashboardUser?.profile_img
+                  ? {uri: DashboardUser?.profile_img}
                   : require('../../../../assets/placeholder.png')
               }
               resizeMode={'contain'}
@@ -175,11 +179,11 @@ const Profile = ({navigation, route}) => {
           {
             <EditProfile
               defaultValue={{
-                id: Userdata?.id,
-                name: Userdata?.name,
-                city: Userdata?.city,
-                mobile: Userdata?.mobile,
-                profileImg: Userdata?.profile_img,
+                id: DashboardUser?.id,
+                name: DashboardUser?.name,
+                city: DashboardUser?.city,
+                mobile: DashboardUser?.mobile,
+                profileImg: DashboardUser?.profile_img,
               }}
               dismissModal={() => setEditProfile(false)}
               isEdit={isEditProfile}
@@ -190,7 +194,7 @@ const Profile = ({navigation, route}) => {
           <View style={style.profileView}>
             <Pressable
               onPress={() =>
-                Userdata?.profile_img
+                DashboardUser?.profile_img
                   ? setBigImage(!isBigImage)
                   : Toast.show('No Profile Image!', Toast.LONG)
               }
@@ -202,8 +206,8 @@ const Profile = ({navigation, route}) => {
                   borderRadius: 50,
                 }}
                 source={
-                  Userdata?.profile_img
-                    ? {uri: Userdata?.profile_img}
+                  DashboardUser?.profile_img
+                    ? {uri: DashboardUser?.profile_img}
                     : require('../../../../assets/placeholder.png')
                 }
                 resizeMode={'cover'}
@@ -211,26 +215,26 @@ const Profile = ({navigation, route}) => {
             </Pressable>
             <View style={style.verticalLine} />
             <View style={{flex: 1, marginLeft: 17, justifyContent: 'center'}}>
-              <Text style={style.profileTitle}>{Userdata?.name}</Text>
+              <Text style={style.profileTitle}>{DashboardUser?.name}</Text>
               <Text style={style.subTitle}>
-                {Userdata?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
+                {DashboardUser?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
               </Text>
-              {/* <Text style={style.subTitle}>{Userdata?.city}</Text> */}
-              <Text style={style.subTitle}>{Userdata?.mobile}</Text>
+              {/* <Text style={style.subTitle}>{DashboardUser?.city}</Text> */}
+              <Text style={style.subTitle}>{DashboardUser?.mobile}</Text>
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity>
                     <Shield
                       size={16}
-                      color={Userdata?.verify ? 'green' : GradientColor2}
-                      verified={Userdata?.verify}
+                      color={DashboardUser?.verify ? 'green' : GradientColor2}
+                      verified={DashboardUser?.verify}
                     />
                   </TouchableOpacity>
                   <Text
                     style={style.dashboardHeaderVerifiedTitle(
-                      Userdata?.verify,
+                      DashboardUser?.verify,
                     )}>
-                    {Userdata?.verify === 1
+                    {DashboardUser?.verify === 1
                       ? `${Constants.VERIFY}`
                       : Constants.NOT_VERIFIED}
                   </Text>
@@ -242,7 +246,7 @@ const Profile = ({navigation, route}) => {
                     type="star"
                     ratingCount={5}
                     imageSize={15}
-                    startingValue={Userdata?.rating || 0}
+                    startingValue={DashboardUser?.rating || 0}
                   />
                 </View>
               </View>
@@ -269,7 +273,7 @@ const Profile = ({navigation, route}) => {
               <PercentageBar
                 navigation={navigation}
                 percentage={UserVerifyPercentage || 0}
-                verify={Userdata?.verify}
+                verify={DashboardUser?.verify}
                 style={style}
               />
               <TouchableOpacity
@@ -309,7 +313,7 @@ const Profile = ({navigation, route}) => {
                   title={'Previous Bookings'}
                   onPress={() =>
                     navigation.navigate('Previous Bookings', {
-                      Owner: Userdata,
+                      Owner: DashboardUser,
                     })
                   }
                   Icon={

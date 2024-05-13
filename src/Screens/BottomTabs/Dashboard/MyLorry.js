@@ -51,6 +51,8 @@ const MyLorry = ({navigation}) => {
     myLorryLoding,
     myLorryUserData,
     myLoadUserData,
+    DashboardUser,
+    dashboardLoading,
   } = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
     return state.data;
@@ -193,7 +195,7 @@ const MyLorry = ({navigation}) => {
   return (
     <View style={style.Container}>
       <View style={style.DashboardHeaderView}>
-        <DashboardHeader
+        {/* <DashboardHeader
           img={
             userType === '1'
               ? myLoadUserData?.profile_img
@@ -215,6 +217,18 @@ const MyLorry = ({navigation}) => {
           verify={
             userType === '1' ? myLoadUserData?.verify : myLorryUserData?.verify
           }
+        /> */}
+        <DashboardHeader
+          img={DashboardUser?.profile_img}
+          navigatiopnWallet={() => navigation.navigate('Wallet')}
+          notification={() => navigation.navigate('Notification')}
+          isDashboard={true}
+          title={DashboardUser?.name}
+          gotoProfile={() => navigation.navigate(Constants.MENU)}
+          navigate={() => navigation?.navigate('Contactus')}
+          loading={dashboardLoading}
+          wallet={DashboardUser?.wallet}
+          verify={DashboardUser?.verify}
         />
       </View>
       <View style={style.tabView}>

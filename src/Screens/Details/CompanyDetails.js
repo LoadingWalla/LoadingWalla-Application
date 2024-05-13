@@ -492,5 +492,8 @@ const styleSheet = StyleSheet.create({
   paddingStyle: {
     padding: 20,
   },
-  imagePickerView: {flexDirection: 'row', justifyContent: 'space-around'},
+  imagePickerView: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
 });

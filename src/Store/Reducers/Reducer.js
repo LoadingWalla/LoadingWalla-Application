@@ -17,7 +17,6 @@ const initialState = {
   locationData: [],
   DashboardUser: null,
   dashboardStatus: null,
-  Userdata: null,
   UserVerifyPercentage: null,
   language: null,
   profileSetupLoading: false,
@@ -325,12 +324,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         profileLoading: true,
         status: null,
-        Userdata: null,
+        DashboardUser: null,
         UserVerifyPercentage: null,
       };
     case actionTypes.PROFILE_SUCCESS:
       return updateState(state, {
-        Userdata: payload?.data?.user,
+        DashboardUser: payload?.data?.user,
         profileLoading: false,
         status: payload?.data?.status,
         UserVerifyPercentage: payload?.data?.verify,
@@ -338,7 +337,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PROFILE_FAILURE:
       return updateState(state, {
         profileLoading: false,
-        Userdata: null,
+        DashboardUser: null,
         status: null,
         UserVerifyPercentage: null,
       });

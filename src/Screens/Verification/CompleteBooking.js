@@ -11,14 +11,30 @@ import {
   Image,
 } from 'react-native';
 import Button from '../../Components/Button';
-import {GradientColor3, textColor, titleColor, white} from '../../Color/color';
+import {
+  GradientColor2,
+  GradientColor3,
+  GradientColor4,
+  PrivacyPolicy,
+  textColor,
+  titleColor,
+  white,
+} from '../../Color/color';
 import FindLoadHeader from '../../Components/FindLoadHeader';
 import RadioButton from '../../Components/RadioButton';
 import InnerButton from '../../Components/InnerButton';
+import CheckBox from '@react-native-community/checkbox';
+import * as Constants from '../../Constants/Constant';
+import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 
 const CompleteBooking = ({navigation}) => {
   const [selectedDocument, setSelectedDocument] = useState(1);
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
+
+  const handleCheckBoxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   const toggleTerms = () => setTermsAccepted(previousState => !previousState);
 
@@ -68,7 +84,6 @@ const CompleteBooking = ({navigation}) => {
 
         <View
           style={{
-            // borderWidth: 1,
             paddingHorizontal: 10,
             paddingVertical: 20,
             elevation: 2,
@@ -112,17 +127,59 @@ const CompleteBooking = ({navigation}) => {
             navigation={() => {}}
           />
         </View>
+        <View style={styles.centerItem}>
+          <View style={styles.checkBoxContainer}>
+            <CheckBox
+              value={isChecked}
+              onValueChange={handleCheckBoxChange}
+              tintColors={{true: GradientColor2, false: GradientColor4}}
+              style={styles.checkBoxStyle}
+            />
+            <Text style={{color: PrivacyPolicy}}>
+              {Constants.WHATSAPP_ALERT_CHECK}
+            </Text>
+          </View>
+          <Text style={styles.policyTitle}>
+            {Constants.TERMS_CONDITION_TITLE1}{' '}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Legal Policies', {
+                  headerTitle: 'Terms and Conditions',
+                  uri: uriTermsCondition3,
+                });
+              }}>
+              <Text style={[styles.policyLinkTitle(true)]}>
+                {Constants.TERMS_CONDITION_TITLE2}{' '}
+              </Text>
+            </TouchableOpacity>
+            <Text> {' and '} </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Legal Policies', {
+                  headerTitle: 'Terms and Conditions',
+                  uri: uriTermsCondition2,
+                });
+              }}>
+              <Text style={[styles.policyLinkTitle(true)]}>
+                {Constants.TERMS_CONDITION_TITLE3}
+              </Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
 
-        <TouchableOpacity style={styles.termsContainer} onPress={toggleTerms}>
-          <Text style={styles.termsText}>{termsAccepted ? '✓' : '○'}</Text>
-          <Text style={styles.termsLabel}>I agree the terms & conditions</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.completeOrderButton}
-          onPress={completeOrder}>
-          <Text style={styles.completeOrderButtonText}>Complete order</Text>
-        </TouchableOpacity>
+        {/* <View>
+          <TouchableOpacity style={styles.termsContainer} onPress={toggleTerms}>
+            <Text style={styles.termsText}>{termsAccepted ? '✓' : '○'}</Text>
+            <Text style={styles.termsLabel}>
+              I agree the terms & conditions
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.completeOrderButton}
+            onPress={completeOrder}>
+            <Text style={styles.completeOrderButtonText}>Complete order</Text>
+          </TouchableOpacity>
+        </View> */}
       </ScrollView>
     </View>
   );
@@ -182,6 +239,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     padding: 10,
     marginBottom: 20,
+    borderRadius: 10,
   },
   documentImage: {
     width: 100,
@@ -227,6 +285,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: GradientColor3,
     borderColor: GradientColor3,
+    width: 100,
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   findButtonText: {
     fontSize: 13,

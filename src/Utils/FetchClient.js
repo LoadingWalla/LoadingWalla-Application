@@ -45,23 +45,19 @@ const instanceFunction = instanceObj => {
           textColor: '#000000',
           // marginBottom: 10,
           backgroundColor: '#FFD7CC',
-          action: {
-            text: 'Retry',
-            textColor: '#FF0402',
-            onPress: () => {
-              /* Do something. */
-            },
-          },
+          // action: {
+          //   text: 'Retry',
+          //   textColor: '#FF0402',
+          //   onPress: () => {},
+          // },
         });
       } else if (error.response && error.response.status === 401) {
         // }else if (error.response.status === 401 || error.response.status === 403){
-        // Existing 401 handling code
         await AsyncStorage.removeItem('UserType');
         await AsyncStorage.removeItem('auth-token');
         navigate('Signup');
       } else if (error.response && error.response.status === 500) {
         // Internal server error
-        // Handle 500 error here
         Snackbar.show({
           text: 'Internal Server Error.',
           duration: Snackbar.LENGTH_LONG,
