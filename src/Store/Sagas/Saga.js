@@ -808,7 +808,7 @@ export function* documentUploadRequest({
     param.append('document_type', document_type);
 
     if (
-      document_type === 'adhaar_card' &&
+      document_type === 'aadhar' &&
       document_file &&
       document_file.length > 0
     ) {

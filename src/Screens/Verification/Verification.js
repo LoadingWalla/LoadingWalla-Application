@@ -41,13 +41,13 @@ const Verification = ({navigation, route}) => {
       id: '1',
       title: 'Aadhaar Card',
       onPress: 'Card Details',
-      status: getStatus('adhaar_card'),
+      status: getStatus('aadhar'),
     },
     {
       id: '2',
       title: 'PAN Card',
       onPress: 'Card Details',
-      status: getStatus('pan_card'),
+      status: getStatus('pan'),
     },
     {
       id: '3',

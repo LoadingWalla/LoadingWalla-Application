@@ -50,8 +50,8 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const documentTypeMapping = {
-    fromAadhar: 'adhaar_card',
-    fromPan: 'pan_card',
+    fromAadhar: 'aadhar',
+    fromPan: 'pan',
     fromGst: 'gst',
   };
 
@@ -151,7 +151,7 @@ const CardDetails = ({route, navigation}) => {
       return;
     }
 
-    if (documentTypeMapping[from.from] === 'adhaar_card') {
+    if (documentTypeMapping[from.from] === 'aadhar') {
       if (!aadhaarFrontImage || !aadhaarBackImage) {
         alert('Please select both front and back images.');
         return;
@@ -256,9 +256,7 @@ const CardDetails = ({route, navigation}) => {
           onChangeText={setAadhaarNumber}
           maxLength={20}
           keyboardType={
-            documentTypeMapping[from.from] === 'adhaar_card'
-              ? 'numeric'
-              : 'default'
+            documentTypeMapping[from.from] === 'aadhar' ? 'numeric' : 'default'
           }
         />
         <View style={{flex: 1}}>

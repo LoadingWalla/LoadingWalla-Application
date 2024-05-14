@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -19,11 +19,13 @@ import {
 import {
   GradientColor3,
   PrivacyPolicy,
+  backgroundColorNew,
   pageBackground,
   textColor,
   titleColor,
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
+import AlertBox from '../../../Components/AlertBox';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(0);
@@ -31,7 +33,7 @@ const Wallet = ({navigation}) => {
 
   const {wallletData, walletStatus, walletLoading, getWallletData} =
     useSelector(state => {
-      console.log('My Lorry/Load', state.data);
+      console.log('My Wallet', state.data);
       return state.data;
     });
 
@@ -54,58 +56,151 @@ const Wallet = ({navigation}) => {
     setAmount(numericValue);
   };
 
-  const addAmount = () => {
+  // const addAmount = () => {
+  //   if (amount === 0) {
+  //     Toast.show('Add amount', Toast.LONG);
+  //     return;
+  //   }
+  //   if (amount < 1) {
+  //     Toast.show('Enter minimum amount 100', Toast.LONG);
+  //     return;
+  //   }
+  //   if (amount > 100000) {
+  //     Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
+  //     return;
+  //   }
+
+  //   var options = {
+  //     description: 'Loading Walla',
+  //     image: getWallletData?.profile_img,
+  //     currency: 'INR',
+  //     // key: 'rzp_test_saNeTWFs98DyuF',
+  //     key: 'rzp_live_SuyP4BXtpLkIzS',
+  //     amount: amount * 100,
+  //     name: getWallletData?.name,
+  //     prefill: {
+  //       email: getWallletData?.email,
+  //       contact: getWallletData?.mobile,
+  //       name: 'Loading Walla',
+  //     },
+  //     theme: {color: backgroundColorNew},
+  //   };
+  //   RazorpayCheckout.open(options)
+  //     .then(data => {
+  //       if (data?.razorpay_payment_id) {
+  //         verifyPayment(data.razorpay_payment_id, options.order_id);
+  //         // dispatch(initWallet(amount));
+  //       } else {
+  //         AlertBox('Trancation not success');
+  //       }
+  //     })
+  //     .catch(error => {
+  //       AlertBox('Trancation not success');
+  //     });
+  // };
+
+  const addAmount = async () => {
     if (amount === 0) {
       Toast.show('Add amount', Toast.LONG);
       return;
     }
-    if (amount < 1) {
+    if (parseInt(amount, 10) < 100) {
       Toast.show('Enter minimum amount 100', Toast.LONG);
       return;
     }
-    if (amount > 100000) {
+    if (parseInt(amount, 10) > 100000) {
       Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
       return;
     }
 
-    var options = {
-      description: 'Credits towards consultation',
-      image: getWallletData?.profile_img,
-      currency: 'INR',
-      // key: 'rzp_test_saNeTWFs98DyuF',
-      key: 'rzp_live_ryn4MzwhQI4eE3',
-      amount: amount * 100,
-      name: getWallletData?.name,
-      prefill: {
-        email: getWallletData?.email,
-        contact: getWallletData?.mobile,
-        name: 'Razorpay Software',
-      },
-      theme: {color: '#F37254'},
-    };
-    RazorpayCheckout.open(options)
-      .then(data => {
-        if (data?.razorpay_payment_id) {
-          dispatch(initWallet(amount));
-        } else {
-          alert('Trancation not success');
-        }
-      })
-      .catch(error => {
-        // handle failure
-        alert('Trancation not success');
-      });
+    // API call to your server to create an order
+    try {
+      const orderResponse = await fetch(
+        'https://loadingwalla.com/api/payment/order',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({amount: parseInt(amount, 10)}), // Send the amount to the backend
+        },
+      );
 
-    // dispatch(initWallet(amount))
+      const orderData = await orderResponse.json();
+      console.log(4444, orderData);
+
+      if (orderResponse.ok) {
+        var options = {
+          description: 'Loading Walla',
+          image: getWallletData?.profile_img,
+          currency: 'INR',
+          key: 'rzp_live_SuyP4BXtpLkIzS',
+          amount: orderData.amount, // amount should be in the smallest currency unit
+          name: getWallletData?.name,
+          order_id: orderData.id, // this is important, it links the payment to the order created on the server
+          prefill: {
+            email: getWallletData?.email,
+            contact: getWallletData?.mobile,
+            name: 'Loading Walla',
+          },
+          theme: {color: backgroundColorNew},
+        };
+
+        RazorpayCheckout.open(options)
+          .then(data => {
+            if (data?.razorpay_payment_id) {
+              verifyPayment(data.razorpay_payment_id, orderData.id);
+            } else {
+              AlertBox('Transaction not successful');
+            }
+          })
+          .catch(error => {
+            AlertBox('Transaction not successful');
+          });
+      } else {
+        throw new Error(orderData.message || 'Failed to create order');
+      }
+    } catch (error) {
+      console.error(999, error);
+      // AlertBox(`Error: ${error.message}`);
+    }
+  };
+
+  const verifyPayment = async (paymentId, orderId) => {
+    try {
+      const verifyResponse = await fetch(
+        'https://loadingwalla.com/api/payment/verify',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            razorpay_payment_id: paymentId,
+            razorpay_order_id: orderId,
+          }),
+        },
+      );
+      const verifyData = await verifyResponse.json();
+      console.log(66666, verifyData);
+      if (verifyData.status === 'success') {
+        Toast.show('Payment Successful');
+        dispatch(initWallet(amount));
+      } else {
+        Toast.show('Payment Verification Failed');
+      }
+    } catch (error) {
+      Toast.show('Server Error', 'Unable to verify payment at this time');
+    }
   };
 
   const quickAmount = ['100', '200', '500', '1000', '5000'];
   const onSetAmount = amt => {
     let newamt;
     if (amount === '') {
-      newamt = parseInt(amt);
+      newamt = parseInt(amt, 10);
     } else {
-      newamt = parseInt(amount) + parseInt(amt);
+      newamt = parseInt(amount, 10) + parseInt(amt, 10);
     }
     setAmount(newamt);
   };

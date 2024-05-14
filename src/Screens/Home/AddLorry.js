@@ -207,18 +207,19 @@ const AddLorry = ({navigation, route}) => {
     }
   };
 
-  const validateVehicleNumber = () => {
-    const pattern = /^[A-Z]{2}\s[0-9]{2}\s[A-Z]{2}\s[0-9]{4}$/;
+  // const validateVehicleNumber = () => {
+  //   const pattern = /^[A-Z]{2}\s[0-9]{2}\s[A-Z]{2}\s[0-9]{4}$/;
 
-    if (!pattern.test(vehicleNumber)) {
-      console.log("Vehicle number doesn't match the expected format.");
-      return false;
-    }
-    return true;
-  };
+  //   if (!pattern.test(vehicleNumber)) {
+  //     console.log("Vehicle number doesn't match the expected format.");
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
   const addLorry = async () => {
-    if (!validateVehicleNumber() || vehicleNumber === '') {
+    // if (!validateVehicleNumber() || vehicleNumber === '') {
+    if (vehicleNumber === '') {
       Toast.show('Enter valid vehicle number', Toast.LONG);
       return;
     }
@@ -364,16 +365,7 @@ const AddLorry = ({navigation, route}) => {
                 hint={'XX 00 XX 0000'}
                 onChangeText={e => {
                   let input = e.toUpperCase().replace(/[^A-Z0-9]/g, '');
-                  if (input.length > 2) {
-                    input = input.substring(0, 2) + ' ' + input.substring(2);
-                  }
-                  if (input.length > 5) {
-                    input = input.substring(0, 5) + ' ' + input.substring(5);
-                  }
-                  if (input.length > 8) {
-                    input = input.substring(0, 8) + ' ' + input.substring(8);
-                  }
-                  input = input.substring(0, 13);
+                  input = input.substring(0, 15);
                   setVehicleNumber(input);
                 }}
               />

@@ -40,7 +40,7 @@ const instanceFunction = instanceObj => {
         // console.log('Connection is slow.');
         Snackbar.show({
           text: 'Slow Internet Connection.',
-          duration: Snackbar.LENGTH_INDEFINITE,
+          duration: Snackbar.LENGTH_LONG,
           fontFamily: 'PlusJakartaSans-SemiBold',
           textColor: '#000000',
           // marginBottom: 10,

@@ -16,6 +16,7 @@ const initialState = {
   addLorrydata: null,
   locationData: [],
   DashboardUser: null,
+  Userdata: null,
   dashboardStatus: null,
   UserVerifyPercentage: null,
   language: null,
@@ -325,11 +326,13 @@ const reducer = (state = initialState, action) => {
         profileLoading: true,
         status: null,
         DashboardUser: null,
+        Userdata: null,
         UserVerifyPercentage: null,
       };
     case actionTypes.PROFILE_SUCCESS:
       return updateState(state, {
         DashboardUser: payload?.data?.user,
+        Userdata: payload?.data?.user,
         profileLoading: false,
         status: payload?.data?.status,
         UserVerifyPercentage: payload?.data?.verify,
@@ -338,6 +341,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         profileLoading: false,
         DashboardUser: null,
+        Userdata: null,
         status: null,
         UserVerifyPercentage: null,
       });

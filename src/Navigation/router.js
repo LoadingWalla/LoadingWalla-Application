@@ -1160,6 +1160,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
+          headerShadowVisible: false,
           title: 'Complete Booking',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
