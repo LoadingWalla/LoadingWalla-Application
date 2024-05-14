@@ -40,7 +40,7 @@ function offsetCoordinates(coord, isLeft) {
 }
 
 const ViewDetail = ({navigation, route}) => {
-  // console.log("view detail", route);
+  console.log('view detail', route);
   const {
     from,
     material_name,
@@ -61,8 +61,6 @@ const ViewDetail = ({navigation, route}) => {
     distance,
     user_type,
   } = route.params.item;
-  const {Owner} = route.params;
-  // console.log(98798798, Owner);
 
   const mapRef = useRef(null);
   const [origin, setOrigin] = useState(null);
@@ -113,7 +111,10 @@ const ViewDetail = ({navigation, route}) => {
   const handleAcceptBooking = () => {
     route?.params?.userType === '1'
       ? dispatch(initAcceptReject('complete', id))
-      : navigation.navigate('completeBooking');
+      : navigation.navigate('completeBooking', {
+          item: route.params.item,
+          userType: route?.params?.userType,
+        });
   };
 
   const handleRating = () => {

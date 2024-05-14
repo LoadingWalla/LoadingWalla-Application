@@ -36,8 +36,10 @@ const Booking = ({navigation}) => {
     BookingDashUser,
     BookingStatus,
     accept_rejectStatus,
+    DashboardUser,
+    dashboardLoading,
   } = useSelector(state => {
-    // console.log('My Bookings', state.data);
+    console.log('My Bookings', state.data);
     return state.data;
   });
 
@@ -88,16 +90,16 @@ const Booking = ({navigation}) => {
     <View style={style.Container}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
-          img={BookingDashUser?.profile_img}
+          img={DashboardUser?.profile_img}
           navigatiopnWallet={() => navigation.navigate('Wallet')}
           notification={() => navigation.navigate('Notification')}
-          title={BookingDashUser?.name}
           isDashboard={true}
+          title={DashboardUser?.name}
           gotoProfile={() => navigation.navigate(Constants.MENU)}
           navigate={() => navigation?.navigate('Contactus')}
-          wallet={BookingDashUser?.wallet}
-          verify={BookingDashUser?.verify}
-          loading={BookingLoading}
+          loading={dashboardLoading}
+          wallet={DashboardUser?.wallet}
+          verify={DashboardUser?.verify}
         />
       </View>
       <View style={style.mainContainer}>

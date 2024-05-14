@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetIcon from '../../../assets/SVG/svg/NoInternetIcon';
 
-const NoInternetScreen = ({navigation}) => {
+const NoInternetScreen = () => {
   const [isConnected, setIsConnected] = useState(true);
 
   useEffect(() => {

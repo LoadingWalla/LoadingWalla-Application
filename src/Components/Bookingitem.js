@@ -47,7 +47,9 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
       {buttonStatus === 'ongoing' ? (
         <TouchableOpacity
           style={{alignItems: 'center'}}
-          onPress={() => navigation.navigate('viewDetail', {item: detail})}>
+          onPress={() =>
+            navigation.navigate('viewDetail', {item: detail, userType})
+          }>
           <Text
             style={{
               fontSize: 15,
