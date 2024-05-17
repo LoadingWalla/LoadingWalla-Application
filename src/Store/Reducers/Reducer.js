@@ -133,6 +133,14 @@ const initialState = {
   mapDestination: null,
   mapLoading: false,
   mapError: null,
+  // create order
+  orderLoading: false,
+  orderData: null,
+  orderStatus: null,
+  // verify payment
+  verifyPaymentLoading: false,
+  verifyPaymentData: null,
+  verifyPaymentStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1049,6 +1057,48 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         mapLoading: false,
         mapError: payload,
+      });
+
+    //create order
+    case actionTypes.CREATE_ORDER_REQUEST:
+      return {
+        ...state,
+        orderLoading: true,
+        orderData: null,
+        orderStatus: null,
+      };
+    case actionTypes.CREATE_ORDER_SUCCESS:
+      return updateState(state, {
+        orderLoading: false,
+        orderData: payload?.data,
+        orderStatus: payload?.status,
+      });
+    case actionTypes.CREATE_ORDER_FAILURE:
+      return updateState(state, {
+        orderLoading: false,
+        orderData: null,
+        orderStatus: null,
+      });
+
+    // Verify Payment
+    case actionTypes.VERIFY_PAYMENT_REQUEST:
+      return {
+        ...state,
+        verifyPaymentLoading: true,
+        verifyPaymentData: null,
+        verifyPaymentStatus: null,
+      };
+    case actionTypes.VERIFY_PAYMENT_SUCCESS:
+      return updateState(state, {
+        verifyPaymentLoading: false,
+        verifyPaymentData: payload?.data,
+        verifyPaymentStatus: payload?.status,
+      });
+    case actionTypes.VERIFY_PAYMENT_FAILURE:
+      return updateState(state, {
+        verifyPaymentLoading: false,
+        verifyPaymentData: null,
+        verifyPaymentStatus: null,
       });
 
     default:

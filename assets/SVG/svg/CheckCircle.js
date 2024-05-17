@@ -1,7 +1,7 @@
 import React from 'react';
 import {Circle, G, Path, Svg} from 'react-native-svg';
 
-const CheckCircle = ({size, style, color}) => {
+const CheckCircle = ({size, style, color, strokeColor}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
@@ -28,7 +28,7 @@ const CheckCircle = ({size, style, color}) => {
           d="M6.382,10.826,5.42,9.865l-.32.32,1.282,1.282L9.128,8.72l-.32-.32Z"
           transform="translate(-3064.114 -3774.933)"
           fill="#ED1C24"
-          stroke="#ED1C24"
+          stroke={strokeColor ? strokeColor : '#ED1C24'}
           stroke-width="0.5"
         />
       </G>

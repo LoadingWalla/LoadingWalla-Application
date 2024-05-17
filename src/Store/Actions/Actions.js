@@ -891,3 +891,37 @@ export const fetchMapDataFailure = error => ({
   type: actionTypes.FETCH_MAP_DATA_FAILURE,
   payload: error,
 });
+
+// create order
+export const initCreateOrder = (amount, userId) => ({
+  type: actionTypes.CREATE_ORDER_REQUEST,
+  amount,
+  userId,
+});
+
+export const createOrderSuccess = data => ({
+  type: actionTypes.CREATE_ORDER_SUCCESS,
+  payload: data,
+});
+
+export const createOrderFailure = error => ({
+  type: actionTypes.CREATE_ORDER_FAILURE,
+  payload: error,
+});
+
+// verify payment
+export const initVerifyPaymentRequest = (paymentId, orderId) => ({
+  type: actionTypes.VERIFY_PAYMENT_REQUEST,
+  paymentId,
+  orderId,
+});
+
+export const verifyPaymentSuccess = data => ({
+  type: actionTypes.VERIFY_PAYMENT_SUCCESS,
+  payload: data,
+});
+
+export const verifyPaymentFailure = error => ({
+  type: actionTypes.VERIFY_PAYMENT_FAILURE,
+  payload: error,
+});

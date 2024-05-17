@@ -78,7 +78,7 @@ const Verification = ({navigation, route}) => {
             </Text>
           </View>
           {item.status === 'Verified' ? (
-            <CheckCircle size={30} color="green" />
+            <CheckCircle size={30} color="green" strokeColor="#FFFFFF" />
           ) : (
             <TouchableOpacity
               style={styles.uploadButton(item.status)}

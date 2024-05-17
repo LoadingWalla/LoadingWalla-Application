@@ -930,6 +930,28 @@ export function* fetchMapDataSaga({from_id, to_id}) {
   }
 }
 
+// Create Order
+export function* createOrder({amount, userId}) {
+  try {
+    const body = {amount, userId};
+    // console.log(8888888, body);
+    const data = yield API.post('payment/order', body);
+    console.log('API response------MYLOAD', data);
+    if (data?.status === 200) {
+      yield put(actions.createOrderSuccess(data));
+    } else {
+      yield put(actions.createOrderFailure(data.status));
+      console.log('else', data);
+    }
+  } catch (error) {
+    yield put(actions.createOrderFailure());
+    //yield put(actions.VerifyOtpFailure(error.message));
+    console.log('error', error);
+  }
+}
+
+// Verify Payment
+
 // Back Button Handler
 // export function* watchBackButton() {
 //   yield takeLatest('BACK_BUTTON_PRESS', handleBackButton);
