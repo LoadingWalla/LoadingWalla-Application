@@ -116,8 +116,8 @@ const Wallet = ({navigation}) => {
         throw new Error(orderData.message || 'Failed to create order');
       }
     } catch (error) {
-      // console.error(999, error);
-      AlertBox(`Error: ${error.message}`);
+      console.error(999, error);
+      // AlertBox(`Error: ${error.message}`);
     }
   };
 
@@ -225,7 +225,7 @@ const Wallet = ({navigation}) => {
                     color: '#119500',
                     fontFamily: 'PlusJakartaSans-SemiBold',
                   }}>
-                  ₹ 99, Payment successful
+                  ₹ 5000 Payment successful
                 </Text>
                 <Text style={styles.dateText}>31 Dec 2023, 03:08 PM</Text>
               </View>
@@ -234,7 +234,7 @@ const Wallet = ({navigation}) => {
                   enabledStyle={styles.requestButtonContainer}
                   textStyle={styles.gradientButtonText}
                   title={'Repeat'}
-                  navigation={() => {}}
+                  navigation={() => setAmount(5000)}
                 />
               </View>
             </View>
