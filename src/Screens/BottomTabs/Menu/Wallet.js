@@ -179,6 +179,7 @@ const Wallet = ({navigation}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
+            marginBottom: 10,
           }}>
           <View style={styles.inputContainer}>
             <TextInput
@@ -216,7 +217,9 @@ const Wallet = ({navigation}) => {
       </View>
       <View style={{flex: 1, marginTop: 20}}>
         <Text style={styles.walletText}>Previous TopUps</Text>
-        <ScrollView>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}>
           {Array.from({length: 10}, (_, index) => (
             <View style={styles.repeatView}>
               <View style={{}}>
@@ -225,18 +228,17 @@ const Wallet = ({navigation}) => {
                     color: '#119500',
                     fontFamily: 'PlusJakartaSans-SemiBold',
                   }}>
-                  ₹ 5000 Payment successful
+                  ₹ 1000 Payment successful
                 </Text>
                 <Text style={styles.dateText}>31 Dec 2023, 03:08 PM</Text>
               </View>
-              <View>
-                <InnerButton
-                  enabledStyle={styles.requestButtonContainer}
-                  textStyle={styles.gradientButtonText}
-                  title={'Repeat'}
-                  navigation={() => setAmount(5000)}
-                />
-              </View>
+              {/* <View> */}
+              <TouchableOpacity
+                onPress={() => setAmount(5000)}
+                style={styles.requestButtonContainer}>
+                <Text style={styles.gradientButtonText}>Repeat</Text>
+              </TouchableOpacity>
+              {/* </View> */}
             </View>
           ))}
         </ScrollView>
@@ -296,8 +298,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     borderWidth: 1,
-    marginBottom: 10,
-    minWidth: 200,
+    // marginBottom: 10,
+    minWidth: 150,
   },
   textInput: {
     fontFamily: 'PlusJakartaSans-Regular',
@@ -331,8 +333,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     flexDirection: 'row',
     borderRadius: 8,
-    // height: 50,
-    paddingVertical: 15,
+    height: 50,
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -343,14 +344,16 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
   },
   requestButtonContainer: {
-    borderWidth: 2,
-    borderRadius: 8,
+    borderWidth: 1,
+    borderRadius: 5,
     borderColor: GradientColor3,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
   },
   gradientButtonText: {
-    fontSize: 13,
+    fontSize: 12,
     color: GradientColor3,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-SemiBold',
     textAlign: 'center',
   },
   repeatView: {
