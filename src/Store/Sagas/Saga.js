@@ -951,6 +951,24 @@ export function* createOrder({amount, userId}) {
 }
 
 // Verify Payment
+export function* verifyPayment({paymentId, orderId}) {
+  try {
+    const body = {paymentId, orderId};
+    // console.log(8888888, body);
+    const data = yield API.post('payment/verify', body);
+    // console.log('API response------PaymentVerify', data);
+    if (data?.status === 200) {
+      yield put(actions.verifyPaymentSuccess(data));
+    } else {
+      yield put(actions.verifyPaymentFailure(data.status));
+      console.log('else', data);
+    }
+  } catch (error) {
+    yield put(actions.verifyPaymentFailure());
+    //yield put(actions.VerifyOtpFailure(error.message));
+    console.log('error', error);
+  }
+}
 
 // Back Button Handler
 // export function* watchBackButton() {

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, {useContext, useRef, useState} from 'react';
 import {
   View,

@@ -49,6 +49,7 @@ function* rootSaga() {
   );
   yield takeLatest(actions.FETCH_MAP_DATA_START, saga.fetchMapDataSaga);
   yield takeLatest(actions.CREATE_ORDER_REQUEST, saga.createOrder);
+  yield takeLatest(actions.VERIFY_PAYMENT_REQUEST, saga.verifyPayment);
 }
 
 export default rootSaga;

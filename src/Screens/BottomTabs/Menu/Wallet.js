@@ -15,6 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   initCreateOrder,
   initGetWallet,
+  initVerifyPaymentRequest,
   initWallet,
   walletFailure,
 } from '../../../Store/Actions/Actions';
@@ -39,9 +40,12 @@ const Wallet = ({navigation}) => {
     walletStatus,
     walletLoading,
     getWallletData,
-    orderLoading,
     orderData,
+    orderLoading,
     orderStatus,
+    verifyPaymentLoading,
+    verifyPaymentData,
+    verifyPaymentStatus,
   } = useSelector(state => {
     console.log('My Wallet', state.data);
     return state.data;
@@ -59,7 +63,13 @@ const Wallet = ({navigation}) => {
       setAmount(0);
       dispatch(walletFailure());
     }
-  }, [dispatch, walletStatus, wallletData]);
+    if (verifyPaymentStatus === 'success') {
+      Toast.show('Payment Successful');
+      dispatch(initWallet(amount));
+    } else {
+      Toast.show('Payment Verification Failed');
+    }
+  }, [dispatch, walletStatus, wallletData, verifyPaymentStatus]);
 
   const handleAmountChange = text => {
     const numericValue = text.replace(/[^0-9]/g, '');
@@ -104,7 +114,13 @@ const Wallet = ({navigation}) => {
         RazorpayCheckout.open(options)
           .then(data => {
             if (data?.razorpay_payment_id) {
-              verifyPayment(data.razorpay_payment_id, orderData.id);
+              // verifyPayment(data.razorpay_payment_id, orderData.id);
+              dispatch(
+                initVerifyPaymentRequest(
+                  data.razorpay_payment_id,
+                  orderData.id,
+                ),
+              );
             } else {
               AlertBox('Transaction not successful');
             }
@@ -121,33 +137,33 @@ const Wallet = ({navigation}) => {
     }
   };
 
-  const verifyPayment = async (paymentId, orderId) => {
-    try {
-      const verifyResponse = await fetch(
-        'https://loadingwalla.com/api/payment/verify',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            razorpay_payment_id: paymentId,
-            razorpay_order_id: orderId,
-          }),
-        },
-      );
-      const verifyData = await verifyResponse.json();
-      // console.log(66666, verifyData);
-      if (verifyData.status === 'success') {
-        Toast.show('Payment Successful');
-        dispatch(initWallet(amount));
-      } else {
-        Toast.show('Payment Verification Failed');
-      }
-    } catch (error) {
-      Toast.show('Server Error', 'Unable to verify payment at this time');
-    }
-  };
+  // const verifyPayment = async (paymentId, orderId) => {
+  //   try {
+  //     const verifyResponse = await fetch(
+  //       'https://loadingwalla.com/api/payment/verify',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           razorpay_payment_id: paymentId,
+  //           razorpay_order_id: orderId,
+  //         }),
+  //       },
+  //     );
+  //     const verifyData = await verifyResponse.json();
+  //     // console.log(66666, verifyData);
+  //     if (verifyData.status === 'success') {
+  //       Toast.show('Payment Successful');
+  //       dispatch(initWallet(amount));
+  //     } else {
+  //       Toast.show('Payment Verification Failed');
+  //     }
+  //   } catch (error) {
+  //     Toast.show('Server Error', 'Unable to verify payment at this time');
+  //   }
+  // };
 
   const quickAmount = ['100', '200', '500', '1000', '5000'];
   const onSetAmount = amt => {
