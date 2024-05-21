@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -236,8 +236,15 @@ const Signup = ({navigation, route}) => {
                 {t(Constants.WHATSAPP_ALERT_CHECK)}
               </Text>
             </View>
-            <Text style={styles.policyTitle}>
-              {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={styles.policyTitle}>
+                {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -249,7 +256,7 @@ const Signup = ({navigation, route}) => {
                   {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
                 </Text>
               </TouchableOpacity>
-              <Text> {' and '} </Text>
+              <Text style={styles.policyTitle}> {' and '} </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -258,10 +265,11 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
+                  {' '}
                   {t(Constants.TERMS_CONDITION_TITLE3)}
                 </Text>
               </TouchableOpacity>
-            </Text>
+            </View>
           </View>
 
           <Button

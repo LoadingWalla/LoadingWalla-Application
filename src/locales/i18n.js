@@ -3,6 +3,8 @@ import {initReactI18next} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from './en.json';
 import hi from './hi.json';
+import pn from './pn.json';
+import gj from './gj.json';
 
 i18n
   .use(initReactI18next) // Passes i18next instance to react-i18next
@@ -14,6 +16,12 @@ i18n
       },
       hi: {
         translation: hi,
+      },
+      pn: {
+        translation: pn,
+      },
+      gj: {
+        translation: gj,
       },
     },
     lng: 'en',
