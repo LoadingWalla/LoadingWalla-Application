@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useCallback, useState} from 'react';
+import React, {useEffect, useCallback, useState} from 'react';
 import {
   View,
   Text,
@@ -75,7 +75,6 @@ const Guide = ({navigation}) => {
 
   return (
     <View style={styles.backgroundView}>
-      {/* <Text style={styles.header}>Frequently Asked Questions</Text> */}
       <FlatList
         data={guideStatus === 200 ? guideData : []}
         keyExtractor={item => item?.id}

@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
+import {Picker} from '@react-native-picker/picker';
 import {
   GradientColor2,
   GradientColor4,
@@ -25,12 +26,44 @@ import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
 
+const languages = [
+  {
+    id: 1,
+    languageName: 'English',
+    language: 'English',
+    code: 'en',
+    langId: 1,
+  },
+  {
+    id: 2,
+    languageName: 'Hindi',
+    language: 'हिन्दी',
+    code: 'hi',
+    langId: 2,
+  },
+  {
+    id: 3,
+    languageName: 'Punjabi',
+    language: 'ਪੰਜਾਬੀ',
+    code: 'pn',
+    langId: 3,
+  },
+  {
+    id: 4,
+    languageName: 'Gujrati',
+    language: 'ગુજરાતી',
+    code: 'gj',
+    langId: 4,
+  },
+];
+
 const Signup = ({navigation, route}) => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
   const dispatch = useDispatch();
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const {data, loading, dashboardStatus} = useSelector(state => {
     // console.log('signup screen', state.data);
@@ -38,6 +71,10 @@ const Signup = ({navigation, route}) => {
   });
   const handleCheckBoxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const selectLanguage = code => {
+    i18n.changeLanguage(code);
   };
 
   useEffect(() => {
@@ -94,15 +131,45 @@ const Signup = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginVertical: 10,
+              // marginVertical: 10,
             }}>
-            <TouchableOpacity>
-              <Text style={{color: GradientColor2, fontWeight: '500'}}>
-                Change Language
-              </Text>
+            <TouchableOpacity
+              style={{
+                // borderWidth: 1,
+                // borderColor: '#ccc',
+                // borderRadius: 8,
+                minWidth: 140,
+                overflow: 'hidden',
+              }}>
+              <Picker
+                selectedValue={selectedLanguage}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedLanguage(itemValue);
+                  selectLanguage(itemValue);
+                }}
+                style={{color: GradientColor2}}
+                mode="dropdown" // Android only
+                dropdownIconColor={GradientColor2}>
+                {languages?.map(lang => (
+                  <Picker.Item
+                    key={lang.id}
+                    label={lang.languageName}
+                    value={lang.code}
+                    color={GradientColor2}
+                    fontFamily="PlusJakartaSans-Bold"
+                    contentDescription="long tooo"
+                  />
+                ))}
+              </Picker>
             </TouchableOpacity>
+
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
-              <Text style={{color: GradientColor2, fontWeight: '500'}}>
+              <Text
+                style={{
+                  color: GradientColor2,
+                  fontWeight: '500',
+                  textAlign: 'center',
+                }}>
                 {t(Constants.NEED_HELP)}
               </Text>
             </TouchableOpacity>
