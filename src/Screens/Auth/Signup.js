@@ -23,12 +23,13 @@ import Toast from 'react-native-simple-toast';
 import {Dimensions} from 'react-native';
 import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
+import {useTranslation} from 'react-i18next';
 
 const Signup = ({navigation, route}) => {
+  const {t} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
-  // console.log(77777777777, screenHeight);
   const dispatch = useDispatch();
 
   const {data, loading, dashboardStatus} = useSelector(state => {
@@ -95,23 +96,29 @@ const Signup = ({navigation, route}) => {
               justifyContent: 'space-between',
               marginVertical: 10,
             }}>
-            <View></View>
+            <TouchableOpacity>
+              <Text style={{color: GradientColor2, fontWeight: '500'}}>
+                Change Language
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
               <Text style={{color: GradientColor2, fontWeight: '500'}}>
-                {Constants.NEED_HELP}
+                {t(Constants.NEED_HELP)}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.WelcomeTruckTitle}>
-              <Text style={styles.LoadingWalla}>{Constants.LOADING_WALLA}</Text>{' '}
-              {Constants.WELCOME_TO_TRUCK}
+              <Text style={styles.LoadingWalla}>
+                {t(Constants.LOADING_WALLA)}
+              </Text>{' '}
+              {t(Constants.WELCOME_TO_TRUCK)}
             </Text>
           </View>
           <Text style={styles.signupTopTitle}>
-            {Constants.ENTER_MOBILE_NUMBER_TITLE}
+            {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
           </Text>
-          <Text style={styles.label}>{Constants.MOBILE_NUMBER}</Text>
+          <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
           <PhoneInput
             defaultCode="IN"
             layout="first"
@@ -120,7 +127,7 @@ const Signup = ({navigation, route}) => {
               placeholderTextColor: PrivacyPolicy,
             }}
             withShadow
-            placeholder={Constants.ENTER_MOBILE_NUMBER}
+            placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
             // autoFocus={true}
             containerStyle={styles.phoneContainer}
             textContainerStyle={styles.textInput}
@@ -159,11 +166,11 @@ const Signup = ({navigation, route}) => {
                 style={styles.checkBoxStyle}
               />
               <Text style={{color: PrivacyPolicy}}>
-                {Constants.WHATSAPP_ALERT_CHECK}
+                {t(Constants.WHATSAPP_ALERT_CHECK)}
               </Text>
             </View>
             <Text style={styles.policyTitle}>
-              {Constants.TERMS_CONDITION_TITLE1}{' '}
+              {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -172,7 +179,7 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {Constants.TERMS_CONDITION_TITLE2}{' '}
+                  {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
                 </Text>
               </TouchableOpacity>
               <Text> {' and '} </Text>
@@ -184,7 +191,7 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {Constants.TERMS_CONDITION_TITLE3}
+                  {t(Constants.TERMS_CONDITION_TITLE3)}
                 </Text>
               </TouchableOpacity>
             </Text>
@@ -193,7 +200,7 @@ const Signup = ({navigation, route}) => {
           <Button
             loading={loading}
             onPress={() => sendOtp()}
-            title={Constants.SEND_OTP}
+            title={t(Constants.SEND_OTP)}
             textStyle={styles.buttonTitile}
             style={styles.button}
           />

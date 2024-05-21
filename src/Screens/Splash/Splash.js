@@ -29,8 +29,7 @@ const Splash = ({navigation: {replace}}) => {
         if (newUser === '1') {
           replace('companyDetails', {userId});
         } else {
-          // replace('Language');
-          replace('Signup');
+          replace('Language');
         }
       }, 3000);
     };
@@ -63,39 +62,3 @@ const Splash = ({navigation: {replace}}) => {
 };
 
 export default Splash;
-
-// import React from 'react';
-// import {View, Text, Button} from 'react-native';
-// import {useTranslation} from 'react-i18next';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import * as Constants from '../../Constants/Constant';
-
-// const Splash = ({navigation}) => {
-//   const {t, i18n} = useTranslation();
-
-//   const changeLanguage = async language => {
-//     try {
-//       await AsyncStorage.setItem('language', language);
-//       i18n.changeLanguage(language);
-//     } catch (error) {
-//       console.error('Error changing language:', error);
-//     }
-//   };
-
-//   return (
-//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-//       <Text
-//         style={{
-//           color: '#000000',
-//           fontSize: 20,
-//           fontFamily: 'PlusJakartaSans-SemiBold',
-//         }}>
-//         {t(Constants.LOADING_WALLA)}
-//       </Text>
-//       <Button title="Hindi" onPress={() => changeLanguage('hi')} />
-//       <Button title="English" onPress={() => changeLanguage('en')} />
-//     </View>
-//   );
-// };
-
-// export default Splash;
