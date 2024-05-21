@@ -61,6 +61,7 @@ import Inconvenience from '../Screens/Details/Inconvenience';
 import LoadIcon from '../../assets/SVG/svg/LoadIcon';
 import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
+import i18n from '../locales/i18n';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -439,9 +440,26 @@ function MyLoadsBottomTabs() {
 }
 
 const Navigation = ({language}) => {
-  // const {i18n} = useTranslation();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log('routess');
+    const setlanguage = async () => {
+      const lan = await AsyncStorage.getItem('language');
+      const languageId = await AsyncStorage.getItem('languageID');
+      if (!lan || !languageId) {
+        const defaultLanguage = {
+          code: 'en',
+          langId: '1', // Store as string to be consistent with AsyncStorage's storage format
+        };
+        await AsyncStorage.setItem('language', defaultLanguage?.code);
+        await AsyncStorage.setItem('languageID', defaultLanguage?.langId);
+        i18n.changeLanguage(defaultLanguage.code);
+      }
+    };
+    setlanguage();
+  }, []);
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -459,19 +477,6 @@ const Navigation = ({language}) => {
       return true;
     }
   }
-
-  // useEffect(() => {
-  //   const setlanguage = async () => {
-  //     const lan = await AsyncStorage.getItem('language');
-  //     i18n
-  //       .changeLanguage(
-  //         language === null ? lan : language === lan ? lan : language,
-  //       )
-  //       .then(() => {})
-  //       .catch(err => console.error(err));
-  //   };
-  //   setlanguage();
-  // }, [i18n, language]);
 
   return (
     <Stack.Navigator initialRouteName="Splash">

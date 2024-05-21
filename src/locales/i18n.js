@@ -4,25 +4,32 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import en from './en.json';
 import hi from './hi.json';
 
-const loadResourcesAndInitI18n = async () => {
-  const storedLang = await AsyncStorage.getItem('language');
-
-  i18n.use(initReactI18next).init({
+i18n
+  .use(initReactI18next) // Passes i18next instance to react-i18next
+  .init({
     compatibilityJSON: 'v3',
-    lng: storedLang,
-    fallbackLng: 'en',
     resources: {
-      en: {translation: en},
-      hi: {translation: hi},
+      en: {
+        translation: en,
+      },
+      hi: {
+        translation: hi,
+      },
     },
+    lng: 'en',
+    fallbackLng: 'en',
     interpolation: {
-      escapeValue: false,
-    },
-    react: {
-      useSuspense: false,
+      escapeValue: false, // React already safes from XSS
     },
   });
-  return i18n;
-};
 
-export default loadResourcesAndInitI18n();
+// Define a function to set the language dynamically
+const loadResources = async () => {
+  const storedLang = await AsyncStorage.getItem('language');
+  if (storedLang) {
+    i18n.changeLanguage(storedLang); // Change language if it's stored
+  }
+};
+loadResources();
+
+export default i18n;

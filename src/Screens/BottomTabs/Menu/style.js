@@ -60,7 +60,8 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBold',
   },
   bigImageStyle: {
-    backgroundColor: '#000000',
+    // backgroundColor: '#000000',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
     flex: 1,
   },
   closeIcon: {position: 'absolute', right: 10, top: 10},

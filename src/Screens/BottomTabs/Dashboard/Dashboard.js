@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import Swiper from 'react-native-swiper';
 import * as Constants from '../../../Constants/Constant';
@@ -16,7 +16,7 @@ import SearchFilter from '../../../Components/SearchFilter';
 import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
 
-const {height, width} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
   const [allLocation, setAllLocation] = useState([]);
@@ -30,6 +30,8 @@ const Dashboard = ({navigation}) => {
   const user = useRef('');
   const handleNavigate = useRef(false);
   const dispatch = useDispatch();
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const {
     DashboardData,
@@ -158,6 +160,7 @@ const Dashboard = ({navigation}) => {
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
+                    activeDotStyle={{width: 15}}
                     autoplayTimeout={3}>
                     {DashboardBanner?.map((item, index) => {
                       return (
