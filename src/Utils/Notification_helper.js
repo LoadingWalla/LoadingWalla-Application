@@ -1,7 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
-import {Alert, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import notifee, {AndroidImportance} from '@notifee/react-native';
-import {navigationRef, navigate} from '../Navigation/NavigationService';
+import {navigate} from '../Navigation/NavigationService';
 
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
@@ -22,30 +22,6 @@ const getFcmToken = async () => {
   return token;
 };
 
-// export const notificationListener = () => {
-//   messaging().onNotificationOpenedApp(remoteMessage => {
-//     // navigation.navigate(remoteMessage.data.type);
-//     // console.log("killl mode", remoteMessage);
-//     // handleNavigation(remoteMessage.data);
-//     Alert.alert(
-//       'A new FCM message arrived! killlllll',
-//       JSON.stringify(remoteMessage),
-//     );
-//   });
-//   messaging()
-//     .getInitialNotification()
-//     .then(remoteMessage => {
-//       if (remoteMessage) {
-//         // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-//         console.log('kill mode87', remoteMessage);
-//         Alert.alert(
-//           'A new FCM message arrived in Kill Mode!',
-//           JSON.stringify(remoteMessage),
-//         );
-//       }
-//       // setLoading(false);
-//     });
-// };
 export const notificationListener = () => {
   messaging().onNotificationOpenedApp(remoteMessage => {
     if (remoteMessage.data && remoteMessage.data.screen) {
@@ -127,23 +103,5 @@ async function onDisplayNotification(remoteMessage) {
         id: 'default',
       },
     },
-    // title:
-    //   '<p style="color: #4caf50;"><b>Styled HTMLTitle</span></p></b></p> &#128576;',
-    // subtitle: '&#129395;',
-    // body: 'The <p style="text-decoration: line-through">body can</p> also be <p style="color: #ffffff; background-color: #9c27b0"><i>styled too</i></p> &#127881;!',
-    // android: {
-    //   channelId,
-    //   color: '#4caf50',
-    //   actions: [
-    //     {
-    //       title: '<b>Dance</b> &#128111;',
-    //       pressAction: {id: 'dance'},
-    //     },
-    //     {
-    //       title: '<p style="color: #f44336;"><b>Cry</b> &#128557;</p>',
-    //       pressAction: {id: 'cry'},
-    //     },
-    //   ],
-    // },
   });
 }

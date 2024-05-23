@@ -40,14 +40,8 @@ const GridView = ({data, index, selected, onPress}) => (
 const Language = ({navigation, route}) => {
   const {params} = route;
   const {t, i18n} = useTranslation();
-
   const [selected, setSelected] = useState(1);
   const dispatch = useDispatch();
-
-  const {language} = useSelector(state => {
-    console.log('language Screen', state.data);
-    return state.data;
-  });
 
   const languages = [
     {
@@ -80,9 +74,22 @@ const Language = ({navigation, route}) => {
     },
   ];
 
-  const selectLanguage = data => {
+  const getLanguageId = async () => {
+    let langId = await AsyncStorage.getItem('languageID');
+    // console.log(8888, JSON.parse(langId), langId);
+    setSelected(JSON.parse(langId));
+  };
+
+  useEffect(() => {
+    getLanguageId();
+  }, []);
+
+  const selectLanguage = async data => {
     setSelected(data?.langId);
     i18n.changeLanguage(data.code);
+    dispatch(initLanguage(data?.code, data?.langId));
+    await AsyncStorage.setItem('languageID', JSON.stringify(data?.langId));
+    await AsyncStorage.setItem('language', data?.code);
   };
 
   const navigate = () => {

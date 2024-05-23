@@ -35,7 +35,7 @@ const instanceFunction = instanceObj => {
     //     return error.response;
     //   }
     async function (error) {
-      console.log('5454545', error);
+      console.log('fetch Client', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         // console.log('Connection is slow.');
         Snackbar.show({

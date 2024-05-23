@@ -444,14 +444,14 @@ const Navigation = ({language}) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    console.log('routess');
+    // console.log('routess');
     const setlanguage = async () => {
       const lan = await AsyncStorage.getItem('language');
       const languageId = await AsyncStorage.getItem('languageID');
       if (!lan || !languageId) {
         const defaultLanguage = {
           code: 'en',
-          langId: '1', // Store as string to be consistent with AsyncStorage's storage format
+          langId: '1',
         };
         await AsyncStorage.setItem('language', defaultLanguage?.code);
         await AsyncStorage.setItem('languageID', defaultLanguage?.langId);

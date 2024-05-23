@@ -205,7 +205,7 @@ export function* profile() {
 export function* updateLanguage({langCode, langId}) {
   try {
     const data = yield API.get(`lang?lang=${langId}`);
-    // console.log("API response------LANGUAGE", data);
+    console.log('API response------LANGUAGE', data);
     if (data?.data?.status === 200) {
       yield put(actions.languageSuccess(langCode));
     } else {
@@ -967,6 +967,25 @@ export function* verifyPayment({paymentId, orderId}) {
     yield put(actions.verifyPaymentFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
     console.log('error', error);
+  }
+}
+
+// change Language
+export function* changeLanguage({lang}) {
+  // console.log("language test", lang);
+  try {
+    const data = yield API.get(`lang?lang=${lang}`);
+    // console.log("API response", data);
+    if (data?.data?.status === 200) {
+      // console.log("success", data);
+      yield put(actions.fetchMapDataSuccess(data));
+    } else {
+      // console.log("else", data);
+      yield put(actions.fetchMapDataFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchMapDataFailure(error.message));
+    // console.log("error", error);
   }
 }
 

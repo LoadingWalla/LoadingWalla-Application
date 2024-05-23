@@ -357,7 +357,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.INIT_LANGUAGE:
       return {
         ...state,
-
         language: null,
       };
     case actionTypes.LANGUAGE_SUCCESS:
