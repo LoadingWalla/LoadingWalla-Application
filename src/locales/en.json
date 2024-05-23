@@ -124,5 +124,8 @@
   "Received Requests": "Received Requests",
   "Sent Requests": "Sent Requests",
   "Remove": "Remove",
-  "Select a language, this can be changed later in settings.": "Select a language, this can be changed later in settings."
+  "Select a language, this can be changed later in settings.": "Select a language, this can be changed later in settings.",
+  "Terms of use": "Terms of use",
+  "By signing up, you accept our " : "By signing up, you accept our ",
+  ".": "."
 }

@@ -162,3 +162,5 @@ export const SENT_REQUEST = 'Sent Requests';
 export const REMOVE = 'Remove';
 export const NEED_HELP = 'Need help?';
 export const NAV_HOME = 'Market';
+export const AND = 'and';
+export const DOT = '.';

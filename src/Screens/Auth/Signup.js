@@ -13,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
-import {Picker} from '@react-native-picker/picker';
+// import {Picker} from '@react-native-picker/picker';
 import {
   GradientColor2,
   GradientColor4,
@@ -26,36 +26,36 @@ import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
 
-const languages = [
-  {
-    id: 1,
-    languageName: 'English',
-    language: 'English',
-    code: 'en',
-    langId: 1,
-  },
-  {
-    id: 2,
-    languageName: 'Hindi',
-    language: 'हिन्दी',
-    code: 'hi',
-    langId: 2,
-  },
-  {
-    id: 3,
-    languageName: 'Punjabi',
-    language: 'ਪੰਜਾਬੀ',
-    code: 'pn',
-    langId: 3,
-  },
-  {
-    id: 4,
-    languageName: 'Gujrati',
-    language: 'ગુજરાતી',
-    code: 'gj',
-    langId: 4,
-  },
-];
+// const languages = [
+//   {
+//     id: 1,
+//     languageName: 'English',
+//     language: 'English',
+//     code: 'en',
+//     langId: 1,
+//   },
+//   {
+//     id: 2,
+//     languageName: 'Hindi',
+//     language: 'हिन्दी',
+//     code: 'hi',
+//     langId: 2,
+//   },
+//   {
+//     id: 3,
+//     languageName: 'Punjabi',
+//     language: 'ਪੰਜਾਬੀ',
+//     code: 'pn',
+//     langId: 3,
+//   },
+//   {
+//     id: 4,
+//     languageName: 'Gujrati',
+//     language: 'ગુજરાતી',
+//     code: 'gj',
+//     langId: 4,
+//   },
+// ];
 
 const Signup = ({navigation, route}) => {
   const {t, i18n} = useTranslation();
@@ -63,7 +63,7 @@ const Signup = ({navigation, route}) => {
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
   const dispatch = useDispatch();
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
+  // const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const {data, loading, dashboardStatus} = useSelector(state => {
     // console.log('signup screen', state.data);
@@ -73,9 +73,9 @@ const Signup = ({navigation, route}) => {
     setIsChecked(!isChecked);
   };
 
-  const selectLanguage = code => {
-    i18n.changeLanguage(code);
-  };
+  // const selectLanguage = code => {
+  //   i18n.changeLanguage(code);
+  // };
 
   useEffect(() => {
     if (data?.data?.status === 201) {
@@ -131,17 +131,13 @@ const Signup = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              // marginVertical: 10,
             }}>
             <TouchableOpacity
               style={{
-                // borderWidth: 1,
-                // borderColor: '#ccc',
-                // borderRadius: 8,
                 minWidth: 140,
                 overflow: 'hidden',
               }}>
-              <Picker
+              {/* <Picker
                 selectedValue={selectedLanguage}
                 onValueChange={(itemValue, itemIndex) => {
                   setSelectedLanguage(itemValue);
@@ -160,7 +156,7 @@ const Signup = ({navigation, route}) => {
                     contentDescription="long tooo"
                   />
                 ))}
-              </Picker>
+              </Picker> */}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
@@ -256,7 +252,10 @@ const Signup = ({navigation, route}) => {
                   {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
                 </Text>
               </TouchableOpacity>
-              <Text style={styles.policyTitle}> {' and '} </Text>
+              <Text style={styles.policyTitle}>
+                {' '}
+                {` ${t(Constants.AND)} `}{' '}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -267,8 +266,10 @@ const Signup = ({navigation, route}) => {
                 <Text style={[styles.policyLinkTitle(true)]}>
                   {' '}
                   {t(Constants.TERMS_CONDITION_TITLE3)}
+                  {'  '}
                 </Text>
               </TouchableOpacity>
+              <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
             </View>
           </View>
 

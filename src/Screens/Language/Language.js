@@ -87,7 +87,9 @@ const Language = ({navigation, route}) => {
   const selectLanguage = async data => {
     setSelected(data?.langId);
     i18n.changeLanguage(data.code);
-    dispatch(initLanguage(data?.code, data?.langId));
+    if (route?.params?.fromMenu) {
+      dispatch(initLanguage(data?.code, data?.langId));
+    }
     await AsyncStorage.setItem('languageID', JSON.stringify(data?.langId));
     await AsyncStorage.setItem('language', data?.code);
   };
