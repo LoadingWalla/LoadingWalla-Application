@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -23,7 +23,6 @@ import {initLogout, initProfile} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {uriTermsCondition2, uriTermsCondition3} from '../../../Utils/Url';
 import * as Constants from '../../../Constants/Constant';
-
 import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
 import EditProfile from './EditProfile';
 import {GradientColor1, GradientColor2, titleColor} from '../../../Color/color';
@@ -58,7 +57,6 @@ const Profile = ({navigation, route}) => {
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
-  const isFirstRun = useRef(true);
 
   const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
     useSelector(state => {
@@ -68,12 +66,8 @@ const Profile = ({navigation, route}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Condition to check if it's the first time or when profileSetupData changes
-      // if (isFirstRun.current || profileSetupData) {
       dispatch(initProfile());
-      //   isFirstRun.current = false; // After the first run, set this to false
-      // }
-    }, [dispatch, profileSetupData]), // Dependency array includes profileSetupData
+    }, [dispatch, profileSetupData]),
   );
 
   const bigImage = () => {
@@ -150,22 +144,6 @@ const Profile = ({navigation, route}) => {
       console.log('This feature is only available on Android.');
     }
   };
-  // const handleRateUs = () => {
-  //   if (InAppReview.isAvailable()) {
-  //     InAppReview.RequestInAppReview()
-  //       .then(hasFlowFinishedSuccessfully => {
-  //         console.log(
-  //           'In-app review finished with success:',
-  //           hasFlowFinishedSuccessfully,
-  //         );
-  //       })
-  //       .catch(error => {
-  //         console.error('In-app review flow failed', error);
-  //       });
-  //   } else {
-  //     console.log('In-app review not available');
-  //   }
-  // };
 
   return (
     <KeyboardAvoidingView>
@@ -219,7 +197,6 @@ const Profile = ({navigation, route}) => {
               <Text style={style.subTitle}>
                 {Userdata?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
               </Text>
-              {/* <Text style={style.subTitle}>{Userdata?.city}</Text> */}
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>

@@ -62,6 +62,7 @@ import LoadIcon from '../../assets/SVG/svg/LoadIcon';
 import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
 import i18n from '../locales/i18n';
+import {useTranslation} from 'react-i18next';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,6 +75,7 @@ function getWidth() {
 function BottomTabs() {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -114,7 +116,7 @@ function BottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={Constants.NAV_HOME}
+          name={t(Constants.NAV_HOME)}
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -141,7 +143,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.NAV_MY_LORRY}
+          name={t(Constants.NAV_MY_LORRY)}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -174,7 +176,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.BOOKINGS}
+          name={t(Constants.BOOKINGS)}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -210,7 +212,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.MENU}
+          name={t(Constants.MENU)}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -259,6 +261,7 @@ function BottomTabs() {
 function MyLoadsBottomTabs() {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -294,7 +297,7 @@ function MyLoadsBottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={Constants.NAV_DASHBOARD}
+          name={t(Constants.NAV_DASHBOARD)}
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -323,7 +326,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.NAV_MY_LOAD}
+          name={t(Constants.NAV_MY_LOAD)}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -355,7 +358,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.BOOKINGS}
+          name={t(Constants.BOOKINGS)}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -392,7 +395,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.MENU}
+          name={t(Constants.MENU)}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -442,6 +445,7 @@ function MyLoadsBottomTabs() {
 const Navigation = ({language}) => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   useEffect(() => {
     // console.log('routess');
@@ -491,7 +495,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: route?.params?.fromMenu ? true : false,
           headerTitleAlign: 'center',
-          title: Constants.SELECT_LANGUAGE,
+          title: t(Constants.SELECT_LANGUAGE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

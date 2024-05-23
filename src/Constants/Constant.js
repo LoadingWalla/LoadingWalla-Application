@@ -30,7 +30,7 @@ export const VERIFY = 'Verify';
 export const DID_NOT_RECIEVE_OTP = 'Didn’t receive the code?';
 export const RESEND_CODE = 'Resend code';
 export const VERIFY_NUMBER_TITLE = 'Verify Phone Number';
-export const SELECT_LANGUAGE = 'Select a language';
+export const SELECT_LANGUAGE = 'Select Language';
 export const SELECT_LANGUAGE_TITLE =
   'Select a language, this can be changed later in settings.';
 export const CONTINUE = 'Continue';

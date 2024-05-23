@@ -58,20 +58,20 @@ const Language = ({navigation, route}) => {
       code: 'hi',
       langId: 2,
     },
-    {
-      id: 3,
-      languageName: 'Punjabi',
-      language: 'ਪੰਜਾਬੀ',
-      code: 'pn',
-      langId: 3,
-    },
-    {
-      id: 4,
-      languageName: 'Gujrati',
-      language: 'ગુજરાતી',
-      code: 'gj',
-      langId: 4,
-    },
+    // {
+    //   id: 3,
+    //   languageName: 'Punjabi',
+    //   language: 'ਪੰਜਾਬੀ',
+    //   code: 'pn',
+    //   langId: 3,
+    // },
+    // {
+    //   id: 4,
+    //   languageName: 'Gujrati',
+    //   language: 'ગુજરાતી',
+    //   code: 'gj',
+    //   langId: 4,
+    // },
   ];
 
   const getLanguageId = async () => {

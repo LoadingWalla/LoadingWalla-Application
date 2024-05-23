@@ -205,7 +205,7 @@ export function* profile() {
 export function* updateLanguage({langCode, langId}) {
   try {
     const data = yield API.get(`lang?lang=${langId}`);
-    console.log('API response------LANGUAGE', data);
+    // console.log('API response------LANGUAGE', data);
     if (data?.data?.status === 200) {
       yield put(actions.languageSuccess(langCode));
     } else {
@@ -765,7 +765,7 @@ export function* cancelBookingRequest({req_id}) {
     // console.log("API response------MYLOAD", data);
 
     if (data?.data?.status === 200) {
-      console.log(8998, data);
+      // console.log(8998, data);
       yield put(actions.cancelBookingSuccess(data));
     } else {
       yield put(actions.cancelBookingFailure(data.status));
@@ -936,7 +936,7 @@ export function* createOrder({amount, userId}) {
     const body = {amount, userId};
     // console.log(8888888, body);
     const data = yield API.post('payment/order', body);
-    console.log('API response------MYLOAD', data);
+    // console.log('API response------MYLOAD', data);
     if (data?.status === 200) {
       yield put(actions.createOrderSuccess(data));
     } else {
