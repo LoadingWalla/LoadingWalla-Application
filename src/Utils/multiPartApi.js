@@ -12,7 +12,7 @@ const instanceFunction = instanceObj => {
         config.headers['Content-Type'] = 'multipart/form-data';
       });
       // config.headers['Content-Type'] = 'multipart/form-data';
-      console.log('header is ', config);
+      // console.log('header is ', config);
       return config;
     },
     function (error) {

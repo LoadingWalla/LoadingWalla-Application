@@ -830,7 +830,6 @@ export function* documentUploadRequest({
         name: file.fileName,
       });
     }
-
     let data = yield multiPartApi.post('document-verification', param);
 
     if (data?.data?.status === 200) {
@@ -985,6 +984,38 @@ export function* changeLanguage({lang}) {
     }
   } catch (error) {
     yield put(actions.fetchMapDataFailure(error.message));
+    // console.log("error", error);
+  }
+}
+
+// complete Booking Document
+export function* completeBookingDocument({
+  booking_id,
+  documentType,
+  documentImage,
+}) {
+  // console.log(77777777, booking_id, documentType, documentImage);
+  try {
+    let body = new FormData();
+    body.append('booking_id', booking_id);
+    body.append('document_name', documentType);
+    if (documentImage?.uri) {
+      body.append('document_file', {
+        uri: documentImage.uri,
+        type: 'image/jpeg',
+        name: documentImage.fileName,
+      });
+    }
+    // console.log(9999999, body);
+    let data = yield multiPartApi.post('complete-booking-document', body);
+    if (data?.data?.status === 200) {
+      yield put(actions.completeBookingDocumentSuccess(data));
+    } else {
+      yield put(actions.completeBookingDocumentFailure(data.status));
+      // console.log("else", data);
+    }
+  } catch (error) {
+    yield put(actions.completeBookingDocumentFailure());
     // console.log("error", error);
   }
 }

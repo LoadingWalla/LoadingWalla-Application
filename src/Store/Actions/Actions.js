@@ -925,3 +925,28 @@ export const verifyPaymentFailure = error => ({
   type: actionTypes.VERIFY_PAYMENT_FAILURE,
   payload: error,
 });
+
+// Complete Booking Document for Lorry Owner
+export const initCompleteBookingDocumentRequest = (
+  booking_id,
+  documentType,
+  documentImage,
+) => {
+  // console.log(333333333, booking_id, documentType, documentImage);
+  return {
+    type: actionTypes.COMPLETE_BOOKING_DOCUMENT_REQUEST,
+    booking_id,
+    documentType,
+    documentImage,
+  };
+};
+
+export const completeBookingDocumentSuccess = response => ({
+  type: actionTypes.COMPLETE_BOOKING_DOCUMENT_SUCCESS,
+  payload: response,
+});
+
+export const completeBookingDocumentFailure = error => ({
+  type: actionTypes.COMPLETE_BOOKING_DOCUMENT_FAILURE,
+  payload: error,
+});

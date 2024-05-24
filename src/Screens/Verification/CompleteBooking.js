@@ -2,36 +2,37 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  KeyboardAvoidingView,
   StyleSheet,
-  ScrollView,
   Alert,
-  Image,
+  Modal,
 } from 'react-native';
-import Button from '../../Components/Button';
 import {
   GradientColor2,
   GradientColor3,
   GradientColor4,
   PrivacyPolicy,
   backgroundColorNew,
-  textColor,
   titleColor,
   white,
 } from '../../Color/color';
-import FindLoadHeader from '../../Components/FindLoadHeader';
 import RadioButton from '../../Components/RadioButton';
-import InnerButton from '../../Components/InnerButton';
 import CheckBox from '@react-native-community/checkbox';
 import * as Constants from '../../Constants/Constant';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import UploadDocument from '../../../assets/SVG/svg/UploadDocument';
 import CardHeader from '../../Components/CardHeader';
+import ImagePicker from 'react-native-image-crop-picker';
+import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import Gallery from '../../../assets/SVG/Gallery';
+import Cammera from '../../../assets/SVG/Camera';
+import {useDispatch} from 'react-redux';
+import {initCompleteBookingDocumentRequest} from '../../Store/Actions/Actions';
+import AlertBox from '../../Components/AlertBox';
 
 const CompleteBooking = ({navigation, route}) => {
   const {
+    id,
     from,
     to,
     name,
@@ -42,35 +43,143 @@ const CompleteBooking = ({navigation, route}) => {
     price,
     price_type,
   } = route.params.item;
+  // console.log(88888888888888, route.params.item);
   const userType = route.params.userType;
-  console.log(88888, route);
-  const [selectedDocument, setSelectedDocument] = useState(1);
-  const [termsAccepted, setTermsAccepted] = useState(false);
+  const dispatch = useDispatch();
+  // console.log(88888, route);
+  const [selectedDocumentType, setSelectedDocumentType] = useState(1);
   const [isChecked, setIsChecked] = useState(true);
-
-  const handleCheckBoxChange = () => {
-    setIsChecked(!isChecked);
-  };
-
-  const toggleTerms = () => setTermsAccepted(previousState => !previousState);
+  const [isCameraOptions, setCameraOptions] = useState(false);
+  const [documentImage, setDocumentImage] = useState(null);
 
   const completeOrder = () => {
-    if (!termsAccepted) {
-      Alert.alert(
-        'Terms Required',
+    if (!isChecked) {
+      AlertBox(
         'You must accept the terms and conditions to complete the order.',
       );
       return;
     }
-    // Proceed with the order completion
-    Alert.alert(
-      'Order Completed',
-      'Your order has been successfully submitted.',
+    console.log(222222, id, selectedDocumentType, documentImage);
+    dispatch(
+      initCompleteBookingDocumentRequest(
+        id,
+        selectedDocumentType,
+        documentImage,
+      ),
+    );
+  };
+
+  const takePhoto = async () => {
+    setCameraOptions(false);
+    try {
+      const image = await ImagePicker.openCamera({
+        width: 300,
+        height: 400,
+        cropping: true,
+        compressImageQuality: 0.8,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
+        hideBottomControls: true,
+      });
+      const documentData = {
+        fileName: image.filename || image.path.split('/').pop(),
+        fileSize: image.size || null,
+        height: image.height,
+        type: image.mime,
+        uri: image.path,
+        width: image.width,
+      };
+      setDocumentImage(documentData);
+    } catch (e) {
+      console.error('Take photo error', e);
+    }
+  };
+
+  const choosePhoto = async () => {
+    setCameraOptions(false);
+    try {
+      const image = await ImagePicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+        cropperCircleOverlay: false,
+        compressImageQuality: 0.8,
+        hideBottomControls: true,
+        freeStyleCropEnabled: true,
+        includeBase64: true,
+      });
+      const documentData = {
+        fileName: image.filename || image.path.split('/').pop(),
+        fileSize: image.size || null,
+        height: image.height,
+        type: image.mime,
+        uri: image.path,
+        width: image.width,
+      };
+      setDocumentImage(documentData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onClickProfile = () => {
+    setCameraOptions(true);
+  };
+
+  const chooseOptions = () => {
+    return (
+      <Modal
+        onDismiss={() => false}
+        animationType="slide"
+        transparent={true}
+        visible={isCameraOptions}
+        onRequestClose={() => {}}>
+        <View style={{backgroundColor: 'rgba(0,0,0, 0.5)', flex: 1}}>
+          <View
+            style={{
+              backgroundColor: '#FFFFFF',
+              padding: 10,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+              width: '100%',
+              shadowColor: '#000',
+              shadowOffset: {width: 0, height: 2},
+              shadowOpacity: 0.25,
+              shadowRadius: 4,
+              elevation: 5,
+              position: 'absolute',
+              bottom: 0,
+              marginTop: 200,
+            }}>
+            <TouchableOpacity onPress={() => setCameraOptions(false)}>
+              <CloseCircle color="#252B41" size={26} />
+            </TouchableOpacity>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+              <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Cammera />
+                  <Text>Camera</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => choosePhoto()}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                  <Gallery />
+                  <Text>Gallery</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     );
   };
 
   return (
     <View style={styles.container}>
+      {chooseOptions()}
       <View
         style={{
           padding: 10,
@@ -133,44 +242,46 @@ const CompleteBooking = ({navigation, route}) => {
               <View style={styles.radioButtonContainer}>
                 <RadioButton
                   label="BILTY"
-                  onPress={() => setSelectedDocument(1)}
-                  selected={selectedDocument === 1}
+                  onPress={() => setSelectedDocumentType(1)}
+                  selected={selectedDocumentType === 1}
                   OuterCircleSize={18}
                   InnerCircleSize={9}
                   font={14}
                 />
                 <RadioButton
                   label="POD"
-                  onPress={() => setSelectedDocument(0)}
-                  selected={selectedDocument === 0}
+                  onPress={() => setSelectedDocumentType(0)}
+                  selected={selectedDocumentType === 0}
                   OuterCircleSize={18}
                   InnerCircleSize={9}
                   font={14}
                 />
               </View>
             </View>
-            <TouchableOpacity style={styles.documentContainer}>
+            <TouchableOpacity
+              onPress={() => onClickProfile()}
+              style={styles.documentContainer}>
               <UploadDocument />
               <Text style={styles.filename}>Uploadedfilename.png</Text>
             </TouchableOpacity>
-            <InnerButton
+            {/* <InnerButton
               enabledStyle={styles.findButtonContainer}
               textStyle={styles.findButtonText}
               title={'Upload'}
               navigation={() => {}}
-            />
+            /> */}
           </View>
         </View>
         <View style={styles.centerItem}>
           <View style={styles.checkBoxContainer}>
             <CheckBox
               value={isChecked}
-              onValueChange={handleCheckBoxChange}
+              onValueChange={() => setIsChecked(!isChecked)}
               tintColors={{true: GradientColor2, false: GradientColor4}}
               style={styles.checkBoxStyle}
             />
-            <Text style={{color: PrivacyPolicy}}>
-              I agree the{' '}
+            <Text style={{color: PrivacyPolicy}}>I agree the </Text>
+            <TouchableOpacity>
               <Text
                 style={{
                   color: backgroundColorNew,
@@ -178,7 +289,7 @@ const CompleteBooking = ({navigation, route}) => {
                 }}>
                 terms & conditions
               </Text>
-            </Text>
+            </TouchableOpacity>
           </View>
           <TouchableOpacity
             style={styles.completeOrderButton}
@@ -244,7 +355,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderStyle: 'dashed',
     padding: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
     borderRadius: 10,
   },
   documentImage: {
@@ -278,7 +389,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   completeOrderButton: {
-    backgroundColor: 'green',
+    backgroundColor: GradientColor3,
     paddingVertical: 15,
     alignItems: 'center',
     borderRadius: 8,
@@ -309,7 +420,11 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     bottom: 0,
   },
-  checkBoxContainer: {flexDirection: 'row', alignItems: 'center'},
+  checkBoxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
   checkBoxStyle: {marginRight: 10},
   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
   rowdirection: {flexDirection: 'row', alignItems: 'center'},

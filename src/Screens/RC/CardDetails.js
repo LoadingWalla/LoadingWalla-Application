@@ -163,8 +163,8 @@ const CardDetails = ({route, navigation}) => {
       }
     }
 
-    console.log(654654, aadhaarFrontImage);
-    console.log(321321, aadhaarBackImage);
+    // console.log(654654, aadhaarFrontImage);
+    // console.log(321321, aadhaarBackImage);
 
     // documentUploadRequest(aadhaarNumber, documentType, [aadhaarFrontImage,aadhaarBackImage]);
     dispatch(

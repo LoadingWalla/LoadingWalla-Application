@@ -141,6 +141,10 @@ const initialState = {
   verifyPaymentLoading: false,
   verifyPaymentData: null,
   verifyPaymentStatus: null,
+  // complete Booking Document
+  completeDocumentLoading: false,
+  completeDocumentData: null,
+  completeDocumentStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1098,6 +1102,27 @@ const reducer = (state = initialState, action) => {
         verifyPaymentLoading: false,
         verifyPaymentData: null,
         verifyPaymentStatus: null,
+      });
+
+    // complete Booking Document
+    case actionTypes.VERIFY_PAYMENT_REQUEST:
+      return {
+        ...state,
+        completeDocumentLoading: true,
+        completeDocumentData: null,
+        completeDocumentStatus: null,
+      };
+    case actionTypes.VERIFY_PAYMENT_SUCCESS:
+      return updateState(state, {
+        completeDocumentLoading: false,
+        completeDocumentData: payload?.data,
+        completeDocumentStatus: payload?.status,
+      });
+    case actionTypes.VERIFY_PAYMENT_FAILURE:
+      return updateState(state, {
+        completeDocumentLoading: false,
+        completeDocumentData: null,
+        completeDocumentStatus: null,
       });
 
     default:
