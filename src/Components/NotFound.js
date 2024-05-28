@@ -1,13 +1,14 @@
+import LottieView from 'lottie-react-native';
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, Dimensions} from 'react-native';
 
 const images = {
-  noBookings: require('../../assets/GIFs/NoBookings.gif'),
-  noPreviousBookings: require('../../assets/GIFs/NoPreviousBookings.gif'),
-  noLoadFound: require('../../assets/GIFs/NoLoadFound.gif'),
-  noTruckFound: require('../../assets/GIFs/NoTruckFound.gif'),
-  nothing: require('../../assets/GIFs/Nothing.gif'),
-  serverError: require('../../assets/GIFs/ServerError.gif'),
+  noBookings: require('../../assets/GIFs/No Booking Found.json'),
+  noPreviousBookings: require('../../assets/GIFs/No previous booking.json'),
+  noLoadFound: require('../../assets/GIFs/No Load Found.json'),
+  noTruckFound: require('../../assets/GIFs/No truck found.json'),
+  nothing: require('../../assets/GIFs/Wrong.json'),
+  serverError: require('../../assets/GIFs/Load Found.json'),
 };
 
 const NotFound = ({imageName}) => {
@@ -15,7 +16,14 @@ const NotFound = ({imageName}) => {
 
   return (
     <View style={styles.container}>
-      <Image source={imageSource} resizeMode="contain" style={styles.image} />
+      {/* <Image source={imageSource} resizeMode="contain" style={styles.image} /> */}
+      <LottieView
+        source={imageSource}
+        autoPlay
+        loop
+        resizeMode="contain"
+        style={styles.splashImage}
+      />
     </View>
   );
 };
@@ -25,10 +33,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   image: {
     height: 500,
     marginTop: 10,
+  },
+  splashImage: {
+    // height: Dimensions.get('window').height,
+    // width: Dimensions.get('window').width / 1.9,
+    height: 600,
+    width: 200,
   },
 });
 

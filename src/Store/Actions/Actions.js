@@ -893,11 +893,14 @@ export const fetchMapDataFailure = error => ({
 });
 
 // create order
-export const initCreateOrder = (amount, userId) => ({
-  type: actionTypes.CREATE_ORDER_REQUEST,
-  amount,
-  userId,
-});
+export const initCreateOrder = (amount, userId) => {
+  console.log(333333333, amount, userId);
+  return {
+    type: actionTypes.CREATE_ORDER_REQUEST,
+    amount,
+    userId,
+  };
+};
 
 export const createOrderSuccess = data => ({
   type: actionTypes.CREATE_ORDER_SUCCESS,

@@ -1,4 +1,3 @@
-
 import {
   TouchableOpacity,
   View,

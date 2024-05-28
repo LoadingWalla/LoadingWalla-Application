@@ -14,7 +14,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import Button from '../../Components/Button';
-import {GradientColor3, PrivacyPolicy} from '../../Color/color';
+import {GradientColor2, GradientColor3, PrivacyPolicy} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   documentVerifyFailure,
@@ -22,6 +22,7 @@ import {
   initDocumentVerify,
 } from '../../Store/Actions/Actions';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import {Picker} from '@react-native-picker/picker';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
@@ -30,6 +31,7 @@ const CardDetails = ({route, navigation}) => {
   const [aadhaarBackImage, setAadhaarBackImage] = useState(null);
   const [isCameraOptions, setCameraOptions] = useState(false);
   const [currentSide, setCurrentSide] = useState(null);
+  const [selectedDocument, setSelectedDocument] = useState();
   const dispatch = useDispatch();
 
   const {
@@ -237,9 +239,43 @@ const CardDetails = ({route, navigation}) => {
     );
   };
 
+  const business = [
+    {id: 'gst', name: 'GST', code: 'GST'},
+    {id: 'udyog_aadhar', name: 'Udyog Aadhar', code: 'Udyog Aadhar'},
+    {id: 'trade_license', name: 'Trade License', code: 'Trade License'},
+    {id: 'utility_bill', name: 'Utility Bill', code: 'Utility Bill'},
+  ];
+
   return (
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
+      {from.from === 'fromGst' && (
+        <View
+          style={{
+            borderWidth: 1,
+            borderRadius: 8,
+            borderColor: '#ddd',
+            marginBottom: 10,
+          }}>
+          <Picker
+            selectedValue={selectedDocument}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedDocument(itemValue)
+            }
+            style={{color: PrivacyPolicy}}
+            mode="dropdown" // Android only
+            dropdownIconColor={PrivacyPolicy}>
+            {business?.map(doc => (
+              <Picker.Item
+                key={doc.id}
+                label={doc.name}
+                value={doc.code}
+                color={PrivacyPolicy}
+              />
+            ))}
+          </Picker>
+        </View>
+      )}
       <View style={styles.otpSection}>
         <Text style={styles.otpLabel}>Enter {title} Number</Text>
         <TextInput

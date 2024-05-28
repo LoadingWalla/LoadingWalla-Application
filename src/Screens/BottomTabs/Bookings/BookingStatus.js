@@ -8,9 +8,8 @@ import {
   textColor,
   titleColor,
 } from '../../../Color/color';
-import ErrorImage from '../../../../assets/GIFs/error.gif';
-import successImage from '../../../../assets/GIFs/success.gif';
-
+import ErrorImage from '../../../../assets/GIFs/Wrong.json';
+import successImage from '../../../../assets/GIFs/Done.json';
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';

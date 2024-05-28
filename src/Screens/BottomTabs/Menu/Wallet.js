@@ -30,6 +30,8 @@ import {
 import Button from '../../../Components/Button';
 import AlertBox from '../../../Components/AlertBox';
 import InnerButton from '../../../Components/InnerButton';
+import {SceneMap, TabView} from 'react-native-tab-view';
+import RenderTabBar from '../../Requests/RenderTabBar';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
@@ -67,7 +69,8 @@ const Wallet = ({navigation}) => {
       Toast.show('Payment Successful');
       dispatch(initWallet(amount));
     } else {
-      Toast.show('Payment Verification Failed');
+      console.log('Payment Verification Failed');
+      // Toast.show('Payment Verification Failed');
     }
   }, [dispatch, walletStatus, wallletData, verifyPaymentStatus]);
 
@@ -77,21 +80,21 @@ const Wallet = ({navigation}) => {
   };
 
   const addAmount = async () => {
-    if (amount === 0) {
-      Toast.show('Add amount', Toast.LONG);
-      return;
-    }
-    if (parseInt(amount, 10) < 100) {
-      Toast.show('Enter minimum amount 100', Toast.LONG);
-      return;
-    }
-    if (parseInt(amount, 10) > 100000) {
-      Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
-      return;
-    }
+    // if (amount === 0) {
+    //   Toast.show('Add amount', Toast.LONG);
+    //   return;
+    // }
+    // if (parseInt(amount, 10) < 100) {
+    //   Toast.show('Enter minimum amount 100', Toast.LONG);
+    //   return;
+    // }
+    // if (parseInt(amount, 10) > 100000) {
+    //   Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
+    //   return;
+    // }
 
-    // API call to your server to create an order
     try {
+      console.log(888888);
       dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
 
       if (orderData !== null) {
@@ -176,6 +179,56 @@ const Wallet = ({navigation}) => {
     setAmount(newamt);
   };
 
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'recharge', title: 'Recharge'},
+    {key: 'deductions', title: 'Deductions'},
+  ]);
+
+  const data = Array.from({length: 10}, (_, index) => ({
+    id: index.toString(),
+    amount: '5000',
+    date: '31 Dec 2023, 03:08 PM',
+  }));
+
+  const renderItem = ({item}) => (
+    <View style={styles.repeatView}>
+      <View>
+        <Text style={styles.paymentText}>
+          ₹ {item.amount} Payment successful
+        </Text>
+        <Text style={styles.dateText}>{item.date}</Text>
+      </View>
+      <TouchableOpacity
+        onPress={() => setAmount(5000)}
+        style={styles.requestButtonContainer}>
+        <Text style={styles.gradientButtonText}>Repeat</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const RechargeRoute = () => (
+    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+
+  const DeductionsRoute = () => (
+    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -231,33 +284,18 @@ const Wallet = ({navigation}) => {
           )}
         />
       </View>
-      <View style={{flex: 1, marginTop: 20}}>
-        <Text style={styles.walletText}>Previous TopUps</Text>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}>
-          {Array.from({length: 10}, (_, index) => (
-            <View style={styles.repeatView}>
-              <View style={{}}>
-                <Text
-                  style={{
-                    color: '#119500',
-                    fontFamily: 'PlusJakartaSans-SemiBold',
-                  }}>
-                  ₹ 1000 Payment successful
-                </Text>
-                <Text style={styles.dateText}>31 Dec 2023, 03:08 PM</Text>
-              </View>
-              {/* <View> */}
-              <TouchableOpacity
-                onPress={() => setAmount(5000)}
-                style={styles.requestButtonContainer}>
-                <Text style={styles.gradientButtonText}>Repeat</Text>
-              </TouchableOpacity>
-              {/* </View> */}
-            </View>
-          ))}
-        </ScrollView>
+
+      <View style={styles.tabView}>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={SceneMap({
+            recharge: RechargeRoute,
+            deductions: DeductionsRoute,
+          })}
+          onIndexChange={setIndex}
+          initialLayout={{width: '100%'}}
+          renderTabBar={RenderTabBar}
+        />
       </View>
     </View>
   );
@@ -267,7 +305,7 @@ export default Wallet;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     backgroundColor: pageBackground,
     flex: 1,
   },
@@ -277,6 +315,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderRadius: 8,
     marginTop: 20,
+    marginHorizontal: 10,
   },
   texts: {
     color: PrivacyPolicy,
@@ -380,7 +419,12 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderRadius: 8,
     marginVertical: 10,
-    marginHorizontal: 3,
+    marginHorizontal: 15,
     alignItems: 'center',
+  },
+  tabView: {
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: '#FFFDFD',
   },
 });

@@ -163,8 +163,8 @@ const Signup = ({navigation, route}) => {
               <Text
                 style={{
                   color: GradientColor2,
-                  fontWeight: '500',
                   textAlign: 'center',
+                  fontFamily: 'PlusJakartaSans-SemiBold',
                 }}>
                 {t(Constants.NEED_HELP)}
               </Text>

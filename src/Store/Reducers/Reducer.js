@@ -638,7 +638,7 @@ const reducer = (state = initialState, action) => {
       };
     case actionTypes.NOTIFICATION_SUCCESS:
       return updateState(state, {
-        NotificationData: payload?.data?.guide,
+        NotificationData: payload?.data?.notification,
         NotificationStatus: payload?.status,
         NotificationLoading: false,
       });
@@ -1105,20 +1105,20 @@ const reducer = (state = initialState, action) => {
       });
 
     // complete Booking Document
-    case actionTypes.VERIFY_PAYMENT_REQUEST:
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_REQUEST:
       return {
         ...state,
         completeDocumentLoading: true,
         completeDocumentData: null,
         completeDocumentStatus: null,
       };
-    case actionTypes.VERIFY_PAYMENT_SUCCESS:
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_SUCCESS:
       return updateState(state, {
         completeDocumentLoading: false,
         completeDocumentData: payload?.data,
         completeDocumentStatus: payload?.status,
       });
-    case actionTypes.VERIFY_PAYMENT_FAILURE:
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_FAILURE:
       return updateState(state, {
         completeDocumentLoading: false,
         completeDocumentData: null,

@@ -933,10 +933,11 @@ export function* fetchMapDataSaga({from_id, to_id}) {
 export function* createOrder({amount, userId}) {
   try {
     const body = {amount, userId};
-    // console.log(8888888, body);
+    console.log(8888888, body);
     const data = yield API.post('payment/order', body);
-    // console.log('API response------MYLOAD', data);
+    console.log('API response------MYLOAD', data);
     if (data?.status === 200) {
+      console.log(999999, 'success');
       yield put(actions.createOrderSuccess(data));
     } else {
       yield put(actions.createOrderFailure(data.status));
@@ -953,9 +954,9 @@ export function* createOrder({amount, userId}) {
 export function* verifyPayment({paymentId, orderId}) {
   try {
     const body = {paymentId, orderId};
-    // console.log(8888888, body);
+    console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
-    // console.log('API response------PaymentVerify', data);
+    console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.verifyPaymentSuccess(data));
     } else {
@@ -966,25 +967,6 @@ export function* verifyPayment({paymentId, orderId}) {
     yield put(actions.verifyPaymentFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
     console.log('error', error);
-  }
-}
-
-// change Language
-export function* changeLanguage({lang}) {
-  // console.log("language test", lang);
-  try {
-    const data = yield API.get(`lang?lang=${lang}`);
-    // console.log("API response", data);
-    if (data?.data?.status === 200) {
-      // console.log("success", data);
-      yield put(actions.fetchMapDataSuccess(data));
-    } else {
-      // console.log("else", data);
-      yield put(actions.fetchMapDataFailure(data.status));
-    }
-  } catch (error) {
-    yield put(actions.fetchMapDataFailure(error.message));
-    // console.log("error", error);
   }
 }
 
