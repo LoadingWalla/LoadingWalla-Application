@@ -933,11 +933,11 @@ export function* fetchMapDataSaga({from_id, to_id}) {
 export function* createOrder({amount, userId}) {
   try {
     const body = {amount, userId};
-    console.log(8888888, body);
+    // console.log(8888888, body);
     const data = yield API.post('payment/order', body);
-    console.log('API response------createOrder', data);
+    // console.log('API response------createOrder', data);
     if (data?.status === 200) {
-      console.log(666666, 'success');
+      // console.log(666666, 'success');
       yield put(actions.createOrderSuccess(data));
     } else {
       yield put(actions.createOrderFailure(data.status));
@@ -953,7 +953,7 @@ export function* createOrder({amount, userId}) {
 // Verify Payment
 export function* verifyPayment({paymentId, orderId}) {
   try {
-    const body = {paymentId, orderId};
+    const body = {razorpay_payment_id: paymentId, razorpay_order_id: orderId};
     console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
     console.log('API response------PaymentVerify', data);

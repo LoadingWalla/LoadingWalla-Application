@@ -37,7 +37,7 @@ import AlertBox from '../../Components/AlertBox';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
-  console.log(3456789, Owner);
+  // console.log(3456789, Owner);
   const dispatch = useDispatch();
   const [selected, setSelected] = useState(1);
   const [index, setIndex] = useState(0);

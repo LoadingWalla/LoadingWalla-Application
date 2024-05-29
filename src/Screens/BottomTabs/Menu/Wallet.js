@@ -96,6 +96,10 @@ const Wallet = ({navigation}) => {
     //   return;
     // }
     dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
+    // for testing only
+    // dispatch(
+    //   initVerifyPaymentRequest('pay_OGF2UeAA6Yjryd', 'order_OGF1mJCNaa6lpk'),
+    // );
   };
 
   const proceedWithPayment = async () => {
@@ -115,12 +119,22 @@ const Wallet = ({navigation}) => {
       theme: {color: backgroundColorNew},
     };
 
+    console.log(9999999, options);
+
     RazorpayCheckout.open(options)
       .then(data => {
+        console.log(7777, data);
         if (data?.razorpay_payment_id) {
           // verifyPayment(data.razorpay_payment_id, orderData.id);
           dispatch(
-            initVerifyPaymentRequest(data.razorpay_payment_id, orderData.id),
+            initVerifyPaymentRequest(
+              data.razorpay_payment_id,
+              data.razorpay_order_id,
+            ),
+            // initVerifyPaymentRequest(
+            //   'pay_OGF2UeAA6Yjryd',
+            //   'order_OGF1mJCNaa6lpk',
+            // ),
           );
         } else {
           AlertBox('Transaction not successful');
@@ -132,34 +146,6 @@ const Wallet = ({navigation}) => {
         AlertBox('Transaction not successful');
       });
   };
-
-  // const verifyPayment = async (paymentId, orderId) => {
-  //   try {
-  //     const verifyResponse = await fetch(
-  //       'https://loadingwalla.com/api/payment/verify',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           razorpay_payment_id: paymentId,
-  //           razorpay_order_id: orderId,
-  //         }),
-  //       },
-  //     );
-  //     const verifyData = await verifyResponse.json();
-  //     // console.log(66666, verifyData);
-  //     if (verifyData.status === 'success') {
-  //       Toast.show('Payment Successful');
-  //       dispatch(initWallet(amount));
-  //     } else {
-  //       Toast.show('Payment Verification Failed');
-  //     }
-  //   } catch (error) {
-  //     Toast.show('Server Error', 'Unable to verify payment at this time');
-  //   }
-  // };
 
   const quickAmount = ['100', '200', '500', '1000', '5000'];
   const onSetAmount = amt => {
@@ -232,7 +218,9 @@ const Wallet = ({navigation}) => {
           </View>
           <View>
             <Text style={styles.texts}>{Constants.BALANCE}</Text>
-            <Text style={styles.walletText}>₹ {getWallletData?.wallet}</Text>
+            <Text style={styles.walletText}>
+              {`₹ ${getWallletData?.wallet || '0'}`}
+            </Text>
           </View>
         </View>
         <View style={styles.horizontalLine} />

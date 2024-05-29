@@ -913,11 +913,14 @@ export const createOrderFailure = error => ({
 });
 
 // verify payment
-export const initVerifyPaymentRequest = (paymentId, orderId) => ({
-  type: actionTypes.VERIFY_PAYMENT_REQUEST,
-  paymentId,
-  orderId,
-});
+export const initVerifyPaymentRequest = (paymentId, orderId) => {
+  console.log(222222, paymentId, orderId);
+  return {
+    type: actionTypes.VERIFY_PAYMENT_REQUEST,
+    paymentId,
+    orderId,
+  };
+};
 
 export const verifyPaymentSuccess = data => ({
   type: actionTypes.VERIFY_PAYMENT_SUCCESS,

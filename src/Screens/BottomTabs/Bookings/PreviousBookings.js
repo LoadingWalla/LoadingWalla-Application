@@ -21,7 +21,7 @@ import NotFound from '../../../Components/NotFound';
 
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
-  console.log(989898, Owner);
+  // console.log(989898, Owner);
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 

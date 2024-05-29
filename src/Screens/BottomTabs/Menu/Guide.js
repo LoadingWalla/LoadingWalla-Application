@@ -16,6 +16,8 @@ import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
 import UpArrow from '../../../../assets/SVG/svg/UpArrow';
 import DownArrow from '../../../../assets/SVG/svg/DownArrow';
+import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
+import {DialCall} from '../../../Utils/DialCall';
 
 if (
   Platform.OS === 'android' &&
@@ -51,35 +53,47 @@ const Guide = ({navigation}) => {
 
   const renderItem = useCallback(
     ({item}) => (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => handlePress(item.id.toString())}
-        style={styles.itemContainer}>
-        <Text style={styles.category}>{item.title}</Text>
-        {selectedId === item.id.toString() ? (
-          <UpArrow size={20} color={GradientColor2} style={styles.arrow} />
-        ) : (
-          <DownArrow size={20} color={GradientColor2} style={styles.arrow} />
-        )}
-        {selectedId === item.id.toString() && (
-          <Text style={styles.topic}>{item.description}</Text>
-        )}
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => handlePress(item.id.toString())}
+          style={styles.itemContainer}>
+          <Text style={styles.category}>{item.title}</Text>
+          {selectedId === item.id.toString() ? (
+            <UpArrow size={15} color={'#808080'} style={styles.arrow} />
+          ) : (
+            <DownArrow size={15} color={'#808080'} style={styles.arrow} />
+          )}
+          {selectedId === item.id.toString() && (
+            <Text style={styles.topic}>{item.description}</Text>
+          )}
+        </TouchableOpacity>
+        <View style={styles.horizontalLine} />
+      </View>
     ),
     [selectedId, handlePress],
   );
 
-  if (guideLoading) {
-    return <GuideShimmer />;
-  }
-
   return (
     <View style={styles.backgroundView}>
-      <FlatList
-        data={guideStatus === 200 ? guideData : []}
-        keyExtractor={item => item?.id}
-        renderItem={renderItem}
-      />
+      <View style={styles.callBox}>
+        <Text style={styles.header}>Facing trouble?</Text>
+        <TouchableOpacity
+          style={styles.callSection}
+          onPress={() => DialCall('110-465833494')}>
+          <PhoneCall size={20} color={'#EF4D23'} />
+          <Text style={styles.phoneNo}>110-465833494</Text>
+        </TouchableOpacity>
+      </View>
+      {guideLoading ? (
+        <GuideShimmer />
+      ) : (
+        <FlatList
+          data={guideStatus === 200 ? guideData : []}
+          keyExtractor={item => item?.id}
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
 };
@@ -89,28 +103,53 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#FFFDFD',
     height: '100%',
+    flex: 1,
   },
   header: {
-    marginBottom: 20,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 26,
+    color: '#808080',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 18,
+  },
+  callSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    backgroundColor: '#FFF5F2',
+    borderColor: '#EF4D23',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 50,
+  },
+  phoneNo: {
+    color: '#808080',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 14,
+    marginLeft: 10,
+  },
+  callBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    backgroundColor: '#FFFFFF',
+    elevation: 2,
+    marginBottom: 10,
+    marginHorizontal: 1,
+    paddingHorizontal: 5,
+    paddingVertical: 20,
+    borderRadius: 10,
   },
   itemContainer: {
-    backgroundColor: '#ededed',
     borderRadius: 8,
     marginBottom: 10,
-    elevation: 2,
     marginHorizontal: 1,
-    borderBottomWidth: 1,
-    borderColor: GradientColor2,
     padding: 10,
   },
   category: {
     fontSize: 16,
-    fontFamily: 'PlusJakartaSans',
+    fontFamily: 'PlusJakartaSans-Bold',
     marginRight: 15,
-    color: GradientColor2,
+    color: '#808080',
   },
   topic: {
     fontSize: 14,
@@ -125,6 +164,7 @@ const styles = StyleSheet.create({
     top: 15,
     right: 5,
   },
+  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginBottom: 10},
 });
 
 export default React.memo(Guide);
