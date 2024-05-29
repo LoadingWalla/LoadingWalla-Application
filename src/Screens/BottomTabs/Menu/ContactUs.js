@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,7 +20,6 @@ import {
   GradientColor1,
   GradientColor2,
   GradientColor3,
-  backgroundColorNew,
   textColor,
 } from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
@@ -69,9 +68,9 @@ const ContactUs = ({navigation}) => {
     setMessage(text);
   };
 
-  const isValidEmail = email => {
+  const isValidEmail = mail => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return emailRegex.test(email);
+    return emailRegex.test(mail);
   };
 
   const sendMessage = () => {
@@ -101,7 +100,7 @@ const ContactUs = ({navigation}) => {
     if (val === 'call') {
       let phoneNumber = '';
       if (Platform.OS === 'android') {
-        phoneNumber = `tel:+919354761565`;
+        phoneNumber = 'tel:+919910824740';
       } else {
         //phoneNumber = `telprompt:${phone}`;
       }
@@ -110,20 +109,20 @@ const ContactUs = ({navigation}) => {
     }
 
     if (val === 'mail') {
-      let email = '';
+      let Lemail = '';
       if (Platform.OS === 'android') {
-        email = `mailto:test@gmail.com`;
+        Lemail = 'mailto:support@loadingwalla.com';
       } else {
         //phoneNumber = `telprompt:${phone}`;
       }
-      Linking.openURL(email);
+      Linking.openURL(Lemail);
       return;
     }
 
     if (val === 'whatsapp') {
       let whatsappNumber = '';
       if (Platform.OS === 'android') {
-        whatsappNumber = `whatsapp://send?phone=${+918800899875}`;
+        whatsappNumber = `whatsapp://send?phone=${+919910824740}`;
       } else {
         //phoneNumber = `telprompt:${phone}`;
       }
@@ -139,18 +138,8 @@ const ContactUs = ({navigation}) => {
 
   return (
     <Background style={{flex: 1}}>
-      {/* <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor={backgroundColorNew}
-      /> */}
       <GradientStatusBar />
-      <View
-        style={{
-          flexDirection: 'row',
-          width: '100%',
-          marginVertical: 20,
-          justifyContent: 'space-evenly',
-        }}>
+      <View style={stylesStatusbar.iconContainer}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => linking('call')}>
           <PhoneCall size={30} color="white" />
         </TouchableOpacity>
@@ -312,5 +301,11 @@ const stylesStatusbar = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    marginVertical: 20,
+    justifyContent: 'space-evenly',
   },
 });

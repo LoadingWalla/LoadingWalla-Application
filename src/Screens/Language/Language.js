@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initLanguage} from '../../Store/Actions/Actions';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
+import {useTranslation} from 'react-i18next';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
@@ -38,15 +39,9 @@ const GridView = ({data, index, selected, onPress}) => (
 
 const Language = ({navigation, route}) => {
   const {params} = route;
-  // console.log(Constants.SELECT_LANGUAGE_TITLE);
-
+  const {t, i18n} = useTranslation();
   const [selected, setSelected] = useState(1);
   const dispatch = useDispatch();
-
-  const {language} = useSelector(state => {
-    // console.log('language Screen', state.data);
-    return state.data;
-  });
 
   const languages = [
     {
@@ -56,13 +51,13 @@ const Language = ({navigation, route}) => {
       code: 'en',
       langId: 1,
     },
-    // {
-    //   id: 2,
-    //   languageName: 'Hindi',
-    //   language: 'हिन्दी',
-    //   code: 'hi',
-    //   langId: 2,
-    // },
+    {
+      id: 2,
+      languageName: 'Hindi',
+      language: 'हिन्दी',
+      code: 'hi',
+      langId: 2,
+    },
     // {
     //   id: 3,
     //   languageName: 'Punjabi',
@@ -79,9 +74,24 @@ const Language = ({navigation, route}) => {
     // },
   ];
 
-  const selectLanguage = data => {
+  const getLanguageId = async () => {
+    let langId = await AsyncStorage.getItem('languageID');
+    // console.log(8888, JSON.parse(langId), langId);
+    setSelected(JSON.parse(langId));
+  };
+
+  useEffect(() => {
+    getLanguageId();
+  }, []);
+
+  const selectLanguage = async data => {
     setSelected(data?.langId);
-    // i18n.changeLanguage(data.code);
+    i18n.changeLanguage(data.code);
+    if (route?.params?.fromMenu) {
+      dispatch(initLanguage(data?.code, data?.langId));
+    }
+    await AsyncStorage.setItem('languageID', JSON.stringify(data?.langId));
+    await AsyncStorage.setItem('language', data?.code);
   };
 
   const navigate = () => {
@@ -96,7 +106,7 @@ const Language = ({navigation, route}) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.part1}>
         <Text style={styles.languageTitle}>
-          {Constants.SELECT_LANGUAGE_TITLE}
+          {t(Constants.SELECT_LANGUAGE_TITLE)}
         </Text>
       </View>
       <View style={styles.part2}>
@@ -116,7 +126,7 @@ const Language = ({navigation, route}) => {
       <View style={styles.part3}>
         <Button
           onPress={() => navigate()}
-          title={Constants.CONTINUE}
+          title={t(Constants.CONTINUE)}
           textStyle={styles.buttonTitile}
           style={styles.button}
         />

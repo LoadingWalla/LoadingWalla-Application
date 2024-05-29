@@ -2,12 +2,13 @@ import React from 'react';
 import {View, Image, Text} from 'react-native';
 import style from './style';
 
-const CommonItem = ({title, desc}) => {
+const CommonItem = ({title, desc, img}) => {
+  console.log(9999, img);
   return (
     <View style={style.notificationItemView}>
       <Image
         style={style.notificationIconView}
-        source={require('../../assets/Notification.png')}
+        source={{url: img}}
         resizeMode={'stretch'}
       />
       <View style={style.notificatioView}>

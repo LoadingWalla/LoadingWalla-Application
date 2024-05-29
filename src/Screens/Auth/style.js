@@ -115,9 +115,10 @@ export default StyleSheet.create({
   },
   policyLinkTitle: activate => ({
     textDecorationLine: 'underline',
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
     color: activate ? GradientColor3 : PrivacyPolicy,
+    textAlign: 'center',
   }),
   otpResendView: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
+// import {Picker} from '@react-native-picker/picker';
 import {
   GradientColor2,
   GradientColor4,
@@ -23,13 +24,46 @@ import Toast from 'react-native-simple-toast';
 import {Dimensions} from 'react-native';
 import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
+import {useTranslation} from 'react-i18next';
+
+// const languages = [
+//   {
+//     id: 1,
+//     languageName: 'English',
+//     language: 'English',
+//     code: 'en',
+//     langId: 1,
+//   },
+//   {
+//     id: 2,
+//     languageName: 'Hindi',
+//     language: 'हिन्दी',
+//     code: 'hi',
+//     langId: 2,
+//   },
+//   {
+//     id: 3,
+//     languageName: 'Punjabi',
+//     language: 'ਪੰਜਾਬੀ',
+//     code: 'pn',
+//     langId: 3,
+//   },
+//   {
+//     id: 4,
+//     languageName: 'Gujrati',
+//     language: 'ગુજરાતી',
+//     code: 'gj',
+//     langId: 4,
+//   },
+// ];
 
 const Signup = ({navigation, route}) => {
+  const {t, i18n} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
   const screenHeight = Dimensions.get('window').height;
-  // console.log(77777777777, screenHeight);
   const dispatch = useDispatch();
+  // const [selectedLanguage, setSelectedLanguage] = useState('en');
 
   const {data, loading, dashboardStatus} = useSelector(state => {
     // console.log('signup screen', state.data);
@@ -38,6 +72,10 @@ const Signup = ({navigation, route}) => {
   const handleCheckBoxChange = () => {
     setIsChecked(!isChecked);
   };
+
+  // const selectLanguage = code => {
+  //   i18n.changeLanguage(code);
+  // };
 
   useEffect(() => {
     if (data?.data?.status === 201) {
@@ -93,25 +131,57 @@ const Signup = ({navigation, route}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginVertical: 10,
             }}>
-            <View></View>
+            <TouchableOpacity
+              style={{
+                minWidth: 140,
+                overflow: 'hidden',
+              }}>
+              {/* <Picker
+                selectedValue={selectedLanguage}
+                onValueChange={(itemValue, itemIndex) => {
+                  setSelectedLanguage(itemValue);
+                  selectLanguage(itemValue);
+                }}
+                style={{color: GradientColor2}}
+                mode="dropdown" // Android only
+                dropdownIconColor={GradientColor2}>
+                {languages?.map(lang => (
+                  <Picker.Item
+                    key={lang.id}
+                    label={lang.languageName}
+                    value={lang.code}
+                    color={GradientColor2}
+                    fontFamily="PlusJakartaSans-Bold"
+                    contentDescription="long tooo"
+                  />
+                ))}
+              </Picker> */}
+            </TouchableOpacity>
+
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
-              <Text style={{color: GradientColor2, fontWeight: '500'}}>
-                {Constants.NEED_HELP}
+              <Text
+                style={{
+                  color: GradientColor2,
+                  textAlign: 'center',
+                  fontFamily: 'PlusJakartaSans-SemiBold',
+                }}>
+                {t(Constants.NEED_HELP)}
               </Text>
             </TouchableOpacity>
           </View>
           <View>
             <Text style={styles.WelcomeTruckTitle}>
-              <Text style={styles.LoadingWalla}>{Constants.LOADING_WALLA}</Text>{' '}
-              {Constants.WELCOME_TO_TRUCK}
+              <Text style={styles.LoadingWalla}>
+                {t(Constants.LOADING_WALLA)}
+              </Text>{' '}
+              {t(Constants.WELCOME_TO_TRUCK)}
             </Text>
           </View>
           <Text style={styles.signupTopTitle}>
-            {Constants.ENTER_MOBILE_NUMBER_TITLE}
+            {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
           </Text>
-          <Text style={styles.label}>{Constants.MOBILE_NUMBER}</Text>
+          <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
           <PhoneInput
             defaultCode="IN"
             layout="first"
@@ -120,7 +190,7 @@ const Signup = ({navigation, route}) => {
               placeholderTextColor: PrivacyPolicy,
             }}
             withShadow
-            placeholder={Constants.ENTER_MOBILE_NUMBER}
+            placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
             // autoFocus={true}
             containerStyle={styles.phoneContainer}
             textContainerStyle={styles.textInput}
@@ -159,11 +229,18 @@ const Signup = ({navigation, route}) => {
                 style={styles.checkBoxStyle}
               />
               <Text style={{color: PrivacyPolicy}}>
-                {Constants.WHATSAPP_ALERT_CHECK}
+                {t(Constants.WHATSAPP_ALERT_CHECK)}
               </Text>
             </View>
-            <Text style={styles.policyTitle}>
-              {Constants.TERMS_CONDITION_TITLE1}{' '}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Text style={styles.policyTitle}>
+                {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -172,10 +249,13 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {Constants.TERMS_CONDITION_TITLE2}{' '}
+                  {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
                 </Text>
               </TouchableOpacity>
-              <Text> {' and '} </Text>
+              <Text style={styles.policyTitle}>
+                {' '}
+                {` ${t(Constants.AND)} `}{' '}
+              </Text>
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
@@ -184,16 +264,19 @@ const Signup = ({navigation, route}) => {
                   });
                 }}>
                 <Text style={[styles.policyLinkTitle(true)]}>
-                  {Constants.TERMS_CONDITION_TITLE3}
+                  {' '}
+                  {t(Constants.TERMS_CONDITION_TITLE3)}
+                  {'  '}
                 </Text>
               </TouchableOpacity>
-            </Text>
+              <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
+            </View>
           </View>
 
           <Button
             loading={loading}
             onPress={() => sendOtp()}
-            title={Constants.SEND_OTP}
+            title={t(Constants.SEND_OTP)}
             textStyle={styles.buttonTitile}
             style={styles.button}
           />

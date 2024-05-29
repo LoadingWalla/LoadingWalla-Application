@@ -3,6 +3,7 @@ import {View, StatusBar, Animated} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import {backgroundColorNew} from '../../Color/color';
+import LottieView from 'lottie-react-native';
 
 const Splash = ({navigation: {replace}}) => {
   const opacity = useRef(new Animated.Value(0)).current;
@@ -29,8 +30,7 @@ const Splash = ({navigation: {replace}}) => {
         if (newUser === '1') {
           replace('companyDetails', {userId});
         } else {
-          // replace('Language');
-          replace('Signup');
+          replace('Language');
         }
       }, 3000);
     };
@@ -57,6 +57,13 @@ const Splash = ({navigation: {replace}}) => {
           style={[styles.splashImage, {opacity}]}
           source={require('../../../assets/Logo.png')}
         />
+        {/* <LottieView
+          source={require('../../../assets/GIFs/Animation.json')}
+          autoPlay
+          loop
+          resizeMode="contain"
+          style={styles.splashImage}
+        /> */}
       </View>
     </>
   );

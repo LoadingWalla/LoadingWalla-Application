@@ -51,7 +51,7 @@ const Verification = ({navigation, route}) => {
     },
     {
       id: '3',
-      title: 'GSTIN Details',
+      title: 'Business Details',
       onPress: 'Card Details',
       status: getStatus('gst'),
     },
@@ -72,13 +72,13 @@ const Verification = ({navigation, route}) => {
       <View>
         <View style={styles.stepContainer}>
           <View style={styles.circleContainer}>
-            <View style={styles.circle(item.status)}></View>
+            <View style={styles.circle(item.status)} />
             <Text style={{color: titleColor, fontSize: 18, marginLeft: 8}}>
               {item.title}
             </Text>
           </View>
           {item.status === 'Verified' ? (
-            <CheckCircle size={30} color="green" />
+            <CheckCircle size={30} color="green" strokeColor="#FFFFFF" />
           ) : (
             <TouchableOpacity
               style={styles.uploadButton(item.status)}

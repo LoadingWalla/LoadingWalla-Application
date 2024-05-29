@@ -38,6 +38,26 @@ const VerifyOtp = ({navigation, route}) => {
     return state.data;
   });
 
+  // useEffect(() => {
+  //   RNOtpVerify.getOtp()
+  //     .then(p =>
+  //       RNOtpVerify.addListener(message => {
+  //         try {
+  //           const otp = /(\d{4})/g.exec(message)[1]; // Regex to extract the OTP
+  //           setOtpvalue(otp);
+  //           setCodeFill(true);
+  //         } catch (error) {
+  //           console.log('Error in OTP extraction', error);
+  //         }
+  //       }),
+  //     )
+  //     .catch(p => console.log(p));
+
+  //   return () => {
+  //     RNOtpVerify.removeListener();
+  //   };
+  // }, []);
+
   useEffect(() => {
     setDelay('299');
     const getToken = async () => {
@@ -82,7 +102,9 @@ const VerifyOtp = ({navigation, route}) => {
 
   const verifyOtp = async otp => {
     let langId = await AsyncStorage.getItem('languageID');
+    console.log(888888);
     dispatch(initVerifyOtp(userId, otp, langId, devicetoken));
+    console.log(777777);
   };
 
   const verify = async () => {

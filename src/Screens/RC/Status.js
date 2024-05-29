@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initMyLorryById} from '../../Store/Actions/Actions';
 import Shield from '../../../assets/SVG/svg/Shield';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import LottieView from 'lottie-react-native';
 
 const Status = ({navigation, route}) => {
   const {truck_id} = route.params;
@@ -38,11 +39,21 @@ const Status = ({navigation, route}) => {
           <CloseCircle size={25} />
         </TouchableOpacity>
         <View style={styles.container}>
-          <Image
+          {/* <Image
             source={require('../../../assets/GIFs/success.gif')}
             resizeMode="contain"
             style={{
               height: 200,
+              width: 200,
+            }}
+          /> */}
+          <LottieView
+            source={require('../../../assets/GIFs/Done.json')}
+            autoPlayð
+            loop
+            resizeMode="contain"
+            style={{
+              height: 600,
               width: 200,
             }}
           />

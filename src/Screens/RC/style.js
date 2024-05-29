@@ -28,6 +28,7 @@ export default StyleSheet.create({
     padding: 10,
     fontSize: 16,
     marginBottom: 10,
+    color: titleColor,
   },
   resendBtn: {
     flexDirection: 'row',

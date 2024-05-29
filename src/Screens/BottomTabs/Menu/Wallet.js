@@ -6,13 +6,16 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  initCreateOrder,
   initGetWallet,
+  initVerifyPaymentRequest,
   initWallet,
   walletFailure,
 } from '../../../Store/Actions/Actions';
@@ -26,16 +29,29 @@ import {
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
 import AlertBox from '../../../Components/AlertBox';
+import InnerButton from '../../../Components/InnerButton';
+import {SceneMap, TabView} from 'react-native-tab-view';
+import RenderTabBar from '../../Requests/RenderTabBar';
 
 const Wallet = ({navigation}) => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(100);
   const dispatch = useDispatch();
 
-  const {wallletData, walletStatus, walletLoading, getWallletData} =
-    useSelector(state => {
-      console.log('My Wallet', state.data);
-      return state.data;
-    });
+  const {
+    wallletData,
+    walletStatus,
+    walletLoading,
+    getWallletData,
+    orderData,
+    orderLoading,
+    orderStatus,
+    verifyPaymentLoading,
+    verifyPaymentData,
+    verifyPaymentStatus,
+  } = useSelector(state => {
+    console.log('My Wallet', state.data);
+    return state.data;
+  });
 
   useEffect(() => {
     dispatch(initGetWallet());
@@ -49,87 +65,39 @@ const Wallet = ({navigation}) => {
       setAmount(0);
       dispatch(walletFailure());
     }
-  }, [dispatch, walletStatus, wallletData]);
+    if (verifyPaymentStatus === 'success') {
+      Toast.show('Payment Successful');
+      dispatch(initWallet(amount));
+    } else {
+      console.log('Payment Verification Failed');
+      // Toast.show('Payment Verification Failed');
+    }
+  }, [dispatch, walletStatus, wallletData, verifyPaymentStatus]);
 
   const handleAmountChange = text => {
     const numericValue = text.replace(/[^0-9]/g, '');
     setAmount(numericValue);
   };
 
-  // const addAmount = () => {
-  //   if (amount === 0) {
-  //     Toast.show('Add amount', Toast.LONG);
-  //     return;
-  //   }
-  //   if (amount < 1) {
-  //     Toast.show('Enter minimum amount 100', Toast.LONG);
-  //     return;
-  //   }
-  //   if (amount > 100000) {
-  //     Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
-  //     return;
-  //   }
-
-  //   var options = {
-  //     description: 'Loading Walla',
-  //     image: getWallletData?.profile_img,
-  //     currency: 'INR',
-  //     // key: 'rzp_test_saNeTWFs98DyuF',
-  //     key: 'rzp_live_SuyP4BXtpLkIzS',
-  //     amount: amount * 100,
-  //     name: getWallletData?.name,
-  //     prefill: {
-  //       email: getWallletData?.email,
-  //       contact: getWallletData?.mobile,
-  //       name: 'Loading Walla',
-  //     },
-  //     theme: {color: backgroundColorNew},
-  //   };
-  //   RazorpayCheckout.open(options)
-  //     .then(data => {
-  //       if (data?.razorpay_payment_id) {
-  //         verifyPayment(data.razorpay_payment_id, options.order_id);
-  //         // dispatch(initWallet(amount));
-  //       } else {
-  //         AlertBox('Trancation not success');
-  //       }
-  //     })
-  //     .catch(error => {
-  //       AlertBox('Trancation not success');
-  //     });
-  // };
-
   const addAmount = async () => {
-    if (amount === 0) {
-      Toast.show('Add amount', Toast.LONG);
-      return;
-    }
-    if (parseInt(amount, 10) < 100) {
-      Toast.show('Enter minimum amount 100', Toast.LONG);
-      return;
-    }
-    if (parseInt(amount, 10) > 100000) {
-      Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
-      return;
-    }
+    // if (amount === 0) {
+    //   Toast.show('Add amount', Toast.LONG);
+    //   return;
+    // }
+    // if (parseInt(amount, 10) < 100) {
+    //   Toast.show('Enter minimum amount 100', Toast.LONG);
+    //   return;
+    // }
+    // if (parseInt(amount, 10) > 100000) {
+    //   Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
+    //   return;
+    // }
 
-    // API call to your server to create an order
     try {
-      const orderResponse = await fetch(
-        'https://loadingwalla.com/api/payment/order',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({amount: parseInt(amount, 10)}), // Send the amount to the backend
-        },
-      );
+      console.log(888888);
+      dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
 
-      const orderData = await orderResponse.json();
-      console.log(4444, orderData);
-
-      if (orderResponse.ok) {
+      if (orderData !== null) {
         var options = {
           description: 'Loading Walla',
           image: getWallletData?.profile_img,
@@ -149,7 +117,13 @@ const Wallet = ({navigation}) => {
         RazorpayCheckout.open(options)
           .then(data => {
             if (data?.razorpay_payment_id) {
-              verifyPayment(data.razorpay_payment_id, orderData.id);
+              // verifyPayment(data.razorpay_payment_id, orderData.id);
+              dispatch(
+                initVerifyPaymentRequest(
+                  data.razorpay_payment_id,
+                  orderData.id,
+                ),
+              );
             } else {
               AlertBox('Transaction not successful');
             }
@@ -166,33 +140,33 @@ const Wallet = ({navigation}) => {
     }
   };
 
-  const verifyPayment = async (paymentId, orderId) => {
-    try {
-      const verifyResponse = await fetch(
-        'https://loadingwalla.com/api/payment/verify',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            razorpay_payment_id: paymentId,
-            razorpay_order_id: orderId,
-          }),
-        },
-      );
-      const verifyData = await verifyResponse.json();
-      console.log(66666, verifyData);
-      if (verifyData.status === 'success') {
-        Toast.show('Payment Successful');
-        dispatch(initWallet(amount));
-      } else {
-        Toast.show('Payment Verification Failed');
-      }
-    } catch (error) {
-      Toast.show('Server Error', 'Unable to verify payment at this time');
-    }
-  };
+  // const verifyPayment = async (paymentId, orderId) => {
+  //   try {
+  //     const verifyResponse = await fetch(
+  //       'https://loadingwalla.com/api/payment/verify',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           razorpay_payment_id: paymentId,
+  //           razorpay_order_id: orderId,
+  //         }),
+  //       },
+  //     );
+  //     const verifyData = await verifyResponse.json();
+  //     // console.log(66666, verifyData);
+  //     if (verifyData.status === 'success') {
+  //       Toast.show('Payment Successful');
+  //       dispatch(initWallet(amount));
+  //     } else {
+  //       Toast.show('Payment Verification Failed');
+  //     }
+  //   } catch (error) {
+  //     Toast.show('Server Error', 'Unable to verify payment at this time');
+  //   }
+  // };
 
   const quickAmount = ['100', '200', '500', '1000', '5000'];
   const onSetAmount = amt => {
@@ -205,22 +179,93 @@ const Wallet = ({navigation}) => {
     setAmount(newamt);
   };
 
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'recharge', title: 'Recharge'},
+    {key: 'deductions', title: 'Deductions'},
+  ]);
+
+  const data = Array.from({length: 10}, (_, index) => ({
+    id: index.toString(),
+    amount: '5000',
+    date: '31 Dec 2023, 03:08 PM',
+  }));
+
+  const renderItem = ({item}) => (
+    <View style={styles.repeatView}>
+      <View>
+        <Text style={styles.paymentText}>
+          ₹ {item.amount} Payment successful
+        </Text>
+        <Text style={styles.dateText}>{item.date}</Text>
+      </View>
+      <TouchableOpacity
+        onPress={() => setAmount(5000)}
+        style={styles.requestButtonContainer}>
+        <Text style={styles.gradientButtonText}>Repeat</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const RechargeRoute = () => (
+    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+
+  const DeductionsRoute = () => (
+    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-        <Text style={styles.texts}>{Constants.BALANCE}</Text>
-        <Text style={styles.walletText}>₹ {getWallletData?.wallet}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View>
+            <Text style={styles.texts}>Total Topup Amount</Text>
+            <Text style={styles.walletText}>Account Balance</Text>
+          </View>
+          <View>
+            <Text style={styles.texts}>{Constants.BALANCE}</Text>
+            <Text style={styles.walletText}>₹ {getWallletData?.wallet}</Text>
+          </View>
+        </View>
         <View style={styles.horizontalLine} />
-        <Text style={styles.topupWallet}>{Constants.TOPUP_WALLET}</Text>
-        <View style={styles.inputContainer}>
-          <Text style={styles.rupeeSymbol}>₹</Text>
-          <TextInput
-            value={'' + amount + ''}
-            onChangeText={handleAmountChange}
-            placeholder="Enter amount"
-            style={styles.textInput}
-            keyboardType="numeric"
-            placeholderTextColor={PrivacyPolicy}
+        <Text style={styles.topupWallet}>Enter Amount in ₹</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              value={'' + amount + ''}
+              onChangeText={handleAmountChange}
+              placeholder="Enter amount"
+              style={styles.textInput}
+              keyboardType="numeric"
+              placeholderTextColor={PrivacyPolicy}
+            />
+          </View>
+          <Button
+            onPress={() => addAmount()}
+            title={'TopUp'}
+            loading={walletLoading}
+            textStyle={styles.textStyle}
+            style={styles.buttonStyle}
           />
         </View>
 
@@ -238,13 +283,18 @@ const Wallet = ({navigation}) => {
             </TouchableOpacity>
           )}
         />
+      </View>
 
-        <Button
-          onPress={() => addAmount()}
-          title={Constants.PROCEED_TO_TOPUP}
-          loading={walletLoading}
-          textStyle={styles.textStyle}
-          style={styles.buttonStyle}
+      <View style={styles.tabView}>
+        <TabView
+          navigationState={{index, routes}}
+          renderScene={SceneMap({
+            recharge: RechargeRoute,
+            deductions: DeductionsRoute,
+          })}
+          onIndexChange={setIndex}
+          initialLayout={{width: '100%'}}
+          renderTabBar={RenderTabBar}
         />
       </View>
     </View>
@@ -255,7 +305,7 @@ export default Wallet;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
     backgroundColor: pageBackground,
     flex: 1,
   },
@@ -265,6 +315,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     borderRadius: 8,
     marginTop: 20,
+    marginHorizontal: 10,
   },
   texts: {
     color: PrivacyPolicy,
@@ -274,7 +325,7 @@ const styles = StyleSheet.create({
   walletText: {
     fontFamily: 'PlusJakartaSans-SemiBold',
     color: titleColor,
-    fontSize: 30,
+    fontSize: 20,
   },
   horizontalLine: {
     height: 1,
@@ -289,6 +340,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Regular',
   },
+  dateText: {
+    color: PrivacyPolicy,
+    fontSize: 12,
+    marginTop: 5,
+    fontFamily: 'PlusJakartaSans-Regular',
+  },
   inputContainer: {
     height: 50,
     borderRadius: 4,
@@ -296,19 +353,14 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     borderWidth: 1,
-    flexDirection: 'row',
-    marginBottom: 10,
+    // marginBottom: 10,
+    minWidth: 150,
   },
   textInput: {
     fontFamily: 'PlusJakartaSans-Regular',
     fontSize: 15,
     width: '100%',
     color: PrivacyPolicy,
-  },
-  rupeeSymbol: {
-    fontSize: 18,
-    alignSelf: 'center',
-    fontFamily: 'PlusJakartaSans-SemiBold',
   },
   renderItemStyle: {
     flexShrink: 1,
@@ -337,13 +389,42 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius: 8,
     height: 50,
+    paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 20,
   },
   textStyle: {
     color: textColor,
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
+  },
+  requestButtonContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: GradientColor3,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+  },
+  gradientButtonText: {
+    fontSize: 12,
+    color: GradientColor3,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    textAlign: 'center',
+  },
+  repeatView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 15,
+    elevation: 2,
+    borderRadius: 8,
+    marginVertical: 10,
+    marginHorizontal: 15,
+    alignItems: 'center',
+  },
+  tabView: {
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: '#FFFDFD',
   },
 });

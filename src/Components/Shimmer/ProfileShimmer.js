@@ -6,22 +6,24 @@ const ProfileShimmer = ({title}) => {
   return (
     <View style={{backgroundColor: '#FFFFFF'}}>
       <SkeletonPlaceholder>
-        <View style={stylesss.shimmerLocationView} />
-        {/* <View>
-          <View style={stylesss.shimmerTextView} />
-          <View style={stylesss.shimmerTextView} />
-        </View> */}
         <View style={stylesss.bannerContainer} />
-        {/* <View style={stylesss.bannerContainer} /> */}
-        {/* <View style={stylesss.bannerContainer} /> */}
         <View style={{marginBottom: 20}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={stylesss.shimmerTextView} />
-            <View style={stylesss.shimmerTextView} />
+            <View style={stylesss.shimmerButtonView} />
+            <View style={stylesss.shimmerButtonView} />
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{marginTop: 20}}>
             <View style={stylesss.shimmerTextView} />
+            <View style={stylesss.shimmerCardView} />
+            <View style={stylesss.shimmerCardView} />
+          </View>
+          <View style={{marginTop: 20}}>
             <View style={stylesss.shimmerTextView} />
+            <View style={stylesss.shimmerCardView} />
+            <View style={stylesss.shimmerCardView} />
+            <View style={stylesss.shimmerCardView} />
+            <View style={stylesss.shimmerCardView} />
+            <View style={stylesss.shimmerCardView} />
           </View>
         </View>
       </SkeletonPlaceholder>
@@ -47,13 +49,28 @@ const stylesss = StyleSheet.create({
     marginTop: 20,
     width: 110,
   },
+  shimmerButtonView: {
+    borderRadius: 8,
+    height: 60,
+    elevation: 2,
+    marginHorizontal: 10,
+    marginTop: 15,
+    width: 180,
+  },
+  shimmerCardView: {
+    borderRadius: 8,
+    height: 60,
+    elevation: 2,
+    marginHorizontal: 10,
+    marginTop: 15,
+  },
   shimmerTextView: {
     borderRadius: 8,
     height: 20,
     elevation: 2,
     marginHorizontal: 10,
     marginTop: 15,
-    width: 180,
+    width: 200,
   },
   bannerContainer: {
     height: 150,

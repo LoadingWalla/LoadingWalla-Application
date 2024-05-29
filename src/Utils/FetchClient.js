@@ -29,13 +29,8 @@ const instanceFunction = instanceObj => {
       };
       return respObj;
     },
-    // function (error) {
-    //   if (error.response && error.response.status) {
-    //     console.log("FETCH CLIENT ERROR", error.response.status);
-    //     return error.response;
-    //   }
     async function (error) {
-      console.log('5454545', error);
+      console.log('fetch Client', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         // console.log('Connection is slow.');
         Snackbar.show({

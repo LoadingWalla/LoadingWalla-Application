@@ -185,7 +185,8 @@ const PostLoads = ({navigation, route}) => {
             value={materialName}
             // onChangeText={(e) => setMaterialName(e)}
             onChangeText={e => {
-              const sanitizedInput = e.replace(/\s+/g, '');
+              // const sanitizedInput = e.replace(/\s+/g, '');
+              const sanitizedInput = e.replace(/[^a-zA-Z0-9]/g, '');
               setMaterialName(sanitizedInput);
             }}
           />

@@ -133,6 +133,18 @@ const initialState = {
   mapDestination: null,
   mapLoading: false,
   mapError: null,
+  // create order
+  orderLoading: false,
+  orderData: null,
+  orderStatus: null,
+  // verify payment
+  verifyPaymentLoading: false,
+  verifyPaymentData: null,
+  verifyPaymentStatus: null,
+  // complete Booking Document
+  completeDocumentLoading: false,
+  completeDocumentData: null,
+  completeDocumentStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -349,7 +361,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.INIT_LANGUAGE:
       return {
         ...state,
-
         language: null,
       };
     case actionTypes.LANGUAGE_SUCCESS:
@@ -627,7 +638,7 @@ const reducer = (state = initialState, action) => {
       };
     case actionTypes.NOTIFICATION_SUCCESS:
       return updateState(state, {
-        NotificationData: payload?.data?.guide,
+        NotificationData: payload?.data?.notification,
         NotificationStatus: payload?.status,
         NotificationLoading: false,
       });
@@ -1049,6 +1060,69 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         mapLoading: false,
         mapError: payload,
+      });
+
+    //create order
+    case actionTypes.CREATE_ORDER_REQUEST:
+      return {
+        ...state,
+        orderLoading: true,
+        orderData: null,
+        orderStatus: null,
+      };
+    case actionTypes.CREATE_ORDER_SUCCESS:
+      return updateState(state, {
+        orderLoading: false,
+        orderData: payload?.data,
+        orderStatus: payload?.status,
+      });
+    case actionTypes.CREATE_ORDER_FAILURE:
+      return updateState(state, {
+        orderLoading: false,
+        orderData: null,
+        orderStatus: null,
+      });
+
+    // Verify Payment
+    case actionTypes.VERIFY_PAYMENT_REQUEST:
+      return {
+        ...state,
+        verifyPaymentLoading: true,
+        verifyPaymentData: null,
+        verifyPaymentStatus: null,
+      };
+    case actionTypes.VERIFY_PAYMENT_SUCCESS:
+      return updateState(state, {
+        verifyPaymentLoading: false,
+        verifyPaymentData: payload?.data,
+        verifyPaymentStatus: payload?.status,
+      });
+    case actionTypes.VERIFY_PAYMENT_FAILURE:
+      return updateState(state, {
+        verifyPaymentLoading: false,
+        verifyPaymentData: null,
+        verifyPaymentStatus: null,
+      });
+
+    // complete Booking Document
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_REQUEST:
+      return {
+        ...state,
+        completeDocumentLoading: true,
+        completeDocumentData: null,
+        completeDocumentStatus: null,
+      };
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_SUCCESS:
+      return updateState(state, {
+        completeDocumentLoading: false,
+        completeDocumentData: payload?.data,
+        completeDocumentStatus: payload?.status,
+      });
+    case actionTypes.COMPLETE_BOOKING_DOCUMENT_FAILURE:
+      return updateState(state, {
+        completeDocumentLoading: false,
+        completeDocumentData: null,
+        completeDocumentStatus: null,
       });
 
     default:

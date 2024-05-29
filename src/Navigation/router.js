@@ -61,6 +61,8 @@ import Inconvenience from '../Screens/Details/Inconvenience';
 import LoadIcon from '../../assets/SVG/svg/LoadIcon';
 import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
+import i18n from '../locales/i18n';
+import {useTranslation} from 'react-i18next';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,6 +75,7 @@ function getWidth() {
 function BottomTabs() {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -113,7 +116,7 @@ function BottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={Constants.NAV_HOME}
+          name={t(Constants.NAV_HOME)}
           component={Dashboard}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -140,7 +143,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.NAV_MY_LORRY}
+          name={t(Constants.NAV_MY_LORRY)}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -173,7 +176,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.BOOKINGS}
+          name={t(Constants.BOOKINGS)}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -209,7 +212,7 @@ function BottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.MENU}
+          name={t(Constants.MENU)}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -258,6 +261,7 @@ function BottomTabs() {
 function MyLoadsBottomTabs() {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -293,7 +297,7 @@ function MyLoadsBottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={Constants.NAV_DASHBOARD}
+          name={t(Constants.NAV_DASHBOARD)}
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -322,7 +326,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.NAV_MY_LOAD}
+          name={t(Constants.NAV_MY_LOAD)}
           component={MyLorry}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -354,7 +358,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.BOOKINGS}
+          name={t(Constants.BOOKINGS)}
           component={Booking}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -391,7 +395,7 @@ function MyLoadsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={Constants.MENU}
+          name={t(Constants.MENU)}
           component={Profile}
           options={{
             tabBarIcon: ({focused, color, size}) =>
@@ -439,9 +443,27 @@ function MyLoadsBottomTabs() {
 }
 
 const Navigation = ({language}) => {
-  // const {i18n} = useTranslation();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const {t} = useTranslation();
+
+  useEffect(() => {
+    // console.log('routess');
+    const setlanguage = async () => {
+      const lan = await AsyncStorage.getItem('language');
+      const languageId = await AsyncStorage.getItem('languageID');
+      if (!lan || !languageId) {
+        const defaultLanguage = {
+          code: 'en',
+          langId: '1',
+        };
+        await AsyncStorage.setItem('language', defaultLanguage?.code);
+        await AsyncStorage.setItem('languageID', defaultLanguage?.langId);
+        i18n.changeLanguage(defaultLanguage.code);
+      }
+    };
+    setlanguage();
+  }, []);
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -460,19 +482,6 @@ const Navigation = ({language}) => {
     }
   }
 
-  // useEffect(() => {
-  //   const setlanguage = async () => {
-  //     const lan = await AsyncStorage.getItem('language');
-  //     i18n
-  //       .changeLanguage(
-  //         language === null ? lan : language === lan ? lan : language,
-  //       )
-  //       .then(() => {})
-  //       .catch(err => console.error(err));
-  //   };
-  //   setlanguage();
-  // }, [i18n, language]);
-
   return (
     <Stack.Navigator initialRouteName="Splash">
       <Stack.Screen
@@ -486,7 +495,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: route?.params?.fromMenu ? true : false,
           headerTitleAlign: 'center',
-          title: Constants.SELECT_LANGUAGE,
+          title: t(Constants.SELECT_LANGUAGE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

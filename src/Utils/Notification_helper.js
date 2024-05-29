@@ -1,5 +1,7 @@
 import messaging from '@react-native-firebase/messaging';
-import {Alert} from 'react-native';
+import {Platform} from 'react-native';
+import notifee, {AndroidImportance} from '@notifee/react-native';
+import {navigate} from '../Navigation/NavigationService';
 
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
@@ -20,42 +22,86 @@ const getFcmToken = async () => {
   return token;
 };
 
-export const notificationListner = () => {
+export const notificationListener = () => {
   messaging().onNotificationOpenedApp(remoteMessage => {
-    // navigation.navigate(remoteMessage.data.type);
-    // console.log("killl mode", remoteMessage);
-    Alert.alert(
-      'A new FCM message arrived! kill',
-      JSON.stringify(remoteMessage),
-    );
+    if (remoteMessage.data && remoteMessage.data.screen) {
+      navigate(remoteMessage.data.screen, remoteMessage.data.params);
+    }
   });
+
   messaging()
     .getInitialNotification()
     .then(remoteMessage => {
-      if (remoteMessage) {
-        // setInitialRoute(remoteMessage.data.type); // e.g. "Settings"
-        console.log('kill mode87', remoteMessage);
-        Alert.alert(
-          'A new FCM message arrived in Kill Mode!',
-          JSON.stringify(remoteMessage),
-        );
+      if (remoteMessage && remoteMessage.data && remoteMessage.data.screen) {
+        navigate(remoteMessage.data.screen, remoteMessage.data.params);
       }
-      // setLoading(false);
     });
 };
 
 export const foregroundNotification = () => {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
-    Alert.alert(
-      'A new FCM message arrived in foregroundMode!',
-      JSON.stringify(remoteMessage),
-    );
+    console.log('ForeGround Message', remoteMessage);
+    if (remoteMessage.data && remoteMessage.data.screen) {
+      navigate(remoteMessage.data.screen, remoteMessage.data.params);
+    }
+    await onDisplayNotification(remoteMessage);
   });
   return unsubscribe;
 };
 
 export const backgroundNotification = () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
-    Alert.alert('Message handled in the background!', remoteMessage);
+    // Alert.alert('Message handled in the background!', remoteMessage);
+    if (remoteMessage.data && remoteMessage.data.screen) {
+      console.log('Navigate to:', remoteMessage.data.screen);
+    }
+
+    if (Platform.OS === 'ios') {
+      await notifee.requestPermission();
+    }
+
+    const channelId = await notifee.createChannel({
+      id: 'backgroundChannel',
+      name: 'Background Channel',
+      sound: 'notification',
+      importance: AndroidImportance.HIGH,
+    });
+
+    await notifee.displayNotification({
+      title: remoteMessage.notification?.title,
+      body: remoteMessage.notification?.body,
+      android: {
+        channelId,
+        smallIcon: 'ic_notification',
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
   });
 };
+
+async function onDisplayNotification(remoteMessage) {
+  if (Platform.OS === 'ios') {
+    await notifee.requestPermission();
+  }
+
+  const channelId = await notifee.createChannel({
+    id: 'default9',
+    name: 'Default Channel9',
+    sound: 'notification',
+    importance: AndroidImportance.HIGH,
+  });
+
+  await notifee.displayNotification({
+    title: remoteMessage.notification.title,
+    body: remoteMessage.notification.body,
+    android: {
+      channelId,
+      smallIcon: 'ic_notification',
+      pressAction: {
+        id: 'default',
+      },
+    },
+  });
+}

@@ -2,9 +2,9 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import ErrorImage from '../../../assets/GIFs/error.gif';
-import successImage from '../../../assets/GIFs/success.gif';
-import deletedImage from '../../../assets/GIFs/success.gif';
+import ErrorImage from '../../../assets/GIFs/Wrong.json';
+import successImage from '../../../assets/GIFs/Done.json';
+import deletedImage from '../../../assets/GIFs/Wrong.json';
 import {initMyLoadById, initMyLorryById} from '../../Store/Actions/Actions';
 import Button from '../../Components/Button';
 import {

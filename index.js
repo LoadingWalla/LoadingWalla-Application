@@ -3,9 +3,9 @@ import App from './App';
 import {name as appName} from './app.json';
 import {
   backgroundNotification,
-  notificationListner,
+  notificationListener,
 } from './src/Utils/Notification_helper';
 
 backgroundNotification();
-notificationListner();
+notificationListener();
 AppRegistry.registerComponent(appName, () => App);
