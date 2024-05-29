@@ -684,8 +684,8 @@ const reducer = (state = initialState, action) => {
       });
     case actionTypes.WALLET_FAILURE:
       return updateState(state, {
-        wallletData: payload,
-        walletStatus: payload,
+        wallletData: null,
+        walletStatus: null,
         walletLoading: false,
       });
 

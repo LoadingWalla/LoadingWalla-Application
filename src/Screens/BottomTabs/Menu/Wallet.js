@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
-  ScrollView,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  createOrderFailure,
   initCreateOrder,
   initGetWallet,
   initVerifyPaymentRequest,
@@ -29,7 +29,6 @@ import {
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
 import AlertBox from '../../../Components/AlertBox';
-import InnerButton from '../../../Components/InnerButton';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
 
@@ -58,19 +57,27 @@ const Wallet = ({navigation}) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (walletStatus === 200) {
-      Toast.show(`${wallletData}`, Toast.LONG);
-      // AlertBox(wallletData);
-      dispatch(initGetWallet());
-      setAmount(0);
-      dispatch(walletFailure());
+    if (orderData && orderData.id) {
+      proceedWithPayment();
     }
-    if (verifyPaymentStatus === 'success') {
-      Toast.show('Payment Successful');
-      dispatch(initWallet(amount));
-    } else {
-      console.log('Payment Verification Failed');
-      // Toast.show('Payment Verification Failed');
+  }, [orderData]);
+
+  useEffect(() => {
+    if (walletStatus !== null) {
+      if (walletStatus === 200) {
+        Toast.show(`${wallletData}`, Toast.LONG);
+        // AlertBox(wallletData);
+        dispatch(initGetWallet());
+        setAmount(0);
+        dispatch(walletFailure());
+      }
+      if (verifyPaymentStatus === 'success') {
+        Toast.show('Payment Successful');
+        dispatch(initWallet(amount));
+      } else {
+        console.log('Payment Verification Failed');
+        Toast.show('Payment Verification Failed');
+      }
     }
   }, [dispatch, walletStatus, wallletData, verifyPaymentStatus]);
 
@@ -79,65 +86,51 @@ const Wallet = ({navigation}) => {
     setAmount(numericValue);
   };
 
-  const addAmount = async () => {
-    // if (amount === 0) {
-    //   Toast.show('Add amount', Toast.LONG);
+  const addAmount = () => {
+    // if (
+    //   parseInt(amount, 10) === 0 ||
+    //   parseInt(amount, 10) < 100 ||
+    //   parseInt(amount, 10) > 100000
+    // ) {
+    //   Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
     //   return;
     // }
-    // if (parseInt(amount, 10) < 100) {
-    //   Toast.show('Enter minimum amount 100', Toast.LONG);
-    //   return;
-    // }
-    // if (parseInt(amount, 10) > 100000) {
-    //   Toast.show('Enter maximum amount 1,00,000', Toast.LONG);
-    //   return;
-    // }
+    dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
+  };
 
-    try {
-      console.log(888888);
-      dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
+  const proceedWithPayment = async () => {
+    var options = {
+      description: 'Loading Walla',
+      image: getWallletData?.profile_img,
+      currency: 'INR',
+      key: 'rzp_live_SuyP4BXtpLkIzS',
+      amount: orderData.amount, // amount should be in the smallest currency unit
+      name: getWallletData?.name,
+      order_id: orderData.id, // this is important, it links the payment to the order created on the server
+      prefill: {
+        email: getWallletData?.email,
+        contact: getWallletData?.mobile,
+        name: 'Loading Walla',
+      },
+      theme: {color: backgroundColorNew},
+    };
 
-      if (orderData !== null) {
-        var options = {
-          description: 'Loading Walla',
-          image: getWallletData?.profile_img,
-          currency: 'INR',
-          key: 'rzp_live_SuyP4BXtpLkIzS',
-          amount: orderData.amount, // amount should be in the smallest currency unit
-          name: getWallletData?.name,
-          order_id: orderData.id, // this is important, it links the payment to the order created on the server
-          prefill: {
-            email: getWallletData?.email,
-            contact: getWallletData?.mobile,
-            name: 'Loading Walla',
-          },
-          theme: {color: backgroundColorNew},
-        };
-
-        RazorpayCheckout.open(options)
-          .then(data => {
-            if (data?.razorpay_payment_id) {
-              // verifyPayment(data.razorpay_payment_id, orderData.id);
-              dispatch(
-                initVerifyPaymentRequest(
-                  data.razorpay_payment_id,
-                  orderData.id,
-                ),
-              );
-            } else {
-              AlertBox('Transaction not successful');
-            }
-          })
-          .catch(error => {
-            AlertBox('Transaction not successful');
-          });
-      } else {
-        throw new Error(orderData.message || 'Failed to create order');
-      }
-    } catch (error) {
-      console.error(999, error);
-      // AlertBox(`Error: ${error.message}`);
-    }
+    RazorpayCheckout.open(options)
+      .then(data => {
+        if (data?.razorpay_payment_id) {
+          // verifyPayment(data.razorpay_payment_id, orderData.id);
+          dispatch(
+            initVerifyPaymentRequest(data.razorpay_payment_id, orderData.id),
+          );
+        } else {
+          AlertBox('Transaction not successful');
+        }
+      })
+      .catch(error => {
+        // console.log('Payment Error:', error);
+        dispatch(createOrderFailure());
+        AlertBox('Transaction not successful');
+      });
   };
 
   // const verifyPayment = async (paymentId, orderId) => {
@@ -263,7 +256,7 @@ const Wallet = ({navigation}) => {
           <Button
             onPress={() => addAmount()}
             title={'TopUp'}
-            loading={walletLoading}
+            loading={orderLoading}
             textStyle={styles.textStyle}
             style={styles.buttonStyle}
           />

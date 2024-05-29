@@ -935,9 +935,9 @@ export function* createOrder({amount, userId}) {
     const body = {amount, userId};
     console.log(8888888, body);
     const data = yield API.post('payment/order', body);
-    console.log('API response------MYLOAD', data);
+    console.log('API response------createOrder', data);
     if (data?.status === 200) {
-      console.log(999999, 'success');
+      console.log(666666, 'success');
       yield put(actions.createOrderSuccess(data));
     } else {
       yield put(actions.createOrderFailure(data.status));
