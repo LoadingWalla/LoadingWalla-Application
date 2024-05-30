@@ -38,7 +38,6 @@ const instanceFunction = instanceObj => {
           duration: Snackbar.LENGTH_LONG,
           fontFamily: 'PlusJakartaSans-SemiBold',
           textColor: '#000000',
-          // marginBottom: 10,
           backgroundColor: '#FFD7CC',
           // action: {
           //   text: 'Retry',
