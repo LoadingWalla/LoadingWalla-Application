@@ -123,7 +123,8 @@ const Signup = ({navigation, route}) => {
     <KeyboardAvoidingView
       style={styles.Container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}>
+      // keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+    >
       <View style={styles.signupBackground}>
         <View style={{flex: 1}}>
           <View
@@ -136,28 +137,7 @@ const Signup = ({navigation, route}) => {
               style={{
                 minWidth: 140,
                 overflow: 'hidden',
-              }}>
-              {/* <Picker
-                selectedValue={selectedLanguage}
-                onValueChange={(itemValue, itemIndex) => {
-                  setSelectedLanguage(itemValue);
-                  selectLanguage(itemValue);
-                }}
-                style={{color: GradientColor2}}
-                mode="dropdown" // Android only
-                dropdownIconColor={GradientColor2}>
-                {languages?.map(lang => (
-                  <Picker.Item
-                    key={lang.id}
-                    label={lang.languageName}
-                    value={lang.code}
-                    color={GradientColor2}
-                    fontFamily="PlusJakartaSans-Bold"
-                    contentDescription="long tooo"
-                  />
-                ))}
-              </Picker> */}
-            </TouchableOpacity>
+              }}></TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
               <Text
@@ -178,26 +158,28 @@ const Signup = ({navigation, route}) => {
               {t(Constants.WELCOME_TO_TRUCK)}
             </Text>
           </View>
-          <Text style={styles.signupTopTitle}>
-            {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
-          </Text>
-          <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
-          <PhoneInput
-            defaultCode="IN"
-            layout="first"
-            textInputProps={{
-              maxLength: 10,
-              placeholderTextColor: PrivacyPolicy,
-            }}
-            withShadow
-            placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
-            // autoFocus={true}
-            containerStyle={styles.phoneContainer}
-            textContainerStyle={styles.textInput}
-            onChangeFormattedText={text => {
-              setMobileNumber(text);
-            }}
-          />
+          <View style={{zIndex: 5}}>
+            <Text style={styles.signupTopTitle}>
+              {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
+            </Text>
+            <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
+            <PhoneInput
+              defaultCode="IN"
+              layout="first"
+              textInputProps={{
+                maxLength: 10,
+                placeholderTextColor: PrivacyPolicy,
+              }}
+              withShadow
+              placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
+              // autoFocus={true}
+              containerStyle={styles.phoneContainer}
+              textContainerStyle={styles.textInput}
+              onChangeFormattedText={text => {
+                setMobileNumber(text);
+              }}
+            />
+          </View>
 
           {screenHeight >= 650 && (
             <View
@@ -218,7 +200,6 @@ const Signup = ({navigation, route}) => {
             </View>
           )}
         </View>
-
         <View style={{backgroundColor: pageBackground}}>
           <View style={styles.centerItem}>
             <View style={styles.checkBoxContainer}>
@@ -232,12 +213,7 @@ const Signup = ({navigation, route}) => {
                 {t(Constants.WHATSAPP_ALERT_CHECK)}
               </Text>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
+            <View style={styles.policyContainer}>
               <Text style={styles.policyTitle}>
                 {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
               </Text>

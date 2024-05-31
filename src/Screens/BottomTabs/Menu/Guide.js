@@ -8,6 +8,7 @@ import {
   LayoutAnimation,
   UIManager,
   Platform,
+  TextInput,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {initGuide} from '../../../Store/Actions/Actions';
@@ -18,6 +19,9 @@ import UpArrow from '../../../../assets/SVG/svg/UpArrow';
 import DownArrow from '../../../../assets/SVG/svg/DownArrow';
 import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
 import {DialCall} from '../../../Utils/DialCall';
+import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
+import BackArrow from '../../../../assets/SVG/svg/BackArrow';
+import Close from '../../../../assets/SVG/Close';
 
 if (
   Platform.OS === 'android' &&
@@ -27,8 +31,10 @@ if (
 }
 
 const Guide = ({navigation}) => {
-  const [selectedId, setSelectedId] = useState(null);
   const dispatch = useDispatch();
+  const [selectedId, setSelectedId] = useState(null);
+  const [searchMode, setSearchMode] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const {guideData, guideStatus, guideLoading} = useSelector(state => ({
     guideData: state.data.guideData,
@@ -50,6 +56,43 @@ const Guide = ({navigation}) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setSelectedId(currentId => (currentId === id ? '' : id));
   }, []);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerTitle: searchMode ? () => null : 'Help Guide',
+      headerRight: () =>
+        searchMode ? (
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.headerSearchInput}
+              autoFocus={true}
+              onChangeText={setSearchText}
+              value={searchText}
+              placeholder="Search..."
+              returnKeyType="done"
+            />
+            <TouchableOpacity
+              onPress={() => {
+                setSearchMode(false);
+                setSearchText('');
+              }}>
+              <Close />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            onPress={() => setSearchMode(true)}
+            style={{top: 2}}>
+            <SearchIcon size={25} color={'#000000'} />
+          </TouchableOpacity>
+        ),
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <BackArrow />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, searchMode, searchText]);
 
   const renderItem = useCallback(
     ({item}) => (
@@ -76,21 +119,29 @@ const Guide = ({navigation}) => {
 
   return (
     <View style={styles.backgroundView}>
-      <View style={styles.callBox}>
-        <Text style={styles.header}>Facing trouble?</Text>
-        <TouchableOpacity
-          style={styles.callSection}
-          onPress={() => DialCall('110-465833494')}>
-          <PhoneCall size={20} color={'#EF4D23'} />
-          <Text style={styles.phoneNo}>110-465833494</Text>
-        </TouchableOpacity>
-      </View>
+      {searchMode ? null : (
+        <View style={styles.callBox}>
+          <Text style={styles.header}>Facing trouble?</Text>
+          <TouchableOpacity
+            style={styles.callSection}
+            onPress={() => DialCall('110-465833494')}>
+            <PhoneCall size={20} color={'#EF4D23'} />
+            <Text style={styles.phoneNo}>110-465833494</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {guideLoading ? (
         <GuideShimmer />
       ) : (
         <FlatList
-          data={guideStatus === 200 ? guideData : []}
-          keyExtractor={item => item?.id}
+          data={
+            guideStatus === 200
+              ? guideData.filter(item =>
+                  item.title.toLowerCase().includes(searchText.toLowerCase()),
+                )
+              : []
+          }
+          keyExtractor={item => item?.id.toString()}
           renderItem={renderItem}
         />
       )}
@@ -165,6 +216,20 @@ const styles = StyleSheet.create({
     right: 5,
   },
   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginBottom: 10},
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 2,
+    width: '90%',
+    paddingHorizontal: 10,
+    left: 15,
+    borderRadius: 20,
+    borderColor: PrivacyPolicy,
+  },
+  headerSearchInput: {
+    flex: 1,
+    height: 40,
+  },
 });
 
 export default React.memo(Guide);
