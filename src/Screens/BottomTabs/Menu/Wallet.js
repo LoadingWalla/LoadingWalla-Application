@@ -31,6 +31,7 @@ import Button from '../../../Components/Button';
 import AlertBox from '../../../Components/AlertBox';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
+import RightArrow2 from '../../../../assets/SVG/svg/RightArrow2';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
@@ -165,7 +166,7 @@ const Wallet = ({navigation}) => {
     date: '31 Dec 2023, 03:08 PM',
   }));
 
-  const renderItem = ({item}) => (
+  const rechargeRenderItem = ({item}) => (
     <View style={styles.repeatView}>
       <View>
         <Text style={styles.paymentText}>
@@ -181,12 +182,52 @@ const Wallet = ({navigation}) => {
     </View>
   );
 
+  // const deductionRenderItem = ({item}) => (
+  //   <View style={styles.deductionCard}>
+  //     <View style={styles.rowdirection}>
+  //       <Text style={styles.textDetailStyle}>BR 01 FF 7867</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>15 Ton</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>22 Tyre</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>Half Body</Text>
+  //     </View>
+  //     <View style={styles.horizontalLine} />
+  //     <View style={styles.loacationBox}>
+  //       <View style={styles.loactionTextView}>
+  //         <View style={styles.circleDot} />
+  //         <Text style={styles.locationText}>Jamshedpur, Jharkhand</Text>
+  //       </View>
+  //       <RightArrow2 />
+  //       <View style={styles.loactionTextView}>
+  //         <View style={styles.squareDot} />
+  //         <Text style={styles.locationText}>New Delhi, Delhi</Text>
+  //       </View>
+  //     </View>
+  //     <View style={styles.horizontalLine} />
+  //     <View style={styles.rowdirection}>
+  //       <Text style={styles.textDetailStyle}>200 Ton</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>RICE BAGS</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>₹ 120000 / Fixed</Text>
+  //     </View>
+  //     <View>
+  //       <Text>31 Dec 2023, 03:08 PM</Text>
+  //       <View>
+  //         <Text>₹ 1000</Text>
+  //       </View>
+  //     </View>
+  //   </View>
+  // );
+
   const RechargeRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={renderItem}
+        renderItem={rechargeRenderItem}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -197,7 +238,7 @@ const Wallet = ({navigation}) => {
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={renderItem}
+        renderItem={rechargeRenderItem}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -306,8 +347,7 @@ const styles = StyleSheet.create({
   horizontalLine: {
     height: 1,
     backgroundColor: '#E7E7E7',
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   topupWallet: {
     color: PrivacyPolicy,
@@ -398,9 +438,71 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     alignItems: 'center',
   },
+  deductionCard: {
+    flexDirection: 'column',
+    // alignItems: 'center',
+    // justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 15,
+    elevation: 2,
+    borderRadius: 8,
+    marginVertical: 10,
+    marginHorizontal: 15,
+  },
   tabView: {
     flex: 1,
     marginTop: 10,
     backgroundColor: '#FFFDFD',
+  },
+  paymentText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    color: 'green',
+  },
+  rowdirection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  textDetailStyle: {
+    color: titleColor,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  verticalLine: {
+    backgroundColor: PrivacyPolicy,
+    width: 2,
+    marginHorizontal: 10,
+    height: '100%',
+  },
+  loacationBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  circleDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'green',
+    marginRight: 5,
+  },
+  squareDot: {
+    width: 8,
+    height: 8,
+    backgroundColor: 'red',
+    marginRight: 5,
+  },
+  loactionTextView: {
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  locationText: {
+    // borderWidth: 1,
+    color: titleColor,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Regular',
   },
 });

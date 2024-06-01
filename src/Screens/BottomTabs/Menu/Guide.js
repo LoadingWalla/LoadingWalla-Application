@@ -96,7 +96,7 @@ const Guide = ({navigation}) => {
 
   const renderItem = useCallback(
     ({item}) => (
-      <View>
+      <View key={item?.id}>
         <TouchableOpacity
           activeOpacity={0.9}
           onPress={() => handlePress(item.id.toString())}
@@ -143,6 +143,7 @@ const Guide = ({navigation}) => {
           }
           keyExtractor={item => item?.id.toString()}
           renderItem={renderItem}
+          extraData={selectedId}
         />
       )}
     </View>
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   header: {
     color: '#808080',
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 18,
+    fontSize: 16,
   },
   callSection: {
     flexDirection: 'row',

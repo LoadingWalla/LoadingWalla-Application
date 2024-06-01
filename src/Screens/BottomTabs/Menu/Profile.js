@@ -297,16 +297,12 @@ const Profile = ({navigation, route}) => {
                     <PreviousBookingIcon size={30} color={GradientColor1} />
                   }
                 />
-                {/* <View style={style.horizontalLine} />
+                <View style={style.horizontalLine} />
                 <MenuItem
-                  title={'Truck GPS Settings'}
-                  onPress={() =>
-                    navigation.navigate('Inconvenience', {
-                      headerTitle: 'Truck GPS Settings',
-                    })
-                  }
+                  title={'Saved address'}
+                  onPress={() => navigation.navigate('Address')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
-                /> */}
+                />
               </View>
             </View>
 

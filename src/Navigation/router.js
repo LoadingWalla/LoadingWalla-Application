@@ -63,6 +63,8 @@ import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
 import i18n from '../locales/i18n';
 import {useTranslation} from 'react-i18next';
+import Address from '../Screens/BottomTabs/Menu/Address';
+import AddAddress from '../Screens/Modals/AddAddress';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -991,6 +993,48 @@ const Navigation = ({language}) => {
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Address"
+        component={Address}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Saved Address',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="addAddress"
+        component={AddAddress}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
