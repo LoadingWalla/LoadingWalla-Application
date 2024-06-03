@@ -893,7 +893,7 @@ export function* qrCodeScanner({truck_id, value}) {
 }
 
 export function* getDocumentVerification() {
-  // console.log("documetn Test");
+  console.log('documetn Test');
   try {
     const data = yield API.get('get-document-verification');
     // console.log("API response", data);

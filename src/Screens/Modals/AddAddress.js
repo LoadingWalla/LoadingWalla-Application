@@ -33,12 +33,61 @@ const AddAddress = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.centeredView}>
-          <TextInputField
-            // value={}
-            hint={'Enter Full Address'}
-            // onChangeText={e => onChangeEmail(e)}
-            // placeholderTextColor={PrivacyPolicy}
-          />
+          <View>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              Full Address
+            </Text>
+            <TextInputField
+              // value={}
+              hint={'Enter Full Address'}
+              // onChangeText={e => onChangeEmail(e)}
+              // placeholderTextColor={PrivacyPolicy}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              //   borderWidth: 1,
+            }}>
+            <View style={{minWidth: '48%'}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: 'black',
+                  fontFamily: 'PlusJakartaSans-Bold',
+                }}>
+                City
+              </Text>
+              <TextInputField
+                // value={}
+                hint={'Enter City Name'}
+                // onChangeText={e => onChangeEmail(e)}
+                // placeholderTextColor={PrivacyPolicy}
+              />
+            </View>
+            <View style={{minWidth: '48%'}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: 'black',
+                  fontFamily: 'PlusJakartaSans-Bold',
+                }}>
+                State
+              </Text>
+              <TextInputField
+                // value={}
+                hint={'Enter State Name'}
+                // onChangeText={e => onChangeEmail(e)}
+                // placeholderTextColor={PrivacyPolicy}
+              />
+            </View>
+          </View>
           <Button
             title={'Save Changes'}
             textStyle={styles.saveText}

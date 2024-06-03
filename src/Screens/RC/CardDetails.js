@@ -26,6 +26,7 @@ import {Picker} from '@react-native-picker/picker';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
+  // console.log(9999, route);
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [aadhaarFrontImage, setAadhaarFrontImage] = useState(null);
   const [aadhaarBackImage, setAadhaarBackImage] = useState(null);
@@ -48,13 +49,12 @@ const CardDetails = ({route, navigation}) => {
   const regexPatterns = {
     fromAadhar: /^[2-9]{1}[0-9]{3}\s[0-9]{4}\s[0-9]{4}$/,
     fromPan: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-    fromGst: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
   };
 
   const documentTypeMapping = {
     fromAadhar: 'aadhar',
     fromPan: 'pan',
-    fromGst: 'gst',
+    // fromBusiness: 'business',
   };
 
   const getStatus = documentType => {
@@ -144,37 +144,42 @@ const CardDetails = ({route, navigation}) => {
     const documentType = documentTypeMapping[from.from];
     const regexPattern = regexPatterns[from.from];
 
-    if (!documentType) {
-      alert('Invalid document type');
-      return;
-    }
-    if (!regexPattern.test(aadhaarNumber)) {
-      alert('Invalid input. Please enter a valid document number.');
-      return;
-    }
+    // if (!documentType) {
+    //   alert('Invalid document type');
+    //   return;
+    // }
+    // if (!regexPattern.test(aadhaarNumber)) {
+    //   alert('Invalid input. Please enter a valid document number.');
+    //   return;
+    // }
 
-    if (documentTypeMapping[from.from] === 'aadhar') {
-      if (!aadhaarFrontImage || !aadhaarBackImage) {
-        alert('Please select both front and back images.');
-        return;
-      }
-    } else {
-      if (!aadhaarFrontImage) {
-        alert('Please select image.');
-        return;
-      }
-    }
+    // if (documentTypeMapping[from.from] === 'aadhar') {
+    //   if (!aadhaarFrontImage || !aadhaarBackImage) {
+    //     alert('Please select both front and back images.');
+    //     return;
+    //   }
+    // } else {
+    //   if (!aadhaarFrontImage) {
+    //     alert('Please select image.');
+    //     return;
+    //   }
+    // }
 
     // console.log(654654, aadhaarFrontImage);
     // console.log(321321, aadhaarBackImage);
+    console.log(321321, selectedDocument);
+    console.log('documet sumbitted', aadhaarNumber, documentType, [
+      aadhaarFrontImage,
+      aadhaarBackImage,
+    ]);
 
     // documentUploadRequest(aadhaarNumber, documentType, [aadhaarFrontImage,aadhaarBackImage]);
-    dispatch(
-      initDocumentVerify(aadhaarNumber, documentType, [
-        aadhaarFrontImage,
-        aadhaarBackImage,
-      ]),
-    );
+    // dispatch(
+    //   initDocumentVerify(aadhaarNumber, documentType, [
+    //     aadhaarFrontImage,
+    //     aadhaarBackImage,
+    //   ]),
+    // );
   };
 
   useEffect(() => {
@@ -240,6 +245,7 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const business = [
+    {id: '', name: 'Select Document Type', code: ''},
     {id: 'gst', name: 'GST', code: 'GST'},
     {id: 'udyog_aadhar', name: 'Udyog Aadhar', code: 'Udyog Aadhar'},
     {id: 'trade_license', name: 'Trade License', code: 'Trade License'},
@@ -249,7 +255,7 @@ const CardDetails = ({route, navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
-      {from.from === 'fromGst' && (
+      {from.from === 'business' && (
         <View
           style={{
             borderWidth: 1,
@@ -285,7 +291,7 @@ const CardDetails = ({route, navigation}) => {
               ? 'XXXX XXXX XXXX'
               : from.from === 'fromPan'
               ? 'ABCDE1234F'
-              : '22AAAAA0000A1Z5'
+              : ''
           }
           value={aadhaarNumber}
           placeholderTextColor={PrivacyPolicy}

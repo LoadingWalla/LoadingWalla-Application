@@ -791,7 +791,7 @@ export const initDocumentVerify = (
   document_type,
   document_file,
 ) => {
-  // console.log(22222222222, document_number, document_type, document_file);
+  console.log(22222222222, document_number, document_type, document_file);
   return {
     type: actionTypes.INIT_DOCUMENT_VERIFY,
     document_number,

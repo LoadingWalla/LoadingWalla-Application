@@ -1112,7 +1112,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="QRScanner"
         component={QRscanner}
-        options={{headerShown: false}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>

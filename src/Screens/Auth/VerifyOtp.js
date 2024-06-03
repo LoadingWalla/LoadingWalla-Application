@@ -21,7 +21,7 @@ import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
-import RNOtpVerify from 'react-native-otp-verify';
+// import RNOtpVerify from 'react-native-otp-verify';
 
 const VerifyOtp = ({navigation, route}) => {
   const {userId, mobileNumber} = route?.params;
@@ -34,7 +34,7 @@ const VerifyOtp = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const {otpdata, otpLoading, status, dashboardStatus} = useSelector(state => {
-    console.log('Verify Otp', state.data);
+    // console.log('Verify Otp', state.data);
     return state.data;
   });
 
@@ -59,7 +59,7 @@ const VerifyOtp = ({navigation, route}) => {
   // }, []);
 
   useEffect(() => {
-    setDelay('299');
+    setDelay('599');
     const getToken = async () => {
       const deviceToken = await requestUserPermission();
       setDeviceToken(deviceToken);
@@ -95,16 +95,16 @@ const VerifyOtp = ({navigation, route}) => {
 
   useEffect(() => {
     if (dashboardStatus === 200) {
-      setDelay('299');
+      setDelay('599');
       Toast.show(`OTP send to your number ${mobileNumber}`, Toast.LONG);
     }
   }, [dashboardStatus, mobileNumber]);
 
   const verifyOtp = async otp => {
     let langId = await AsyncStorage.getItem('languageID');
-    console.log(888888);
+    // console.log(888888);
     dispatch(initVerifyOtp(userId, otp, langId, devicetoken));
-    console.log(777777);
+    // console.log(777777);
   };
 
   const verify = async () => {
@@ -125,7 +125,7 @@ const VerifyOtp = ({navigation, route}) => {
 
   const resendCode = () => {
     dispatch(initLogin(mobileNumber));
-    setDelay('299');
+    setDelay('599');
   };
 
   useLayoutEffect(() => {

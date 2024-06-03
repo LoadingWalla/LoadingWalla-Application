@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Vibration,
+  TouchableOpacity,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -14,6 +15,9 @@ import {
   useCodeScanner,
 } from 'react-native-vision-camera';
 import {initQrCodeVerify, qrScanningFailure} from '../../Store/Actions/Actions';
+import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
+import FlashOn from '../../../assets/SVG/svg/FlashOn';
+import FlashOff from '../../../assets/SVG/svg/FlashOff';
 
 const QRscanner = ({route, navigation}) => {
   const {truck_id} = route.params;
@@ -22,6 +26,7 @@ const QRscanner = ({route, navigation}) => {
   const qrCodeLoading = useSelector(state => state.data.qrCodeLoading);
 
   const [isScanning, setIsScanning] = useState(false);
+  const [isFlashOn, setIsFlashOn] = useState(false);
   const {hasPermission, requestPermission} = useCameraPermission();
   const device = useCameraDevice('back');
 
@@ -60,6 +65,10 @@ const QRscanner = ({route, navigation}) => {
     };
   }, [qrCodeStatus]);
 
+  const toggleFlashlight = () => {
+    setIsFlashOn(!isFlashOn);
+  };
+
   if (!hasPermission || device == null) {
     return <ActivityIndicator size="large" />;
   }
@@ -76,7 +85,24 @@ const QRscanner = ({route, navigation}) => {
         device={device}
         isActive={true}
         codeScanner={codeScanner}
+        torch={isFlashOn ? 'on' : 'off'}
       />
+      {/* <View style={styles.focusBorder} /> */}
+      <View style={styles.focusBorder}>
+        <View style={styles.cornerTopLeft} />
+        <View style={styles.cornerTopRight} />
+        <View style={styles.cornerBottomLeft} />
+        <View style={styles.cornerBottomRight} />
+      </View>
+      <TouchableOpacity
+        style={styles.flashlightButton}
+        onPress={toggleFlashlight}>
+        {isFlashOn ? (
+          <FlashOff size={30} color={PrivacyPolicy} />
+        ) : (
+          <FlashOn size={30} color={PrivacyPolicy} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -98,5 +124,69 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  flashlightButton: {
+    position: 'absolute',
+    bottom: 50,
+    // backgroundColor: '#4d4d4d',
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    borderRadius: 8,
+    padding: 10,
+    borderWidth: 2,
+    borderColor: PrivacyPolicy,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  focusBorder: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    // borderWidth: 5,
+  },
+  cornerTopLeft: {
+    position: 'absolute',
+    // left: 20,
+    // top: 20,
+    width: 50,
+    height: 50,
+    borderTopWidth: 5,
+    borderLeftWidth: 5,
+    borderColor: '#FFFFFF',
+    borderTopLeftRadius: 20,
+  },
+  cornerTopRight: {
+    position: 'absolute',
+    right: 0,
+    // top: 20,
+    width: 50,
+    height: 50,
+    borderTopWidth: 5,
+    borderRightWidth: 5,
+    borderColor: '#FFFFFF',
+    borderTopRightRadius: 20,
+  },
+  cornerBottomLeft: {
+    position: 'absolute',
+    // left: 20,
+    bottom: 0,
+    width: 50,
+    height: 50,
+    borderBottomWidth: 5,
+    borderLeftWidth: 5,
+    borderColor: '#FFFFFF',
+    borderBottomLeftRadius: 20,
+  },
+  cornerBottomRight: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    width: 50,
+    height: 50,
+    borderBottomWidth: 5,
+    borderRightWidth: 5,
+    borderColor: '#FFFFFF',
+    borderBottomRightRadius: 20,
   },
 });

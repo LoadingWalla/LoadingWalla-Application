@@ -19,6 +19,7 @@ import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import QRScanner from '../../../assets/SVG/svg/QRScanner';
 
 const RCVerification = ({navigation, route}) => {
   const {title, RC, truck_id} = route.params;
@@ -370,18 +371,11 @@ const RCVerification = ({navigation, route}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('QRScanner', {truck_id: truck_id})}
         style={{
-          borderWidth: 1,
-          borderColor: GradientColor3,
-          borderStyle: 'dotted',
-          borderRadius: 5,
           marginBottom: 10,
           flex: 1,
           paddingVertical: 10,
         }}>
-        <Image
-          style={styles.image}
-          source={require('../../../assets/qr-code.png')}
-        />
+        <QRScanner />
       </TouchableOpacity>
 
       <Button
