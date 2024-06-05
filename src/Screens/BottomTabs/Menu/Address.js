@@ -28,7 +28,7 @@ const Address = ({navigation}) => {
           </View>
           <View style={styles.actions}>
             <TouchableOpacity
-              onPress={() => alert('ok')}
+              onPress={() => navigation.navigate('Inconvenience')}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -38,6 +38,7 @@ const Address = ({navigation}) => {
               <Text style={styles.editText}>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => navigation.navigate('Inconvenience')}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',

@@ -1032,9 +1032,12 @@ const Navigation = ({language}) => {
         name="addAddress"
         component={AddAddress}
         options={{
-          headerShown: false,
-          animation: 'slide_from_bottom',
-          presentation: 'transparentModal',
+          headerShown: true,
+          title: 'Add New Address',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....

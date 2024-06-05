@@ -23,79 +23,140 @@ const AddAddress = ({navigation}) => {
     <KeyboardAvoidingView
       style={styles.fullScreenContainer}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={styles.screenModalView}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Add New Address</Text>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.closeButton}>
-            <CloseCircle size={30} color={GradientColor2} />
-          </TouchableOpacity>
+      <View style={styles.centeredView}>
+        <View>
+          <Text
+            style={{
+              fontSize: 15,
+              color: 'black',
+              fontFamily: 'PlusJakartaSans-Bold',
+            }}>
+            Name
+          </Text>
+          <TextInputField
+            // value={}
+            hint={'Enter Full Address'}
+            // onChangeText={e => onChangeEmail(e)}
+            // placeholderTextColor={PrivacyPolicy}
+          />
         </View>
-        <View style={styles.centeredView}>
-          <View>
+        <View>
+          <Text
+            style={{
+              fontSize: 15,
+              color: 'black',
+              fontFamily: 'PlusJakartaSans-Bold',
+            }}>
+            To Location
+          </Text>
+          <TextInputField
+            // value={}
+            hint={'Enter Full Address'}
+            // onChangeText={e => onChangeEmail(e)}
+            // placeholderTextColor={PrivacyPolicy}
+          />
+        </View>
+        <View>
+          <Text
+            style={{
+              fontSize: 15,
+              color: 'black',
+              fontFamily: 'PlusJakartaSans-Bold',
+            }}>
+            Full Address
+          </Text>
+          <TextInputField
+            // value={}
+            hint={'Enter Full Address'}
+            // onChangeText={e => onChangeEmail(e)}
+            // placeholderTextColor={PrivacyPolicy}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            //   borderWidth: 1,
+          }}>
+          <View style={{minWidth: '48%'}}>
             <Text
               style={{
                 fontSize: 15,
                 color: 'black',
                 fontFamily: 'PlusJakartaSans-Bold',
               }}>
-              Full Address
+              City
             </Text>
             <TextInputField
+              hint={'Enter City Name'}
               // value={}
-              hint={'Enter Full Address'}
               // onChangeText={e => onChangeEmail(e)}
               // placeholderTextColor={PrivacyPolicy}
             />
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              //   borderWidth: 1,
-            }}>
-            <View style={{minWidth: '48%'}}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: 'black',
-                  fontFamily: 'PlusJakartaSans-Bold',
-                }}>
-                City
-              </Text>
-              <TextInputField
-                // value={}
-                hint={'Enter City Name'}
-                // onChangeText={e => onChangeEmail(e)}
-                // placeholderTextColor={PrivacyPolicy}
-              />
-            </View>
-            <View style={{minWidth: '48%'}}>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: 'black',
-                  fontFamily: 'PlusJakartaSans-Bold',
-                }}>
-                State
-              </Text>
-              <TextInputField
-                // value={}
-                hint={'Enter State Name'}
-                // onChangeText={e => onChangeEmail(e)}
-                // placeholderTextColor={PrivacyPolicy}
-              />
-            </View>
+          <View style={{minWidth: '48%'}}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              State
+            </Text>
+            <TextInputField
+              hint={'Enter State Name'}
+              // value={}
+              // onChangeText={e => onChangeEmail(e)}
+              // placeholderTextColor={PrivacyPolicy}
+            />
           </View>
-          <Button
-            title={'Save Changes'}
-            textStyle={styles.saveText}
-            style={styles.saveButton}
-            // onPress={() => saveChanges()}
-            // loading={statusChangeLoading}
-          />
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            //   borderWidth: 1,
+          }}>
+          <View style={{minWidth: '48%'}}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              City
+            </Text>
+            <TextInputField
+              hint={'Enter City Name'}
+              // value={}
+              // onChangeText={e => onChangeEmail(e)}
+              // placeholderTextColor={PrivacyPolicy}
+            />
+          </View>
+          <View style={{minWidth: '48%'}}>
+            <Text
+              style={{
+                fontSize: 15,
+                color: 'black',
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              State
+            </Text>
+            <TextInputField
+              hint={'Enter State Name'}
+              // value={}
+              // onChangeText={e => onChangeEmail(e)}
+              // placeholderTextColor={PrivacyPolicy}
+            />
+          </View>
+        </View>
+        <Button
+          title={'Save Changes'}
+          textStyle={styles.saveText}
+          style={styles.saveButton}
+          onPress={() => navigation.navigate('Inconvenience')}
+          // loading={statusChangeLoading}
+        />
       </View>
     </KeyboardAvoidingView>
   );
@@ -106,47 +167,13 @@ export default AddAddress;
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-  },
-  screenModalView: {
-    marginTop: '25%',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    backgroundColor: pageBackground,
-    padding: 10,
-    // borderWidth: 1,
-  },
-  header: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  headerTitle: {
-    color: titleColor,
-    fontSize: 20,
-    textAlign: 'center',
-    justifyContent: 'center',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  closeButton: {
-    position: 'absolute',
-    right: 10,
-    color: titleColor,
+    backgroundColor: '#FDFDFD',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
   },
   centeredView: {
-    flex: 1,
-    marginTop: '15%',
-    width: '100%',
-    padding: 10,
+    // flex: 1,
   },
   activeContainer: {
     flexDirection: 'row',
