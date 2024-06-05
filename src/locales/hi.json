@@ -113,7 +113,7 @@
   "Edit": "संपादन करें",
   "Request": "निवेदन",
   "Tyre": "टायर",
-  "Permit": "अनुमति दे",
+  "Permit": "अनुमति है",
   "Capacity": "क्षमता",
   "Body": "शरीर",
   "Submit": "जमा करें",
@@ -154,5 +154,11 @@
   "Help Guide (FAQs)": "सहायता मार्गदर्शिका (FAQs)",
   "Post loads to carry": "ढोने के लिए भार पोस्ट करें",
   "Post Load +": "पोस्ट लोड +",
-  "Select price type": "मूल्य प्रकार चुनें"
+  "Select price type": "मूल्य प्रकार चुनें",
+  "Select Body type": "बॉडी टाइप चुनें",
+  "See More": "और देखें",
+  "Skip": "छोड़े",
+  "Save": "सहेजें",
+  "Remove Load": "भार हटाएँ",
+  "Remove Truck": "ट्रक हटाएँ"
 }

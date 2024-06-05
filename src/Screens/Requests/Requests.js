@@ -105,7 +105,7 @@ const Requests = ({route, navigation}) => {
           <MyLorryShimmer />
         ) : (
           <>
-            {getRequestBookingdataReceived.length > 0 ? (
+            {getRequestBookingdataReceived?.length > 0 ? (
               <ScrollView
                 refreshControl={
                   <RefreshControl
@@ -162,7 +162,7 @@ const Requests = ({route, navigation}) => {
           <MyLorryShimmer />
         ) : (
           <>
-            {getRequestBookingdataSent.length > 0 ? (
+            {getRequestBookingdataSent?.length > 0 ? (
               <ScrollView
                 refreshControl={
                   <RefreshControl
