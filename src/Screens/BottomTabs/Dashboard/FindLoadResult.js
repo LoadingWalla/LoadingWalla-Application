@@ -22,6 +22,7 @@ import SearchFilter from '../../../Components/SearchFilter';
 import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';
 import NotFound from '../../../Components/NotFound';
+import {useTranslation} from 'react-i18next';
 
 const FindLoadResult = ({navigation, route}) => {
   const user = useRef('');
@@ -33,6 +34,7 @@ const FindLoadResult = ({navigation, route}) => {
   const [showLocationFrom, setLocationFrom] = useState(false);
   const [showLocationTo, setLocationTo] = useState(false);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {findLoadData, findLoadLoading, findLoadStatus} = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
@@ -130,7 +132,7 @@ const FindLoadResult = ({navigation, route}) => {
   const renderItem = item => {
     return (
       <View style={style.card}>
-        <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
+        <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
         <View style={style.horizontalLine} />
         <View style={style.rowdirection}>
           <View style={style.point} />

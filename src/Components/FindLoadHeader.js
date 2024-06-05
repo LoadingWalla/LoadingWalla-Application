@@ -6,6 +6,7 @@ import ShowPermitModal from './ShowPermitModal';
 import * as Constants from '../Constants/Constant';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
+import {useTranslation} from 'react-i18next';
 
 const FindLoadHeader = ({
   title,
@@ -23,12 +24,13 @@ const FindLoadHeader = ({
   id,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const {t} = useTranslation();
 
   return (
     <View style={styles.card}>
       <View style={styles.cardTop}>
         <View style={styles.cardHeaderView}>
-          <CardHeader from={from} to={to} icon={icon} />
+          <CardHeader from={from} to={to} icon={icon} t={t} />
         </View>
         <View style={styles.horizontalLine} />
         <View>

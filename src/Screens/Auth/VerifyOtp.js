@@ -1,11 +1,5 @@
-import React, {useEffect, useState, useLayoutEffect, useContext} from 'react';
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  PermissionsAndroid,
-} from 'react-native';
+import React, {useEffect, useState, useLayoutEffect} from 'react';
+import {View, Text, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import styles from './style';
@@ -21,9 +15,11 @@ import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
+import {useTranslation} from 'react-i18next';
 // import RNOtpVerify from 'react-native-otp-verify';
 
 const VerifyOtp = ({navigation, route}) => {
+  const {t} = useTranslation();
   const {userId, mobileNumber} = route?.params;
   const [otpValue, setOtpvalue] = useState('');
   const [isCodeFill, setCodeFill] = useState(false);
@@ -147,7 +143,7 @@ const VerifyOtp = ({navigation, route}) => {
       <View style={[styles.signupBackground, {marginTop: 0}]}>
         <View style={styles.otpResendView}>
           <Text style={styles.signupTopTitle}>
-            {`${Constants.ENTER_OTP_TITLE} ${mobileNumber} `}
+            {`${t(Constants.ENTER_OTP_TITLE)} ${mobileNumber} `}
             <Text
               onPress={() => navigation.replace('Signup')}
               style={styles.policyLinkTitle(true)}>
@@ -190,14 +186,14 @@ const VerifyOtp = ({navigation, route}) => {
         </View>
         <View style={styles.otpResendView}>
           <Text style={styles.policyTitle}>
-            {Constants.DID_NOT_RECIEVE_OTP}{' '}
+            {t(Constants.DID_NOT_RECIEVE_OTP)}{' '}
           </Text>
           <TouchableOpacity
             activeOpacity={0.5}
             disabled={minutes < 4 ? false : true}
             onPress={() => (minutes < 4 ? resendCode() : {})}>
             <Text style={styles.policyLinkTitle(minutes < 4 ? true : false)}>
-              {Constants.RESEND_CODE}
+              {t(Constants.RESEND_CODE)}
             </Text>
           </TouchableOpacity>
         </View>
@@ -206,7 +202,7 @@ const VerifyOtp = ({navigation, route}) => {
           <Button
             loading={otpLoading}
             onPress={() => verify()}
-            title={Constants.VERIFY}
+            title={t(Constants.VERIFY)}
             textStyle={styles.buttonTitile}
             style={styles.button}
           />

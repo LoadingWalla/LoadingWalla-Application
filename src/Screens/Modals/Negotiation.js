@@ -27,11 +27,13 @@ import {
 } from '../../Color/color';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import Button from '../../Components/Button';
+import {useTranslation} from 'react-i18next';
 
 const Negotiation = ({navigation, route}) => {
   // console.log('negotiation screen', route);
   const {item, owner, userType} = route?.params; // this should be on top
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [offered_price, setOffered_price] = useState(
     userType === '1' ? owner?.price : item?.price,
   );
@@ -100,7 +102,12 @@ const Negotiation = ({navigation, route}) => {
         <View style={styles.centeredView}>
           <View style={styles.container}>
             <View style={styles.locationCard}>
-              <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
+              <CardHeader
+                from={item?.from}
+                to={item?.to}
+                icon={item?.image}
+                t={t}
+              />
               <View style={styles.horizontalLine} />
               <View style={styles.rowdirection}>
                 <Text style={styles.textStyle}>

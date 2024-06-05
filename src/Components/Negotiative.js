@@ -7,6 +7,7 @@ import {initMyLorry, initRequestBooking} from '../Store/Actions/Actions';
 import {GradientColor3, PrivacyPolicy, titleColor, white} from '../Color/color';
 import CardHeader from './CardHeader';
 import InnerButton from './InnerButton';
+import {useTranslation} from 'react-i18next';
 
 const Negotiative = ({
   navigation,
@@ -20,6 +21,7 @@ const Negotiative = ({
     item?.user_type === 2 ? owner?.price : item?.price,
   );
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {myLorryTruckData, myLoadTruckData, findLorryData} = useSelector(
     state => {
@@ -63,7 +65,12 @@ const Negotiative = ({
           />
           <View style={styles.container}>
             <View style={styles.locationCard}>
-              <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
+              <CardHeader
+                from={item?.from}
+                to={item?.to}
+                icon={item?.image}
+                t={t}
+              />
               <View style={styles.horizontalLine} />
               <View style={styles.rowdirection}>
                 <Text style={styles.textStyle}>{item?.loads}</Text>

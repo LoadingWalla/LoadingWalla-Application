@@ -17,6 +17,7 @@ const DashboardHeader = ({
   gotoProfile,
   loading,
   verify,
+  t,
 }) => {
   return (
     <>
@@ -47,7 +48,9 @@ const DashboardHeader = ({
                 verified={verify}
               />
               <Text style={style.dashboardHeaderVerifiedTitle(verify)}>
-                {verify === 1 ? `${Constants.VERIFY}` : Constants.NOT_VERIFIED}
+                {verify === 1
+                  ? `${t(Constants.VERIFIED)}`
+                  : `${t(Constants.NOT_VERIFIED)}`}
               </Text>
             </TouchableOpacity>
           </Pressable>

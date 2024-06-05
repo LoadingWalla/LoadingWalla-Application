@@ -15,6 +15,7 @@ import DashboardHeader from '../../../Components/DashboardHeader';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {initDashboard, myPostLoadFailure} from '../../../Store/Actions/Actions';
+import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
 
@@ -29,6 +30,7 @@ const DashboardLoad = ({navigation}) => {
   const user = useRef('');
   const childRef = useRef(null);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {
     DashboardBanner,
@@ -145,11 +147,12 @@ const DashboardLoad = ({navigation}) => {
           notification={() => navigation.navigate('Notification')}
           title={DashboardUser?.name}
           isDashboard={true}
-          gotoProfile={() => navigation.navigate(Constants.PROFILE)}
+          gotoProfile={() => navigation.navigate(t(Constants.PROFILE))}
           navigate={() => navigation?.navigate('Contactus')}
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}
           verify={DashboardUser?.verify}
+          t={t}
         />
       </View>
       <ScrollView
@@ -184,28 +187,28 @@ const DashboardLoad = ({navigation}) => {
                   </Swiper>
                 )}
                 <Text style={style.locationTitle}>
-                  {Constants.POST_LOAD_CARRY}
+                  {t(Constants.POST_LOAD_CARRY)}
                 </Text>
                 <SearchFilter
                   onSearchPress={() => navigateToSeach('from')}
                   defaultValue={searchFrom}
-                  leftTitle={Constants.FROM}
+                  leftTitle={t(Constants.FROM)}
                   closeIconClick={() => closeIconClick('from')}
-                  placeholder={Constants.SELECT_LOCATION_TITLE}
+                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
                 <SearchFilter
                   onSearchPress={() => navigateToSeach()}
                   defaultValue={searchTo}
-                  leftTitle={Constants.TO}
+                  leftTitle={t(Constants.TO)}
                   closeIconClick={() => closeIconClick('to')}
-                  placeholder={Constants.SELECT_LOCATION_TITLE}
+                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
                 <Button
                   onPress={() => continueSearch()}
                   title={
                     user.current === '1'
-                      ? Constants.CONTINUE
-                      : Constants.FIND_LORRY
+                      ? t(Constants.CONTINUE)
+                      : t(Constants.FIND_LORRY)
                   }
                   loading={findLoadLoading}
                   touchStyle={style.touchStyle}

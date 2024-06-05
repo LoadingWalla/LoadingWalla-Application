@@ -13,17 +13,24 @@ import style from './style';
 import Button from '../../../Components/Button';
 import RenderTabBar from '../../Requests/RenderTabBar';
 import NotFound from '../../../Components/NotFound';
+import {useTranslation} from 'react-i18next';
 
-function getRoutesForUserType(type) {
+function getRoutesForUserType(type, t) {
   if (type === '1') {
     return [
-      {key: 'active', title: 'Active Load'},
-      {key: 'inactive', title: 'Inactive Load'},
+      {key: 'active', title: `${t(Constants.ACTIVE)} ${t(Constants.LOAD)}`},
+      {
+        key: 'inactive',
+        title: `${t(Constants.INACTIVE)} ${t(Constants.LOAD)}`,
+      },
     ];
   } else if (type === '2') {
     return [
-      {key: 'active', title: 'Active Truck'},
-      {key: 'inactive', title: 'Inactive Truck'},
+      {key: 'active', title: `${t(Constants.ACTIVE)} ${t(Constants.LORRY)}`},
+      {
+        key: 'inactive',
+        title: `${t(Constants.INACTIVE)} ${t(Constants.LORRY)}`,
+      },
     ];
   }
   return [];
@@ -31,6 +38,7 @@ function getRoutesForUserType(type) {
 
 const MyLorry = ({navigation}) => {
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [userType, setUserType] = useState('');
   const [isStatus, setShowStatus] = useState(false);
   const [statusData, setStatusData] = useState(null);
@@ -50,7 +58,7 @@ const MyLorry = ({navigation}) => {
     return state.data;
   });
 
-  const routes = useMemo(() => getRoutesForUserType(userType), [userType]);
+  const routes = useMemo(() => getRoutesForUserType(userType, t), [userType]);
 
   useFocusEffect(
     useCallback(() => {
@@ -122,7 +130,7 @@ const MyLorry = ({navigation}) => {
             <MyLorryItem
               item={item}
               userType={userType}
-              // t={t}
+              t={t}
               openStatusModal={openStatusModal}
               navigation={navigation}
               selected={selected}
@@ -198,6 +206,7 @@ const MyLorry = ({navigation}) => {
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}
           verify={DashboardUser?.verify}
+          t={t}
         />
       </View>
       <View style={style.tabView}>
@@ -214,7 +223,9 @@ const MyLorry = ({navigation}) => {
 
       <Button
         title={
-          userType === '1' ? Constants.POST_LOADS : Constants.ADD_NEW_LORRY
+          userType === '1'
+            ? t(Constants.POST_LOADS)
+            : t(Constants.ADD_NEW_LORRY)
         }
         textStyle={style.buttonTextStyle}
         style={style.buttonstyle}

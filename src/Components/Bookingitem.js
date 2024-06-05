@@ -11,10 +11,12 @@ import {
   white,
 } from '../Color/color';
 import CardHeader from './CardHeader';
+import {useTranslation} from 'react-i18next';
 
 const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
   const navigation = useNavigation();
   // console.log(909080980, detail);
+  const {t} = useTranslation();
 
   return (
     <View style={styles.card}>
@@ -40,7 +42,7 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
         <Text style={styles.textStyle}>{`${detail?.qty} Ton`}</Text>
         <View style={styles.verticalLine} />
         <Text style={styles.textStyle}>{`₹ ${detail?.price} / ${
-          detail?.price_type === 1 ? Constants.FIXED : Constants.PER_TON
+          detail?.price_type === 1 ? t(Constants.FIXED) : t(Constants.PER_TON)
         }`}</Text>
       </View>
       <View style={styles.horizontalLine} />
@@ -65,7 +67,7 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
           <InnerButton
             enabledStyle={styles.requestButtonContainer}
             textStyle={styles.gradientButtonText}
-            title={'Declined'}
+            title={t(Constants.DECLINED)}
             onpressStatus={() => {
               navigation.navigate('Booking Status', {manualVerify: true});
               onpressStatus(detail?.id, false);
@@ -74,7 +76,7 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
           <InnerButton
             enabledStyle={styles.findButtonContainer}
             textStyle={styles.findButtonText}
-            title={Constants.ACCEPT}
+            title={t(Constants.ACCEPT)}
             onpressStatus={() => {
               onpressStatus(detail?.id, false);
               navigation.navigate('Booking Status', {manualVerify: false});

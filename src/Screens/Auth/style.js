@@ -10,6 +10,7 @@ import {
   back_color,
   loadingwalla,
 } from '../../Color/color';
+
 export default StyleSheet.create({
   phoneContainer: {
     width: '100%',
@@ -49,6 +50,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     alignSelf: 'center',
     fontFamily: 'PlusJakartaSans-SemiBold',
+    paddingVertical: 5,
     // borderWidth: 1,
   },
   languageTitle: {

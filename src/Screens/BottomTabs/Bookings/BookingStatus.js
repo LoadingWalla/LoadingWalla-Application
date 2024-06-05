@@ -14,10 +14,13 @@ import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
 import Information from '../../../../assets/SVG/svg/Information';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../../Constants/Constant';
 
 const BookingStatus = ({navigation, route}) => {
   // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
+  const {t} = useTranslation();
 
   const getStatusContent = () => {
     if (status >= 500) {
@@ -102,15 +105,7 @@ const BookingStatus = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      <View
-        style={{
-          borderWidth: 1,
-          width: 1,
-          height: 50,
-          borderStyle: 'dashed',
-          borderColor: GradientColor1,
-        }}
-      />
+      <View style={styles.verticalDashedLine} />
       <View style={styles.cardContainer}>
         <View style={styles.card}>
           <View style={styles.childCard}>
@@ -167,7 +162,7 @@ const BookingStatus = ({navigation, route}) => {
               userType: userType,
             })
           }
-          title={'Find More Loads'}
+          title={t(Constants.FIND_MORE_LOADS)}
           style={styles.buttonstyle}
           textStyle={styles.buttonTextStyle}
           touchStyle={styles.touchStyle}
@@ -340,6 +335,13 @@ const styles = StyleSheet.create({
   boldText: {
     color: black,
     fontWeight: '700',
+  },
+  verticalDashedLine: {
+    borderWidth: 1,
+    width: 1,
+    height: 50,
+    borderStyle: 'dashed',
+    borderColor: GradientColor1,
   },
 });
 

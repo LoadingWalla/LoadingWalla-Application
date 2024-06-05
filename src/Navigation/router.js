@@ -560,7 +560,7 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          title: 'Verify Phone Number',
+          title: t(Constants.VERIFY_NUMBER_TITLE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

@@ -21,7 +21,11 @@ import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
 import {initLogout, initProfile} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {uriTermsCondition2, uriTermsCondition3} from '../../../Utils/Url';
+import {
+  playStoreLink,
+  uriTermsCondition2,
+  uriTermsCondition3,
+} from '../../../Utils/Url';
 import * as Constants from '../../../Constants/Constant';
 import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
 import EditProfile from './EditProfile';
@@ -48,6 +52,7 @@ import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
 import InAppReview from 'react-native-in-app-review';
+import {useTranslation} from 'react-i18next';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
@@ -57,6 +62,7 @@ const Profile = ({navigation, route}) => {
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
     useSelector(state => {
@@ -97,15 +103,15 @@ const Profile = ({navigation, route}) => {
 
   const logout = () => {
     Alert.alert(
-      Constants.LOGOUT,
-      Constants.LOGOUT_CONFIRM,
+      t(Constants.LOGOUT),
+      t(Constants.LOGOUT_CONFIRM),
       [
         {
-          text: 'Cancel',
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
         {
-          text: 'LOG OUT',
+          text: t(Constants.LOGOUT),
           onPress: async () => {
             try {
               dispatch(initLogout());
@@ -128,8 +134,7 @@ const Profile = ({navigation, route}) => {
 
   const handleRateUs = () => {
     if (Platform.OS === 'android') {
-      const url =
-        'https://play.google.com/store/apps/details?id=com.loadingwalla';
+      const url = playStoreLink;
 
       Linking.canOpenURL(url)
         .then(supported => {
@@ -212,8 +217,8 @@ const Profile = ({navigation, route}) => {
                       Userdata?.verify,
                     )}>
                     {Userdata?.verify === 1
-                      ? `${Constants.VERIFY}`
-                      : Constants.NOT_VERIFIED}
+                      ? `${t(Constants.VERIFIED)}`
+                      : t(Constants.NOT_VERIFIED)}
                   </Text>
                 </View>
                 <View style={style.verticalLine} />
@@ -257,7 +262,7 @@ const Profile = ({navigation, route}) => {
                 style={style.buttonContainer}
                 onPress={() => navigation.navigate('Wallet')}>
                 <WalletIcon size={25} color={'#F0C200'} />
-                <Text style={style.buttonText}>My wallet</Text>
+                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
                 <View
                   style={{
                     marginLeft: 'auto',
@@ -273,21 +278,23 @@ const Profile = ({navigation, route}) => {
             <View style={style.section}>
               <View style={style.sectionHeader}>
                 <UserDetailsIcon size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>User Details</Text>
+                <Text style={style.sectionHeaderText}>
+                  {t(Constants.USER_DETAILS)}
+                </Text>
               </View>
               <View style={style.userDetails}>
                 <MenuItem
-                  title={'User Summary'}
+                  title={t(Constants.USER_SUMMARY)}
                   onPress={() =>
                     navigation.navigate('Inconvenience', {
-                      headerTitle: 'User Summary',
+                      headerTitle: t(Constants.USER_SUMMARY),
                     })
                   }
                   Icon={<UserSummaryIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={'Previous Bookings'}
+                  title={t(Constants.PREVIOUS_BOOKINGS)}
                   onPress={() =>
                     navigation.navigate('Previous Bookings', {
                       Owner: Userdata,
@@ -299,7 +306,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={'Saved address'}
+                  title={t(Constants.SAVED_ADDRESS)}
                   onPress={() => navigation.navigate('Address')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
@@ -309,17 +316,19 @@ const Profile = ({navigation, route}) => {
             <View style={style.section}>
               <View style={style.sectionHeader}>
                 <SupportIcon2 size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>Support</Text>
+                <Text style={style.sectionHeaderText}>
+                  {t(Constants.SUPPORT)}
+                </Text>
               </View>
               <View style={style.userDetails}>
                 <MenuItem
-                  title={Constants.CONTACT_US}
+                  title={t(Constants.CONTACT_US)}
                   onPress={() => navigation.navigate('Contactus')}
                   Icon={<ContactUsIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.TERMS_CONDITION_TITLE2}
+                  title={t(Constants.TERMS_CONDITION_TITLE2)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
                       headerTitle: 'Terms and Conditions',
@@ -330,7 +339,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.TERMS_CONDITION_TITLE3}
+                  title={t(Constants.TERMS_CONDITION_TITLE3)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
                       headerTitle: 'Privacy Policy',
@@ -341,13 +350,13 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.HELP_GUIDE}
+                  title={t(Constants.HELP_GUIDE)}
                   onPress={() => navigation.navigate('Guide')}
                   Icon={<HelpIcon size={30} color={GradientColor1} />}
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.RATE_US_ON_PLAY_STORE}
+                  title={t(Constants.RATE_US_ON_PLAY_STORE)}
                   onPress={handleRateUs}
                   Icon={<RateIcon size={30} color={GradientColor1} />}
                 />
@@ -357,11 +366,13 @@ const Profile = ({navigation, route}) => {
             <View style={style.section}>
               <View style={style.sectionHeader}>
                 <SettingIcon size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>Settings</Text>
+                <Text style={style.sectionHeaderText}>
+                  {t(Constants.SETTINGS)}
+                </Text>
               </View>
               <View style={style.userDetails}>
                 <MenuItem
-                  title={Constants.LANGUAGE}
+                  title={t(Constants.LANGUAGE)}
                   onPress={() =>
                     navigation.navigate('Language', {fromMenu: true})
                   }
@@ -369,7 +380,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.WHATSAPP_ALERT}
+                  title={t(Constants.WHATSAPP_ALERT)}
                   onPress={() =>
                     navigation.navigate('WhatsApp', {fromMenu: true})
                   }
@@ -377,7 +388,7 @@ const Profile = ({navigation, route}) => {
                 />
                 <View style={style.horizontalLine} />
                 <MenuItem
-                  title={Constants.LOGOUT}
+                  title={t(Constants.LOGOUT)}
                   onPress={() => logout()}
                   Icon={<LogoutIcon size={30} color={GradientColor1} />}
                 />
@@ -386,7 +397,6 @@ const Profile = ({navigation, route}) => {
 
             <View
               style={{
-                // paddingTop: 10,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -397,7 +407,7 @@ const Profile = ({navigation, route}) => {
                   fontSize: 14,
                   fontFamily: 'PlusJakartaSans-Medium',
                 }}>
-                App Version: {version}
+                {t(Constants.APP_VERSION)} {version}
               </Text>
             </View>
           </ScrollView>
