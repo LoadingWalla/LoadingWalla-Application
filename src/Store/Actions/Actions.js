@@ -791,7 +791,7 @@ export const initDocumentVerify = (
   document_type,
   document_file,
 ) => {
-  // console.log(22222222222, document_number, document_type, document_file);
+  console.log(22222222222, document_number, document_type, document_file);
   return {
     type: actionTypes.INIT_DOCUMENT_VERIFY,
     document_number,
@@ -913,11 +913,14 @@ export const createOrderFailure = error => ({
 });
 
 // verify payment
-export const initVerifyPaymentRequest = (paymentId, orderId) => ({
-  type: actionTypes.VERIFY_PAYMENT_REQUEST,
-  paymentId,
-  orderId,
-});
+export const initVerifyPaymentRequest = (paymentId, orderId) => {
+  console.log(222222, paymentId, orderId);
+  return {
+    type: actionTypes.VERIFY_PAYMENT_REQUEST,
+    paymentId,
+    orderId,
+  };
+};
 
 export const verifyPaymentSuccess = data => ({
   type: actionTypes.VERIFY_PAYMENT_SUCCESS,

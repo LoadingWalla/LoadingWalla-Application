@@ -29,6 +29,7 @@ import Cammera from '../../../assets/SVG/Camera';
 import {useDispatch} from 'react-redux';
 import {initCompleteBookingDocumentRequest} from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
+import {useTranslation} from 'react-i18next';
 
 const CompleteBooking = ({navigation, route}) => {
   const {
@@ -46,6 +47,7 @@ const CompleteBooking = ({navigation, route}) => {
   // console.log(88888888888888, route.params.item);
   const userType = route.params.userType;
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   // console.log(88888, route);
   const [selectedDocumentType, setSelectedDocumentType] = useState(1);
   const [isChecked, setIsChecked] = useState(true);
@@ -188,7 +190,7 @@ const CompleteBooking = ({navigation, route}) => {
           borderBottomLeftRadius: 8,
           borderBottomRightRadius: 8,
         }}>
-        <CardHeader from={from} to={to} icon={icon} />
+        <CardHeader from={from} to={to} icon={icon} t={t} />
         <View style={styles.horizontalLine} />
         <View style={styles.rowdirection}>
           <View style={styles.point} />

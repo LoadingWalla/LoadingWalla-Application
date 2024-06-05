@@ -32,7 +32,7 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 
 const StatusChangeModal = ({navigation, route}) => {
   const {userType, data} = route?.params;
-  console.log(9898989, route.params);
+  // console.log(9898989, route.params);
   const dispatch = useDispatch();
 
   const [searchFrom, setSearchFrom] = useState(data?.from);
@@ -57,6 +57,7 @@ const StatusChangeModal = ({navigation, route}) => {
     navigation.navigate('Search', {
       locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
+        console.log(8888888888, item);
         if (val === 'from') {
           setSearchFrom(item?.place_name);
           setSearchFromId(item?.id);

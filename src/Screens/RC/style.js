@@ -139,4 +139,12 @@ export default StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
   },
+
+  //
+  activityIndicator: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activityIndicatorBox: {width: '100%', height: '100%', flex: 1},
 });

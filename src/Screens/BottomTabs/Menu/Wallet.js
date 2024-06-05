@@ -31,6 +31,7 @@ import Button from '../../../Components/Button';
 import AlertBox from '../../../Components/AlertBox';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
+import RightArrow2 from '../../../../assets/SVG/svg/RightArrow2';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
@@ -87,15 +88,19 @@ const Wallet = ({navigation}) => {
   };
 
   const addAmount = () => {
-    // if (
-    //   parseInt(amount, 10) === 0 ||
-    //   parseInt(amount, 10) < 100 ||
-    //   parseInt(amount, 10) > 100000
-    // ) {
-    //   Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
-    //   return;
-    // }
+    if (
+      parseInt(amount, 10) === 0 ||
+      parseInt(amount, 10) < 100 ||
+      parseInt(amount, 10) > 100000
+    ) {
+      Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
+      return;
+    }
     dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
+    // for testing only
+    // dispatch(
+    //   initVerifyPaymentRequest('pay_OGF2UeAA6Yjryd', 'order_OGF1mJCNaa6lpk'),
+    // );
   };
 
   const proceedWithPayment = async () => {
@@ -115,12 +120,17 @@ const Wallet = ({navigation}) => {
       theme: {color: backgroundColorNew},
     };
 
+    // console.log(9999999, options);
+
     RazorpayCheckout.open(options)
       .then(data => {
+        console.log(7777, data);
         if (data?.razorpay_payment_id) {
-          // verifyPayment(data.razorpay_payment_id, orderData.id);
           dispatch(
-            initVerifyPaymentRequest(data.razorpay_payment_id, orderData.id),
+            initVerifyPaymentRequest(
+              data.razorpay_payment_id,
+              data.razorpay_order_id,
+            ),
           );
         } else {
           AlertBox('Transaction not successful');
@@ -132,34 +142,6 @@ const Wallet = ({navigation}) => {
         AlertBox('Transaction not successful');
       });
   };
-
-  // const verifyPayment = async (paymentId, orderId) => {
-  //   try {
-  //     const verifyResponse = await fetch(
-  //       'https://loadingwalla.com/api/payment/verify',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           razorpay_payment_id: paymentId,
-  //           razorpay_order_id: orderId,
-  //         }),
-  //       },
-  //     );
-  //     const verifyData = await verifyResponse.json();
-  //     // console.log(66666, verifyData);
-  //     if (verifyData.status === 'success') {
-  //       Toast.show('Payment Successful');
-  //       dispatch(initWallet(amount));
-  //     } else {
-  //       Toast.show('Payment Verification Failed');
-  //     }
-  //   } catch (error) {
-  //     Toast.show('Server Error', 'Unable to verify payment at this time');
-  //   }
-  // };
 
   const quickAmount = ['100', '200', '500', '1000', '5000'];
   const onSetAmount = amt => {
@@ -184,7 +166,7 @@ const Wallet = ({navigation}) => {
     date: '31 Dec 2023, 03:08 PM',
   }));
 
-  const renderItem = ({item}) => (
+  const rechargeRenderItem = ({item}) => (
     <View style={styles.repeatView}>
       <View>
         <Text style={styles.paymentText}>
@@ -200,12 +182,52 @@ const Wallet = ({navigation}) => {
     </View>
   );
 
+  // const deductionRenderItem = ({item}) => (
+  //   <View style={styles.deductionCard}>
+  //     <View style={styles.rowdirection}>
+  //       <Text style={styles.textDetailStyle}>BR 01 FF 7867</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>15 Ton</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>22 Tyre</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>Half Body</Text>
+  //     </View>
+  //     <View style={styles.horizontalLine} />
+  //     <View style={styles.loacationBox}>
+  //       <View style={styles.loactionTextView}>
+  //         <View style={styles.circleDot} />
+  //         <Text style={styles.locationText}>Jamshedpur, Jharkhand</Text>
+  //       </View>
+  //       <RightArrow2 />
+  //       <View style={styles.loactionTextView}>
+  //         <View style={styles.squareDot} />
+  //         <Text style={styles.locationText}>New Delhi, Delhi</Text>
+  //       </View>
+  //     </View>
+  //     <View style={styles.horizontalLine} />
+  //     <View style={styles.rowdirection}>
+  //       <Text style={styles.textDetailStyle}>200 Ton</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>RICE BAGS</Text>
+  //       <View style={styles.verticalLine} />
+  //       <Text style={styles.textDetailStyle}>₹ 120000 / Fixed</Text>
+  //     </View>
+  //     <View>
+  //       <Text>31 Dec 2023, 03:08 PM</Text>
+  //       <View>
+  //         <Text>₹ 1000</Text>
+  //       </View>
+  //     </View>
+  //   </View>
+  // );
+
   const RechargeRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={renderItem}
+        renderItem={rechargeRenderItem}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -216,7 +238,7 @@ const Wallet = ({navigation}) => {
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={renderItem}
+        renderItem={rechargeRenderItem}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -232,7 +254,9 @@ const Wallet = ({navigation}) => {
           </View>
           <View>
             <Text style={styles.texts}>{Constants.BALANCE}</Text>
-            <Text style={styles.walletText}>₹ {getWallletData?.wallet}</Text>
+            <Text style={styles.walletText}>
+              {`₹ ${getWallletData?.wallet || '0'}`}
+            </Text>
           </View>
         </View>
         <View style={styles.horizontalLine} />
@@ -323,8 +347,7 @@ const styles = StyleSheet.create({
   horizontalLine: {
     height: 1,
     backgroundColor: '#E7E7E7',
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   topupWallet: {
     color: PrivacyPolicy,
@@ -415,9 +438,71 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     alignItems: 'center',
   },
+  deductionCard: {
+    flexDirection: 'column',
+    // alignItems: 'center',
+    // justifyContent: 'space-between',
+    backgroundColor: 'white',
+    padding: 15,
+    elevation: 2,
+    borderRadius: 8,
+    marginVertical: 10,
+    marginHorizontal: 15,
+  },
   tabView: {
     flex: 1,
     marginTop: 10,
     backgroundColor: '#FFFDFD',
+  },
+  paymentText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    color: 'green',
+  },
+  rowdirection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  textDetailStyle: {
+    color: titleColor,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  verticalLine: {
+    backgroundColor: PrivacyPolicy,
+    width: 2,
+    marginHorizontal: 10,
+    height: '100%',
+  },
+  loacationBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  circleDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'green',
+    marginRight: 5,
+  },
+  squareDot: {
+    width: 8,
+    height: 8,
+    backgroundColor: 'red',
+    marginRight: 5,
+  },
+  loactionTextView: {
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  locationText: {
+    // borderWidth: 1,
+    color: titleColor,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Regular',
   },
 });

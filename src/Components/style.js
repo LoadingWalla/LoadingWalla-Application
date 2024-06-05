@@ -211,34 +211,13 @@ export default StyleSheet.create({
   indicatorStyle: {
     marginRight: 10,
   },
-  notificationItemView: {
-    backgroundColor: white,
-    borderRadius: 8,
-    flexDirection: 'row',
-    elevation: 2,
-    margin: 5,
-    padding: 10,
-  },
   notificationIconView: {height: 40, width: 40, borderRadius: 10},
-  notificatioView: {marginLeft: 15},
   searchLocationText: {
     fontSize: 15,
     padding: 5,
     margin: 5,
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  notificationTitle: {
-    fontSize: 14,
-    color: titleColor,
-    fontWeight: '700',
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  notitficationDesc: {
-    fontSize: 12,
-    color: PrivacyPolicy,
-    fontWeight: '400',
-    fontFamily: 'PlusJakartaSans-Regular',
   },
   innerbuttonStyle: {
     padding: 10,

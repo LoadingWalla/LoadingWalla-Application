@@ -2,6 +2,8 @@ import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {GradientColor1, titleColor} from '../Color/color';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../Constants/Constant';
 
 const PercentageBar = ({
   navigation,
@@ -26,6 +28,8 @@ const PercentageBar = ({
     barColor = completedColor;
   }
 
+  const {t} = useTranslation();
+
   return (
     <TouchableOpacity
       style={[styles.barContainer, {height, borderColor: barColor}]}
@@ -38,7 +42,9 @@ const PercentageBar = ({
           {width: `${percentage}%`, backgroundColor: barColor, height},
         ]}
       />
-      <Text style={styles.barText}>{`${percentage}% Complete`}</Text>
+      <Text style={styles.barText}>{`${percentage}%  ${t(
+        Constants.COMPLETE,
+      )}`}</Text>
       <View style={styles.arrowView}>
         <RightArrow size={20} color={GradientColor1} />
       </View>

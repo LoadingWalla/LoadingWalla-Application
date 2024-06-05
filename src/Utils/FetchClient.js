@@ -32,13 +32,12 @@ const instanceFunction = instanceObj => {
     async function (error) {
       console.log('fetch Client', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        // console.log('Connection is slow.');
+        console.log('Network Request', error.code);
         Snackbar.show({
           text: 'Slow Internet Connection.',
           duration: Snackbar.LENGTH_LONG,
           fontFamily: 'PlusJakartaSans-SemiBold',
           textColor: '#000000',
-          // marginBottom: 10,
           backgroundColor: '#FFD7CC',
           // action: {
           //   text: 'Retry',

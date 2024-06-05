@@ -18,10 +18,12 @@ import CardHeader from '../../../Components/CardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {PrivacyPolicy} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
+import {useTranslation} from 'react-i18next';
 
 const PreviousBookings = ({navigation, route}) => {
   const {Owner} = route?.params;
-  console.log(989898, Owner);
+  // console.log(989898, Owner);
+  const {t} = useTranslation();
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -54,10 +56,11 @@ const PreviousBookings = ({navigation, route}) => {
           from={item?.from}
           to={item?.to}
           icon={'https://loadingwalla.com/public/truck_tyre/14%20Tyre.png'}
+          t={t}
         />
         <View style={styles.horizontalLine} />
         <View style={styles.infoContainer}>
-          <Text style={styles.textStyle}>Completed on </Text>
+          <Text style={styles.textStyle}>{t(Constants.COMPLETED_ON)} </Text>
           <Text style={styles.textStyle}>{formattedDate}</Text>
         </View>
         <View style={styles.horizontalLine} />
@@ -66,7 +69,7 @@ const PreviousBookings = ({navigation, route}) => {
           onPress={() =>
             navigation.navigate('viewDetail', {item, Owner: Owner})
           }>
-          <Text style={styles.viewDetail}>View Details</Text>
+          <Text style={styles.viewDetail}>{t(Constants.VIEW_DETAILS)}</Text>
         </TouchableOpacity>
       </View>
     );

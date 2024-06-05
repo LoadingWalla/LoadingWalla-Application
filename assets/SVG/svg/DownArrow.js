@@ -4,20 +4,13 @@ import {Path, Svg} from 'react-native-svg';
 const DownArrow = ({size, color, style}) => {
   return (
     <Svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="ionicon"
       width={size}
       height={size}
+      viewBox="0 0 12 8"
+      fill="none"
       style={style}
-      viewBox="0 0 512 512">
-      <Path
-        fill={color}
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="48"
-        d="M112 184l144 144 144-144"
-      />
+      xmlns="http://www.w3.org/2000/svg">
+      <Path d="M11 1L6 6L1 1" stroke={color} stroke-width="2" />
     </Svg>
   );
 };

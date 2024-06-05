@@ -15,10 +15,12 @@ import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
 import SearchFilter from '../../../Components/SearchFilter';
 import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
+import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
+  const {t} = useTranslation();
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');
@@ -135,11 +137,12 @@ const Dashboard = ({navigation}) => {
           notification={() => navigation.navigate('Notification')}
           isDashboard={true}
           title={DashboardUser?.name}
-          gotoProfile={() => navigation.navigate(Constants.MENU)}
+          gotoProfile={() => navigation.navigate(t(Constants.MENU))}
           navigate={() => navigation?.navigate('Contactus')}
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}
           verify={DashboardUser?.verify}
+          t={t}
         />
       </View>
       <ScrollView
@@ -174,25 +177,25 @@ const Dashboard = ({navigation}) => {
                   </Swiper>
                 )}
                 <Text style={style.locationTitle}>
-                  {Constants.SELECT_LOCATION}
+                  {t(Constants.SELECT_LOCATION)}
                 </Text>
                 <SearchFilter
                   defaultValue={searchFrom}
-                  leftTitle={Constants.FROM}
+                  leftTitle={t(Constants.FROM)}
                   onSearchPress={() => navigateToSeach('from')}
                   closeIconClick={() => closeIconClick('from')}
-                  placeholder={Constants.SELECT_LOCATION_TITLE}
+                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
                 <SearchFilter
                   onSearchPress={() => navigateToSeach()}
                   defaultValue={searchTo}
-                  leftTitle={Constants.TO}
+                  leftTitle={t(Constants.TO)}
                   closeIconClick={() => closeIconClick('to')}
-                  placeholder={Constants.SELECT_LOCATION_TITLE}
+                  placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
                 <View style={{marginTop: 30}}>
                   <Text style={style.locationTitle}>
-                    {Constants.TRUCK_TYPE}
+                    {t(Constants.TRUCK_TYPE)}
                   </Text>
                   <TruckItem
                     click={e => setTruckItem(e?.id)}
@@ -208,8 +211,8 @@ const Dashboard = ({navigation}) => {
                   onPress={() => searchLoad()}
                   title={
                     user.current === '1'
-                      ? Constants.FIND_LORRY
-                      : Constants.FIND_LOADS
+                      ? t(Constants.FIND_LORRY)
+                      : t(Constants.FIND_LOADS)
                   }
                   textStyle={style.buttonTextStyle}
                   style={style.buttonstyle}

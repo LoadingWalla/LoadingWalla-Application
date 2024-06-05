@@ -18,6 +18,7 @@ import {
   initMyPostLoad,
   myPostLoadFailure,
 } from '../../Store/Actions/Actions';
+import {useTranslation} from 'react-i18next';
 
 const PostLoads = ({navigation, route}) => {
   const [searchFrom, setSearchFrom] = useState(
@@ -42,6 +43,7 @@ const PostLoads = ({navigation, route}) => {
   const [weight, setWeight] = useState('');
   const [truckItem, setTruckItem] = useState('');
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {
     locationData,
@@ -75,11 +77,11 @@ const PostLoads = ({navigation, route}) => {
   const truckLoadCapacity = [
     {
       id: 1,
-      label: Constants.FIXED,
+      label: t(Constants.FIXED),
     },
     {
       id: 2,
-      label: Constants.PER_TON,
+      label: t(Constants.PER_TON),
     },
   ];
   const postLoadSubmit = () => {
@@ -157,20 +159,22 @@ const PostLoads = ({navigation, route}) => {
       <View style={styleSheet.backgroundViewContainer}>
         <SearchFilter
           defaultValue={searchFrom}
-          leftTitle={Constants.FROM}
+          leftTitle={t(Constants.FROM)}
           closeIconClick={() => closeIconClick('from')}
-          placeholder={Constants.SELECT_LOCATION_TITLE}
+          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
           onSearchPress={() => navigateToSeach('from')}
         />
         <SearchFilter
           defaultValue={searchTo}
-          leftTitle={Constants.TO}
+          leftTitle={t(Constants.TO)}
           closeIconClick={() => closeIconClick('to')}
-          placeholder={Constants.SELECT_LOCATION_TITLE}
+          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
           onSearchPress={() => navigateToSeach()}
         />
         <View style={styleSheet.ItemView}>
-          <Text style={styleSheet.label}>{`${Constants.QUANTITY} (Ton)`}</Text>
+          <Text style={styleSheet.label}>{`${t(
+            Constants.QUANTITY,
+          )} (Ton)`}</Text>
           <TextInputField
             isPhone
             value={quantity}
@@ -180,7 +184,7 @@ const PostLoads = ({navigation, route}) => {
               setQuantity(sanitizedInput);
             }}
           />
-          <Text style={styleSheet.label}>{Constants.MATERIAL_NAME}</Text>
+          <Text style={styleSheet.label}>{t(Constants.MATERIAL_NAME)}</Text>
           <TextInputField
             value={materialName}
             // onChangeText={(e) => setMaterialName(e)}
@@ -190,7 +194,7 @@ const PostLoads = ({navigation, route}) => {
               setMaterialName(sanitizedInput);
             }}
           />
-          <Text style={styleSheet.label}>{Constants.SELECT_TRUCK}</Text>
+          <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
           <TruckItem
             click={e => setTruckItem(e?.id)}
             backgroundStyle={{
@@ -215,7 +219,7 @@ const PostLoads = ({navigation, route}) => {
             }}
             renderItem={DashboardData}
           />
-          <Text style={styleSheet.label}>{Constants.PRICE}</Text>
+          <Text style={styleSheet.label}>{t(Constants.PRICE)}</Text>
           <TextInputField
             isPhone={true}
             value={price}
@@ -225,7 +229,7 @@ const PostLoads = ({navigation, route}) => {
               setPrice(sanitizedInput);
             }}
           />
-          <Text style={styleSheet.label}>{Constants.SELECT_PRICE_TYPE}</Text>
+          <Text style={styleSheet.label}>{t(Constants.SELECT_PRICE_TYPE)}</Text>
           <TruckItem
             backgroundStyle={styleSheet.truckTypeItem}
             unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
@@ -237,9 +241,9 @@ const PostLoads = ({navigation, route}) => {
           <Button
             loading={myPostLoadLoading}
             onPress={() => postLoadSubmit()}
-            title={Constants.POST_LOADS}
+            title={t(Constants.POST_LOADS)}
             textStyle={styleSheet.buttonTitile}
-            style={[styleSheet.button, {marginTop: 20}]}
+            style={styleSheet.button}
           />
         </View>
       </View>
@@ -252,7 +256,7 @@ export default PostLoads;
 const styleSheet = StyleSheet.create({
   button: {
     flexDirection: 'row',
-    borderRadius: 28,
+    borderRadius: 10,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',

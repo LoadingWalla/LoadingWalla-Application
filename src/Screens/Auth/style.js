@@ -10,6 +10,7 @@ import {
   back_color,
   loadingwalla,
 } from '../../Color/color';
+
 export default StyleSheet.create({
   phoneContainer: {
     width: '100%',
@@ -49,6 +50,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     alignSelf: 'center',
     fontFamily: 'PlusJakartaSans-SemiBold',
+    paddingVertical: 5,
     // borderWidth: 1,
   },
   languageTitle: {
@@ -85,8 +87,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     // maxWidth: 255,
-    marginTop: 22,
-    marginBottom: 20,
+    marginTop: 20,
+    // marginBottom: 10,
   },
   backIconView: {
     width: 38,
@@ -186,5 +188,11 @@ export default StyleSheet.create({
   activePinCodeContainer: {
     backgroundColor: GradientColor2,
     color: pageBackground,
+  },
+  policyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
 });

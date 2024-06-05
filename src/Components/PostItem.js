@@ -5,13 +5,15 @@ import style from './style';
 import CardHeader from './CardHeader';
 import InnerButton from './InnerButton';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 const PostItem = ({navigate, call, item, owner, userType}) => {
   const navigation = useNavigation();
+  const {t} = useTranslation();
 
   return (
     <View style={style.card}>
-      <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
+      <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
       <View style={style.horizontalLine} />
       <View style={style.rowdirection}>
         <View style={style.point} />

@@ -63,6 +63,8 @@ import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
 import i18n from '../locales/i18n';
 import {useTranslation} from 'react-i18next';
+import Address from '../Screens/BottomTabs/Menu/Address';
+import AddAddress from '../Screens/Modals/AddAddress';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -558,7 +560,7 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          title: 'Verify Phone Number',
+          title: t(Constants.VERIFY_NUMBER_TITLE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -1005,6 +1007,51 @@ const Navigation = ({language}) => {
       />
 
       <Stack.Screen
+        name="Address"
+        component={Address}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: 'Saved Address',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="addAddress"
+        component={AddAddress}
+        options={{
+          headerShown: true,
+          title: 'Add New Address',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
         name="Status"
         component={Status}
         options={{
@@ -1068,7 +1115,13 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="QRScanner"
         component={QRscanner}
-        options={{headerShown: false}}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>

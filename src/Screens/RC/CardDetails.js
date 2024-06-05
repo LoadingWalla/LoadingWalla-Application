@@ -8,6 +8,7 @@ import {
   Image,
   Modal,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import styles from './style';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -26,6 +27,7 @@ import {Picker} from '@react-native-picker/picker';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
+  // console.log(9999, route);
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [aadhaarFrontImage, setAadhaarFrontImage] = useState(null);
   const [aadhaarBackImage, setAadhaarBackImage] = useState(null);
@@ -48,13 +50,12 @@ const CardDetails = ({route, navigation}) => {
   const regexPatterns = {
     fromAadhar: /^[2-9]{1}[0-9]{3}\s[0-9]{4}\s[0-9]{4}$/,
     fromPan: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
-    fromGst: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
   };
 
   const documentTypeMapping = {
     fromAadhar: 'aadhar',
     fromPan: 'pan',
-    fromGst: 'gst',
+    // fromBusiness: 'business',
   };
 
   const getStatus = documentType => {
@@ -78,7 +79,7 @@ const CardDetails = ({route, navigation}) => {
     try {
       const image = await ImagePicker.openCamera({
         width: 300,
-        height: 400,
+        height: 200,
         cropping: true,
         compressImageQuality: 0.8,
         freeStyleCropEnabled: true,
@@ -109,7 +110,7 @@ const CardDetails = ({route, navigation}) => {
     try {
       const image = await ImagePicker.openPicker({
         width: 300,
-        height: 400,
+        height: 200,
         cropping: true,
         cropperCircleOverlay: false,
         compressImageQuality: 0.8,
@@ -141,34 +142,33 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const uploadAadhar = async () => {
-    const documentType = documentTypeMapping[from.from];
-    const regexPattern = regexPatterns[from.from];
+    const documentType =
+      from.from === 'business'
+        ? selectedDocument
+        : documentTypeMapping[from.from];
 
     if (!documentType) {
-      alert('Invalid document type');
-      return;
-    }
-    if (!regexPattern.test(aadhaarNumber)) {
-      alert('Invalid input. Please enter a valid document number.');
+      Alert.alert('Invalid document type');
       return;
     }
 
     if (documentTypeMapping[from.from] === 'aadhar') {
       if (!aadhaarFrontImage || !aadhaarBackImage) {
-        alert('Please select both front and back images.');
+        Alert.alert('Please select both front and back images.');
         return;
       }
     } else {
       if (!aadhaarFrontImage) {
-        alert('Please select image.');
+        Alert.alert('Please select image.');
         return;
       }
     }
 
-    // console.log(654654, aadhaarFrontImage);
-    // console.log(321321, aadhaarBackImage);
+    // console.log('documet sumbitted ---->', aadhaarNumber, documentType, [
+    //   aadhaarFrontImage,
+    //   aadhaarBackImage,
+    // ]);
 
-    // documentUploadRequest(aadhaarNumber, documentType, [aadhaarFrontImage,aadhaarBackImage]);
     dispatch(
       initDocumentVerify(aadhaarNumber, documentType, [
         aadhaarFrontImage,
@@ -240,16 +240,17 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const business = [
-    {id: 'gst', name: 'GST', code: 'GST'},
-    {id: 'udyog_aadhar', name: 'Udyog Aadhar', code: 'Udyog Aadhar'},
-    {id: 'trade_license', name: 'Trade License', code: 'Trade License'},
-    {id: 'utility_bill', name: 'Utility Bill', code: 'Utility Bill'},
+    {id: 0, code: '', name: 'Select Document Type'},
+    {id: 1, code: 'gst', name: 'GST'},
+    {id: 2, code: 'udyog', name: 'Udyog Aadhar'},
+    {id: 3, code: 'trade', name: 'Trade License'},
+    // {id: 4, code: 'utility', name: 'Utility Bill'},
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
-      {from.from === 'fromGst' && (
+      {from.from === 'business' && (
         <View
           style={{
             borderWidth: 1,
@@ -285,7 +286,7 @@ const CardDetails = ({route, navigation}) => {
               ? 'XXXX XXXX XXXX'
               : from.from === 'fromPan'
               ? 'ABCDE1234F'
-              : '22AAAAA0000A1Z5'
+              : 'Enter Document Number'
           }
           value={aadhaarNumber}
           placeholderTextColor={PrivacyPolicy}
@@ -408,16 +409,12 @@ const CardDetails = ({route, navigation}) => {
                 }}>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
-                  style={{width: '100%', height: '100%', flex: 1}}>
+                  style={styles.activityIndicatorBox}>
                   {documentUploadLoading ? (
                     <ActivityIndicator
                       size="large"
                       color={GradientColor3}
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
+                      style={styles.activityIndicator}
                     />
                   ) : (
                     <Image

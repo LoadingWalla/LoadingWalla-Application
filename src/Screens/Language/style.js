@@ -17,6 +17,7 @@ export default StyleSheet.create({
   part1: {
     flex: 1,
     justifyContent: 'center',
+    // borderWidth: 1,
   },
   part2: {
     flex: 4,
@@ -30,13 +31,14 @@ export default StyleSheet.create({
   },
   languageTitle: {
     fontSize: 18,
-    lineHeight: 20,
+    // lineHeight: 20,
     maxWidth: 275,
     width: '100%',
     color: PrivacyPolicy,
     textAlign: 'center',
     alignSelf: 'center',
     fontFamily: 'PlusJakartaSans-SemiBold',
+    // borderWidth: 1,
   },
   commonToolbar: {
     marginTop: 20,

@@ -90,7 +90,7 @@ const Verification = ({navigation, route}) => {
                       ? 'fromAadhar'
                       : item.id === '2'
                       ? 'fromPan'
-                      : 'fromGst',
+                      : 'business',
                 })
               }>
               <Text style={styles.uploadButtonText(item.status)}>

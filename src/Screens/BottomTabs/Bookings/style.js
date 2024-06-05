@@ -6,6 +6,7 @@ import {
   back_color,
   white,
   black,
+  backgroundColorNew,
 } from '../../../Color/color';
 
 export default StyleSheet.create({
@@ -160,7 +161,7 @@ export default StyleSheet.create({
     borderRadius: 8,
     fontSize: 18,
     color: PrivacyPolicy,
-    borderColor: PrivacyPolicy,
+    borderColor: backgroundColorNew,
     fontFamily: 'PlusJakartaSans-Medium',
   },
 });

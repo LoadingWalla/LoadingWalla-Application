@@ -29,22 +29,20 @@ const Notification = ({navigation, route}) => {
 
   return (
     <View
-      style={{paddingHorizontal: 20, backgroundColor: pageBackground, flex: 1}}>
+      style={{
+        paddingHorizontal: 5,
+        backgroundColor: '#FDFDFD',
+        flex: 1,
+      }}>
       {NotificationLoading ? (
         <NotificationShimmer />
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={{marginTop: 15}}
+          style={{marginTop: 10}}
           data={NotificationData}
-          renderItem={({item, index}) => (
-            <CommonItem
-              title={item?.title}
-              desc={item?.message}
-              img={item?.icon}
-            />
-          )}
+          renderItem={({item, index}) => <CommonItem item={item} />}
         />
       )}
     </View>

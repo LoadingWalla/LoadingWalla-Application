@@ -18,15 +18,13 @@ import PencilIcon from '../../assets/SVG/svg/PencilIcon';
 const MyLorryItem = ({item, userType, t, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  // console.log(888888, item);
-  // console.log(3333, userType);
   const priceType =
-    item?.price_type === 1 ? Constants.FIXED : Constants.PER_TON;
+    item?.price_type === 1 ? `${t(Constants.FIXED)}` : t(Constants.PER_TON);
   const ac_time = userType === '2' ? item?.updated : false;
 
   return (
     <View style={styles.card}>
-      <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
+      <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
       <View style={styles.horizontalLine} />
       <View>
         <View style={styles.rowdirection}>
@@ -90,8 +88,8 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
               />
               <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
-                  ? `${Constants.VERIFY}`
-                  : Constants.NOT_VERIFIED}
+                  ? `${t(Constants.VERIFIED)}`
+                  : `${t(Constants.NOT_VERIFIED)}`}
               </Text>
             </TouchableOpacity>
           ) : null}
@@ -162,7 +160,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                   styles.editButtonText,
                   {color: item.status === 1 ? '#56CA6F' : '#d73b29'},
                 ]}>
-                {Constants.EDIT}
+                {t(Constants.EDIT)}
               </Text>
               <PencilIcon
                 size={10}
@@ -175,7 +173,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                 disabledStyle={styles.requestButtonContainerDisabled}
                 textStyle={styles.gradientButtonText}
                 disableTextStyle={styles.disabledText}
-                title={Constants.REQUEST}
+                title={t(Constants.REQUEST)}
                 count={item?.total_request}
                 disabled={item.status === 0 ? true : false}
                 navigation={() =>
@@ -191,7 +189,9 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                 textStyle={styles.findButtonText}
                 disableTextStyle={styles.findDisabledText}
                 title={
-                  userType === '2' ? Constants.FIND_LOADS : Constants.FIND_LORRY
+                  userType === '2'
+                    ? t(Constants.FIND_LOADS)
+                    : t(Constants.FIND_LORRY)
                 }
                 disabled={item.status === 0 ? true : false}
                 navigation={() =>
@@ -206,7 +206,11 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
         </>
       )}
 
-      {ac_time && <Text style={styles.ac_time}>Updated at: {ac_time}</Text>}
+      {ac_time && (
+        <Text style={styles.ac_time}>
+          {t(Constants.UPDATED_AT)} {ac_time}
+        </Text>
+      )}
     </View>
   );
 };

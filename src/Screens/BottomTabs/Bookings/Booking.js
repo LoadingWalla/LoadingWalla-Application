@@ -22,11 +22,14 @@ import BookingItem from '../../../Components/Bookingitem';
 
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
-import {PrivacyPolicy} from '../../../Color/color';
+import {PrivacyPolicy, backgroundColorNew} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
+import InnerButton from '../../../Components/InnerButton';
+import {useTranslation} from 'react-i18next';
 
 const Booking = ({navigation}) => {
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
   const [userType, setUserType] = useState();
 
@@ -100,6 +103,7 @@ const Booking = ({navigation}) => {
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}
           verify={DashboardUser?.verify}
+          t={t}
         />
       </View>
       <View style={style.mainContainer}>
@@ -133,7 +137,9 @@ const Booking = ({navigation}) => {
                   Owner: BookingDashUser,
                 })
               }>
-              <Text style={{color: PrivacyPolicy}}>Go to Previous Booking</Text>
+              <Text style={{color: backgroundColorNew}}>
+                {t(Constants.GOTOPREVIOUSBOOKING)}
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         )}
