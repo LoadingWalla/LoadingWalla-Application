@@ -20,7 +20,12 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
 
   return (
     <View style={styles.card}>
-      <CardHeader from={detail?.from} to={detail?.to} icon={detail?.icon} />
+      <CardHeader
+        from={detail?.from}
+        to={detail?.to}
+        icon={detail?.icon}
+        t={t}
+      />
       <View style={styles.horizontalLine} />
       <View style={styles.rowdirection}>
         <View style={styles.point} />

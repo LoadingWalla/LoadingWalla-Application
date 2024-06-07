@@ -105,7 +105,11 @@ const Negotiation = ({navigation, route}) => {
               <CardHeader
                 from={item?.from}
                 to={item?.to}
-                icon={item?.image}
+                icon={
+                  item?.image || item.user_type === '1'
+                    ? 'https://loadingwalla.com/public/loado.png'
+                    : 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png'
+                }
                 t={t}
               />
               <View style={styles.horizontalLine} />

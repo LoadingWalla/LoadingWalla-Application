@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
 import {
   GradientColor1,
@@ -8,14 +8,13 @@ import {
   textColor,
   titleColor,
 } from '../../../Color/color';
-import ErrorImage from '../../../../assets/GIFs/Wrong.json';
-import successImage from '../../../../assets/GIFs/Done.json';
 import Button from '../../../Components/Button';
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CheckCircle from '../../../../assets/SVG/svg/CheckCircle';
 import Information from '../../../../assets/SVG/svg/Information';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../../Constants/Constant';
+import NotFound from '../../../Components/NotFound';
 
 const BookingStatus = ({navigation, route}) => {
   // console.log('booking---status', route);
@@ -26,22 +25,19 @@ const BookingStatus = ({navigation, route}) => {
     if (status >= 500) {
       return {
         message: messages,
-        image: ErrorImage,
-        color: '#e5b900',
+        image: 'errorImage',
       };
     } else {
       switch (status) {
         case 200:
           return {
             message: messages,
-            image: successImage,
-            color: '#119500',
+            image: 'successImage',
           };
         default:
           return {
             message: messages,
-            image: ErrorImage,
-            color: '#e5b900',
+            image: 'errorImage',
           };
       }
     }
@@ -50,14 +46,9 @@ const BookingStatus = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <View style={styles.gifView}>
         <Text style={[styles.congratsText, {color: color}]}>{message}</Text>
-        <Image source={image} style={{height: 70, width: 70}} />
+        <NotFound imageName={image} height={80} width={80} />
       </View>
 
       <View style={styles.cardContainer}>
@@ -74,11 +65,7 @@ const BookingStatus = ({navigation, route}) => {
                     : Owner?.vehicle_number}
                 </Text>
                 {userType === '2' && (
-                  <Shield
-                    size={20}
-                    color={Owner?.verified ? '#119500' : '#e5b900'}
-                    verified={Owner?.verified}
-                  />
+                  <Shield size={20} verified={Owner?.verified} />
                 )}
               </View>
               <Text style={styles.truckType}>
@@ -94,13 +81,13 @@ const BookingStatus = ({navigation, route}) => {
             <Text style={styles.specsText}>
               {userType === '2'
                 ? `Capacity: ${Owner?.truck_capacity}`
-                : `Capacity: ${Owner?.qty} Ton`}
+                : `Capacity: ${Owner?.qty}`}
             </Text>
             <View style={styles.verticalLine} />
             <Text style={styles.specsText}>
               {userType === '2'
                 ? `Tyre: ${Owner?.wheel}`
-                : `${Math.ceil(Owner?.distance)} KM`}
+                : `${Owner?.distance}`}
             </Text>
           </View>
         </View>
@@ -149,12 +136,7 @@ const BookingStatus = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      <View
-        style={{
-          width: '100%',
-          marginTop: 20,
-          alignItems: 'center',
-        }}>
+      <View style={styles.btnView}>
         <Button
           onPress={() =>
             navigation.navigate('FindLoads', {
@@ -179,6 +161,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 30,
     backgroundColor: '#fff',
+  },
+  gifView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   congratsText: {
     fontSize: 30,
@@ -342,6 +329,11 @@ const styles = StyleSheet.create({
     height: 50,
     borderStyle: 'dashed',
     borderColor: GradientColor1,
+  },
+  btnView: {
+    width: '100%',
+    marginTop: 20,
+    alignItems: 'center',
   },
 });
 

@@ -14,7 +14,16 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
 
   return (
     <View style={style.card}>
-      <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
+      <CardHeader
+        from={item?.from}
+        to={item?.to}
+        icon={
+          item?.image || item.user_type === '1'
+            ? 'https://loadingwalla.com/public/loado.png'
+            : 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png'
+        }
+        t={t}
+      />
       <View style={style.horizontalLine} />
       <View style={style.rowdirection}>
         <View style={style.point} />

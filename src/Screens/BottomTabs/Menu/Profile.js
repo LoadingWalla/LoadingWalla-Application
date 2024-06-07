@@ -51,7 +51,7 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
-import InAppReview from 'react-native-in-app-review';
+// import InAppReview from 'react-native-in-app-review';
 import {useTranslation} from 'react-i18next';
 
 const hei = Dimensions.get('window').height;
@@ -206,11 +206,7 @@ const Profile = ({navigation, route}) => {
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity>
-                    <Shield
-                      size={16}
-                      color={Userdata?.verify ? 'green' : GradientColor2}
-                      verified={Userdata?.verify}
-                    />
+                    <Shield size={20} verified={Userdata?.verify} />
                   </TouchableOpacity>
                   <Text
                     style={style.dashboardHeaderVerifiedTitle(

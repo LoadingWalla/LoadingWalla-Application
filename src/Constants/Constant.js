@@ -209,3 +209,5 @@ export const ENTER = 'Enter';
 export const NUMBER = 'Number';
 export const FRONT = 'Front Side';
 export const BACK = 'Back Side';
+export const ASKED_PRICE = 'Asked Price';
+export const REVALUED_PRICE = 'Revalued Price';

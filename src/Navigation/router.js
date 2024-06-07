@@ -696,7 +696,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Results',
+          title: t(Constants.RESULTS),
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
@@ -780,7 +780,7 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          title: 'Results',
+          title: t(Constants.RESULTS),
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',

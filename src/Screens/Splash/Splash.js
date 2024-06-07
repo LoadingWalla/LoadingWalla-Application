@@ -32,7 +32,7 @@ const Splash = ({navigation: {replace}}) => {
         } else {
           replace('Language');
         }
-      }, 3000);
+      }, 3500);
     };
 
     getUserStatus();
@@ -52,18 +52,18 @@ const Splash = ({navigation: {replace}}) => {
         backgroundColor={backgroundColorNew}
       />
       <View style={styles.splashContainer}>
-        <Animated.Image
+        {/* <Animated.Image
           resizeMode="contain"
           style={[styles.splashImage, {opacity}]}
           source={require('../../../assets/Logo.png')}
-        />
-        {/* <LottieView
-          source={require('../../../assets/GIFs/Animation.json')}
+        /> */}
+        <LottieView
+          source={require('../../../assets/GIFs/SPLASH SCREEN.json')}
           autoPlay
           loop
           resizeMode="contain"
           style={styles.splashImage}
-        /> */}
+        />
       </View>
     </>
   );

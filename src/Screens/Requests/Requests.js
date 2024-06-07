@@ -263,14 +263,14 @@ const Requests = ({route, navigation}) => {
           </Pressable>
           <View style={styles.routeInfo}>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Load</Text>
+              <Text style={styles.textHeading}>{t(Constants.LOAD)}</Text>
               <Text style={styles.routeText}>
                 {' '}
                 : {`${item?.material_name} | ${item?.qty} Ton`}{' '}
               </Text>
             </View>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Asked Price</Text>
+              <Text style={styles.textHeading}>{t(Constants.ASKED_PRICE)}</Text>
               <Text style={styles.routeText}>
                 {' '}
                 :{' '}
@@ -280,7 +280,9 @@ const Requests = ({route, navigation}) => {
               </Text>
             </View>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Revalued Price</Text>
+              <Text style={styles.textHeading}>
+                {t(Constants.REVALUED_PRICE)}
+              </Text>
               <Text style={styles.routeText}>
                 {' '}
                 :{' '}

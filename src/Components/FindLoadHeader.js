@@ -79,11 +79,7 @@ const FindLoadHeader = ({
                     truck_id: id,
                   })
                 }>
-                <Shield
-                  color={verified ? 'green' : GradientColor2}
-                  size={15}
-                  verified={verified}
-                />
+                <Shield size={20} verified={verified} />
                 <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
                   {verified
                     ? `${t(Constants.VERIFIED)}`

@@ -1,20 +1,21 @@
-import React, {useContext, useEffect, useRef} from 'react';
-import {View, Text, FlatList, Animated, Easing, Image} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {View, FlatList, Animated, Easing, Image} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
 import {initFindLoad, initFindLorry} from '../../Store/Actions/Actions';
 import PostItem from '../../Components/PostItem';
 import {DialCall} from '../../Utils/DialCall';
 import FindLoadHeader from '../../Components/FindLoadHeader';
-import {PrivacyPolicy} from '../../Color/color';
 import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
 import NotFound from '../../Components/NotFound';
+import {useTranslation} from 'react-i18next';
 
 const FindLoads = ({navigation, route}) => {
   // console.log(22222, route.params);
   const {Owner, userType} = route?.params;
   const animationProgress = useRef(new Animated.Value(0));
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {findLoadData, findLoadLoading, findLorryData, findLorryLoading} =
     useSelector(state => ({
@@ -61,7 +62,7 @@ const FindLoads = ({navigation, route}) => {
         backgroundColor: '#FFFDFD',
       }}>
       <FindLoadHeader
-        title={`${Constants.RESULTS} (${
+        title={`${t(Constants.RESULTS)} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length
         })`}
         goBack={() => navigation.goBack()}

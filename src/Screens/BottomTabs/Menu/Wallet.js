@@ -162,7 +162,7 @@ const Wallet = ({navigation}) => {
     {key: 'deductions', title: t(Constants.DEDUCTION)},
   ]);
 
-  const data = Array.from({length: 10}, (_, index) => ({
+  const data = Array.from({length: 0}, (_, index) => ({
     id: index.toString(),
     amount: '5000',
     date: '31 Dec 2023, 03:08 PM',

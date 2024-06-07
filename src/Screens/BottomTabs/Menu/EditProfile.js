@@ -36,10 +36,10 @@ import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
 
 const EditProfile = ({
+  defaultValue,
   isEdit,
   dismissModal,
   editStatus,
-  defaultValue,
   navigation,
 }) => {
   const [isCameraOptions, setCameraOptions] = useState(false);
@@ -217,11 +217,7 @@ const EditProfile = ({
               marginTop: 200,
             }}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
-              <CloseCircle
-                color="#252B41"
-                size={26}
-                onPress={() => setCameraOptions(false)}
-              />
+              <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-around'}}>
