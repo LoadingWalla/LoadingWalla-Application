@@ -227,7 +227,7 @@ export function* findLoad({from, to, truck}) {
   // console.log("find-load mein data jaa rha hai", body);
   try {
     const data = yield API.post('find-load', body);
-    // console.log("find-load response", data);
+    console.log('find-load response', data);
     if (data?.data?.status === 200) {
       yield put(actions.findLoadSuccess(data));
     } else {
@@ -492,8 +492,10 @@ export function* myPostLoad({
     price: price,
     price_type: price_type,
   };
+  console.log(66666, body);
   try {
     const data = yield API.post('add-load', body);
+    console.log('post load', data);
     if (data?.data?.status === 200) {
       yield put(actions.myPostLoadSuccess(data));
     } else {

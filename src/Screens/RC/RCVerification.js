@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -15,12 +15,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 import styles from './style';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import {GradientColor3, PrivacyPolicy, titleColor} from '../../Color/color';
+import {GradientColor3, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import QRScanner from '../../../assets/SVG/svg/QRScanner';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const RCVerification = ({navigation, route}) => {
   const {title, RC, truck_id} = route.params;
@@ -29,6 +31,7 @@ const RCVerification = ({navigation, route}) => {
   const [currentSide, setCurrentSide] = useState(null);
   const [isCameraOptions, setCameraOptions] = useState(false);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {getRcData, getRcLoading, getRcStatus} = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
@@ -189,8 +192,7 @@ const RCVerification = ({navigation, route}) => {
       {chooseOptions()}
       <View style={{flex: 1}}>
         <View style={stylesss.paramBox}>
-          <Text
-            style={styles.RCText}>{`RC verification for truck no. : `}</Text>
+          <Text style={styles.RCText}>{t(Constants.RCV_TRUCK)}</Text>
           <Text style={styles.label}>{RC}</Text>
         </View>
         <View style={stylesss.imageBox}>
@@ -293,12 +295,11 @@ const RCVerification = ({navigation, route}) => {
       <TouchableOpacity
         onPress={() => navigation.navigate('QRScanner', {truck_id: truck_id})}
         style={{
-          marginBottom: 10,
           flex: 1,
-          paddingVertical: 10,
-          borderWidth: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
         }}>
-        <QRScanner />
+        <QRScanner size={200} />
       </TouchableOpacity>
 
       <Button

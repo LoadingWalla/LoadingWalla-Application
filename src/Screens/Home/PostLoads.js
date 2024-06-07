@@ -155,7 +155,8 @@ const PostLoads = ({navigation, route}) => {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}>
+      showsHorizontalScrollIndicator={false}
+      style={{flex: 1, backgroundColor: '#FDFDFD'}}>
       <View style={styleSheet.backgroundViewContainer}>
         <SearchFilter
           defaultValue={searchFrom}

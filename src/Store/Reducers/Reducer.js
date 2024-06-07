@@ -61,7 +61,7 @@ const initialState = {
   accept_rejectData: null,
   accept_rejectLoading: false,
   accept_rejectStatus: null,
-  myfindLoadData: null,
+  myPostLoadData: null,
   myPostLoadStatus: null,
   myfindLoadLoading: false,
   wallletData: null,
@@ -652,19 +652,19 @@ const reducer = (state = initialState, action) => {
     case actionTypes.INIT_MYPOST_LOAD:
       return {
         ...state,
-        myfindLoadData: [],
+        myPostLoadData: [],
         myfindLoadLoading: true,
         myPostLoadStatus: null,
       };
     case actionTypes.MYPOST_LOAD_SUCCESS:
       return updateState(state, {
-        myfindLoadData: payload,
+        myPostLoadData: payload,
         myPostLoadStatus: payload?.data?.status,
         myfindLoadLoading: false,
       });
     case actionTypes.MYPOST_LOAD_FAILURE:
       return updateState(state, {
-        myfindLoadData: payload,
+        myPostLoadData: payload,
         myPostLoadStatus: payload,
         myfindLoadLoading: false,
       });

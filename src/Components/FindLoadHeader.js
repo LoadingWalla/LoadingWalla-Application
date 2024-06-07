@@ -85,7 +85,9 @@ const FindLoadHeader = ({
                   verified={verified}
                 />
                 <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
-                  {verified ? `${Constants.VERIFY}` : Constants.NOT_VERIFIED}
+                  {verified
+                    ? `${t(Constants.VERIFIED)}`
+                    : t(Constants.NOT_VERIFIED)}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -104,9 +106,7 @@ const FindLoadHeader = ({
 
       {userType === '2' ? (
         <View style={styles.warning}>
-          <Text style={styles.warningText}>
-            Verifying your truck will help in faster load booking
-          </Text>
+          <Text style={styles.warningText}>{t(Constants.VERIFY_DES)}</Text>
         </View>
       ) : null}
     </View>

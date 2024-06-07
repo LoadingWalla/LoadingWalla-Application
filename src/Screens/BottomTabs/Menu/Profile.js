@@ -331,7 +331,7 @@ const Profile = ({navigation, route}) => {
                   title={t(Constants.TERMS_CONDITION_TITLE2)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
-                      headerTitle: 'Terms and Conditions',
+                      headerTitle: t(Constants.TERMS_AND_CONDITITIONS),
                       uri: uriTermsCondition3,
                     });
                   }}
@@ -342,7 +342,7 @@ const Profile = ({navigation, route}) => {
                   title={t(Constants.TERMS_CONDITION_TITLE3)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
-                      headerTitle: 'Privacy Policy',
+                      headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
                       uri: uriTermsCondition2,
                     });
                   }}

@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {View, SafeAreaView, Text, Alert} from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import styles from './style';
@@ -10,8 +10,10 @@ import {
   seperator,
   titleColor,
 } from '../../../Color/color';
+import {useTranslation} from 'react-i18next';
 
 const WhatsAppAlert = ({navigation}) => {
+  const {t} = useTranslation();
   const [switchOn, setSwitchOn] = useState(true);
 
   const toggleSwitch = () => {
@@ -38,7 +40,7 @@ const WhatsAppAlert = ({navigation}) => {
               color: titleColor,
               fontFamily: 'PlusJakartaSans-Bold',
             }}>
-            {Constants.WHATSAPP_ALERT}
+            {t(Constants.WHATSAPP_ALERT)}
           </Text>
           <Switch
             isOn={switchOn}

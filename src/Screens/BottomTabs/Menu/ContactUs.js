@@ -21,6 +21,7 @@ import {
   GradientColor2,
   GradientColor3,
   textColor,
+  titleColor,
 } from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
 import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
@@ -28,6 +29,7 @@ import EmailIcon from '../../../../assets/SVG/svg/EmailIcon';
 import WhatsAppIcon from '../../../../assets/SVG/svg/WhatsAppIcon';
 import AlertBox from '../../../Components/AlertBox';
 import LinearGradient from 'react-native-linear-gradient';
+import {useTranslation} from 'react-i18next';
 
 const ContactUs = ({navigation}) => {
   const [name, setName] = useState('');
@@ -35,6 +37,7 @@ const ContactUs = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {contactusData, contactusLoading, contactusStatus} = useSelector(
     state => {
@@ -152,121 +155,43 @@ const ContactUs = ({navigation}) => {
           <WhatsAppIcon size={30} color="white" />
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#FFFFFF',
-          borderTopLeftRadius: 25,
-          borderTopRightRadius: 25,
-          paddingTop: 20,
-        }}>
+      <View style={stylesStatusbar.formContainer}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
           style={{paddingHorizontal: 20}}>
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 15,
-              color: 'black',
-              marginTop: 20,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}>
-            {Constants.NAME}
-          </Text>
+          <Text style={stylesStatusbar.label}>{t(Constants.NAME)}</Text>
           <TextInputField
             value={name}
-            hint={'Enter name'}
+            hint={t(Constants.ENTER_NAME)}
             onChangeText={e => onChangeName(e)}
-            // placeholderTextColor={PrivacyPolicy}
           />
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 15,
-              color: 'black',
-              marginTop: 20,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}>
-            {Constants.E_MAIL}
-          </Text>
+          <Text style={stylesStatusbar.label}>{t(Constants.E_MAIL)}</Text>
           <TextInputField
             value={email}
-            hint={'Enter E-mail'}
+            hint={t(Constants.E_MAIL)}
             onChangeText={e => onChangeEmail(e)}
-            // placeholderTextColor={PrivacyPolicy}
           />
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 15,
-              color: 'black',
-              marginTop: 20,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}>
-            {Constants.PHONE_NUMBER}
-          </Text>
+          <Text style={stylesStatusbar.label}>{t(Constants.PHONE_NUMBER)}</Text>
           <TextInputField
             value={phone}
             isPhone={true}
-            hint={'Enter phone number'}
+            hint={t(Constants.ENTER_MOBILE_NUMBER)}
             onChangeText={e => onChangePhone(e)}
-            // placeholderTextColor={PrivacyPolicy}
           />
-          <Text
-            style={{
-              fontWeight: '700',
-              fontSize: 15,
-              color: 'black',
-              marginTop: 20,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}>
-            {Constants.MESSAGE}
-          </Text>
+          <Text style={stylesStatusbar.label}>{t(Constants.MESSAGE)}</Text>
           <TextInputField
             value={message}
             isMultiLine={true}
-            hint={'Enter message'}
+            hint={t(Constants.ENTER_MESSAGE)}
             onChangeText={e => onChangeMessage(e)}
-            // placeholderTextColor={PrivacyPolicy}
           />
-          {/* <Button
-            onPress={() => sendMessage()}
-            title={'Send message'}
-            loading={contactusLoading}
-            textStyle={{
-              fontWeight: 'bold',
-              color: textColor,
-              fontSize: 16,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}
-            style={{
-              flexDirection: 'row',
-              borderRadius: 8,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginVertical: 20,
-            }}
-          /> */}
           <Button
             onPress={() => sendMessage()}
-            title={'Send message'}
+            title={t(Constants.SEND_MESSAGE)}
             loading={contactusLoading}
-            textStyle={{
-              fontWeight: 'bold',
-              color: textColor,
-              fontSize: 16,
-              fontFamily: 'PlusJakartaSans-Medium',
-            }}
-            style={{
-              flexDirection: 'row',
-              borderRadius: 8,
-              height: 50,
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: 20,
-            }}
+            textStyle={stylesStatusbar.textStyle}
+            style={stylesStatusbar.buttonStyle}
           />
         </ScrollView>
       </View>
@@ -307,5 +232,32 @@ const stylesStatusbar = StyleSheet.create({
     width: '100%',
     marginVertical: 20,
     justifyContent: 'space-evenly',
+  },
+  buttonStyle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
+  },
+  textStyle: {
+    fontWeight: 'bold',
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
+  label: {
+    fontSize: 15,
+    color: titleColor,
+    marginTop: 20,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  formContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 20,
   },
 });

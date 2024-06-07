@@ -147,7 +147,7 @@ const DashboardLoad = ({navigation}) => {
           notification={() => navigation.navigate('Notification')}
           title={DashboardUser?.name}
           isDashboard={true}
-          gotoProfile={() => navigation.navigate(t(Constants.PROFILE))}
+          gotoProfile={() => navigation.navigate(t(Constants.MENU))}
           navigate={() => navigation?.navigate('Contactus')}
           loading={dashboardLoading}
           wallet={DashboardUser?.wallet}

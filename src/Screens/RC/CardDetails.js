@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,8 @@ import {
 } from '../../Store/Actions/Actions';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {Picker} from '@react-native-picker/picker';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
 
 const CardDetails = ({route, navigation}) => {
   const {title, from, headerTitle} = route.params;
@@ -35,6 +37,7 @@ const CardDetails = ({route, navigation}) => {
   const [currentSide, setCurrentSide] = useState(null);
   const [selectedDocument, setSelectedDocument] = useState();
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {
     documentUploadStatus,
@@ -278,7 +281,9 @@ const CardDetails = ({route, navigation}) => {
         </View>
       )}
       <View style={styles.otpSection}>
-        <Text style={styles.otpLabel}>Enter {title} Number</Text>
+        <Text style={styles.otpLabel}>{`${t(Constants.ENTER)} ${title} ${t(
+          Constants.NUMBER,
+        )}`}</Text>
         <TextInput
           style={styles.otpInput}
           placeholder={
@@ -297,7 +302,7 @@ const CardDetails = ({route, navigation}) => {
           }
         />
         <View style={{flex: 1}}>
-          <Text style={styles.otpLabel}>Upload your {title}*</Text>
+          <Text style={styles.otpLabel}>{title}</Text>
 
           {from.from === 'fromAadhar' ? (
             <View
@@ -319,7 +324,7 @@ const CardDetails = ({route, navigation}) => {
                   flex: 1,
                   marginTop: 5,
                 }}>
-                <Text>Front Side</Text>
+                <Text>{t(Constants.FRONT)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
                   style={{width: '100%', height: '100%', flex: 1}}>
@@ -360,7 +365,7 @@ const CardDetails = ({route, navigation}) => {
                   flex: 1,
                   marginTop: 5,
                 }}>
-                <Text style={{textAlign: 'center'}}>Back Side</Text>
+                <Text style={{textAlign: 'center'}}>{t(Constants.BACK)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('back')}
                   style={{width: '100%', height: '100%', flex: 1}}>
@@ -431,17 +436,17 @@ const CardDetails = ({route, navigation}) => {
             </View>
           )}
 
-          <Text style={styles.smallText}>
+          {/* <Text style={styles.smallText}>
             Maximum file size 2MB (.jpeg/.png/.jpg)
-          </Text>
+          </Text> */}
         </View>
       </View>
 
       <Button
         title={
           getStatus(documentTypeMapping[from.from]) === 'Rejected'
-            ? 'Re Upload'
-            : 'Continue'
+            ? t(Constants.REUPLOAD)
+            : t(Constants.CONTINUE)
         }
         textStyle={styles.buttonTextStyle}
         style={styles.buttonstyle}

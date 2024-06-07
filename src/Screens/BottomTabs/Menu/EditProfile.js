@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -34,6 +33,7 @@ import Button from '../../../Components/Button';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 import Toast from 'react-native-simple-toast';
+import {useTranslation} from 'react-i18next';
 
 const EditProfile = ({
   isEdit,
@@ -51,6 +51,7 @@ const EditProfile = ({
   // );
 
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {profileSetupLoading, profileSetupStatus, profileSetupData} =
     useSelector(state => {
@@ -281,7 +282,9 @@ const EditProfile = ({
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <Text style={style.editProfileTitle}>{Constants.EDIT_PROFILE}</Text>
+            <Text style={style.editProfileTitle}>
+              {t(Constants.EDIT_PROFILE)}
+            </Text>
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={() => onClickProfile()}>
@@ -308,7 +311,7 @@ const EditProfile = ({
               </View>
             </TouchableOpacity>
             <View style={style.paddingStyle}>
-              <Text style={style.label}>{Constants.NAME}</Text>
+              <Text style={style.label}>{t(Constants.NAME)}</Text>
               <TextInputField
                 defaultValue={defaultValue?.name}
                 onChangeText={e => setname(e)}
@@ -323,7 +326,7 @@ const EditProfile = ({
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
               /> */}
-              <Text style={style.label}>Mobile number</Text>
+              <Text style={style.label}>{t(Constants.MOBILE_NUMBER)}</Text>
               <Text
                 style={{
                   backgroundColor: inputColor,
@@ -338,7 +341,7 @@ const EditProfile = ({
             <Button
               loading={profileSetupLoading}
               onPress={() => profileSetup(false)}
-              title={Constants.UPDATE}
+              title={t(Constants.UPDATE)}
               textStyle={style.buttonTitile}
               style={[style.button, {margin: 20}]}
             />
