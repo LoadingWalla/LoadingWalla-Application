@@ -220,7 +220,7 @@ const Signup = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
-                    headerTitle: 'Terms and Conditions',
+                    headerTitle: t(Constants.TERMS_CONDITION_TITLE2),
                     uri: uriTermsCondition3,
                   });
                 }}>
@@ -235,7 +235,7 @@ const Signup = ({navigation, route}) => {
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('Legal Policies', {
-                    headerTitle: 'Terms and Conditions',
+                    headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
                     uri: uriTermsCondition2,
                   });
                 }}>

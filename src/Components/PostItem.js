@@ -10,10 +10,20 @@ import {useTranslation} from 'react-i18next';
 const PostItem = ({navigate, call, item, owner, userType}) => {
   const navigation = useNavigation();
   const {t} = useTranslation();
+  console.log(444444, item);
 
   return (
     <View style={style.card}>
-      <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
+      <CardHeader
+        from={item?.from}
+        to={item?.to}
+        icon={
+          item?.image || item.user_type === '1'
+            ? 'https://loadingwalla.com/public/loado.png'
+            : 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png'
+        }
+        t={t}
+      />
       <View style={style.horizontalLine} />
       <View style={style.rowdirection}>
         <View style={style.point} />

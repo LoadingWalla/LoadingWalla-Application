@@ -13,7 +13,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {initGuide} from '../../../Store/Actions/Actions';
 import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
-
+import * as Constants from '../../../Constants/Constant';
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
 import UpArrow from '../../../../assets/SVG/svg/UpArrow';
 import DownArrow from '../../../../assets/SVG/svg/DownArrow';
@@ -22,6 +22,7 @@ import {DialCall} from '../../../Utils/DialCall';
 import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import BackArrow from '../../../../assets/SVG/svg/BackArrow';
 import Close from '../../../../assets/SVG/Close';
+import {useTranslation} from 'react-i18next';
 
 if (
   Platform.OS === 'android' &&
@@ -32,6 +33,7 @@ if (
 
 const Guide = ({navigation}) => {
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [selectedId, setSelectedId] = useState(null);
   const [searchMode, setSearchMode] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -59,7 +61,7 @@ const Guide = ({navigation}) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: searchMode ? () => null : 'Help Guide',
+      headerTitle: searchMode ? () => null : t(Constants.HELP_GUIDE),
       headerRight: () =>
         searchMode ? (
           <View style={styles.searchContainer}>

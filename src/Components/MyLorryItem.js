@@ -81,11 +81,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                   truck_id: item?.truck_id,
                 })
               }>
-              <Shield
-                size={15}
-                color={item?.verified ? 'green' : GradientColor2}
-                verified={item?.verified}
-              />
+              <Shield size={20} verified={item?.verified} />
               <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
                   ? `${t(Constants.VERIFIED)}`

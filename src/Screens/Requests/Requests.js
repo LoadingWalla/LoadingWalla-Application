@@ -34,11 +34,13 @@ import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import NotFound from '../../Components/NotFound';
 import {DialCall} from '../../Utils/DialCall';
 import AlertBox from '../../Components/AlertBox';
+import {useTranslation} from 'react-i18next';
 
 const Requests = ({route, navigation}) => {
   const {Owner, userType} = route?.params;
   // console.log(3456789, Owner);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [selected, setSelected] = useState(1);
   const [index, setIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -105,7 +107,7 @@ const Requests = ({route, navigation}) => {
           <MyLorryShimmer />
         ) : (
           <>
-            {getRequestBookingdataReceived.length > 0 ? (
+            {getRequestBookingdataReceived?.length > 0 ? (
               <ScrollView
                 refreshControl={
                   <RefreshControl
@@ -162,7 +164,7 @@ const Requests = ({route, navigation}) => {
           <MyLorryShimmer />
         ) : (
           <>
-            {getRequestBookingdataSent.length > 0 ? (
+            {getRequestBookingdataSent?.length > 0 ? (
               <ScrollView
                 refreshControl={
                   <RefreshControl
@@ -261,14 +263,14 @@ const Requests = ({route, navigation}) => {
           </Pressable>
           <View style={styles.routeInfo}>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Load</Text>
+              <Text style={styles.textHeading}>{t(Constants.LOAD)}</Text>
               <Text style={styles.routeText}>
                 {' '}
                 : {`${item?.material_name} | ${item?.qty} Ton`}{' '}
               </Text>
             </View>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Asked Price</Text>
+              <Text style={styles.textHeading}>{t(Constants.ASKED_PRICE)}</Text>
               <Text style={styles.routeText}>
                 {' '}
                 :{' '}
@@ -278,7 +280,9 @@ const Requests = ({route, navigation}) => {
               </Text>
             </View>
             <View style={styles.routeTextContainer}>
-              <Text style={styles.textHeading}>Revalued Price</Text>
+              <Text style={styles.textHeading}>
+                {t(Constants.REVALUED_PRICE)}
+              </Text>
               <Text style={styles.routeText}>
                 {' '}
                 :{' '}
@@ -324,7 +328,7 @@ const Requests = ({route, navigation}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1, backgroundColor: '#FFFDFD'}}>
       <FindLoadHeader
-        title={'My Requests'}
+        title={t(Constants.MY_REQUEST)}
         goBack={() => navigation.goBack()}
         from={Owner?.from}
         to={Owner?.to === null ? 'Anywhere' : Owner?.to}
@@ -348,8 +352,8 @@ const Requests = ({route, navigation}) => {
           navigationState={{
             index,
             routes: [
-              {key: 'received', title: Constants.RECEIVED_REQUEST},
-              {key: 'sent', title: Constants.SENT_REQUEST},
+              {key: 'received', title: t(Constants.RECEIVED_REQUEST)},
+              {key: 'sent', title: t(Constants.SENT_REQUEST)},
             ],
           }}
           renderScene={SceneMap({received: ReceiveTab, sent: SentTab})}

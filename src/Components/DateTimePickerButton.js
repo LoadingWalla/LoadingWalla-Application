@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Platform, Text, TouchableOpacity} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useEffect} from 'react';
-import {PrivacyPolicy, black, inputColor} from '../Color/color';
+import {PrivacyPolicy, inputColor} from '../Color/color';
 
 const DateTimePickerButton = ({initialDate, onDateChange}) => {
   const [date, setDate] = useState(initialDate ? new Date(initialDate) : null);

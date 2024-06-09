@@ -51,7 +51,7 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
-import InAppReview from 'react-native-in-app-review';
+// import InAppReview from 'react-native-in-app-review';
 import {useTranslation} from 'react-i18next';
 
 const hei = Dimensions.get('window').height;
@@ -206,11 +206,7 @@ const Profile = ({navigation, route}) => {
               <View style={{flexDirection: 'row', marginTop: 7}}>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity>
-                    <Shield
-                      size={16}
-                      color={Userdata?.verify ? 'green' : GradientColor2}
-                      verified={Userdata?.verify}
-                    />
+                    <Shield size={20} verified={Userdata?.verify} />
                   </TouchableOpacity>
                   <Text
                     style={style.dashboardHeaderVerifiedTitle(
@@ -331,7 +327,7 @@ const Profile = ({navigation, route}) => {
                   title={t(Constants.TERMS_CONDITION_TITLE2)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
-                      headerTitle: 'Terms and Conditions',
+                      headerTitle: t(Constants.TERMS_AND_CONDITITIONS),
                       uri: uriTermsCondition3,
                     });
                   }}
@@ -342,7 +338,7 @@ const Profile = ({navigation, route}) => {
                   title={t(Constants.TERMS_CONDITION_TITLE3)}
                   onPress={() => {
                     navigation.navigate('Legal Policies', {
-                      headerTitle: 'Privacy Policy',
+                      headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
                       uri: uriTermsCondition2,
                     });
                   }}

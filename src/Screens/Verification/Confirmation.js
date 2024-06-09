@@ -102,11 +102,7 @@ const Confirmation = ({navigation, route}) => {
                           selectedData.material_name}
                       </Text>
                       {userType === '1' ? null : (
-                        <Shield
-                          size={20}
-                          color={selectedData.verified ? '#119500' : 'red'}
-                          verified={selectedData.verified}
-                        />
+                        <Shield size={20} verified={selectedData.verified} />
                       )}
                     </View>
                     <Text style={styles.textStyle}>

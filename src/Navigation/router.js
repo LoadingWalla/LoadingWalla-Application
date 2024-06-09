@@ -537,7 +537,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
-          title: route.params?.headerTitle || 'Legal Policies',
+          title: route.params?.headerTitle || t(Constants.LEGAL_POLICIES),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -696,7 +696,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Results',
+          title: t(Constants.RESULTS),
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
@@ -780,7 +780,7 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
-          title: 'Results',
+          title: t(Constants.RESULTS),
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
@@ -802,7 +802,7 @@ const Navigation = ({language}) => {
         component={ContactUs}
         options={{
           headerShown: true,
-          title: 'Contact Us',
+          title: t(Constants.CONTACT_US),
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
@@ -835,7 +835,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Help Guide',
+          title: t(Constants.HELP_GUIDE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -857,6 +857,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
+          title: t(Constants.WALLET),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -916,7 +917,7 @@ const Navigation = ({language}) => {
         name="Request"
         component={Requests}
         options={{
-          title: 'My Requests',
+          title: t(Constants.MY_REQUEST),
           headerShown: true,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
@@ -941,6 +942,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
+          title: t(Constants.KYC),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -962,6 +964,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
+          title: t(Constants.RC_VERIFICATION),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -1012,7 +1015,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Saved Address',
+          title: t(Constants.SAVED_ADDRESS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -1139,7 +1142,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
-          title: 'Document Details',
+          title: t(Constants.DOCUMENT_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -1200,6 +1203,7 @@ const Navigation = ({language}) => {
         component={PreviousBookings}
         options={{
           headerShown: true,
+          title: t(Constants.PREVIOUS_BOOKINGS),
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',

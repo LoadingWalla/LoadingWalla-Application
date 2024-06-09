@@ -29,12 +29,13 @@ import SearchFilter from '../../Components/SearchFilter';
 import ShowPermitModal from '../../Components/ShowPermitModal';
 import Button from '../../Components/Button';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
+import {useTranslation} from 'react-i18next';
 
 const StatusChangeModal = ({navigation, route}) => {
   const {userType, data} = route?.params;
   // console.log(9898989, route.params);
   const dispatch = useDispatch();
-
+  const {t} = useTranslation();
   const [searchFrom, setSearchFrom] = useState(data?.from);
   const [searchFromId, setSearchFromId] = useState(data?.from_id);
   const [searchTo, setSearchTo] = useState(data?.to);
@@ -57,7 +58,7 @@ const StatusChangeModal = ({navigation, route}) => {
     navigation.navigate('Search', {
       locId: val === 'from' ? searchToId : searchFromId,
       onReturn: item => {
-        console.log(8888888888, item);
+        // console.log(8888888888, item);
         if (val === 'from') {
           setSearchFrom(item?.place_name);
           setSearchFromId(item?.id);
@@ -85,8 +86,8 @@ const StatusChangeModal = ({navigation, route}) => {
   useEffect(() => {
     if (statusChange_Status != null) {
       userType === '1'
-        ? navigation.navigate('My Load')
-        : navigation.navigate('My Truck');
+        ? navigation.navigate(t(Constants.NAV_MY_LOAD))
+        : navigation.navigate(t(Constants.NAV_MY_LORRY));
     }
     dispatch(statusChangeFailure());
   }, [statusChange_Status, navigation, dispatch, userType]);
@@ -137,7 +138,8 @@ const StatusChangeModal = ({navigation, route}) => {
       <View style={styles.screenModalView}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>
-            {userType === '1' ? Constants.LOAD : Constants.LORRY} Status
+            {userType === '1' ? t(Constants.LOAD) : t(Constants.LORRY)}{' '}
+            {t(Constants.STATUS)}
           </Text>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -147,7 +149,7 @@ const StatusChangeModal = ({navigation, route}) => {
         </View>
         <View style={styles.centeredView}>
           <View style={styles.activeContainer}>
-            <Text style={styles.activeText}>{Constants.ACTIVE}</Text>
+            <Text style={styles.activeText}>{t(Constants.ACTIVE)}</Text>
             <Switch
               isOn={isEnabled}
               onColor={GradientColor2}
@@ -168,17 +170,17 @@ const StatusChangeModal = ({navigation, route}) => {
           </View> */}
           <SearchFilter
             defaultValue={searchFrom}
-            leftTitle={Constants.FROM}
+            leftTitle={t(Constants.FROM)}
             closeIconClick={() => closeIconClick('from')}
             onSearchPress={() => navigateToSeach('from')}
-            placeholder={Constants.SELECT_LOCATION_TITLE}
+            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
           />
           <SearchFilter
             defaultValue={searchTo}
-            leftTitle={Constants.TO}
+            leftTitle={t(Constants.TO)}
             closeIconClick={() => closeIconClick('to')}
             onSearchPress={() => navigateToSeach()}
-            placeholder={Constants.SELECT_LOCATION_TITLE}
+            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
           />
           <View
             style={{
@@ -192,8 +194,9 @@ const StatusChangeModal = ({navigation, route}) => {
               onPress={deleteLorry}
               style={styles.removeButton}>
               <Text style={styles.removeText}>
-                {Constants.REMOVE}{' '}
-                {userType === '1' ? Constants.LOAD : Constants.LORRY}
+                {userType === '1'
+                  ? t(Constants.REMOVE_LOAD)
+                  : t(Constants.REMOVE_LORRY)}
               </Text>
               {deletelorryLoading && (
                 <ActivityIndicator size="small" color={GradientColor2} />
@@ -207,7 +210,7 @@ const StatusChangeModal = ({navigation, route}) => {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.permitText}>Permit :</Text>
+                <Text style={styles.permitText}>{t(Constants.PERMIT)} :</Text>
                 <TouchableOpacity
                   onPress={() => setModalVisible(true)}
                   disabled={!(data?.permit.length > 1)}>
@@ -234,12 +237,12 @@ const StatusChangeModal = ({navigation, route}) => {
           </View>
           <Button
             onPress={() => saveChanges()}
-            title={'Save Changes'}
+            title={t(Constants.SAVE)}
             loading={statusChangeLoading}
             textStyle={styles.saveText}
             style={styles.saveButton}
           />
-          <Text style={styles.noteText}>{Constants.NOTE}</Text>
+          <Text style={styles.noteText}>{t(Constants.NOTE)}</Text>
         </View>
       </View>
     </KeyboardAvoidingView>

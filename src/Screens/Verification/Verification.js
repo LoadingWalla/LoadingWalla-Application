@@ -9,9 +9,11 @@ import {titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import UploadIcon from '../../../assets/SVG/svg/UploadIcon';
+import {useTranslation} from 'react-i18next';
 
 const Verification = ({navigation, route}) => {
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {getDocumentData, getDocumentLoading, getDocumentStatus} = useSelector(
     state => {
@@ -39,19 +41,19 @@ const Verification = ({navigation, route}) => {
   const steps = [
     {
       id: '1',
-      title: 'Aadhaar Card',
+      title: t(Constants.AADHAAR_CARD),
       onPress: 'Card Details',
       status: getStatus('aadhar'),
     },
     {
       id: '2',
-      title: 'PAN Card',
+      title: t(Constants.PAN_CARD),
       onPress: 'Card Details',
       status: getStatus('pan'),
     },
     {
       id: '3',
-      title: 'Business Details',
+      title: t(Constants.BUSSINESS_DETAILS),
       onPress: 'Card Details',
       status: getStatus('gst'),
     },
@@ -94,7 +96,9 @@ const Verification = ({navigation, route}) => {
                 })
               }>
               <Text style={styles.uploadButtonText(item.status)}>
-                {item.status === 'Rejected' ? 'Re Upload' : 'Upload'}
+                {item.status === 'Rejected'
+                  ? t(Constants.REUPLOAD)
+                  : t(Constants.UPLOAD)}
               </Text>
               <UploadIcon
                 size={20}
@@ -119,10 +123,10 @@ const Verification = ({navigation, route}) => {
       />
 
       <Button
-        title="Done"
+        title={t(Constants.CONTINUE)}
         textStyle={styles.buttonTextStyle}
         style={styles.buttonstyle}
-        onPress={() => navigation.navigate(Constants.PROFILE)}
+        onPress={() => navigation.navigate(t(Constants.MENU))}
       />
     </View>
   );

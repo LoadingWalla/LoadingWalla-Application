@@ -87,13 +87,7 @@ const Status = ({navigation, route}) => {
                     <Text style={styles.truckNumber}>
                       {mySingleTruckData?.vehicle_number}
                     </Text>
-                    <Shield
-                      size={20}
-                      color={
-                        mySingleTruckData?.verified ? '#119500' : '#e5b900'
-                      }
-                      verified={mySingleTruckData?.verified}
-                    />
+                    <Shield size={20} verified={mySingleTruckData?.verified} />
                   </View>
                 </View>
               </View>

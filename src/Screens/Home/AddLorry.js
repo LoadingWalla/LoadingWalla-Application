@@ -38,6 +38,7 @@ import {
   statusChangeFailure,
 } from '../../Store/Actions/Actions';
 import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
+import {useTranslation} from 'react-i18next';
 
 const AddLorry = ({navigation, route}) => {
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -57,6 +58,7 @@ const AddLorry = ({navigation, route}) => {
   const [selectedGPSOption, setSelectedGPSOption] = useState('1');
 
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {
     addLorrydata,
@@ -359,7 +361,9 @@ const AddLorry = ({navigation, route}) => {
           {seeMore()}
           {viewIndex === 0 ? (
             <View>
-              <Text style={styleSheet.label}>{Constants.VEHICLE_NUMBER}</Text>
+              <Text style={styleSheet.label}>
+                {t(Constants.VEHICLE_NUMBER)}
+              </Text>
               <TextInputField
                 value={removeEmojis(vehicleNumber).toUpperCase()}
                 hint={'XX 00 XX 0000'}
@@ -369,7 +373,7 @@ const AddLorry = ({navigation, route}) => {
                   setVehicleNumber(input);
                 }}
               />
-              <Text style={styleSheet.label}>{Constants.TRUCK_TYPE}</Text>
+              <Text style={styleSheet.label}>{t(Constants.TRUCK_TYPE)}</Text>
               <TruckItem
                 click={e => setVehicle(e?.id)}
                 backgroundStyle={{
@@ -395,7 +399,7 @@ const AddLorry = ({navigation, route}) => {
                 }}
                 renderItem={wheeldata}
               />
-              <Text style={styleSheet.label}>{Constants.BODY_TYPE}</Text>
+              <Text style={styleSheet.label}>{t(Constants.BODY_TYPE)}</Text>
               <TruckItem
                 backgroundStyle={styleSheet.truckTypeItem}
                 unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
@@ -406,7 +410,7 @@ const AddLorry = ({navigation, route}) => {
               />
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styleSheet.label}>{'Permit'}</Text>
+                <Text style={styleSheet.label}>{t(Constants.PERMIT)}</Text>
                 <TouchableOpacity onPress={() => setSeeMore(true)}>
                   <Text
                     style={{
@@ -415,7 +419,7 @@ const AddLorry = ({navigation, route}) => {
                       fontSize: 15,
                       fontFamily: 'PlusJakartaSans-Medium',
                     }}>
-                    See More
+                    {t(Constants.SEE_MORE)}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -452,7 +456,7 @@ const AddLorry = ({navigation, route}) => {
                 onPress={() => {
                   addLorry();
                 }}
-                title={Constants.SAVE_PROCEED}
+                title={t(Constants.SAVE_PROCEED)}
                 textStyle={styleSheet.buttonTitile}
                 style={styleSheet.button}
               />
@@ -466,7 +470,7 @@ const AddLorry = ({navigation, route}) => {
                 }}>
                 <Text
                   style={{fontSize: 18, fontWeight: '700', color: '#352422'}}>
-                  {Constants.ACTIVE}
+                  {t(Constants.ACTIVE)}
                 </Text>
                 <Switch
                   isOn={isEnabled}
@@ -479,21 +483,21 @@ const AddLorry = ({navigation, route}) => {
               </View>
               <SearchFilter
                 defaultValue={searchFrom}
-                leftTitle={Constants.FROM}
+                leftTitle={t(Constants.FROM)}
                 closeIconClick={() => closeIconClick('from')}
                 onSearchPress={() => navigateToSeach('from')}
-                placeholder={Constants.SELECT_LOCATION_TITLE}
+                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
               />
               <SearchFilter
                 defaultValue={searchTo}
-                leftTitle={Constants.TO}
+                leftTitle={t(Constants.TO)}
                 closeIconClick={() => closeIconClick('to')}
                 onSearchPress={() => navigateToSeach('to')}
-                placeholder={Constants.SELECT_LOCATION_TITLE}
+                placeholder={t(Constants.SELECT_LOCATION_TITLE)}
               />
               <Button //searchLoad()
                 onPress={() => saveChanges()}
-                title={'Save'}
+                title={t(Constants.SAVE)}
                 loading={statusChangeLoading}
                 textStyle={{
                   color: textColor,
@@ -520,7 +524,7 @@ const AddLorry = ({navigation, route}) => {
                   marginBottom: 15,
                   color: titleColor,
                 }}>
-                {Constants.NOTE}
+                {t(Constants.NOTE)}
               </Text>
               <View
                 style={{
@@ -538,7 +542,7 @@ const AddLorry = ({navigation, route}) => {
                       fontFamily: 'PlusJakartaSans-SemiBold',
                       textDecorationLine: 'underline',
                     }}>
-                    Skip
+                    {t(Constants.SKIP)}
                   </Text>
                 </TouchableOpacity>
               </View>

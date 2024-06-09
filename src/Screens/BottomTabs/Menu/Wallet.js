@@ -32,10 +32,12 @@ import AlertBox from '../../../Components/AlertBox';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
 import RightArrow2 from '../../../../assets/SVG/svg/RightArrow2';
+import {useTranslation} from 'react-i18next';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const {
     wallletData,
@@ -156,11 +158,11 @@ const Wallet = ({navigation}) => {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'recharge', title: 'Recharge'},
-    {key: 'deductions', title: 'Deductions'},
+    {key: 'recharge', title: t(Constants.RECHARGE)},
+    {key: 'deductions', title: t(Constants.DEDUCTION)},
   ]);
 
-  const data = Array.from({length: 10}, (_, index) => ({
+  const data = Array.from({length: 0}, (_, index) => ({
     id: index.toString(),
     amount: '5000',
     date: '31 Dec 2023, 03:08 PM',
@@ -249,24 +251,21 @@ const Wallet = ({navigation}) => {
       <View style={styles.box}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <View>
-            <Text style={styles.texts}>Total Topup Amount</Text>
-            <Text style={styles.walletText}>Account Balance</Text>
+            <Text style={styles.texts}>{t(Constants.TOTAL_TOPUP_AMOUNT)}</Text>
+            <Text style={styles.walletText}>
+              {t(Constants.ACCOUNT_BALANCE)}
+            </Text>
           </View>
           <View>
-            <Text style={styles.texts}>{Constants.BALANCE}</Text>
+            <Text style={styles.texts}>{t(Constants.BALANCE)}</Text>
             <Text style={styles.walletText}>
               {`₹ ${getWallletData?.wallet || '0'}`}
             </Text>
           </View>
         </View>
         <View style={styles.horizontalLine} />
-        <Text style={styles.topupWallet}>Enter Amount in ₹</Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-          }}>
+        <Text style={styles.topupWallet}>{t(Constants.ENTER_AMOUNT)}</Text>
+        <View style={styles.inputContainerBox}>
           <View style={styles.inputContainer}>
             <TextInput
               value={'' + amount + ''}
@@ -279,7 +278,7 @@ const Wallet = ({navigation}) => {
           </View>
           <Button
             onPress={() => addAmount()}
-            title={'TopUp'}
+            title={t(Constants.TOPUP)}
             loading={orderLoading}
             textStyle={styles.textStyle}
             style={styles.buttonStyle}
@@ -504,5 +503,10 @@ const styles = StyleSheet.create({
     color: titleColor,
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Regular',
+  },
+  inputContainerBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
 });
