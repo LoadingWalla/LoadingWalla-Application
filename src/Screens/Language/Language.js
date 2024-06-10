@@ -97,6 +97,7 @@ const Language = ({navigation, route}) => {
   const navigate = () => {
     if (params?.fromMenu) {
       navigation.goBack();
+      // navigation.navigate('Menu');
     } else {
       navigation.replace('Signup');
     }

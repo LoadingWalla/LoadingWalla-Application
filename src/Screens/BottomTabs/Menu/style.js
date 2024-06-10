@@ -178,4 +178,10 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginBottom: 15,
   },
+  rightArrowView: {
+    marginLeft: 'auto',
+    elevation: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+  },
 });
