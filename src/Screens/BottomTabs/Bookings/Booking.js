@@ -128,7 +128,12 @@ const Booking = ({navigation}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <NotFound imageName="noBookings" />
+            <NotFound
+              imageName="noBookings"
+              height={200}
+              width={300}
+              title={'No Bookings Found'}
+            />
 
             <TouchableOpacity
               style={style.previousBooking}
@@ -137,7 +142,12 @@ const Booking = ({navigation}) => {
                   Owner: BookingDashUser,
                 })
               }>
-              <Text style={{color: backgroundColorNew}}>
+              <Text
+                style={{
+                  color: backgroundColorNew,
+                  fontFamily: 'PlusJakartaSans-SemiBold',
+                  fontSize: 16,
+                }}>
                 {t(Constants.GOTOPREVIOUSBOOKING)}
               </Text>
             </TouchableOpacity>

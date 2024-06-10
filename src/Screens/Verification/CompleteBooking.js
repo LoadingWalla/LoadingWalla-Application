@@ -1,13 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Modal,
-} from 'react-native';
-import {
+  GradientColor1,
   GradientColor2,
   GradientColor3,
   GradientColor4,
@@ -18,6 +12,7 @@ import {
 } from '../../Color/color';
 import RadioButton from '../../Components/RadioButton';
 import CheckBox from '@react-native-community/checkbox';
+import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import UploadDocument from '../../../assets/SVG/svg/UploadDocument';
@@ -26,10 +21,14 @@ import ImagePicker from 'react-native-image-crop-picker';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import {useDispatch} from 'react-redux';
-import {initCompleteBookingDocumentRequest} from '../../Store/Actions/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  completeBookingDocumentFailure,
+  initCompleteBookingDocumentRequest,
+} from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
+import Button from '../../Components/Button';
 
 const CompleteBooking = ({navigation, route}) => {
   const {
@@ -54,6 +53,23 @@ const CompleteBooking = ({navigation, route}) => {
   const [isCameraOptions, setCameraOptions] = useState(false);
   const [documentImage, setDocumentImage] = useState(null);
 
+  const {
+    completeDocumentLoading,
+    completeDocumentStatus,
+    completeDocumentData,
+  } = useSelector(state => {
+    console.log('complete bookings', state.data);
+    return state.data;
+  });
+
+  useEffect(() => {
+    if (completeDocumentStatus === 200) {
+      Toast.show(`${completeDocumentData?.message}`, Toast.LONG);
+      // navigation.navigate('KYC');
+    }
+    dispatch(completeBookingDocumentFailure());
+  }, [dispatch, completeDocumentStatus, navigation]);
+
   const completeOrder = () => {
     if (!isChecked) {
       AlertBox(
@@ -76,7 +92,7 @@ const CompleteBooking = ({navigation, route}) => {
     try {
       const image = await ImagePicker.openCamera({
         width: 300,
-        height: 400,
+        height: 200,
         cropping: true,
         compressImageQuality: 0.8,
         freeStyleCropEnabled: true,
@@ -102,7 +118,7 @@ const CompleteBooking = ({navigation, route}) => {
     try {
       const image = await ImagePicker.openPicker({
         width: 300,
-        height: 400,
+        height: 200,
         cropping: true,
         cropperCircleOverlay: false,
         compressImageQuality: 0.8,
@@ -266,12 +282,6 @@ const CompleteBooking = ({navigation, route}) => {
               <UploadDocument />
               <Text style={styles.filename}>Uploadedfilename.png</Text>
             </TouchableOpacity>
-            {/* <InnerButton
-              enabledStyle={styles.findButtonContainer}
-              textStyle={styles.findButtonText}
-              title={'Upload'}
-              navigation={() => {}}
-            /> */}
           </View>
         </View>
         <View style={styles.centerItem}>
@@ -293,11 +303,13 @@ const CompleteBooking = ({navigation, route}) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
+          <Button
+            title={'Complete order'}
+            textStyle={styles.completeOrderButtonText}
             style={styles.completeOrderButton}
-            onPress={completeOrder}>
-            <Text style={styles.completeOrderButtonText}>Complete order</Text>
-          </TouchableOpacity>
+            loading={completeDocumentLoading}
+            onPress={completeOrder}
+          />
         </View>
       </View>
     </View>
@@ -354,7 +366,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'grey',
+    borderColor: GradientColor1,
     borderStyle: 'dashed',
     padding: 10,
     // marginBottom: 20,
@@ -391,6 +403,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   completeOrderButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: GradientColor3,
     paddingVertical: 15,
     alignItems: 'center',

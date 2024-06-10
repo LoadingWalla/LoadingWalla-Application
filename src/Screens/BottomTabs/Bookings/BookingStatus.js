@@ -48,7 +48,7 @@ const BookingStatus = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.gifView}>
         <Text style={[styles.congratsText, {color: color}]}>{message}</Text>
-        <NotFound imageName={image} height={80} width={80} />
+        <NotFound imageName={image} height={80} width={80} title={message} />
       </View>
 
       <View style={styles.cardContainer}>

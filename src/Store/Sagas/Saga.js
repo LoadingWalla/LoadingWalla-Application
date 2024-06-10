@@ -956,9 +956,9 @@ export function* createOrder({amount, userId}) {
 export function* verifyPayment({paymentId, orderId}) {
   try {
     const body = {razorpay_payment_id: paymentId, razorpay_order_id: orderId};
-    console.log(8888888, body);
+    // console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
-    console.log('API response------PaymentVerify', data);
+    // console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.verifyPaymentSuccess(data));
     } else {
@@ -992,6 +992,7 @@ export function* completeBookingDocument({
     }
     // console.log(9999999, body);
     let data = yield multiPartApi.post('complete-booking-document', body);
+    // console.log(22222, data);
     if (data?.data?.status === 200) {
       yield put(actions.completeBookingDocumentSuccess(data));
     } else {
@@ -1000,6 +1001,24 @@ export function* completeBookingDocument({
     }
   } catch (error) {
     yield put(actions.completeBookingDocumentFailure());
+    // console.log("error", error);
+  }
+}
+
+// Transcations
+export function* fetchTranscations() {
+  try {
+    const data = yield API.get('transaction');
+    // console.log('API response', data);
+    if (data?.data?.status === 200) {
+      // console.log("success", data);
+      yield put(actions.transcationDetailsSuccess(data));
+    } else {
+      // console.log("else", data);
+      yield put(actions.transcationDetailsFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.transcationDetailsFailure(error.message));
     // console.log("error", error);
   }
 }

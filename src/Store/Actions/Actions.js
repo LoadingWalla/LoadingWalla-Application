@@ -947,12 +947,25 @@ export const initCompleteBookingDocumentRequest = (
   };
 };
 
-export const completeBookingDocumentSuccess = response => ({
+export const completeBookingDocumentSuccess = data => ({
   type: actionTypes.COMPLETE_BOOKING_DOCUMENT_SUCCESS,
-  payload: response,
+  payload: data,
 });
 
 export const completeBookingDocumentFailure = error => ({
   type: actionTypes.COMPLETE_BOOKING_DOCUMENT_FAILURE,
   payload: error,
+});
+
+// get transcation details
+export const initTranscationDetails = () => ({
+  type: actionTypes.FETCH_TRANSACTIONS_REQUEST,
+});
+export const transcationDetailsSuccess = payload => ({
+  type: actionTypes.FETCH_TRANSACTIONS_SUCCESS,
+  payload,
+});
+export const transcationDetailsFailure = payload => ({
+  type: actionTypes.FETCH_TRANSACTIONS_FAILURE,
+  payload,
 });

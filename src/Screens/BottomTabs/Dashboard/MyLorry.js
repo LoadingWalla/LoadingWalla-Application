@@ -115,6 +115,9 @@ const MyLorry = ({navigation}) => {
           }>
           <NotFound
             imageName={userType === '1' ? 'noLoadFound' : 'noTruckFound'}
+            height={300}
+            width={300}
+            title={userType === '1' ? 'No Load Found' : 'No Truck Found'}
           />
         </ScrollView>
       );

@@ -145,11 +145,15 @@ const initialState = {
   completeDocumentLoading: false,
   completeDocumentData: null,
   completeDocumentStatus: null,
+  // transcation detials
+  transcationLoading: false,
+  transcationData: null,
+  transcationStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
   const {payload, type} = action;
-  // console.log('Reducer', payload);
+  console.log('Reducer', payload);
 
   switch (type) {
     case actionTypes.INIT_LOGIN:
@@ -1123,6 +1127,27 @@ const reducer = (state = initialState, action) => {
         completeDocumentLoading: false,
         completeDocumentData: null,
         completeDocumentStatus: null,
+      });
+
+    // transcation Details
+    case actionTypes.FETCH_TRANSACTIONS_REQUEST:
+      return {
+        ...state,
+        transcationLoading: true,
+        transcationData: null,
+        transcationStatus: null,
+      };
+    case actionTypes.FETCH_TRANSACTIONS_SUCCESS:
+      return updateState(state, {
+        transcationLoading: false,
+        transcationData: payload?.data?.transaction,
+        transcationStatus: payload?.status,
+      });
+    case actionTypes.FETCH_TRANSACTIONS_FAILURE:
+      return updateState(state, {
+        transcationLoading: false,
+        transcationData: null,
+        transcationStatus: null,
       });
 
     default:

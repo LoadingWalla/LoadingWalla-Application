@@ -50,6 +50,7 @@ function* rootSaga() {
   yield takeLatest(actions.FETCH_MAP_DATA_START, saga.fetchMapDataSaga);
   yield takeLatest(actions.CREATE_ORDER_REQUEST, saga.createOrder);
   yield takeLatest(actions.VERIFY_PAYMENT_REQUEST, saga.verifyPayment);
+  yield takeLatest(actions.FETCH_TRANSACTIONS_REQUEST, saga.fetchTranscations);
   yield takeLatest(
     actions.COMPLETE_BOOKING_DOCUMENT_REQUEST,
     saga.completeBookingDocument,

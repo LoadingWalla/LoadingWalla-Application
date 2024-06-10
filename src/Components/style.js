@@ -227,6 +227,7 @@ export default StyleSheet.create({
     marginTop: 10,
     justifyContent: 'center',
     flexDirection: 'row',
+    // borderWidth: 1,
   },
   innerButtonText: isGrey => ({
     fontSize: 13,
