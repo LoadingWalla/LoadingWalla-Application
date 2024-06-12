@@ -124,14 +124,16 @@ const Language = ({navigation, route}) => {
           numColumns={2}
         />
       </View>
-      <View style={styles.part3}>
-        <Button
-          onPress={() => navigate()}
-          title={t(Constants.CONTINUE)}
-          textStyle={styles.buttonTitile}
-          style={styles.button}
-        />
-      </View>
+      {params?.fromMenu ? null : (
+        <View style={styles.part3}>
+          <Button
+            onPress={() => navigate()}
+            title={t(Constants.CONTINUE)}
+            textStyle={styles.buttonTitile}
+            style={styles.button}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

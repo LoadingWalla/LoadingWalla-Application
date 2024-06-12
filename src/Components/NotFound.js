@@ -37,14 +37,14 @@ const NotFound = ({imageName, height, width, title}) => {
           style={styles.splashImage(height, width)}
         />
       </View>
-      <Text style={styles.textStyle}>{title || 'No Data Found'}</Text>
+      {title ? <Text style={styles.textStyle}>{title}</Text> : ''}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     // borderWidth: 1,

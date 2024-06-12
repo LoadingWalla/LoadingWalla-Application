@@ -162,6 +162,7 @@ export default StyleSheet.create({
     fontSize: 18,
     color: PrivacyPolicy,
     borderColor: backgroundColorNew,
-    bottom: 10,
+    // bottom: 10,
+    marginTop: 20,
   },
 });

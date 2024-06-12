@@ -96,14 +96,14 @@ const Wallet = ({navigation}) => {
   };
 
   const addAmount = () => {
-    if (
-      parseInt(amount, 10) === 0 ||
-      parseInt(amount, 10) < 100 ||
-      parseInt(amount, 10) > 100000
-    ) {
-      Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
-      return;
-    }
+    // if (
+    //   parseInt(amount, 10) === 0 ||
+    //   parseInt(amount, 10) < 100 ||
+    //   parseInt(amount, 10) > 100000
+    // ) {
+    //   Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
+    //   return;
+    // }
     dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
     // for testing only
     // dispatch(
@@ -393,10 +393,10 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
   textInput: {
-    fontFamily: 'PlusJakartaSans-Regular',
+    fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 15,
     width: '100%',
-    color: PrivacyPolicy,
+    color: titleColor,
   },
   renderItemStyle: {
     flexShrink: 1,

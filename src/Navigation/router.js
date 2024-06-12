@@ -84,13 +84,12 @@ function BottomTabs() {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
@@ -270,13 +269,12 @@ function MyLoadsBottomTabs() {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
@@ -472,13 +470,12 @@ const Navigation = ({language}) => {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
