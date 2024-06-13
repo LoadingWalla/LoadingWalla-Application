@@ -437,22 +437,22 @@ export function* requestBooking({
 
 // Saga Accept Reject
 export function* acceptReject({bookingId, status}) {
-  // console.log(3333, bookingId, status);
+  console.log(3333, bookingId, status);
   try {
     const data = yield API.get(
       `update-booking?booking_id=${bookingId}&status=${status}`,
     );
-    // console.log("API RESPONSE=======Update booking", data);
+    console.log('API RESPONSE=======Update booking', data);
     if (data?.data?.status === 200) {
       yield put(actions.acceptRejectSuccess(data));
     } else {
       yield put(actions.acceptRejectFailure(data.status));
-      // console.log("else", data);
+      console.log('else', data);
     }
   } catch (error) {
     yield put(actions.acceptRejectFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
-    // console.log("error", error);
+    console.log('error', error);
   }
 }
 

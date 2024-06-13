@@ -153,7 +153,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   const {payload, type} = action;
-  console.log('Reducer', payload);
+  // console.log('Reducer', payload);
 
   switch (type) {
     case actionTypes.INIT_LOGIN:
