@@ -294,6 +294,12 @@ const Profile = ({navigation, route}) => {
                   onPress={() => navigation.navigate('Address')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
+                <View style={style.horizontalLine} />
+                <MenuItem
+                  title={'GPS Tracking'}
+                  onPress={() => navigation.navigate('GPS')}
+                  Icon={<GpsIcon size={30} color={GradientColor1} />}
+                />
               </View>
             </View>
 

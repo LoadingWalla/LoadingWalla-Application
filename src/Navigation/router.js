@@ -4,7 +4,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
+import {
+  Alert,
+  Animated,
+  BackHandler,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -24,6 +32,7 @@ import {
   GradientColor1,
   GradientColor2,
   GradientColor3,
+  backgroundColorNew,
   tabIndicatorColor,
 } from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
@@ -65,6 +74,9 @@ import i18n from '../locales/i18n';
 import {useTranslation} from 'react-i18next';
 import Address from '../Screens/BottomTabs/Menu/Address';
 import AddAddress from '../Screens/Modals/AddAddress';
+import GPStracking from '../Screens/GPS/GPStracking';
+import Button from '../Components/Button';
+import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1028,6 +1040,7 @@ const Navigation = ({language}) => {
             ),
         })}
       />
+
       <Stack.Screen
         name="addAddress"
         component={AddAddress}
@@ -1251,6 +1264,59 @@ const Navigation = ({language}) => {
             fontFamily: 'PlusJakartaSans-Bold',
           },
         })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="GPS"
+        component={GPStracking}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'GPS Tracking',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <TouchableOpacity
+              style={{
+                // borderWidth: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 20,
+                elevation: 3,
+                backgroundColor: '#F7F7F7',
+              }}>
+              <HeadPhoneIcon
+                size={15}
+                style={{marginRight: 5}}
+                color={backgroundColorNew}
+              />
+              <Text
+                style={{
+                  color: backgroundColorNew,
+                  fontFamily: 'PlusJakartaSans-SemiBold',
+                  fontSize: 12,
+                  textAlign: 'center',
+                }}>
+                Help?
+              </Text>
+            </TouchableOpacity>
+          ),
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>
