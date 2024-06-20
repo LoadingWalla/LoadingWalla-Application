@@ -77,6 +77,9 @@ import AddAddress from '../Screens/Modals/AddAddress';
 import GPStracking from '../Screens/GPS/GPStracking';
 import Button from '../Components/Button';
 import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
+import HeaderHelpButton from '../Components/HeaderHelpButton';
+import OwnedGPS from '../Screens/GPS/OwnedGPS';
+import GpsSetting from '../Screens/GPS/GpsSetting';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1276,6 +1279,7 @@ const Navigation = ({language}) => {
         })}
       />
 
+      {/* GPS */}
       <Stack.Screen
         name="GPS"
         component={GPStracking}
@@ -1287,35 +1291,59 @@ const Navigation = ({language}) => {
             fontFamily: 'PlusJakartaSans-Bold',
           },
           headerShadowVisible: false,
-          headerRight: () => (
-            <TouchableOpacity
-              style={{
-                // borderWidth: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 20,
-                elevation: 3,
-                backgroundColor: '#F7F7F7',
-              }}>
-              <HeadPhoneIcon
-                size={15}
-                style={{marginRight: 5}}
-                color={backgroundColorNew}
-              />
-              <Text
-                style={{
-                  color: backgroundColorNew,
-                  fontFamily: 'PlusJakartaSans-SemiBold',
-                  fontSize: 12,
-                  textAlign: 'center',
-                }}>
-                Help?
-              </Text>
-            </TouchableOpacity>
-          ),
+          headerRight: () => <HeaderHelpButton shareIcon={false} />,
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="OwnedGPS"
+        component={OwnedGPS}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Tracking truck',
+          animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => <HeaderHelpButton shareIcon={true} />,
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="GpsSetting"
+        component={GpsSetting}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'GPS Setting',
+          animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => <HeaderHelpButton shareIcon={false} />,
         }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
