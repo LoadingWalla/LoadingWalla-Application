@@ -13,14 +13,26 @@ import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
 import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import DamageIcon from '../../../assets/SVG/svg/DamageIcon';
-import {backgroundColorNew} from '../../Color/color';
+import {PrivacyPolicy, backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import MapView, {Polyline} from 'react-native-maps';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import ToggleIconText from '../../Components/ToggleIconText';
+import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
+import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
+import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
 
-const OwnedGPS = ({navigation, route}) => {
+const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
+  return (
+    <TouchableOpacity style={styles.iconView} onPress={onPress}>
+      <IconComponent size={iconSize} />
+      <Text style={styles.iconText}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+const TrackingTruck = ({navigation, route}) => {
   const {item} = route.params;
   console.log(444, item);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -40,8 +52,8 @@ const OwnedGPS = ({navigation, route}) => {
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text>Today distance:</Text>
-            <Text>300 KM</Text>
+            <Text style={styles.distanceText}>Today distance:</Text>
+            <Text style={styles.highlightText}>300 KM</Text>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
@@ -103,7 +115,7 @@ const OwnedGPS = ({navigation, route}) => {
         <View style={styles.mapHeader}>
           <Text>DEL 0212 DP1</Text>
           <View style={styles.verticalLine} />
-          <Text>Current Location: Jamshedpur, Jharkhand</Text>
+          <Text>Jamshedpur, Jharkhand</Text>
         </View>
         <View style={styles.mapView}>
           <MapView
@@ -120,12 +132,14 @@ const OwnedGPS = ({navigation, route}) => {
               strokeWidth={6}
             />
           </MapView>
-          <TouchableOpacity style={styles.alertButton}>
+          <TouchableOpacity
+            style={styles.alertButton}
+            onPress={() => navigation.navigate('GpsAlert')}>
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.gpsButton}>
-            <NavigationIcon size={20} />
+            <GpsIcon size={30} />
           </TouchableOpacity>
         </View>
       </View>
@@ -134,16 +148,36 @@ const OwnedGPS = ({navigation, route}) => {
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           style={styles.scrollBox}>
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              margin: 5,
-              padding: 5,
-            }}>
-            <NavigationIcon size={30} />
-            <Text>Navigate</Text>
-          </TouchableOpacity>
+          <IconWithName
+            IconComponent={NavigationIcon}
+            iconSize={30}
+            title={'Navigate'}
+            onPress={() => {}}
+          />
+          <IconWithName
+            IconComponent={LocationHistory}
+            iconSize={30}
+            title={'History'}
+            onPress={() => navigation.navigate('LocationHistory')}
+          />
+          <IconWithName
+            IconComponent={FuelPumpIcon}
+            iconSize={30}
+            title={'Fuel Pump'}
+            onPress={() =>
+              navigation.navigate('FuelPump', {headerTitle: 'Fuel Pump'})
+            }
+          />
+          <IconWithName
+            IconComponent={FuelPumpIcon}
+            iconSize={30}
+            title={'Theft'}
+            onPress={() =>
+              navigation.navigate('FuelPump', {
+                headerTitle: 'Nearby Police Station',
+              })
+            }
+          />
         </ScrollView>
         <View style={{justifyContent: 'center'}}>
           <TouchableOpacity style={styles.btnContainer}>
@@ -160,7 +194,7 @@ const OwnedGPS = ({navigation, route}) => {
   );
 };
 
-export default OwnedGPS;
+export default TrackingTruck;
 
 const styles = StyleSheet.create({
   conatiner: {flex: 1},
@@ -204,8 +238,8 @@ const styles = StyleSheet.create({
   gpsButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     borderRadius: 25,
     backgroundColor: '#FFFFFF',
     elevation: 3,
@@ -213,7 +247,6 @@ const styles = StyleSheet.create({
     bottom: 100,
     right: 10,
   },
-  alertButtonText: {marginLeft: 10, textAlign: 'center', fontSize: 16},
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -229,11 +262,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   leftTopContainer: {minWidth: '70%', paddingHorizontal: 5},
-  distanceBox: {
-    minWidth: '70%',
-    paddingHorizontal: 5,
-    flexDirection: 'row',
-  },
+
   mapContainer: {flex: 1},
   mapHeader: {
     flexDirection: 'row',
@@ -256,4 +285,42 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   scrollBox: {marginRight: 10, borderRadius: 10},
+  highlightText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    textAlign: 'left',
+  },
+  alertButtonText: {
+    marginLeft: 10,
+    textAlign: 'center',
+    fontSize: 14,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  distanceBox: {
+    minWidth: '70%',
+    paddingHorizontal: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  distanceText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    textAlign: 'right',
+    marginRight: 5,
+  },
+  iconView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 5,
+    padding: 5,
+    marginHorizontal: 10,
+  },
+  iconText: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Regular',
+  },
 });

@@ -4,7 +4,7 @@ import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 import {backgroundColorNew} from '../Color/color';
 import ShareIcon from '../../assets/SVG/svg/ShareIcon';
 
-const HeaderHelpButton = ({shareIcon}) => {
+const HeaderHelpButton = ({shareIcon, navigation}) => {
   return (
     <View style={styles.container}>
       {shareIcon ? (
@@ -12,7 +12,9 @@ const HeaderHelpButton = ({shareIcon}) => {
           <ShareIcon size={18} color={'#000000'} />
         </TouchableOpacity>
       ) : null}
-      <TouchableOpacity style={styles.btnContainer}>
+      <TouchableOpacity
+        style={styles.btnContainer}
+        onPress={() => navigation.navigate('Contactus')}>
         <HeadPhoneIcon
           size={15}
           style={styles.iconStyle}

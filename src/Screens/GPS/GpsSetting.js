@@ -1,19 +1,18 @@
-import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React from 'react';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
-import {GradientColor2, seperator} from '../../Color/color';
-import Switch from 'toggle-switch-react-native';
+import {textColor} from '../../Color/color';
+import GpsSettingItem from '../../Components/GpsSettingItem';
+import Button from '../../Components/Button';
 
-const GpsSetting = () => {
-  const [switchOn, setSwitchOn] = useState(true);
-
-  const toggleSwitch = () => {
-    const newSwitchState = !switchOn;
-    setSwitchOn(newSwitchState);
-    Alert.alert(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
-  };
-
+const GpsSetting = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerBox}>
@@ -23,45 +22,29 @@ const GpsSetting = () => {
           <NetworkIcon size={30} color={'green'} />
         </View>
       </View>
-      <View style={styles.detailBox}>
-        <View
-          style={{
-            // flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <Text style={styles.textHeader}>Vehicle stop alerts</Text>
-          <Switch
-            isOn={switchOn}
-            onColor={GradientColor2}
-            offColor={seperator}
-            size="medium"
-            onToggle={toggleSwitch}
-          />
-        </View>
-        <View style={{borderWidth: 1, flexDirection: 'row'}}>
-          <Text style={{flex: 1}}>
-            You’ll get notified when vehicle stops for longer duration.
-          </Text>
-          <View
-            style={{
-            //   borderWidth: 1,
-              width: 100,
-              height: 40,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              elevation: 2,
-            }}>
-            <TextInput
-              keyboardType="numeric"
-              style={{alignItems: 'center', width: 50}}
-              value={'60'}
-            />
-            <Text style={{textAlign: 'left'}}>min</Text>
-          </View>
-        </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <GpsSettingItem detailInput={true} />
+        <GpsSettingItem detailInput={true} />
+        <GpsSettingItem detailInput={false} />
+        <GpsSettingItem detailInput={false} />
+        <GpsSettingItem detailInput={true} />
+        <GpsSettingItem detailInput={true} />
+        <GpsSettingItem detailInput={false} />
+        <GpsSettingItem detailInput={false} />
+      </ScrollView>
+      <View>
+        <Button
+          title={'Save'}
+          // onPress={() => saveChanges()}
+          // loading={statusChangeLoading}
+          textStyle={styles.btnText}
+          style={styles.btnStyle}
+        />
+        <TouchableOpacity
+          style={styles.gpsInfo}
+          onPress={() => navigation.navigate('')}>
+          <Text style={styles.gpsInfoText}>GPS Info!</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -102,5 +85,24 @@ const styles = StyleSheet.create({
   textHeader: {
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
+  },
+  btnStyle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  gpsInfo: {alignItems: 'center', marginVertical: 5},
+  gpsInfoText: {
+    fontSize: 15,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: 'blue',
   },
 });

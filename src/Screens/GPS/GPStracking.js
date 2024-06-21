@@ -1,6 +1,8 @@
 import {StyleSheet, Text, View, VirtualizedList} from 'react-native';
 import React, {useEffect} from 'react';
 import GpsItem from '../../Components/GpsItem';
+import Button from '../../Components/Button';
+import {textColor} from '../../Color/color';
 
 const truckData = [
   {
@@ -30,6 +32,15 @@ const truckData = [
     status: 'Expired',
     image: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
   },
+  {
+    id: '4',
+    model: 'DEL 00122 87DP',
+    purchaseDate: 'Feb 20, 2024',
+    expiryDate: 'Feb 20, 2023',
+    planType: 'Expired',
+    status: 'Expired',
+    image: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+  },
 ];
 
 const GPStracking = ({navigation}) => {
@@ -46,15 +57,18 @@ const GPStracking = ({navigation}) => {
         initialNumToRender={6}
         showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
-          <GpsItem
-            item={item}
-            icon={true}
-            onPress={() => navigation.navigate('OwnedGPS', {item: item})}
-          />
+          <GpsItem item={item} icon={true} navigation={navigation} />
         )}
         keyExtractor={item => item.id}
         getItemCount={getItemCount}
         getItem={getItem}
+      />
+      <Button
+        title={'Buy GPS'}
+        onPress={() => navigation.navigate('BuyGPS')}
+        // loading={statusChangeLoading}
+        textStyle={styles.btnText}
+        style={styles.btnStyle}
       />
     </View>
   );
@@ -71,5 +85,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'PlusJakartaSans-Bold',
     paddingLeft: 10,
+  },
+  btnStyle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });
