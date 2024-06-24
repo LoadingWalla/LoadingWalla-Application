@@ -13,7 +13,7 @@ import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
 import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import DamageIcon from '../../../assets/SVG/svg/DamageIcon';
-import {PrivacyPolicy, backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import MapView, {Polyline} from 'react-native-maps';
@@ -180,7 +180,9 @@ const TrackingTruck = ({navigation, route}) => {
           />
         </ScrollView>
         <View style={{justifyContent: 'center'}}>
-          <TouchableOpacity style={styles.btnContainer}>
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() => navigation.navigate('PlayJourney')}>
             <PlayIcon
               size={25}
               style={styles.iconStyle}

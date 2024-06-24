@@ -85,6 +85,9 @@ import LocationHistory from '../Screens/GPS/LocationHistory';
 import TrackingTruck from '../Screens/GPS/TrackingTruck';
 import FuelPump from '../Screens/GPS/FuelPump';
 import BuyGps from '../Screens/GPS/BuyGps';
+import PlayJourney from '../Screens/GPS/PlayJourney';
+import StopsScreen from '../Screens/GPS/StopsScreen';
+import QuickFilters from '../Screens/GPS/QuickFilters';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1399,7 +1402,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Location History',
+          title: 'History',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -1452,6 +1455,84 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'left',
           title: 'Purchase GPS',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="PlayJourney"
+        component={PlayJourney}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Play Journey',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="stops"
+        component={StopsScreen}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Stops',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="quickfilters"
+        component={QuickFilters}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Quick filters',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

@@ -1,6 +1,14 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
+import {titleColor} from '../../Color/color';
+import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 
 const Plan = () => {
   return (
@@ -8,59 +16,111 @@ const Plan = () => {
       style={{
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginVertical: 5,
+        alignItems: 'center',
+        marginVertical: 8,
       }}>
-      <CheckOutline size={20} color={'green'} style={{marginHorizontal: 10}} />
-      <Text style={{fontFamily: 'PlusJakartaSans-SemiBold'}}>
+      <CheckOutline size={15} color={'green'} style={{marginHorizontal: 10}} />
+      <Text style={{fontFamily: 'PlusJakartaSans-Medium', fontSize: 14}}>
         1 Year warranty on hardware.
       </Text>
     </View>
   );
 };
 
-const BuyGps = () => {
+const Rates = () => {
   return (
-    <ScrollView>
+    <TouchableOpacity
+      // onPress={() => alert('clicked')}
+      style={{
+        margin: 10,
+        // borderWidth: 1,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 8,
+        elevation: 2,
+        // paddingHorizontal: 20,
+        paddingVertical: 15,
+        padding: 5,
+      }}>
       <View
         style={{
-          margin: 10,
-          //   borderWidth: 1,
-          backgroundColor: '#FFFFFF',
-          borderRadius: 8,
-          elevation: 2,
-          paddingHorizontal: 20,
-          paddingVertical: 10,
+          // flex: 1,
+          // borderWidth: 1,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: 15,
         }}>
-        <View
-          style={{
-            // borderWidth: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 15,
-          }}>
-          <View style={{borderWidth: 0, padding: 10}}>
-            <Text>1 Year Plan</Text>
-            <Text>20% discount on current plan</Text>
-          </View>
+        <View style={{borderWidth: 0, padding: 8}}>
+          <Text
+            style={{
+              fontFamily: 'PlusJakartaSans-Bold',
+              fontSize: 14,
+              color: titleColor,
+            }}>
+            1 Year Plan
+          </Text>
           <View
             style={{
-              paddingVertical: 10,
-              backgroundColor: '#EFFFE6',
-              borderRadius: 8,
-              paddingHorizontal: 15,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 5,
             }}>
-            <Text>₹ 2,000/year</Text>
-            <Text>₹ 2,000/ year</Text>
+            <PercentageIcon size={15} color={'#0F8B00'} />
+            <Text
+              style={{
+                // flex: 1,
+                fontFamily: 'PlusJakartaSans-Light',
+                fontSize: 12,
+                color: '#0F8B00',
+                marginLeft: 5,
+              }}>
+              20% discount on current plan
+            </Text>
           </View>
         </View>
-        <View>
-          <Plan />
-          <Plan />
-          <Plan />
-          <Plan />
-          <Plan />
+        <View
+          style={{
+            // flex: 1,
+            paddingVertical: 10,
+            backgroundColor: '#EFFFE6',
+            borderRadius: 6,
+            paddingHorizontal: 15,
+          }}>
+          <Text
+            style={{
+              // flex: 1,
+              fontFamily: 'PlusJakartaSans-SemiBold',
+              fontSize: 12,
+              textDecorationLine: 'line-through',
+            }}>
+            ₹ 2,500/year
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'PlusJakartaSans-Bold',
+              fontSize: 14,
+              color: '#0F8B00',
+            }}>
+            ₹ 2,000/ year
+          </Text>
         </View>
       </View>
+      <View>
+        <Plan />
+        <Plan />
+        <Plan />
+        <Plan />
+        <Plan />
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const BuyGps = () => {
+  return (
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Rates />
+      <Rates />
     </ScrollView>
   );
 };
