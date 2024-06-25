@@ -204,7 +204,8 @@ const PaymentGPS = () => {
           </View>
         </View>
         <View style={styles.scrollContainer}>
-          <View style={{borderRadius: 8, backgroundColor: '#FFFFFF'}}>
+          <View
+            style={{borderRadius: 8, backgroundColor: '#FFFFFF', elevation: 2}}>
             <Text style={styles.paymentDetailText}>Payment Details</Text>
             <View
               style={{
