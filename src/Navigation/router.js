@@ -78,7 +78,6 @@ import GPStracking from '../Screens/GPS/GPStracking';
 import Button from '../Components/Button';
 import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 import HeaderHelpButton from '../Components/HeaderHelpButton';
-import OwnedGPS from '../Screens/GPS/TrackingTruck';
 import GpsSetting from '../Screens/GPS/GpsSetting';
 import GpsAlert from '../Screens/GPS/GpsAlert';
 import LocationHistory from '../Screens/GPS/LocationHistory';
@@ -88,6 +87,8 @@ import BuyGps from '../Screens/GPS/BuyGps';
 import PlayJourney from '../Screens/GPS/PlayJourney';
 import StopsScreen from '../Screens/GPS/StopsScreen';
 import QuickFilters from '../Screens/GPS/QuickFilters';
+import OwnedGPS from '../Screens/GPS/OwnedGPS';
+import PaymentGPS from '../Screens/GPS/PaymentGPS';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1475,6 +1476,32 @@ const Navigation = ({language}) => {
         })}
       />
       <Stack.Screen
+        name="paymentGPS"
+        component={PaymentGPS}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Purchase GPS',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
         name="PlayJourney"
         component={PlayJourney}
         options={({route}) => ({
@@ -1533,6 +1560,32 @@ const Navigation = ({language}) => {
           headerShown: true,
           headerTitleAlign: 'left',
           title: 'Quick filters',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="ownedGPS"
+        component={OwnedGPS}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Owned GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },

@@ -27,10 +27,10 @@ const Plan = () => {
   );
 };
 
-const Rates = () => {
+const Rates = ({navigation}) => {
   return (
     <TouchableOpacity
-      // onPress={() => alert('clicked')}
+      onPress={() => navigation.navigate('paymentGPS')}
       style={{
         margin: 10,
         // borderWidth: 1,
@@ -116,11 +116,11 @@ const Rates = () => {
   );
 };
 
-const BuyGps = () => {
+const BuyGps = ({navigation}) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <Rates />
-      <Rates />
+      <Rates navigation={navigation} />
+      <Rates navigation={navigation} />
     </ScrollView>
   );
 };

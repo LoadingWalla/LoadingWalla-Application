@@ -42,7 +42,7 @@ const GpsSetting = ({navigation}) => {
         />
         <TouchableOpacity
           style={styles.gpsInfo}
-          onPress={() => navigation.navigate('')}>
+          onPress={() => navigation.navigate('ownedGPS')}>
           <Text style={styles.gpsInfoText}>GPS Info!</Text>
         </TouchableOpacity>
       </View>
