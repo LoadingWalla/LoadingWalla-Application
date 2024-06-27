@@ -1023,6 +1023,40 @@ export function* fetchTranscations() {
   }
 }
 
+// gps token generate
+export function* fetchTokenSaga() {
+  try {
+    const data = yield API.get('gps/get-token');
+    console.log('API response', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchTokenSuccess(data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchTokenFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchTokenFailure(error.message));
+    // console.log('error', error);
+  }
+}
+export function* watchWebSocket() {
+  try {
+    const data = yield API.get('gps/get-token');
+    console.log('API response', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchTokenSuccess(data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchTokenFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchTokenFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
 // Back Button Handler
 // export function* watchBackButton() {
 //   yield takeLatest('BACK_BUTTON_PRESS', handleBackButton);

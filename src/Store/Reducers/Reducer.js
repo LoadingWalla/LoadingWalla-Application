@@ -149,6 +149,10 @@ const initialState = {
   transcationLoading: false,
   transcationData: null,
   transcationStatus: null,
+  // gps token generate
+  gpsTokenLoading: false,
+  gpsTokenData: null,
+  gpsTokenStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1150,6 +1154,74 @@ const reducer = (state = initialState, action) => {
         transcationStatus: null,
       });
 
+    // GPS TOKEN GENERATE
+    case actionTypes.FETCH_GPS_TOKEN_REQUEST:
+      return {
+        ...state,
+        gpsTokenLoading: true,
+        gpsTokenData: null,
+        gpsTokenStatus: null,
+      };
+    case actionTypes.FETCH_GPS_TOKEN_SUCCESS:
+      return updateState(state, {
+        gpsTokenLoading: false,
+        gpsTokenData: payload,
+        gpsTokenStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_TOKEN_FAILURE:
+      return updateState(state, {
+        gpsTokenLoading: false,
+        gpsTokenData: null,
+        gpsTokenStatus: null,
+      });
+
+    // Gps Websocket Connect
+    case actionTypes.WEBSOCKET_CONNECT:
+      return {
+        ...state,
+        isConnected: true,
+      };
+    case actionTypes.WEBSOCKET_DISCONNECT:
+      return {
+        ...state,
+        isConnected: false,
+        messages: [],
+        devices: [],
+        positions: [],
+        events: [],
+      };
+    case actionTypes.WEBSOCKET_SEND_MESSAGE:
+      return {
+        ...state,
+        messages: [...state.messages, payload],
+      };
+    case actionTypes.WEBSOCKET_MESSAGE_RECEIVED:
+      return {
+        ...state,
+        messages: [...state.messages, payload],
+      };
+    case actionTypes.WEBSOCKET_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
+    case actionTypes.UPDATE_DEVICES:
+      return {
+        ...state,
+        devices: payload,
+      };
+    case actionTypes.UPDATE_POSITIONS:
+      return {
+        ...state,
+        positions: payload,
+      };
+    case actionTypes.UPDATE_EVENTS:
+      return {
+        ...state,
+        events: payload,
+      };
+
+    // default state
     default:
       return state;
   }
