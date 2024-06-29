@@ -1,8 +1,9 @@
-import {put} from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import * as actions from '../Actions/Actions';
 import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import gpsApi from '../../Utils/gpsApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -437,22 +438,22 @@ export function* requestBooking({
 
 // Saga Accept Reject
 export function* acceptReject({bookingId, status}) {
-  // console.log(3333, bookingId, status);
+  console.log(3333, bookingId, status);
   try {
     const data = yield API.get(
       `update-booking?booking_id=${bookingId}&status=${status}`,
     );
-    // console.log("API RESPONSE=======Update booking", data);
+    console.log('API RESPONSE=======Update booking', data);
     if (data?.data?.status === 200) {
       yield put(actions.acceptRejectSuccess(data));
     } else {
       yield put(actions.acceptRejectFailure(data.status));
-      // console.log("else", data);
+      console.log('else', data);
     }
   } catch (error) {
     yield put(actions.acceptRejectFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
-    // console.log("error", error);
+    console.log('error', error);
   }
 }
 
@@ -956,9 +957,9 @@ export function* createOrder({amount, userId}) {
 export function* verifyPayment({paymentId, orderId}) {
   try {
     const body = {razorpay_payment_id: paymentId, razorpay_order_id: orderId};
-    console.log(8888888, body);
+    // console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
-    console.log('API response------PaymentVerify', data);
+    // console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.verifyPaymentSuccess(data));
     } else {
@@ -992,6 +993,7 @@ export function* completeBookingDocument({
     }
     // console.log(9999999, body);
     let data = yield multiPartApi.post('complete-booking-document', body);
+    // console.log(22222, data);
     if (data?.data?.status === 200) {
       yield put(actions.completeBookingDocumentSuccess(data));
     } else {
@@ -1001,6 +1003,61 @@ export function* completeBookingDocument({
   } catch (error) {
     yield put(actions.completeBookingDocumentFailure());
     // console.log("error", error);
+  }
+}
+
+// Transcations
+export function* fetchTranscations() {
+  try {
+    const data = yield API.get('transaction');
+    // console.log('API response', data);
+    if (data?.data?.status === 200) {
+      // console.log("success", data);
+      yield put(actions.transcationDetailsSuccess(data));
+    } else {
+      // console.log("else", data);
+      yield put(actions.transcationDetailsFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.transcationDetailsFailure(error.message));
+    // console.log("error", error);
+  }
+}
+
+// gps token generate
+export function* fetchTokenSaga() {
+  try {
+    const data = yield API.get('gps/get-token');
+    // console.log('Gps Token', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchTokenSuccess(data?.data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchTokenFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchTokenFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+// gps token generate
+export function* fetchGpsDevices({username, password}) {
+  try {
+    console.log(33333, username, password);
+    const data = yield gpsApi.get('devices', username, password);
+    console.log('Gps Devices', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsDevicesSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsDevicesFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsDevicesFailure(error.message));
+    // console.log('error4444', error);
   }
 }
 

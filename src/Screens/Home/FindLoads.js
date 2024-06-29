@@ -93,7 +93,12 @@ const FindLoads = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
         />
       ) : (
-        <NotFound imageName="noLoadFound" />
+        <NotFound
+          imageName="noLoadFound"
+          title={'No Load Found'}
+          height={300}
+          width={300}
+        />
       )}
     </View>
   );

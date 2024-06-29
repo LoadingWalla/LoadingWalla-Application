@@ -1,6 +1,7 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {backgroundColorNew} from '../../Color/color';
+import NotFound from '../../Components/NotFound';
 
 const Inconvenience = ({navigation}) => {
   return (
@@ -10,6 +11,7 @@ const Inconvenience = ({navigation}) => {
           source={require('../../../assets/GIFs/Nothing.gif')}
           resizeMode="contain"
         />
+        {/* <NotFound imageName="nothing" /> */}
       </View>
       <TouchableOpacity
         onPress={() => navigation.goBack()}

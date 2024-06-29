@@ -113,20 +113,23 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
 
       {userType === '2' && item.status === 2 ? (
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <InnerButton
-            enabledStyle={{
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Bookings')}
+            style={{
               justifyContent: 'center',
               alignSelf: 'center',
-            }}
-            textStyle={{
-              color: 'blue',
-              textDecorationLine: 'underline',
-              fontSize: 14,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}
-            title={'Go to Bookings'}
-            onpressStatus={() => navigation.navigate('Bookings')}
-          />
+              width: 200,
+            }}>
+            <Text
+              style={{
+                color: 'blue',
+                textDecorationLine: 'underline',
+                fontSize: 14,
+                fontFamily: 'PlusJakartaSans-Bold',
+              }}>
+              Go to Bookings
+            </Text>
+          </TouchableOpacity>
           <Text
             style={{
               color: titleColor,

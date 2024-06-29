@@ -241,13 +241,7 @@ const Profile = ({navigation, route}) => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: 15,
-              }}>
+            <View style={style.percentageBarView}>
               <PercentageBar
                 navigation={navigation}
                 percentage={UserVerifyPercentage || 0}
@@ -259,13 +253,7 @@ const Profile = ({navigation, route}) => {
                 onPress={() => navigation.navigate('Wallet')}>
                 <WalletIcon size={25} color={'#F0C200'} />
                 <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                <View
-                  style={{
-                    marginLeft: 'auto',
-                    elevation: 1,
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: 10,
-                  }}>
+                <View style={style.rightArrowView}>
                   <RightArrow size={20} color={GradientColor1} />
                 </View>
               </TouchableOpacity>
@@ -304,6 +292,12 @@ const Profile = ({navigation, route}) => {
                 <MenuItem
                   title={t(Constants.SAVED_ADDRESS)}
                   onPress={() => navigation.navigate('Address')}
+                  Icon={<GpsIcon size={30} color={GradientColor1} />}
+                />
+                <View style={style.horizontalLine} />
+                <MenuItem
+                  title={'GPS Tracking'}
+                  onPress={() => navigation.navigate('GPS')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>
@@ -391,18 +385,8 @@ const Profile = ({navigation, route}) => {
               </View>
             </View>
 
-            <View
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontWeight: '500',
-                  color: titleColor,
-                  fontSize: 14,
-                  fontFamily: 'PlusJakartaSans-Medium',
-                }}>
+            <View style={style.appVersionView}>
+              <Text style={style.appVersionText}>
                 {t(Constants.APP_VERSION)} {version}
               </Text>
             </View>

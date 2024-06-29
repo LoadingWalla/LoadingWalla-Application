@@ -15,6 +15,7 @@ import {
   createOrderFailure,
   initCreateOrder,
   initGetWallet,
+  initTranscationDetails,
   initVerifyPaymentRequest,
   initWallet,
   walletFailure,
@@ -33,6 +34,7 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
 import RightArrow2 from '../../../../assets/SVG/svg/RightArrow2';
 import {useTranslation} from 'react-i18next';
+import NotFound from '../../../Components/NotFound';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
@@ -50,6 +52,9 @@ const Wallet = ({navigation}) => {
     verifyPaymentLoading,
     verifyPaymentData,
     verifyPaymentStatus,
+    transcationLoading,
+    transcationData,
+    transcationStatus,
   } = useSelector(state => {
     console.log('My Wallet', state.data);
     return state.data;
@@ -57,6 +62,7 @@ const Wallet = ({navigation}) => {
 
   useEffect(() => {
     dispatch(initGetWallet());
+    dispatch(initTranscationDetails());
   }, [dispatch]);
 
   useEffect(() => {
@@ -90,14 +96,14 @@ const Wallet = ({navigation}) => {
   };
 
   const addAmount = () => {
-    if (
-      parseInt(amount, 10) === 0 ||
-      parseInt(amount, 10) < 100 ||
-      parseInt(amount, 10) > 100000
-    ) {
-      Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
-      return;
-    }
+    // if (
+    //   parseInt(amount, 10) === 0 ||
+    //   parseInt(amount, 10) < 100 ||
+    //   parseInt(amount, 10) > 100000
+    // ) {
+    //   Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
+    //   return;
+    // }
     dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id));
     // for testing only
     // dispatch(
@@ -126,7 +132,7 @@ const Wallet = ({navigation}) => {
 
     RazorpayCheckout.open(options)
       .then(data => {
-        console.log(7777, data);
+        // console.log(7777, data);
         if (data?.razorpay_payment_id) {
           dispatch(
             initVerifyPaymentRequest(
@@ -162,27 +168,24 @@ const Wallet = ({navigation}) => {
     {key: 'deductions', title: t(Constants.DEDUCTION)},
   ]);
 
-  const data = Array.from({length: 0}, (_, index) => ({
-    id: index.toString(),
-    amount: '5000',
-    date: '31 Dec 2023, 03:08 PM',
-  }));
-
-  const rechargeRenderItem = ({item}) => (
-    <View style={styles.repeatView}>
-      <View>
-        <Text style={styles.paymentText}>
-          ₹ {item.amount} Payment successful
-        </Text>
-        <Text style={styles.dateText}>{item.date}</Text>
+  const rechargeRenderItem = ({item}) => {
+    console.log(44444, item);
+    return (
+      <View style={styles.repeatView}>
+        <View>
+          <Text style={styles.paymentText}>
+            ₹ {item.amount} Payment successful
+          </Text>
+          <Text style={styles.dateText}>{item.date}</Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => setAmount(5000)}
+          style={styles.requestButtonContainer}>
+          <Text style={styles.gradientButtonText}>Repeat</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        onPress={() => setAmount(5000)}
-        style={styles.requestButtonContainer}>
-        <Text style={styles.gradientButtonText}>Repeat</Text>
-      </TouchableOpacity>
-    </View>
-  );
+    );
+  };
 
   // const deductionRenderItem = ({item}) => (
   //   <View style={styles.deductionCard}>
@@ -226,23 +229,41 @@ const Wallet = ({navigation}) => {
 
   const RechargeRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
-      <FlatList
-        data={data}
-        keyExtractor={item => item.id}
-        renderItem={rechargeRenderItem}
-        showsVerticalScrollIndicator={false}
-      />
+      {transcationData?.length === 0 ? (
+        <NotFound
+          imageName="noBookings"
+          title={'No Transcation Found'}
+          height={150}
+          width={300}
+        />
+      ) : (
+        <FlatList
+          data={transcationData}
+          keyExtractor={item => item.id}
+          renderItem={rechargeRenderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 
   const DeductionsRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
-      <FlatList
-        data={data}
-        keyExtractor={item => item.id}
-        renderItem={rechargeRenderItem}
-        showsVerticalScrollIndicator={false}
-      />
+      {transcationData?.length === 0 ? (
+        <NotFound
+          imageName="noBookings"
+          title={'No Transcation Found'}
+          height={150}
+          width={300}
+        />
+      ) : (
+        <FlatList
+          data={transcationData}
+          keyExtractor={item => item.id}
+          renderItem={rechargeRenderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 
@@ -372,10 +393,10 @@ const styles = StyleSheet.create({
     minWidth: 150,
   },
   textInput: {
-    fontFamily: 'PlusJakartaSans-Regular',
+    fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 15,
     width: '100%',
-    color: PrivacyPolicy,
+    color: titleColor,
   },
   renderItemStyle: {
     flexShrink: 1,

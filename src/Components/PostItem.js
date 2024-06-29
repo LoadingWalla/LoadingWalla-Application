@@ -10,7 +10,7 @@ import {useTranslation} from 'react-i18next';
 const PostItem = ({navigate, call, item, owner, userType}) => {
   const navigation = useNavigation();
   const {t} = useTranslation();
-  console.log(444444, item);
+  // console.log(444444, item);
 
   return (
     <View style={style.card}>

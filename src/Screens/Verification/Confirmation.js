@@ -14,6 +14,7 @@ import {
   titleColor,
 } from '../../Color/color';
 import Shield from '../../../assets/SVG/svg/Shield';
+import NotFound from '../../Components/NotFound';
 
 const Confirmation = ({navigation, route}) => {
   // console.log(888, route);
@@ -33,19 +34,19 @@ const Confirmation = ({navigation, route}) => {
     if (status >= 500) {
       return {
         message: messages,
-        image: ErrorImage,
+        image: 'errorImage',
       };
     } else {
       switch (status) {
         case 200:
           return {
             message: messages,
-            image: successImage,
+            image: 'successImage',
           };
         default:
           return {
             message: messages,
-            image: ErrorImage,
+            image: 'errorImage',
           };
       }
     }
@@ -76,11 +77,10 @@ const Confirmation = ({navigation, route}) => {
   return (
     <View style={styles.fullScreen}>
       <View style={styles.container}>
-        <Text style={styles.congratsText}>{message}</Text>
-        <Image
-          source={deleteLogistic ? deletedImage : image}
-          style={styles.image}
-        />
+        <View style={styles.gifView}>
+          <Text style={styles.congratsText}>{message}</Text>
+          <NotFound imageName={image} height={80} width={80} title={''} />
+        </View>
 
         {deleteLogistic || fromViewDetail ? (
           <></>
@@ -260,11 +260,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  congratsText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: titleColor,
-  },
   touchStyle: {
     marginTop: 20,
     width: '50%',
@@ -288,5 +283,19 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  gifView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    // borderWidth: 1,
+  },
+  congratsText: {
+    fontSize: 26,
+    marginBottom: 10,
+    fontWeight: '700',
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: titleColor,
   },
 });

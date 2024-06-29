@@ -145,6 +145,14 @@ const initialState = {
   completeDocumentLoading: false,
   completeDocumentData: null,
   completeDocumentStatus: null,
+  // transcation detials
+  transcationLoading: false,
+  transcationData: null,
+  transcationStatus: null,
+  // gps token generate
+  gpsTokenLoading: false,
+  gpsTokenData: null,
+  gpsTokenStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1125,6 +1133,72 @@ const reducer = (state = initialState, action) => {
         completeDocumentStatus: null,
       });
 
+    // transcation Details
+    case actionTypes.FETCH_TRANSACTIONS_REQUEST:
+      return {
+        ...state,
+        transcationLoading: true,
+        transcationData: null,
+        transcationStatus: null,
+      };
+    case actionTypes.FETCH_TRANSACTIONS_SUCCESS:
+      return updateState(state, {
+        transcationLoading: false,
+        transcationData: payload?.data?.transaction,
+        transcationStatus: payload?.status,
+      });
+    case actionTypes.FETCH_TRANSACTIONS_FAILURE:
+      return updateState(state, {
+        transcationLoading: false,
+        transcationData: null,
+        transcationStatus: null,
+      });
+
+    // GPS TOKEN GENERATE
+    case actionTypes.FETCH_GPS_TOKEN_REQUEST:
+      return {
+        ...state,
+        gpsTokenLoading: true,
+        gpsTokenData: null,
+        gpsTokenStatus: null,
+      };
+    case actionTypes.FETCH_GPS_TOKEN_SUCCESS:
+      return updateState(state, {
+        gpsTokenLoading: false,
+        gpsTokenData: payload,
+        gpsTokenStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_TOKEN_FAILURE:
+      return updateState(state, {
+        gpsTokenLoading: false,
+        gpsTokenData: null,
+        gpsTokenStatus: null,
+      });
+
+    // GPS Device fetching
+    case actionTypes.FETCH_GPS_DEVICES_REQUEST:
+      return {
+        ...state,
+        gpsDeviceLoading: true,
+        gpsDeviceData: null,
+        gpsDeviceStatus: null,
+      };
+    case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
+      return updateState(state, {
+        gpsDeviceLoading: false,
+        gpsDeviceData: payload,
+        gpsDeviceStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_DEVICES_FAILURE:
+      return updateState(state, {
+        gpsDeviceLoading: false,
+        gpsDeviceData: null,
+        gpsDeviceStatus: null,
+      });
+
+    // Gps Websocket Connect
+
+    // default state
     default:
       return state;
   }

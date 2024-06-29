@@ -94,7 +94,12 @@ const PreviousBookings = ({navigation, route}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <NotFound imageName="noPreviousBookings" />
+          <NotFound
+            imageName="noPreviousBookings"
+            height={300}
+            width={300}
+            title={'No Previous Bookings'}
+          />
         </ScrollView>
       )}
     </View>

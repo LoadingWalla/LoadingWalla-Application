@@ -4,7 +4,15 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
+import {
+  Alert,
+  Animated,
+  BackHandler,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -24,6 +32,7 @@ import {
   GradientColor1,
   GradientColor2,
   GradientColor3,
+  backgroundColorNew,
   tabIndicatorColor,
 } from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
@@ -65,6 +74,21 @@ import i18n from '../locales/i18n';
 import {useTranslation} from 'react-i18next';
 import Address from '../Screens/BottomTabs/Menu/Address';
 import AddAddress from '../Screens/Modals/AddAddress';
+import Button from '../Components/Button';
+import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
+import HeaderHelpButton from '../Components/HeaderHelpButton';
+import GpsSetting from '../Screens/GPS/GpsSetting';
+import GpsAlert from '../Screens/GPS/GpsAlert';
+import LocationHistory from '../Screens/GPS/LocationHistory';
+import TrackingTruck from '../Screens/GPS/TrackingTruck';
+import FuelPump from '../Screens/GPS/FuelPump';
+import BuyGps from '../Screens/GPS/BuyGps';
+import PlayJourney from '../Screens/GPS/PlayJourney';
+import StopsScreen from '../Screens/GPS/StopsScreen';
+import QuickFilters from '../Screens/GPS/QuickFilters';
+import OwnedGPS from '../Screens/GPS/OwnedGPS';
+import PaymentGPS from '../Screens/GPS/PaymentGPS';
+import GpsTrackings from '../Screens/GPS/GpsTrackings';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,13 +108,12 @@ function BottomTabs() {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
@@ -270,13 +293,12 @@ function MyLoadsBottomTabs() {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
@@ -472,13 +494,12 @@ const Navigation = ({language}) => {
       navigation.goBack();
       return true;
     } else {
-      Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
+      Alert.alert(t(Constants.LOGOUT), t(Constants.LOGOUT_CONFIRM), [
         {
-          text: 'NO',
-          onPress: () => null,
-          style: 'cancel',
+          text: t(Constants.CANCEL),
+          style: t(Constants.CANCEL),
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        {text: t(Constants.LOGOUT), onPress: () => BackHandler.exitApp()},
       ]);
       return true;
     }
@@ -1031,6 +1052,7 @@ const Navigation = ({language}) => {
             ),
         })}
       />
+
       <Stack.Screen
         name="addAddress"
         component={AddAddress}
@@ -1253,6 +1275,324 @@ const Navigation = ({language}) => {
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      {/* GPS */}
+      <Stack.Screen
+        name="GPS"
+        component={GpsTrackings}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'GPS Tracking',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="trackingtruck"
+        component={TrackingTruck}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Tracking truck',
+          animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={true} navigation={navigation} />
+          ),
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="GpsSetting"
+        component={GpsSetting}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'GPS Setting',
+          animation: 'slide_from_bottom',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="GpsAlert"
+        component={GpsAlert}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Alerts',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="LocationHistory"
+        component={LocationHistory}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'History',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="FuelPump"
+        component={FuelPump}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: route.params?.headerTitle || null,
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="BuyGPS"
+        component={BuyGps}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Purchase GPS',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="paymentGPS"
+        component={PaymentGPS}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Purchase GPS',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="PlayJourney"
+        component={PlayJourney}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Play Journey',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="stops"
+        component={StopsScreen}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Stops',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="quickfilters"
+        component={QuickFilters}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Quick filters',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="ownedGPS"
+        component={OwnedGPS}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Owned GPS',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          headerRight: () => (
+            <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          ),
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

@@ -68,6 +68,7 @@ const EditProfile = ({
       editStatus(profileSetupLoading);
       Toast.show(`${profileSetupData.message}`, Toast.LONG);
       dispatch(ProfileSetupFailure());
+      dismissModal();
     }
   }, [
     profileSetupStatus,

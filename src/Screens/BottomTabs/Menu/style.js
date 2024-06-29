@@ -162,4 +162,26 @@ export default StyleSheet.create({
     marginLeft: 10,
   },
   flexDirection: {flexDirection: 'row'},
+  appVersionView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  appVersionText: {
+    fontWeight: '500',
+    color: titleColor,
+    fontSize: 14,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
+  percentageBarView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  rightArrowView: {
+    marginLeft: 'auto',
+    elevation: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+  },
 });

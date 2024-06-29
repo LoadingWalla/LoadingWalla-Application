@@ -17,7 +17,7 @@ import * as Constants from '../../../Constants/Constant';
 import NotFound from '../../../Components/NotFound';
 
 const BookingStatus = ({navigation, route}) => {
-  // console.log('booking---status', route);
+  console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
   const {t} = useTranslation();
 
@@ -48,7 +48,7 @@ const BookingStatus = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.gifView}>
         <Text style={[styles.congratsText, {color: color}]}>{message}</Text>
-        <NotFound imageName={image} height={80} width={80} />
+        <NotFound imageName={image} height={80} width={80} title={''} />
       </View>
 
       <View style={styles.cardContainer}>
@@ -87,7 +87,7 @@ const BookingStatus = ({navigation, route}) => {
             <Text style={styles.specsText}>
               {userType === '2'
                 ? `Tyre: ${Owner?.wheel}`
-                : `${Owner?.distance}`}
+                : `${Math.ceil(Owner?.distance)} KM`}
             </Text>
           </View>
         </View>
@@ -131,7 +131,7 @@ const BookingStatus = ({navigation, route}) => {
             <Text style={styles.specsText}>
               {userType === '1'
                 ? `Tyre: ${renter?.wheel}`
-                : `${Math.ceil(renter?.distance)} KM`}
+                : `${renter?.distance}`}
             </Text>
           </View>
         </View>
@@ -165,7 +165,8 @@ const styles = StyleSheet.create({
   gifView: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
+    // borderWidth: 1,
   },
   congratsText: {
     fontSize: 30,

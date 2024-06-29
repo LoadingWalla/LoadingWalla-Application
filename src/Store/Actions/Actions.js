@@ -947,12 +947,62 @@ export const initCompleteBookingDocumentRequest = (
   };
 };
 
-export const completeBookingDocumentSuccess = response => ({
+export const completeBookingDocumentSuccess = data => ({
   type: actionTypes.COMPLETE_BOOKING_DOCUMENT_SUCCESS,
-  payload: response,
+  payload: data,
 });
 
 export const completeBookingDocumentFailure = error => ({
   type: actionTypes.COMPLETE_BOOKING_DOCUMENT_FAILURE,
   payload: error,
 });
+
+// get transcation details
+export const initTranscationDetails = () => ({
+  type: actionTypes.FETCH_TRANSACTIONS_REQUEST,
+});
+export const transcationDetailsSuccess = payload => ({
+  type: actionTypes.FETCH_TRANSACTIONS_SUCCESS,
+  payload,
+});
+export const transcationDetailsFailure = payload => ({
+  type: actionTypes.FETCH_TRANSACTIONS_FAILURE,
+  payload,
+});
+
+// GPS TOKEN REQUEST
+export const fetchTokenRequest = () => ({
+  type: actionTypes.FETCH_GPS_TOKEN_REQUEST,
+});
+
+export const fetchTokenSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_TOKEN_SUCCESS,
+  payload,
+});
+
+export const fetchTokenFailure = payload => ({
+  type: actionTypes.FETCH_GPS_TOKEN_FAILURE,
+  payload,
+});
+
+// gps devices
+export const fetchGpsDevicesRequest = (username, password) => {
+  // console.log('44444', username, password);
+  return {
+    type: actionTypes.FETCH_GPS_DEVICES_REQUEST,
+    username,
+    password,
+  };
+};
+
+export const fetchGpsDevicesSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_DEVICES_SUCCESS,
+  payload,
+});
+
+export const fetchGpsDevicesFailure = payload => ({
+  type: actionTypes.FETCH_GPS_DEVICES_FAILURE,
+  payload,
+});
+
+// Gps Websocket Connect
