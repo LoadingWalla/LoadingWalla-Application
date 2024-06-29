@@ -1197,50 +1197,6 @@ const reducer = (state = initialState, action) => {
       });
 
     // Gps Websocket Connect
-    // case actionTypes.WEBSOCKET_CONNECT:
-    //   return {
-    //     ...state,
-    //     isConnected: true,
-    //   };
-    // case actionTypes.WEBSOCKET_DISCONNECT:
-    //   return {
-    //     ...state,
-    //     isConnected: false,
-    //     messages: [],
-    //     devices: [],
-    //     positions: [],
-    //     events: [],
-    //   };
-    // case actionTypes.WEBSOCKET_SEND_MESSAGE:
-    //   return {
-    //     ...state,
-    //     messages: [...state.messages, payload],
-    //   };
-    // case actionTypes.WEBSOCKET_MESSAGE_RECEIVED:
-    //   return {
-    //     ...state,
-    //     messages: [...state.messages, payload],
-    //   };
-    // case actionTypes.WEBSOCKET_ERROR:
-    //   return {
-    //     ...state,
-    //     error: payload,
-    //   };
-    // case actionTypes.UPDATE_DEVICES:
-    //   return {
-    //     ...state,
-    //     devices: payload,
-    //   };
-    // case actionTypes.UPDATE_POSITIONS:
-    //   return {
-    //     ...state,
-    //     positions: payload,
-    //   };
-    // case actionTypes.UPDATE_EVENTS:
-    //   return {
-    //     ...state,
-    //     events: payload,
-    //   };
 
     // default state
     default:
