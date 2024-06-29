@@ -56,7 +56,7 @@ function* rootSaga() {
     saga.completeBookingDocument,
   );
   yield takeLatest(actions.FETCH_GPS_TOKEN_REQUEST, saga.fetchTokenSaga);
-  yield takeLatest(actions.FETCH_GPS_TOKEN_REQUEST, saga.watchWebSocket);
+  yield takeLatest(actions.FETCH_GPS_DEVICES_REQUEST, saga.fetchGpsDevices);
 }
 
 export default rootSaga;

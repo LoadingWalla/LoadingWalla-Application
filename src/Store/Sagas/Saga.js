@@ -1,8 +1,9 @@
-import {put} from 'redux-saga/effects';
+import {call, put} from 'redux-saga/effects';
 import * as actions from '../Actions/Actions';
 import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import gpsApi from '../../Utils/gpsApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -1027,10 +1028,10 @@ export function* fetchTranscations() {
 export function* fetchTokenSaga() {
   try {
     const data = yield API.get('gps/get-token');
-    console.log('API response', data);
+    // console.log('Gps Token', data);
     if (data?.data?.status === 200) {
       // console.log('success', data);
-      yield put(actions.fetchTokenSuccess(data));
+      yield put(actions.fetchTokenSuccess(data?.data?.data));
     } else {
       // console.log('else', data);
       yield put(actions.fetchTokenFailure(data.status));
@@ -1040,20 +1041,23 @@ export function* fetchTokenSaga() {
     // console.log('error', error);
   }
 }
-export function* watchWebSocket() {
+
+// gps token generate
+export function* fetchGpsDevices({username, password}) {
   try {
-    const data = yield API.get('gps/get-token');
-    console.log('API response', data);
-    if (data?.data?.status === 200) {
+    console.log(33333, username, password);
+    const data = yield gpsApi.get('devices', username, password);
+    console.log('Gps Devices', data);
+    if (data?.status === 200) {
       // console.log('success', data);
-      yield put(actions.fetchTokenSuccess(data));
+      yield put(actions.fetchGpsDevicesSuccess(data?.data));
     } else {
       // console.log('else', data);
-      yield put(actions.fetchTokenFailure(data.status));
+      yield put(actions.fetchGpsDevicesFailure(data.status));
     }
   } catch (error) {
-    yield put(actions.fetchTokenFailure(error.message));
-    // console.log('error', error);
+    yield put(actions.fetchGpsDevicesFailure(error.message));
+    // console.log('error4444', error);
   }
 }
 

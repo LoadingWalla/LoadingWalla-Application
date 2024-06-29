@@ -985,32 +985,52 @@ export const fetchTokenFailure = payload => ({
   payload,
 });
 
+// gps devices
+export const fetchGpsDevicesRequest = (username, password) => {
+  // console.log('44444', username, password);
+  return {
+    type: actionTypes.FETCH_GPS_DEVICES_REQUEST,
+    username,
+    password,
+  };
+};
+
+export const fetchGpsDevicesSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_DEVICES_SUCCESS,
+  payload,
+});
+
+export const fetchGpsDevicesFailure = payload => ({
+  type: actionTypes.FETCH_GPS_DEVICES_FAILURE,
+  payload,
+});
+
 // Gps Websocket Connect
-export const websocketConnect = () => ({type: actionTypes.WEBSOCKET_CONNECT});
-export const websocketDisconnect = () => ({
-  type: actionTypes.WEBSOCKET_DISCONNECT,
-});
-export const websocketSendMessage = payload => ({
-  type: actionTypes.WEBSOCKET_SEND_MESSAGE,
-  payload,
-});
-export const websocketMessageReceived = payload => ({
-  type: actionTypes.WEBSOCKET_MESSAGE_RECEIVED,
-  payload,
-});
-export const websocketError = payload => ({
-  type: actionTypes.WEBSOCKET_ERROR,
-  payload,
-});
-export const updateDevices = payload => ({
-  type: actionTypes.UPDATE_DEVICES,
-  payload,
-});
-export const updatePositions = payload => ({
-  type: actionTypes.UPDATE_POSITIONS,
-  payload,
-});
-export const updateEvents = payload => ({
-  type: actionTypes.UPDATE_EVENTS,
-  payload,
-});
+// export const websocketConnect = () => ({type: actionTypes.WEBSOCKET_CONNECT});
+// export const websocketDisconnect = () => ({
+//   type: actionTypes.WEBSOCKET_DISCONNECT,
+// });
+// export const websocketSendMessage = payload => ({
+//   type: actionTypes.WEBSOCKET_SEND_MESSAGE,
+//   payload,
+// });
+// export const websocketMessageReceived = payload => ({
+//   type: actionTypes.WEBSOCKET_MESSAGE_RECEIVED,
+//   payload,
+// });
+// export const websocketError = payload => ({
+//   type: actionTypes.WEBSOCKET_ERROR,
+//   payload,
+// });
+// export const updateDevices = payload => ({
+//   type: actionTypes.UPDATE_DEVICES,
+//   payload,
+// });
+// export const updatePositions = payload => ({
+//   type: actionTypes.UPDATE_POSITIONS,
+//   payload,
+// });
+// export const updateEvents = payload => ({
+//   type: actionTypes.UPDATE_EVENTS,
+//   payload,
+// });

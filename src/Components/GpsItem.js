@@ -16,21 +16,29 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 
 const GpsItem = ({navigation, item, icon}) => {
+  console.log(66666, item);
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.imgBox}>
-            <Image source={{uri: item.image}} style={styles.image} />
+            <Image
+              source={{
+                uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+              }}
+              style={styles.image}
+            />
           </View>
           <View />
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('trackingtruck', {item: item})}
           style={styles.textContainer}>
-          <Text style={styles.highlightText}>{item.model}</Text>
+          <Text style={styles.highlightText}>{item.name}</Text>
           <View style={styles.ignBox}>
-            <Text>Active</Text>
+            <Text style={{color: item.status === 'online' ? 'green' : 'red'}}>
+              {item.status}
+            </Text>
             <View style={styles.verticalLine} />
             <Text>Ignition on</Text>
           </View>

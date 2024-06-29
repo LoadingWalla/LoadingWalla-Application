@@ -74,7 +74,6 @@ import i18n from '../locales/i18n';
 import {useTranslation} from 'react-i18next';
 import Address from '../Screens/BottomTabs/Menu/Address';
 import AddAddress from '../Screens/Modals/AddAddress';
-import GPStracking from '../Screens/GPS/GPStracking';
 import Button from '../Components/Button';
 import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 import HeaderHelpButton from '../Components/HeaderHelpButton';
@@ -89,6 +88,7 @@ import StopsScreen from '../Screens/GPS/StopsScreen';
 import QuickFilters from '../Screens/GPS/QuickFilters';
 import OwnedGPS from '../Screens/GPS/OwnedGPS';
 import PaymentGPS from '../Screens/GPS/PaymentGPS';
+import GpsTrackings from '../Screens/GPS/GpsTrackings';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1291,7 +1291,7 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="GPS"
-        component={GPStracking}
+        component={GpsTrackings}
         options={{
           headerShown: true,
           headerTitleAlign: 'left',

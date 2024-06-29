@@ -1175,51 +1175,72 @@ const reducer = (state = initialState, action) => {
         gpsTokenStatus: null,
       });
 
+    // GPS Device fetching
+    case actionTypes.FETCH_GPS_DEVICES_REQUEST:
+      return {
+        ...state,
+        gpsDeviceLoading: true,
+        gpsDeviceData: null,
+        gpsDeviceStatus: null,
+      };
+    case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
+      return updateState(state, {
+        gpsDeviceLoading: false,
+        gpsDeviceData: payload,
+        gpsDeviceStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_DEVICES_FAILURE:
+      return updateState(state, {
+        gpsDeviceLoading: false,
+        gpsDeviceData: null,
+        gpsDeviceStatus: null,
+      });
+
     // Gps Websocket Connect
-    case actionTypes.WEBSOCKET_CONNECT:
-      return {
-        ...state,
-        isConnected: true,
-      };
-    case actionTypes.WEBSOCKET_DISCONNECT:
-      return {
-        ...state,
-        isConnected: false,
-        messages: [],
-        devices: [],
-        positions: [],
-        events: [],
-      };
-    case actionTypes.WEBSOCKET_SEND_MESSAGE:
-      return {
-        ...state,
-        messages: [...state.messages, payload],
-      };
-    case actionTypes.WEBSOCKET_MESSAGE_RECEIVED:
-      return {
-        ...state,
-        messages: [...state.messages, payload],
-      };
-    case actionTypes.WEBSOCKET_ERROR:
-      return {
-        ...state,
-        error: payload,
-      };
-    case actionTypes.UPDATE_DEVICES:
-      return {
-        ...state,
-        devices: payload,
-      };
-    case actionTypes.UPDATE_POSITIONS:
-      return {
-        ...state,
-        positions: payload,
-      };
-    case actionTypes.UPDATE_EVENTS:
-      return {
-        ...state,
-        events: payload,
-      };
+    // case actionTypes.WEBSOCKET_CONNECT:
+    //   return {
+    //     ...state,
+    //     isConnected: true,
+    //   };
+    // case actionTypes.WEBSOCKET_DISCONNECT:
+    //   return {
+    //     ...state,
+    //     isConnected: false,
+    //     messages: [],
+    //     devices: [],
+    //     positions: [],
+    //     events: [],
+    //   };
+    // case actionTypes.WEBSOCKET_SEND_MESSAGE:
+    //   return {
+    //     ...state,
+    //     messages: [...state.messages, payload],
+    //   };
+    // case actionTypes.WEBSOCKET_MESSAGE_RECEIVED:
+    //   return {
+    //     ...state,
+    //     messages: [...state.messages, payload],
+    //   };
+    // case actionTypes.WEBSOCKET_ERROR:
+    //   return {
+    //     ...state,
+    //     error: payload,
+    //   };
+    // case actionTypes.UPDATE_DEVICES:
+    //   return {
+    //     ...state,
+    //     devices: payload,
+    //   };
+    // case actionTypes.UPDATE_POSITIONS:
+    //   return {
+    //     ...state,
+    //     positions: payload,
+    //   };
+    // case actionTypes.UPDATE_EVENTS:
+    //   return {
+    //     ...state,
+    //     events: payload,
+    //   };
 
     // default state
     default:
