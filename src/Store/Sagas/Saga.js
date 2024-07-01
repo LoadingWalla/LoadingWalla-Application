@@ -1,4 +1,4 @@
-import {call, put} from 'redux-saga/effects';
+import {put} from 'redux-saga/effects';
 import * as actions from '../Actions/Actions';
 import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
@@ -493,10 +493,10 @@ export function* myPostLoad({
     price: price,
     price_type: price_type,
   };
-  console.log(66666, body);
+  // console.log(66666, body);
   try {
     const data = yield API.post('add-load', body);
-    console.log('post load', data);
+    // console.log('post load', data);
     if (data?.data?.status === 200) {
       yield put(actions.myPostLoadSuccess(data));
     } else {
@@ -944,7 +944,7 @@ export function* createOrder({amount, userId}) {
       yield put(actions.createOrderSuccess(data));
     } else {
       yield put(actions.createOrderFailure(data.status));
-      console.log('else', data);
+      // console.log('else', data);
     }
   } catch (error) {
     yield put(actions.createOrderFailure());
@@ -1045,9 +1045,9 @@ export function* fetchTokenSaga() {
 // gps token generate
 export function* fetchGpsDevices({username, password}) {
   try {
-    console.log(33333, username, password);
+    // console.log(33333, username, password);
     const data = yield gpsApi.get('devices', username, password);
-    console.log('Gps Devices', data);
+    // console.log('Gps Devices', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsDevicesSuccess(data?.data));

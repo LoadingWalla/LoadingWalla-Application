@@ -1,8 +1,11 @@
-import {takeLatest} from 'redux-saga/effects';
+import {fork, takeLatest} from 'redux-saga/effects';
 import * as actions from './../Actions/ActionTypes';
 import * as saga from './Saga';
+import watchWebSocket from './websocketSaga';
 
 function* rootSaga() {
+  yield fork(watchWebSocket); // Fork the WebSocket saga to run it concurrently
+
   yield takeLatest(actions.INIT_LOGIN, saga.authenticate);
   yield takeLatest(actions.INIT_VERIFY_OTP, saga.verifyOtp);
   yield takeLatest(actions.INIT_PROFILE_SETUP, saga.profileSetup);

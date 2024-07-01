@@ -16,7 +16,7 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 
 const GpsItem = ({navigation, item, icon}) => {
-  console.log(66666, item);
+  // console.log(66666, item);
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
