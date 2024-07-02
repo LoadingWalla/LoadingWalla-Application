@@ -43,7 +43,7 @@ const Dashboard = ({navigation}) => {
     dashboardLoading,
     loadTruckLoading,
   } = useSelector(state => {
-    console.log('Dashboard Truck', state.data);
+    // console.log('Dashboard Truck', state.data);
     return state.data;
   });
 

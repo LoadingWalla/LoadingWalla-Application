@@ -45,9 +45,9 @@ const GpsTrackings = ({navigation}) => {
   useEffect(() => {
     if (gpsTokenData !== null) {
       const cookie = gpsTokenData.cookie;
-      console.log(3333, cookie);
+      // console.log(3333, cookie);
       dispatch(websocketConnect(cookie));
-      console.log(7777);
+      // console.log(7777);
     } else {
       dispatch(fetchTokenRequest());
     }

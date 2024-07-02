@@ -35,7 +35,7 @@ const QRscanner = ({route, navigation}) => {
       setIsScanning(true);
       Vibration.vibrate(5000); // Vibrate the device
       const qrData = codes[0].value;
-      console.log(987987, qrData);
+      // console.log(987987, qrData);
       dispatch(initQrCodeVerify(truck_id, qrData)); // Dispatch the action to verify QR code
     }
   };

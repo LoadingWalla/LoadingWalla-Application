@@ -53,9 +53,9 @@ const RCVerification = ({navigation, route}) => {
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Camera permission granted');
+          // console.log('Camera permission granted');
         } else {
-          console.log('Camera permission denied');
+          // console.log('Camera permission denied');
           // Show an alert if camera permissions are not granted
           Alert.alert(
             'Permission Denied',

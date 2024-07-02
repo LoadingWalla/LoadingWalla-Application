@@ -40,7 +40,7 @@ export const notificationListener = () => {
 
 export const foregroundNotification = () => {
   const unsubscribe = messaging().onMessage(async remoteMessage => {
-    console.log('ForeGround Message', remoteMessage);
+    // console.log('ForeGround Message', remoteMessage);
     if (remoteMessage.data && remoteMessage.data.screen) {
       navigate(remoteMessage.data.screen, remoteMessage.data.params);
     }
@@ -53,7 +53,7 @@ export const backgroundNotification = () => {
   messaging().setBackgroundMessageHandler(async remoteMessage => {
     // Alert.alert('Message handled in the background!', remoteMessage);
     if (remoteMessage.data && remoteMessage.data.screen) {
-      console.log('Navigate to:', remoteMessage.data.screen);
+      // console.log('Navigate to:', remoteMessage.data.screen);
     }
 
     if (Platform.OS === 'ios') {

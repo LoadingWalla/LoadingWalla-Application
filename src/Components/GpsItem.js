@@ -16,7 +16,7 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 
 const GpsItem = ({navigation, item, icon}) => {
-  console.log(66666, item);
+  // console.log(66666, item);
 
   const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
   const todayDistance = item?.position[0]?.attributes?.distance;

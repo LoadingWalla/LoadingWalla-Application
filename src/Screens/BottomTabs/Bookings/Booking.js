@@ -42,7 +42,7 @@ const Booking = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('My Bookings', state.data);
+    // console.log('My Bookings', state.data);
     return state.data;
   });
 

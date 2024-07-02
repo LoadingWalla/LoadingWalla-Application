@@ -55,7 +55,7 @@ const EditProfile = ({
 
   const {profileSetupLoading, profileSetupStatus, profileSetupData} =
     useSelector(state => {
-      console.log('Edit profile', state.data);
+      // console.log('Edit profile', state.data);
       return state.data;
     });
 

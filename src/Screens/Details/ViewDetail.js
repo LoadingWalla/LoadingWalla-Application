@@ -40,7 +40,7 @@ function offsetCoordinates(coord, isLeft) {
 }
 
 const ViewDetail = ({navigation, route}) => {
-  console.log('view detail', route);
+  // console.log('view detail', route);
   const {
     from,
     material_name,

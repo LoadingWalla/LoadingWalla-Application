@@ -23,13 +23,13 @@ const instanceFunction = instanceObj => {
   // Add a response interceptor
   instanceObj.interceptors.response.use(
     function (response) {
-      console.log('response', response.data);
+      // console.log('response', response.data);
       // Any status code that lie within the range of 2xx will come here
       let respObj = {
         data: response.data ? response.data : [],
         status: response.status,
       };
-      console.log('responseObject', respObj);
+      // console.log('responseObject', respObj);
       return respObj;
     },
     function (error) {

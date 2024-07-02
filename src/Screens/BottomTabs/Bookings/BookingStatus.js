@@ -17,7 +17,7 @@ import * as Constants from '../../../Constants/Constant';
 import NotFound from '../../../Components/NotFound';
 
 const BookingStatus = ({navigation, route}) => {
-  console.log('booking---status', route);
+  // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
   const {t} = useTranslation();
 
