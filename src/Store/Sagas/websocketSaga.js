@@ -18,14 +18,17 @@ function createWebSocketChannel(cookie) {
 
     ws.onmessage = event => {
       const data = JSON.parse(event.data);
+      console.log('websocket onmessage', data);
       emit(actions.websocketMessage(data));
     };
 
     ws.onerror = error => {
+      console.log('websocket onerror', error);
       emit(actions.websocketError(error.message));
     };
 
     ws.onclose = event => {
+      console.log('onclose', event);
       emit(actions.websocketClosed());
       if (event.code !== 1000) {
         emit(actions.websocketRetry());
@@ -38,20 +41,12 @@ function createWebSocketChannel(cookie) {
   });
 }
 
-// function* handleWebSocketConnection(cookie) {
-//   const channel = yield call(createWebSocketChannel, cookie);
-
-//   while (true) {
-//     const action = yield take(channel);
-//     yield put(action);
-//   }
-// }
-
 function* handleWebSocketConnection(cookie) {
   const channel = yield call(createWebSocketChannel, cookie);
 
   while (true) {
     const action = yield take(channel);
+    yield put(action);
     if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
       const {devices, positions, events} = action.payload;
       if (devices) {
@@ -76,6 +71,7 @@ function* websocketSaga() {
   while (true) {
     const {payload} = yield take(actionTypes.WEBSOCKET_CONNECT);
     const {cookie} = payload;
+    console.log(444, cookie);
 
     if (connectionTask) {
       yield cancel(connectionTask);

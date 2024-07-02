@@ -16,7 +16,12 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 
 const GpsItem = ({navigation, item, icon}) => {
-  // console.log(66666, item);
+  console.log(66666, item);
+
+  const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
+  const todayDistance = item?.position[0]?.attributes?.distance;
+  const batteryLevel = item?.position[0]?.attributes?.batteryLevel;
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -32,7 +37,9 @@ const GpsItem = ({navigation, item, icon}) => {
           <View />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('trackingtruck', {item: item})}
+          onPress={() =>
+            navigation.navigate('trackingtruck', {deviceId: item.id})
+          }
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{item.name}</Text>
           <View style={styles.ignBox}>
@@ -40,11 +47,21 @@ const GpsItem = ({navigation, item, icon}) => {
               {item.status}
             </Text>
             <View style={styles.verticalLine} />
-            <Text>Ignition on</Text>
+            <View style={{flexDirection: 'row', borderWidth: 0}}>
+              <Text>Ignition</Text>
+              <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
+                {ignition ? (ignition ? 'on' : 'off') : 'off'}
+              </Text>
+            </View>
           </View>
           <View style={styles.iconBox}>
-            <FuelIcon size={20} />
-            <BatteryIcon size={20} />
+            <FuelIcon size={20} color={'#727272'} />
+            <BatteryIcon
+              size={20}
+              color={
+                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
+              }
+            />
             <NetworkIcon size={20} />
             <GeoFencingIcon size={20} />
             <DamageIcon size={20} />
@@ -52,7 +69,9 @@ const GpsItem = ({navigation, item, icon}) => {
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>300 KM</Text>
+            <Text style={styles.highlightText}>
+              {todayDistance ? `${Math.ceil(todayDistance)} KM` : '0 KM'}
+            </Text>
             <Text style={styles.distanceText}>Today Distance</Text>
           </View>
         </View>

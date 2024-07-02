@@ -5,7 +5,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import GpsItem from '../../Components/GpsItem';
 import Button from '../../Components/Button';
 import {backgroundColorNew, textColor} from '../../Color/color';
@@ -19,6 +19,10 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
+  const latestDevice = useSelector(state => state.data.wsDevices);
+  const allPositions = useSelector(state => state.data.wsPositions);
+  const allEvents = useSelector(state => state.data.wsEvents);
+  // console.log(444, allPositions);
 
   const {
     gpsTokenLoading,
@@ -32,14 +36,21 @@ const GpsTrackings = ({navigation}) => {
     return state.data;
   });
 
-  useEffect(() => {
-    if (gpsTokenData === null) {
-      dispatch(fetchTokenRequest());
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (gpsTokenData === null) {
+  //     dispatch(fetchTokenRequest());
+  //   }
+  // }, [dispatch]);
 
   useEffect(() => {
-    dispatch(websocketConnect(gpsTokenData.cookie));
+    if (gpsTokenData !== null) {
+      const cookie = gpsTokenData.cookie;
+      console.log(3333, cookie);
+      dispatch(websocketConnect(cookie));
+      console.log(7777);
+    } else {
+      dispatch(fetchTokenRequest());
+    }
 
     return () => {
       dispatch(websocketDisconnect());
@@ -54,6 +65,20 @@ const GpsTrackings = ({navigation}) => {
     }
   }, [dispatch, gpsTokenData]);
 
+  // Merge gpsDeviceData with latestDevice, positions, and events
+  const mergedDeviceData = gpsDeviceData?.map(device => {
+    const latest = latestDevice.find(d => d.id === device.id);
+    const position = allPositions.filter(p => p.deviceId === device.id);
+    const events = allEvents.filter(e => e.deviceId === device.id);
+    // console.log(
+    //   55555,
+    //   latest ? {...device, ...latest, position, events} : device,
+    // );
+    return latest
+      ? {...device, ...latest, position, events}
+      : {...device, position, events};
+  });
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.headerContainer}>
@@ -65,7 +90,7 @@ const GpsTrackings = ({navigation}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsDeviceData}
+          data={mergedDeviceData}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
@@ -112,90 +137,3 @@ const styles = StyleSheet.create({
   },
   loadingStyle: {flex: 1, justifyContent: 'center', alignItems: 'center'},
 });
-
-// import {StyleSheet, Text, View} from 'react-native';
-// import React, {useEffect, useState} from 'react';
-
-// const GpsTrackings = () => {
-//   const [message, setMessage] = useState(null);
-//   const [attempts, setAttempts] = useState(0);
-//   const wsUrl = 'ws://13.200.80.190:8082/api/socket';
-//   const cookie = 'JSESSIONID=node01mzy5gr053w2o1xtfjhav16hwn1314.node0'; // Replace with your actual cookie
-
-//   useEffect(() => {
-//     if (attempts > 5) {
-//       console.log('Max retry attempts reached');
-//       return;
-//     }
-
-//     console.log(`Attempting to connect: attempt ${attempts + 1}`);
-//     const ws = new WebSocket(wsUrl, null, {
-//       headers: {
-//         Cookie: cookie,
-//       },
-//     });
-
-//     ws.onopen = () => {
-//       console.log('WebSocket connection opened');
-//     };
-
-//     ws.onmessage = e => {
-//       // Parse the incoming message
-//       const data = JSON.parse(e.data);
-//       setMessage(data);
-//       console.log('Message received:', data);
-//     };
-
-//     ws.onerror = e => {
-//       console.error('WebSocket error', e.message);
-//     };
-
-//     ws.onclose = e => {
-//       console.log('WebSocket connection closed', e.code, e.reason);
-//       if (e.code !== 1000) {
-//         // Retry connection if it was not closed normally
-//         console.log('Retrying connection...');
-//         setTimeout(() => {
-//           setAttempts(prev => prev + 1);
-//         }, 5000); // Retry after 5 seconds
-//       }
-//     };
-
-//     // Cleanup function to close the WebSocket when the component unmounts
-//     return () => {
-//       console.log('Cleaning up WebSocket connection');
-//       ws.close();
-//     };
-//   }, [attempts]);
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>GpsTrackings</Text>
-//       {message ? (
-//         <Text style={styles.message}>Received: {JSON.stringify(message)}</Text>
-//       ) : (
-//         <Text style={styles.message}>Connecting to WebSocket...</Text>
-//       )}
-//     </View>
-//   );
-// };
-
-// export default GpsTrackings;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: 16,
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: 'bold',
-//     marginBottom: 16,
-//   },
-//   message: {
-//     fontSize: 16,
-//     textAlign: 'center',
-//   },
-// });

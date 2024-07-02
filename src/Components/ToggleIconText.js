@@ -8,6 +8,7 @@ const ToggleIconText = ({
   index,
   activeIndex,
   onPress,
+  color,
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -21,7 +22,7 @@ const ToggleIconText = ({
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <IconComponent size={iconSize} />
+      <IconComponent size={iconSize} color={color} />
       {activeIndex === index && (
         <Animated.View style={{opacity}}>
           <Text style={styles.hiddenText}>{text}</Text>

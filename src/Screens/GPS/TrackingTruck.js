@@ -22,6 +22,7 @@ import ToggleIconText from '../../Components/ToggleIconText';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
+import {useSelector} from 'react-redux';
 
 const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
   return (
@@ -33,9 +34,20 @@ const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  const {item} = route.params;
-  console.log(444, item);
+  const {deviceId} = route.params;
+  console.log(444, deviceId);
   const [activeIndex, setActiveIndex] = useState(null);
+  const device = useSelector(state =>
+    state.data.wsDevices.find(d => d.id === deviceId),
+  );
+  const positions = useSelector(state =>
+    state.data.wsPositions.filter(p => p.deviceId === deviceId),
+  );
+  const events = useSelector(state =>
+    state.data.wsEvents.filter(e => e.deviceId === deviceId),
+  );
+
+  console.log(3333, device, positions, events);
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -52,8 +64,10 @@ const TrackingTruck = ({navigation, route}) => {
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Today distance:</Text>
-            <Text style={styles.highlightText}>300 KM</Text>
+            <Text style={styles.distanceText}>Total distance:</Text>
+            <Text style={styles.highlightText}>
+              {`${Math.ceil(positions[0]?.attributes?.totalDistance)} KM`}
+            </Text>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
@@ -61,6 +75,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={FuelIcon}
               text="Fuel"
               iconSize={30}
+              color={'#727272'}
               index={0}
               activeIndex={activeIndex}
               onPress={() => handlePress(0)}
@@ -69,6 +84,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={BatteryIcon}
               text="Battery"
               iconSize={30}
+              color={'#727272'}
               index={1}
               activeIndex={activeIndex}
               onPress={() => handlePress(1)}
@@ -77,6 +93,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={NetworkIcon}
               text="Network"
               iconSize={25}
+              color={'#727272'}
               index={2}
               activeIndex={activeIndex}
               onPress={() => handlePress(2)}
@@ -85,6 +102,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={GeoFencingIcon}
               text="GeoFencing"
               iconSize={25}
+              color={'#727272'}
               index={3}
               activeIndex={activeIndex}
               onPress={() => handlePress(3)}
@@ -93,6 +111,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={KeyIcon}
               text="Key"
               iconSize={25}
+              color={'#727272'}
               index={4}
               activeIndex={activeIndex}
               onPress={() => handlePress(4)}
@@ -101,6 +120,7 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={DamageIcon}
               text="Damage"
               iconSize={25}
+              color={'#727272'}
               index={5}
               activeIndex={activeIndex}
               onPress={() => handlePress(5)}
