@@ -169,7 +169,7 @@ const Wallet = ({navigation}) => {
   ]);
 
   const rechargeRenderItem = ({item}) => {
-    console.log(44444, item);
+    // console.log(44444, item);
     return (
       <View style={styles.repeatView}>
         <View>

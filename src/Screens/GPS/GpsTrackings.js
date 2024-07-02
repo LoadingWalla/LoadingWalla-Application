@@ -16,6 +16,7 @@ import {
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
@@ -32,38 +33,69 @@ const GpsTrackings = ({navigation}) => {
     gpsDeviceData,
     gpsDeviceStatus,
   } = useSelector(state => {
-    // console.log('profile Data', state.data);
+    console.log('Gps Tracking', state.data);
     return state.data;
   });
 
   // useEffect(() => {
-  //   if (gpsTokenData === null) {
+  //   if (gpsTokenData !== null) {
+  //     const cookie = gpsTokenData.cookie;
+  //     // console.log(3333, cookie);
+  //     dispatch(websocketConnect(cookie));
+  //     // console.log(7777);
+  //   } else {
   //     dispatch(fetchTokenRequest());
   //   }
+
+  //   return () => {
+  //     dispatch(websocketDisconnect());
+  //   };
   // }, [dispatch]);
 
-  useEffect(() => {
-    if (gpsTokenData !== null) {
-      const cookie = gpsTokenData.cookie;
-      // console.log(3333, cookie);
-      dispatch(websocketConnect(cookie));
-      // console.log(7777);
-    } else {
-      dispatch(fetchTokenRequest());
-    }
+  // useEffect(() => {
+  //   if (gpsTokenData) {
+  //     dispatch(
+  //       fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
+  //     );
+  //   }
+  // }, [dispatch, gpsTokenData]);
 
-    return () => {
-      dispatch(websocketDisconnect());
-    };
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (gpsTokenData !== null) {
+  //     const cookie = gpsTokenData.cookie;
+  //     dispatch(websocketConnect(cookie));
+  //   } else {
+  //     dispatch(fetchTokenRequest());
+  //   }
+  // }, [dispatch, gpsTokenData]);
+  // useEffect(() => {
+  //   if (gpsTokenData) {
+  //     dispatch(
+  //       fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
+  //     );
+  //   }
+  // }, [dispatch, gpsTokenData]);
 
   useEffect(() => {
     if (gpsTokenData) {
+      const cookie = gpsTokenData.cookie;
+      dispatch(websocketConnect(cookie));
       dispatch(
         fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
       );
+    } else {
+      dispatch(fetchTokenRequest());
     }
   }, [dispatch, gpsTokenData]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        console.log('WebSocket disconnecting on screen leave');
+        dispatch(websocketDisconnect());
+      };
+    }, [dispatch]),
+  );
 
   // Merge gpsDeviceData with latestDevice, positions, and events
   const mergedDeviceData = gpsDeviceData?.map(device => {

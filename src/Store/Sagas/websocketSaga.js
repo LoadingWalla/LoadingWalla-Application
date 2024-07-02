@@ -28,39 +28,73 @@ function createWebSocketChannel(cookie) {
     };
 
     ws.onclose = event => {
-      console.log('onclose', event);
+      console.log('WebSocket onclose', event);
       emit(actions.websocketClosed());
       if (event.code !== 1000) {
         emit(actions.websocketRetry());
       }
     };
 
-    return () => {
+    // return () => {
+    //   console.log('WebSocket cleanup and close');
+    //   ws.close();
+    // };
+    const unsubscribe = () => {
+      console.log('WebSocket cleanup and close');
       ws.close();
     };
+    return unsubscribe;
   });
 }
 
+// function* handleWebSocketConnection(cookie) {
+//   const channel = yield call(createWebSocketChannel, cookie);
+
+//   while (true) {
+//     const action = yield take(channel);
+//     yield put(action);
+//     if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
+//       const {devices, positions, events} = action.payload;
+//       if (devices) {
+//         yield put(actions.updateDevices(devices));
+//       }
+//       if (positions) {
+//         yield put(actions.updatePositions(positions));
+//       }
+//       if (events) {
+//         yield put(actions.updateEvents(events));
+//       }
+//     } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
+//       console.log('WebSocket connection closed');
+//     }
+//   }
+// }
 function* handleWebSocketConnection(cookie) {
   const channel = yield call(createWebSocketChannel, cookie);
 
-  while (true) {
-    const action = yield take(channel);
-    yield put(action);
-    if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-      const {devices, positions, events} = action.payload;
-      if (devices) {
-        yield put(actions.updateDevices(devices));
-      }
-      if (positions) {
-        yield put(actions.updatePositions(positions));
-      }
-      if (events) {
-        yield put(actions.updateEvents(events));
-      }
-    } else {
+  try {
+    while (true) {
+      const action = yield take(channel);
       yield put(action);
+
+      if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
+        const {devices, positions, events} = action.payload;
+        if (devices) {
+          yield put(actions.updateDevices(devices));
+        }
+        if (positions) {
+          yield put(actions.updatePositions(positions));
+        }
+        if (events) {
+          yield put(actions.updateEvents(events));
+        }
+      } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
+        console.log('WebSocket connection closed');
+      }
     }
+  } finally {
+    console.log('WebSocket connection finally block, cleaning up');
+    channel.close();
   }
 }
 
@@ -71,7 +105,7 @@ function* websocketSaga() {
   while (true) {
     const {payload} = yield take(actionTypes.WEBSOCKET_CONNECT);
     const {cookie} = payload;
-    console.log(444, cookie);
+    console.log('WebSocket connection requested with cookie:', cookie);
 
     if (connectionTask) {
       yield cancel(connectionTask);
@@ -85,10 +119,13 @@ function* websocketSaga() {
     ]);
 
     if (action.type === actionTypes.WEBSOCKET_DISCONNECT) {
+      console.log('WebSocket disconnect requested');
       yield cancel(connectionTask);
+      console.log('WebSocket connection task cancelled');
     } else if (action.type === actionTypes.WEBSOCKET_RETRY) {
       retryCount++;
       if (retryCount <= 5) {
+        console.log('WebSocket retry attempt:', retryCount);
         yield delay(5000); // Retry after 5 seconds
         connectionTask = yield fork(handleWebSocketConnection, cookie);
       } else {

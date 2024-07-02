@@ -66,7 +66,7 @@ const Profile = ({navigation, route}) => {
 
   const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
     useSelector(state => {
-      // console.log('profile Data', state.data);
+      console.log('profile Data', state.data);
       return state.data;
     });
 
