@@ -22,7 +22,8 @@ import ToggleIconText from '../../Components/ToggleIconText';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import useAddress from '../../hooks/useAddress';
 
 const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
   return (
@@ -36,7 +37,9 @@ const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId} = route.params;
   console.log(444, deviceId);
+  const dispatch = useDispatch();
   const [activeIndex, setActiveIndex] = useState(null);
+
   const device = useSelector(state =>
     state.data.wsDevices.find(d => d.id === deviceId),
   );
@@ -47,11 +50,16 @@ const TrackingTruck = ({navigation, route}) => {
     state.data.wsEvents.filter(e => e.deviceId === deviceId),
   );
 
-  console.log(3333, device, positions, events);
+  const {wsPositions} = useSelector(state => {
+    console.log('Tracking truck', state.data);
+    return state.data;
+  });
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
+  const {address, fetchAddress} = useAddress(wsPositions);
 
   const truckRouteCoordinates = [
     {latitude: 25.0961, longitude: 85.3131},
@@ -66,7 +74,9 @@ const TrackingTruck = ({navigation, route}) => {
           <View style={styles.distanceBox}>
             <Text style={styles.distanceText}>Total distance:</Text>
             <Text style={styles.highlightText}>
-              {`${Math.ceil(positions[0]?.attributes?.totalDistance)} KM`}
+              {`${Math.ceil(
+                positions[0]?.attributes?.totalDistance / 1000,
+              )} KM`}
             </Text>
           </View>
           <View style={styles.horizontalLine} />
@@ -84,7 +94,13 @@ const TrackingTruck = ({navigation, route}) => {
               IconComponent={BatteryIcon}
               text="Battery"
               iconSize={30}
-              color={'#727272'}
+              color={
+                positions[0]?.attributes?.batteryLevel
+                  ? positions[0]?.attributes?.batteryLevel > 60
+                    ? 'green'
+                    : 'red'
+                  : '#727272'
+              }
               index={1}
               activeIndex={activeIndex}
               onPress={() => handlePress(1)}
@@ -133,9 +149,13 @@ const TrackingTruck = ({navigation, route}) => {
       </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapHeader}>
-          <Text>DEL 0212 DP1</Text>
+          <Text>{device?.name}</Text>
           <View style={styles.verticalLine} />
-          <Text>Jamshedpur, Jharkhand</Text>
+          <TouchableOpacity onPress={fetchAddress}>
+            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+              {address}
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.mapView}>
           <MapView
@@ -178,7 +198,12 @@ const TrackingTruck = ({navigation, route}) => {
             IconComponent={LocationHistory}
             iconSize={30}
             title={'History'}
-            onPress={() => navigation.navigate('LocationHistory')}
+            onPress={() =>
+              navigation.navigate('LocationHistory', {
+                deviceId: deviceId,
+                name: device?.name,
+              })
+            }
           />
           <IconWithName
             IconComponent={FuelPumpIcon}

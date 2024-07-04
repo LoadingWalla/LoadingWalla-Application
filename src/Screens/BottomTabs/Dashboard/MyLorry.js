@@ -54,7 +54,7 @@ const MyLorry = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    // console.log("My Lorry/Load", state.data);
+    console.log('My Lorry/Load', state.data);
     return state.data;
   });
 

@@ -160,6 +160,14 @@ const initialState = {
   wsDevices: [],
   wsEvents: [],
   wsPositions: [],
+  // gps address
+  gpsAddressLoading: false,
+  gpsAddressData: null,
+  gpsAddressError: null,
+  // gps summary
+  gpsSummaryLoading: false,
+  gpsSummaryError: null,
+  gpsSummaryData: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1194,6 +1202,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsDeviceLoading: false,
         gpsDeviceData: payload,
+        wsDevices: payload,
         gpsDeviceStatus: payload?.status,
       });
     case actionTypes.FETCH_GPS_DEVICES_FAILURE:
@@ -1207,19 +1216,57 @@ const reducer = (state = initialState, action) => {
     case actionTypes.WEBSOCKET_CONNECT:
       return {...state, wsConnected: true};
     case actionTypes.WEBSOCKET_DISCONNECT:
-      return {...state, wsConnected: false, wsError: null};
+      return updateState(state, {wsConnected: false, wsError: null});
     case actionTypes.WEBSOCKET_MESSAGE:
-      return {...state, wsMessages: [...state.wsMessages, payload]};
+      return updateState(state, {wsMessages: [...state.wsMessages, payload]});
     case actionTypes.WEBSOCKET_ERROR:
-      return {...state, wsError: payload};
+      return updateState(state, {wsError: payload});
     case actionTypes.WEBSOCKET_CLOSED:
-      return {...state, wsConnected: false};
+      return updateState(state, {wsConnected: false});
     case actionTypes.UPDATE_DEVICES:
-      return {...state, wsDevices: payload};
+      return updateState(state, {wsDevices: payload});
     case actionTypes.UPDATE_POSITIONS:
-      return {...state, wsPositions: payload};
+      return updateState(state, {wsPositions: payload});
     case actionTypes.UPDATE_EVENTS:
-      return {...state, wsEvents: payload};
+      return updateState(state, {wsEvents: payload});
+
+    // GPS Address
+    case actionTypes.FETCH_GPS_ADDRESS_REQUEST:
+      return {
+        ...state,
+        gpsAddressLoading: true,
+        gpsAddressError: null,
+      };
+    case actionTypes.FETCH_GPS_ADDRESS_SUCCESS:
+      return updateState(state, {
+        gpsAddressLoading: false,
+        gpsAddressData: payload,
+      });
+    case actionTypes.FETCH_GPS_ADDRESS_FAILURE:
+      return updateState(state, {
+        gpsAddressLoading: false,
+        gpsAddressError: payload,
+        gpsAddressData: null,
+      });
+
+    // GPS Summary report
+    case actionTypes.FETCH_SUMMARY_REPORT_REQUEST:
+      return {
+        ...state,
+        gpsSummaryLoading: true,
+        gpsSummaryError: null,
+      };
+    case actionTypes.FETCH_SUMMARY_REPORT_SUCCESS:
+      return updateState(state, {
+        gpsSummaryLoading: false,
+        gpsSummaryData: payload,
+      });
+    case actionTypes.FETCH_SUMMARY_REPORT_FAILURE:
+      return updateState(state, {
+        gpsSummaryLoading: false,
+        gpsSummaryError: payload,
+        gpsSummaryData: null,
+      });
 
     // default state
     default:

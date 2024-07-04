@@ -1,48 +1,81 @@
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {titleColor} from '../../Color/color';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {fetchSummaryReportRequest} from '../../Store/Actions/Actions';
+import {formatDate} from '../../Utils/dateUtils';
+import useAddress from '../../hooks/useAddress';
 
-const LocationHistory = ({navigation}) => {
-  const data = [
-    {
-      id: 1,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-    {
-      id: 2,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-    {
-      id: 3,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-  ];
+const LocationHistory = ({navigation, route}) => {
+  const {deviceId, name} = route.params;
+  const dispatch = useDispatch();
+  console.log(999, route);
 
-  const renderItem = ({item}) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.rowText}>{item.date}</Text>
-      <Text style={styles.rowText}>{item.distance}</Text>
-      <Text style={styles.rowText}>{item.fuel}</Text>
-      <Text style={styles.rowText}>{item.mileage}</Text>
-    </View>
-  );
+  const {
+    gpsSummaryLoading,
+    gpsSummaryError,
+    gpsSummaryData,
+    gpsTokenData,
+    wsPositions,
+  } = useSelector(state => {
+    console.log('HistoryLocation', state.data);
+    return state.data;
+  });
+
+  useEffect(() => {
+    // console.log(
+    //   4444444,
+    //   gpsTokenData.email,
+    //   gpsTokenData.password,
+    //   deviceId,
+    //   '2024-06-29T18%3A30%3A00.000Z',
+    //   '2024-07-06T18%3A29%3A59.999Z',
+    //   true,
+    // );
+    dispatch(
+      fetchSummaryReportRequest(
+        gpsTokenData.email,
+        gpsTokenData.password,
+        deviceId,
+        '2024-07-02T18%3A30%3A00.000Z',
+        '2024-07-03T18%3A29%3A59.999Z',
+        true,
+      ),
+    );
+  }, []);
+
+  const {address, fetchAddress} = useAddress(wsPositions);
+
+  const renderItem = ({item}) => {
+    // console.log(3333333, item);
+    return (
+      <View style={styles.tableRow}>
+        <Text style={styles.rowText}>{formatDate(item?.startTime)}</Text>
+        <Text style={styles.rowText}>{`${Math.ceil(
+          item?.distance / 1000,
+        )} KM`}</Text>
+        <Text style={styles.rowText}>{`${Math.ceil(
+          item?.averageSpeed * 3.6,
+        )} km/h`}</Text>
+        <Text style={styles.rowText}>{`${Math.ceil(
+          item?.maxSpeed * 3.6,
+        )} km/h`}</Text>
+      </View>
+    );
+  };
 
   return (
     <View style={{flex: 1}}>
       <View style={styles.headerBox}>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Total distance</Text>
-          <Text style={styles.stopCount}>1,300KM</Text>
+          <Text style={styles.stopCount}>
+            {`${Math.ceil(
+              wsPositions[0]?.attributes?.totalDistance / 1000,
+            )} KM`}
+          </Text>
         </View>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Total Fuel consumption</Text>
@@ -52,6 +85,7 @@ const LocationHistory = ({navigation}) => {
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() => navigation.navigate('quickfilters')}>
+            {/* onPress={() => navigation.navigate('quickfilters')}> */}
             <CalendarIcon size={40} />
           </TouchableOpacity>
         </View>
@@ -67,23 +101,26 @@ const LocationHistory = ({navigation}) => {
           margin: 10,
         }}>
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Text style={styles.stopText}>DEL 0212 DP1</Text>
+          <Text style={styles.stopText}>{name}</Text>
           <View style={styles.verticalLine2} />
-          <Text style={styles.stopText}>
-            Current Location: Jamshedpur, Jharkhand
-          </Text>
+          <TouchableOpacity onPress={fetchAddress}>
+            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+              {address}
+            </Text>
+          </TouchableOpacity>
+          {/* motion true toh running otherwise location */}
         </View>
       </View>
       <FlatList
-        data={data}
+        data={gpsSummaryData}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         ListHeaderComponent={
           <View style={styles.tableHeader}>
-            <Text style={styles.headerText}>Date</Text>
+            <Text style={styles.headerText}>Start Date</Text>
             <Text style={styles.headerText}>Distance</Text>
-            <Text style={styles.headerText}>Fuel</Text>
-            <Text style={styles.headerText}>Mileage</Text>
+            <Text style={styles.headerText}>Avg. Speed</Text>
+            <Text style={styles.headerText}>Max. Speed</Text>
           </View>
         }
         style={styles.tableContainer}

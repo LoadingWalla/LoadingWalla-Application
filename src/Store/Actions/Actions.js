@@ -1048,3 +1048,58 @@ export const updateEvents = events => ({
   type: actionTypes.UPDATE_EVENTS,
   payload: events,
 });
+
+// GPS Address
+export const fetchGpsAddressRequest = (
+  username,
+  password,
+  latitude,
+  longitude,
+) => {
+  // console.log('actions3333', username, password, latitude, longitude);
+  return {
+    type: actionTypes.FETCH_GPS_ADDRESS_REQUEST,
+    username,
+    password,
+    latitude,
+    longitude,
+  };
+};
+
+export const fetchGpsAddressSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_ADDRESS_SUCCESS,
+  payload,
+});
+
+export const fetchGpsAddressFailure = payload => ({
+  type: actionTypes.FETCH_GPS_ADDRESS_FAILURE,
+  payload,
+});
+
+// GPS summary report
+export const fetchSummaryReportRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+  daily,
+) => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+  daily,
+});
+
+export const fetchSummaryReportSuccess = data => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_SUCCESS,
+  payload: data,
+});
+
+export const fetchSummaryReportFailure = error => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_FAILURE,
+  payload: error,
+});

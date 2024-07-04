@@ -35,40 +35,23 @@ function createWebSocketChannel(cookie) {
       }
     };
 
-    // return () => {
-    //   console.log('WebSocket cleanup and close');
-    //   ws.close();
-    // };
     const unsubscribe = () => {
       console.log('WebSocket cleanup and close');
-      ws.close();
+      ws.onclose = null; // Remove onclose handler to prevent auto-reconnect logic
+      ws.onerror = null; // Remove onerror handler to prevent further error handling
+      ws.onmessage = null; // Remove onmessage handler to prevent further message handling
+      ws.onopen = null; // Remove onopen handler to prevent open events
+      if (
+        ws.readyState === WebSocket.OPEN ||
+        ws.readyState === WebSocket.CONNECTING
+      ) {
+        ws.close();
+      }
     };
     return unsubscribe;
   });
 }
 
-// function* handleWebSocketConnection(cookie) {
-//   const channel = yield call(createWebSocketChannel, cookie);
-
-//   while (true) {
-//     const action = yield take(channel);
-//     yield put(action);
-//     if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-//       const {devices, positions, events} = action.payload;
-//       if (devices) {
-//         yield put(actions.updateDevices(devices));
-//       }
-//       if (positions) {
-//         yield put(actions.updatePositions(positions));
-//       }
-//       if (events) {
-//         yield put(actions.updateEvents(events));
-//       }
-//     } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
-//       console.log('WebSocket connection closed');
-//     }
-//   }
-// }
 function* handleWebSocketConnection(cookie) {
   const channel = yield call(createWebSocketChannel, cookie);
 

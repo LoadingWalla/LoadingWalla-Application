@@ -1061,6 +1061,59 @@ export function* fetchGpsDevices({username, password}) {
   }
 }
 
+// gps token generate
+export function* fetchGpsAddress({username, password, latitude, longitude}) {
+  try {
+    // console.log(33333, username, password, latitude, longitude);
+    const data = yield gpsApi.get(
+      `/server/geocode?latitude=${latitude}&longitude=${longitude}`,
+      username,
+      password,
+    );
+    // console.log('Gps Devices', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsAddressSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsAddressFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsAddressFailure(error.message));
+    // console.log('error4444', error);
+  }
+}
+
+// gps summary
+export function* fetchGpsSummary({
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+  daily,
+}) {
+  try {
+    console.log(33333, username, password, deviceId, from, to, daily);
+    const data = yield gpsApi.get(
+      `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
+      username,
+      password,
+    );
+    console.log('Gps Summary', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchSummaryReportSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchSummaryReportFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchSummaryReportFailure(error.message));
+    // console.log('error4444', error);
+  }
+}
+
 // Back Button Handler
 // export function* watchBackButton() {
 //   yield takeLatest('BACK_BUTTON_PRESS', handleBackButton);

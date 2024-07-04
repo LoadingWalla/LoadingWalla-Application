@@ -11,6 +11,7 @@ import Button from '../../Components/Button';
 import {backgroundColorNew, textColor} from '../../Color/color';
 import {
   fetchGpsDevicesRequest,
+  fetchTokenFailure,
   fetchTokenRequest,
   websocketConnect,
   websocketDisconnect,
@@ -37,45 +38,6 @@ const GpsTrackings = ({navigation}) => {
     return state.data;
   });
 
-  // useEffect(() => {
-  //   if (gpsTokenData !== null) {
-  //     const cookie = gpsTokenData.cookie;
-  //     // console.log(3333, cookie);
-  //     dispatch(websocketConnect(cookie));
-  //     // console.log(7777);
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-
-  //   return () => {
-  //     dispatch(websocketDisconnect());
-  //   };
-  // }, [dispatch]);
-
-  // useEffect(() => {
-  //   if (gpsTokenData) {
-  //     dispatch(
-  //       fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
-  //     );
-  //   }
-  // }, [dispatch, gpsTokenData]);
-
-  // useEffect(() => {
-  //   if (gpsTokenData !== null) {
-  //     const cookie = gpsTokenData.cookie;
-  //     dispatch(websocketConnect(cookie));
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-  // }, [dispatch, gpsTokenData]);
-  // useEffect(() => {
-  //   if (gpsTokenData) {
-  //     dispatch(
-  //       fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
-  //     );
-  //   }
-  // }, [dispatch, gpsTokenData]);
-
   useEffect(() => {
     if (gpsTokenData) {
       const cookie = gpsTokenData.cookie;
@@ -93,6 +55,7 @@ const GpsTrackings = ({navigation}) => {
       return () => {
         console.log('WebSocket disconnecting on screen leave');
         dispatch(websocketDisconnect());
+        dispatch(fetchTokenFailure());
       };
     }, [dispatch]),
   );

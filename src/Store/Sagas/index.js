@@ -60,6 +60,8 @@ function* rootSaga() {
   );
   yield takeLatest(actions.FETCH_GPS_TOKEN_REQUEST, saga.fetchTokenSaga);
   yield takeLatest(actions.FETCH_GPS_DEVICES_REQUEST, saga.fetchGpsDevices);
+  yield takeLatest(actions.FETCH_GPS_ADDRESS_REQUEST, saga.fetchGpsAddress);
+  yield takeLatest(actions.FETCH_SUMMARY_REPORT_REQUEST, saga.fetchGpsSummary);
 }
 
 export default rootSaga;
