@@ -1,22 +1,106 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
-import MapView, {Polyline} from 'react-native-maps';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useEffect, useState, useMemo} from 'react';
+import MapView, {Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
+import {fetchPositionsRequest} from '../../Store/Actions/Actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import moment from 'moment';
+import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
+import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
+import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 
-export default function PlayJourney({navigation}) {
+export default function PlayJourney({navigation, route}) {
+  const {deviceId, from, to} = route.params;
   const [sliderValue, setSliderValue] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(null);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
-  const truckRouteCoordinates = [
-    {latitude: 25.0961, longitude: 85.3131},
-    {latitude: 25.0971, longitude: 85.3201},
-    {latitude: 25.0981, longitude: 85.3251},
-  ];
+  const dispatch = useDispatch();
+  const {gpsTokenData, gpsReplayLoading, gpsReplayError, gpsReplayData} =
+    useSelector(state => state.data);
+
+  const coordinates = useMemo(
+    () =>
+      gpsReplayData?.map(point => ({
+        latitude: point.latitude,
+        longitude: point.longitude,
+      })),
+    [gpsReplayData],
+  );
+
+  const initialRegion = useMemo(
+    () =>
+      coordinates?.length > 0
+        ? {
+            latitude: coordinates[0].latitude,
+            longitude: coordinates[0].longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }
+        : null,
+    [coordinates],
+  );
+
+  const togglePlayback = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const changePlaybackSpeed = speed => {
+    setPlaybackSpeed(speed);
+    if (isPlaying) {
+      togglePlayback();
+      togglePlayback();
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const defaultFrom = from || moment().utc().startOf('day').toISOString();
+      const defaultTo = to || moment().utc().endOf('day').toISOString();
+      dispatch(
+        fetchPositionsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+    }, [dispatch, from, to, deviceId, gpsTokenData]),
+  );
+
+  useEffect(() => {
+    let interval = null;
+    if (isPlaying && currentIndex < coordinates?.length) {
+      interval = setInterval(() => {
+        setCurrentIndex(prevIndex => {
+          const newIndex = prevIndex + 1;
+          setCurrentPosition(coordinates[newIndex]);
+          setSliderValue(newIndex / (coordinates.length - 1));
+          return newIndex;
+        });
+      }, 1000 / playbackSpeed);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Stop</Text>
@@ -27,118 +111,113 @@ export default function PlayJourney({navigation}) {
           Road number - C/33, Gali number 03, new Ashok Nagar, demo address for
           length, Delhi - 110030
         </Text>
-      </View>
-      <View style={styles.mapContainer}>
-        <View style={styles.mapView}>
-          <MapView
-            style={StyleSheet.absoluteFillObject}
-            initialRegion={{
-              latitude: 25.0961,
-              longitude: 85.3131,
-              latitudeDelta: 0,
-              longitudeDelta: 0,
-            }}>
-            <Polyline
-              coordinates={truckRouteCoordinates}
-              strokeColor="#000"
-              strokeWidth={6}
-            />
-          </MapView>
-          <View style={styles.extraButtonBox}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('stops')}
-              style={styles.stopsBtnStyle}>
-              <AlertsIcon size={20} />
-              <Text style={styles.alertButtonText}>Stops</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrlBtn}>
-              <GpsIcon size={30} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.ctrlBtn}>
-              <GpsIcon size={30} />
-            </TouchableOpacity>
-          </View>
+        <View>
+          <TouchableOpacity
+            style={styles.calendarIconBox}
+            onPress={() =>
+              navigation.navigate('quickfilters', {
+                deviceId,
+                navigationPath: 'PlayJourney',
+              })
+            }>
+            <CalendarIcon size={30} />
+          </TouchableOpacity>
         </View>
       </View>
+      <View style={styles.mapContainer}>
+        {gpsReplayLoading ? (
+          <View style={styles.loader}>
+            <ActivityIndicator size="large" color={backgroundColorNew} />
+          </View>
+        ) : (
+          <View style={styles.mapView}>
+            {initialRegion && (
+              <MapView
+                style={StyleSheet.absoluteFillObject}
+                initialRegion={initialRegion}>
+                <Polyline
+                  coordinates={coordinates}
+                  strokeColor="#000"
+                  strokeWidth={6}
+                />
+                {currentPosition && (
+                  <Marker
+                    coordinate={{
+                      latitude: currentPosition.latitude,
+                      longitude: currentPosition.longitude,
+                    }}
+                    title={`Current Position`}
+                    description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}>
+                    <BatteryIcon size={20} fill={backgroundColorNew} />
+                  </Marker>
+                )}
+              </MapView>
+            )}
+            <View style={styles.extraButtonBox}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('stops')}
+                style={styles.stopsBtnStyle}>
+                <AlertsIcon size={20} />
+                <Text style={styles.alertButtonText}>Stops</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
       <View style={styles.bottomContainer}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            // borderWidth: 1,
-          }}>
+        <View style={styles.controlsContainer}>
           <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderRadius: 20,
-              padding: 5,
-              borderColor: backgroundColorNew,
-            }}>
-            <PlayIcon size={20} color={backgroundColorNew} />
+            style={styles.playPauseButton}
+            onPress={togglePlayback}>
+            {isPlaying ? (
+              <PauseIcon size={20} color={backgroundColorNew} />
+            ) : (
+              <PlayIcon size={20} color={backgroundColorNew} />
+            )}
           </TouchableOpacity>
-          <View
-            style={{
-              //   borderWidth: 1,
-              flex: 1,
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+          <View style={styles.sliderContainer}>
             <Slider
               style={styles.slider}
               minimumValue={0}
               maximumValue={1}
-              minimumTrackTintColor={backgroundColorNew} // Coral red color
-              maximumTrackTintColor="#FFDCD3" // Light gray for the remaining track
-              thumbTintColor={backgroundColorNew} // Orange red color for the thumb
+              minimumTrackTintColor={backgroundColorNew}
+              maximumTrackTintColor="#FFDCD3"
+              thumbTintColor={backgroundColorNew}
               value={sliderValue}
-              onValueChange={setSliderValue}
-              // thumbImage={}
-              // trackImage={}
-              // maximumTrackImage={}
-              // minimumTrackImage={}
+              onValueChange={value => {
+                setSliderValue(value);
+                const newIndex = Math.round(value * (coordinates.length - 1));
+                setCurrentIndex(newIndex);
+                setCurrentPosition(coordinates[newIndex]);
+              }}
             />
           </View>
-          <View
-            style={{
-              //   borderWidth: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+          <View style={styles.speedButtonsContainer}>
             <TouchableOpacity
-              style={{
-                paddingVertical: 5,
-                paddingHorizontal: 8,
-                backgroundColor: '#E0E0E0',
-                borderRadius: 5,
-                marginRight: 5,
-                borderColor: '#E0E0E0',
-                borderWidth: 1,
-              }}>
+              style={[
+                styles.speedButton,
+                playbackSpeed === 1 && styles.activeSpeedButton,
+              ]}
+              onPress={() => changePlaybackSpeed(1)}>
               <Text
-                style={{
-                  fontFamily: 'PlusJakartaSans-ExtraBold',
-                  color: backgroundColorNew,
-                }}>
+                style={[
+                  styles.speedButtonText,
+                  playbackSpeed === 1 && styles.activeSpeedButtonText,
+                ]}>
                 1X
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{
-                paddingVertical: 5,
-                paddingHorizontal: 8,
-                backgroundColor: '#E0E0E0',
-                borderRadius: 5,
-                borderColor: '#E0E0E0',
-                borderWidth: 1,
-              }}>
+              style={[
+                styles.speedButton,
+                playbackSpeed === 2 && styles.activeSpeedButton,
+              ]}
+              onPress={() => changePlaybackSpeed(2)}>
               <Text
-                style={{
-                  fontFamily: 'PlusJakartaSans-ExtraBold',
-                  color: backgroundColorNew,
-                }}>
+                style={[
+                  styles.speedButtonText,
+                  playbackSpeed === 2 && styles.activeSpeedButtonText,
+                ]}>
                 2X
               </Text>
             </TouchableOpacity>
@@ -166,7 +245,8 @@ export default function PlayJourney({navigation}) {
 }
 
 const styles = StyleSheet.create({
-  conatiner: {flex: 1},
+  container: {flex: 1},
+  loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 1,
@@ -180,7 +260,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 130,
     right: 0,
-    // borderWidth: 1,
     zIndex: 10,
   },
   addressText: {
@@ -190,9 +269,7 @@ const styles = StyleSheet.create({
     color: titleColor,
   },
   topContainer: {
-    //   borderWidth: 1,
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 10,
@@ -233,7 +310,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 10,
     textAlign: 'center',
-    // borderWidth: 1,
   },
   stopCount: {
     color: titleColor,
@@ -241,11 +317,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     marginTop: -5,
-    // borderWidth: 1,
   },
   totalBox: {
     flexDirection: 'row',
-    // borderWidth: 1,
     flex: 1,
     justifyContent: 'space-between',
     paddingVertical: 10,
@@ -267,9 +341,60 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 10,
   },
+  controlsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  playPauseButton: {
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 5,
+    borderColor: backgroundColorNew,
+  },
+  sliderContainer: {
+    flex: 1,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   slider: {
     flex: 1,
     width: '100%',
+  },
+  speedButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  speedButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 8,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 5,
+    marginRight: 5,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+  },
+  activeSpeedButton: {
+    backgroundColor: backgroundColorNew,
+  },
+  speedButtonText: {
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    color: backgroundColorNew,
+  },
+  activeSpeedButtonText: {
+    color: '#FFF',
+  },
+  calendarIconBox: {
     // borderWidth: 1,
+    padding: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#f7f7f7',
+    elevation: 2,
   },
 });

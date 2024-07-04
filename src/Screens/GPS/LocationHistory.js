@@ -12,7 +12,7 @@ import moment from 'moment';
 const LocationHistory = ({navigation, route}) => {
   const {deviceId, name, from, to} = route.params;
   const dispatch = useDispatch();
-  console.log(999, route);
+  // console.log(999, route);
 
   const {
     gpsSummaryLoading,
@@ -21,7 +21,7 @@ const LocationHistory = ({navigation, route}) => {
     gpsTokenData,
     wsPositions,
   } = useSelector(state => {
-    console.log('HistoryLocation', state.data);
+    // console.log('HistoryLocation', state.data);
     return state.data;
   });
 
@@ -29,15 +29,15 @@ const LocationHistory = ({navigation, route}) => {
     React.useCallback(() => {
       const defaultFrom = from || moment().utc().startOf('day').toISOString();
       const defaultTo = to || moment().utc().endOf('day').toISOString();
-      console.log(
-        4444444,
-        gpsTokenData.email,
-        gpsTokenData.password,
-        deviceId,
-        defaultFrom,
-        defaultTo,
-        true,
-      );
+      // console.log(
+      //   4444444,
+      //   gpsTokenData.email,
+      //   gpsTokenData.password,
+      //   deviceId,
+      //   defaultFrom,
+      //   defaultTo,
+      //   true,
+      // );
       dispatch(
         fetchSummaryReportRequest(
           gpsTokenData.email,
@@ -94,7 +94,11 @@ const LocationHistory = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
-              navigation.navigate('quickfilters', {deviceId, name})
+              navigation.navigate('quickfilters', {
+                deviceId,
+                name,
+                navigationPath: 'LocationHistory',
+              })
             }>
             {/* onPress={() => navigation.navigate('quickfilters')}> */}
             <CalendarIcon size={40} />

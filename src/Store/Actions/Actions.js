@@ -1103,3 +1103,46 @@ export const fetchSummaryReportFailure = error => ({
   type: actionTypes.FETCH_SUMMARY_REPORT_FAILURE,
   payload: error,
 });
+
+// GPS Notifications
+export const fetchGpsNotificationsRequest = (username, password) => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
+  username,
+  password,
+});
+
+export const fetchGpsNotificationsSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS,
+  payload,
+});
+
+export const fetchGpsNotificationsFailure = error => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_FAILURE,
+  payload: error,
+});
+
+// GPS Replay
+export const fetchPositionsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_POSITIONS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchPositionsSuccess = data => ({
+  type: actionTypes.FETCH_POSITIONS_SUCCESS,
+  payload: data,
+});
+
+export const fetchPositionsFailure = error => ({
+  type: actionTypes.FETCH_POSITIONS_FAILURE,
+  payload: error,
+});

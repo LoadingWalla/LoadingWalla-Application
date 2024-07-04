@@ -168,6 +168,14 @@ const initialState = {
   gpsSummaryLoading: false,
   gpsSummaryError: null,
   gpsSummaryData: null,
+  // gps notification
+  gpsNotificationLoading: false,
+  gpsNotificationError: null,
+  gpsNotificationData: null,
+  // gps replay
+  gpsReplayLoading: false,
+  gpsReplayError: null,
+  gpsReplayData: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1266,6 +1274,45 @@ const reducer = (state = initialState, action) => {
         gpsSummaryLoading: false,
         gpsSummaryError: payload,
         gpsSummaryData: null,
+      });
+
+    // GPS Notification
+    case actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST:
+      return {
+        ...state,
+        gpsNotificationLoading: true,
+        gpsNotificationError: null,
+      };
+    case actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS:
+      return updateState(state, {
+        gpsNotificationLoading: false,
+        gpsNotificationData: payload,
+      });
+    case actionTypes.FETCH_GPS_NOTIFICATIONS_FAILURE:
+      return updateState(state, {
+        gpsNotificationLoading: false,
+        gpsNotificationError: payload,
+        gpsNotificationData: null,
+      });
+
+    // GPS Replay
+    case actionTypes.FETCH_POSITIONS_REQUEST:
+      return {
+        ...state,
+        gpsReplayLoading: true,
+        gpsReplayError: null,
+        gpsReplayData: null,
+      };
+    case actionTypes.FETCH_POSITIONS_SUCCESS:
+      return updateState(state, {
+        gpsReplayLoading: false,
+        gpsReplayData: payload,
+      });
+    case actionTypes.FETCH_POSITIONS_FAILURE:
+      return updateState(state, {
+        gpsReplayLoading: false,
+        gpsReplayError: payload,
+        gpsReplayData: null,
       });
 
     // default state

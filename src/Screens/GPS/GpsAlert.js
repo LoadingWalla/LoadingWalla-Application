@@ -1,4 +1,5 @@
 import {
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,20 +9,24 @@ import {
 import React from 'react';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {fetchGpsNotificationsRequest} from '../../Store/Actions/Actions';
 
-const GpsAlertItems = ({call}) => {
+const renderItem = ({call, item}) => {
+  // console.log(44444444, item);
   return (
     <View style={styles.headerbox}>
       <View style={styles.textView}>
         <View style={styles.speedBox}>
-          <Text style={styles.headerText}>Truck over speeding: </Text>
-          <Text style={styles.headerTextValue}>70KMPH</Text>
+          <Text style={styles.headerText}>{item?.type}</Text>
+          {/* <Text style={styles.headerTextValue}>70KMPH</Text> */}
         </View>
-        <View style={styles.timeDateBox}>
+        {/* <View style={styles.timeDateBox}>
           <Text style={styles.mediumTextStyle}>June 10, 2024</Text>
           <View style={styles.verticalLine} />
           <Text style={styles.mediumTextStyle}>12:30 PM - 01:00 PM</Text>
-        </View>
+        </View> */}
       </View>
       {call ? (
         <View style={styles.callBox}>
@@ -36,14 +41,41 @@ const GpsAlertItems = ({call}) => {
 };
 
 const GpsAlert = () => {
+  const dispatch = useDispatch();
+  const {
+    gpsTokenData,
+    gpsNotificationLoading,
+    gpsNotificationError,
+    gpsNotificationData,
+  } = useSelector(state => {
+    console.log('Gps Alerts', state.data);
+    return state.data;
+  });
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(4444, gpsTokenData?.email, gpsTokenData?.password);
+      dispatch(
+        fetchGpsNotificationsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+        ),
+      );
+      // Optional cleanup function
+      return () => {
+        // Any cleanup actions
+      };
+    }, [dispatch]), // Dependencies
+  );
+
   return (
     <View style={styles.container}>
-      <GpsAlertItems call={true} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <GpsAlertItems call={false} />
-        <GpsAlertItems call={false} />
-        <GpsAlertItems call={false} />
-      </ScrollView>
+      <FlatList
+        data={gpsNotificationData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   );
 };

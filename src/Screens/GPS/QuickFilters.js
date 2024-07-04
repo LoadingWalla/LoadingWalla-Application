@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 
 const QuickFilters = ({navigation, route}) => {
-  const {deviceId, name} = route.params;
+  const {deviceId, name, navigationPath} = route.params;
   // console.log(33333333333333, deviceId);
   const filters = [
     'Yesterday',
@@ -150,7 +150,8 @@ const QuickFilters = ({navigation, route}) => {
     }
     // console.log(`From: ${from}`);
     // console.log(`To: ${to}`);
-    navigation.navigate('LocationHistory', {from, to, deviceId, name});
+    // navigation.navigate('LocationHistory', {from, to, deviceId, name});
+    navigation.navigate(navigationPath, {from, to, deviceId, name});
   };
 
   const formatDate = date => {

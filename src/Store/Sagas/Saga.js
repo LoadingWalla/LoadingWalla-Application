@@ -1114,6 +1114,48 @@ export function* fetchGpsSummary({
   }
 }
 
+// gps summary
+export function* fetchGpsNotifications({username, password}) {
+  try {
+    console.log(33333, username, password);
+    const data = yield gpsApi.get('notifications', username, password);
+    console.log('Gps Notification', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsNotificationsSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsNotificationsFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsNotificationsFailure(error.message));
+    // console.log('error4444', error);
+  }
+}
+
+// gps replay
+export function* fetchGpsReplay({username, password, deviceId, from, to}) {
+  try {
+    console.log(999999, username, password, deviceId, from, to);
+    const data = yield gpsApi.get(
+      `positions?deviceId=${deviceId}&from=${from}&to=${to}`,
+      username,
+      password,
+    );
+    console.log('Gps Replay', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchPositionsSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchSummaryReportFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchPositionsFailure(error.message));
+    // console.log('error4444', error);
+  }
+}
+
 // Back Button Handler
 // export function* watchBackButton() {
 //   yield takeLatest('BACK_BUTTON_PRESS', handleBackButton);

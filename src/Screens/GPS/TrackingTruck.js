@@ -227,7 +227,7 @@ const TrackingTruck = ({navigation, route}) => {
         <View style={{justifyContent: 'center'}}>
           <TouchableOpacity
             style={styles.btnContainer}
-            onPress={() => navigation.navigate('PlayJourney')}>
+            onPress={() => navigation.navigate('PlayJourney', {deviceId})}>
             <PlayIcon
               size={25}
               style={styles.iconStyle}
