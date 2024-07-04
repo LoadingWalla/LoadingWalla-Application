@@ -7,9 +7,10 @@ import {useFocusEffect} from '@react-navigation/native';
 import {fetchSummaryReportRequest} from '../../Store/Actions/Actions';
 import {formatDate} from '../../Utils/dateUtils';
 import useAddress from '../../hooks/useAddress';
+import moment from 'moment';
 
 const LocationHistory = ({navigation, route}) => {
-  const {deviceId, name} = route.params;
+  const {deviceId, name, from, to} = route.params;
   const dispatch = useDispatch();
   console.log(999, route);
 
@@ -24,27 +25,35 @@ const LocationHistory = ({navigation, route}) => {
     return state.data;
   });
 
-  useEffect(() => {
-    // console.log(
-    //   4444444,
-    //   gpsTokenData.email,
-    //   gpsTokenData.password,
-    //   deviceId,
-    //   '2024-06-29T18%3A30%3A00.000Z',
-    //   '2024-07-06T18%3A29%3A59.999Z',
-    //   true,
-    // );
-    dispatch(
-      fetchSummaryReportRequest(
+  useFocusEffect(
+    React.useCallback(() => {
+      const defaultFrom = from || moment().utc().startOf('day').toISOString();
+      const defaultTo = to || moment().utc().endOf('day').toISOString();
+      console.log(
+        4444444,
         gpsTokenData.email,
         gpsTokenData.password,
         deviceId,
-        '2024-07-02T18%3A30%3A00.000Z',
-        '2024-07-03T18%3A29%3A59.999Z',
+        defaultFrom,
+        defaultTo,
         true,
-      ),
-    );
-  }, []);
+      );
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+          true,
+        ),
+      );
+      // Optional cleanup function
+      return () => {
+        // Any cleanup actions
+      };
+    }, [gpsTokenData, deviceId, from, to, dispatch]), // Dependencies
+  );
 
   const {address, fetchAddress} = useAddress(wsPositions);
 
@@ -79,12 +88,14 @@ const LocationHistory = ({navigation, route}) => {
         </View>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Total Fuel consumption</Text>
-          <Text style={styles.stopCount}>433 Liters</Text>
+          <Text style={styles.stopCount}>N/A</Text>
         </View>
         <View style={{paddingBottom: 10}}>
           <TouchableOpacity
             style={styles.calendarIconBox}
-            onPress={() => navigation.navigate('quickfilters')}>
+            onPress={() =>
+              navigation.navigate('quickfilters', {deviceId, name})
+            }>
             {/* onPress={() => navigation.navigate('quickfilters')}> */}
             <CalendarIcon size={40} />
           </TouchableOpacity>
