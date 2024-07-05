@@ -50,7 +50,7 @@ const TrackingTruck = ({navigation, route}) => {
     state.data.wsEvents.filter(e => e.deviceId === deviceId),
   );
 
-  const {wsPositions} = useSelector(state => {
+  const {wsPositions, wsMessages} = useSelector(state => {
     console.log('Tracking truck', state.data);
     return state.data;
   });
