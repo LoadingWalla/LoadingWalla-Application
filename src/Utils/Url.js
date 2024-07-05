@@ -8,4 +8,5 @@ export const playStoreLink =
 
 // export const traccarApi = 'http://13.200.80.190:8082/api/';
 export const traccarApi = 'https://gpsapi.loadingwalla.com/api/';
-export const WS_URL = 'ws://13.200.80.190:8082/api/socket';
+// export const WS_URL = 'ws://13.200.80.190:8082/api/socket';
+export const WS_URL = 'wss://gpsapi.loadingwalla.com/api/socket';

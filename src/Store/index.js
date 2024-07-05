@@ -8,7 +8,10 @@ const store = configureStore({
   reducer: rootReducer,
   //   middleware: () => [sagaMiddleware],
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(sagaMiddleware),
+    getDefaultMiddleware({
+      immutableCheck: false, // Disable immutable state check middleware
+      serializableCheck: false, // Disable serializable state check middleware if necessary
+    }).concat(sagaMiddleware),
 });
 
 sagaMiddleware.run(rootSaga);

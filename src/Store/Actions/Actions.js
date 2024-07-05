@@ -1146,3 +1146,29 @@ export const fetchPositionsFailure = error => ({
   type: actionTypes.FETCH_POSITIONS_FAILURE,
   payload: error,
 });
+
+// GPS Stops
+export const fetchGpsStopsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_GPS_STOPS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchGpsStopsSuccess = data => ({
+  type: actionTypes.FETCH_GPS_STOPS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsStopsFailure = error => ({
+  type: actionTypes.FETCH_GPS_STOPS_FAILURE,
+  payload: error,
+});

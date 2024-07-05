@@ -1136,22 +1136,45 @@ export function* fetchGpsNotifications({username, password}) {
 // gps replay
 export function* fetchGpsReplay({username, password, deviceId, from, to}) {
   try {
-    console.log(999999, username, password, deviceId, from, to);
+    // console.log(999999, username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `positions?deviceId=${deviceId}&from=${from}&to=${to}`,
+      username,
+      password,
+    );
+    // console.log('Gps Replay', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchPositionsSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchPositionsFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchPositionsFailure(error.message));
+    // console.log('error4444', error);
+  }
+}
+
+// gps stops
+export function* fetchGpsStops({username, password, deviceId, from, to}) {
+  try {
+    console.log(999999, username, password, deviceId, from, to);
+    const data = yield gpsApi.get(
+      `reports/stops?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
     console.log('Gps Replay', data);
     if (data?.status === 200) {
       // console.log('success', data);
-      yield put(actions.fetchPositionsSuccess(data?.data));
+      yield put(actions.fetchGpsStopsSuccess(data?.data));
     } else {
       // console.log('else', data);
-      yield put(actions.fetchSummaryReportFailure(data.status));
+      yield put(actions.fetchGpsStopsFailure(data.status));
     }
   } catch (error) {
-    yield put(actions.fetchPositionsFailure(error.message));
+    yield put(actions.fetchGpsStopsFailure(error.message));
     // console.log('error4444', error);
   }
 }

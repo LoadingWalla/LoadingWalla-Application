@@ -12,13 +12,21 @@ import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
-import {fetchPositionsRequest} from '../../Store/Actions/Actions';
+import {
+  fetchGpsStopsRequest,
+  fetchPositionsRequest,
+  websocketConnect,
+  websocketDisconnect,
+} from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
+import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
+import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
+import NextIcon from '../../../assets/SVG/svg/NextIcon';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
@@ -27,10 +35,19 @@ export default function PlayJourney({navigation, route}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [currentStopIndex, setCurrentStopIndex] = useState(0);
+  const [currentStop, setCurrentStop] = useState(null);
 
   const dispatch = useDispatch();
-  const {gpsTokenData, gpsReplayLoading, gpsReplayError, gpsReplayData} =
-    useSelector(state => state.data);
+  const {
+    gpsTokenData,
+    gpsReplayLoading,
+    gpsReplayError,
+    gpsReplayData,
+    gpsStopsLoading,
+    gpsStopsError,
+    gpsStopsData,
+  } = useSelector(state => state.data);
 
   const coordinates = useMemo(
     () =>
@@ -70,6 +87,9 @@ export default function PlayJourney({navigation, route}) {
     React.useCallback(() => {
       const defaultFrom = from || moment().utc().startOf('day').toISOString();
       const defaultTo = to || moment().utc().endOf('day').toISOString();
+
+      // Disconnect WebSocket and call REST APIs
+      dispatch(websocketDisconnect());
       dispatch(
         fetchPositionsRequest(
           gpsTokenData?.email,
@@ -79,6 +99,18 @@ export default function PlayJourney({navigation, route}) {
           defaultTo,
         ),
       );
+      dispatch(
+        fetchGpsStopsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+      return () => {
+        dispatch(websocketConnect(gpsTokenData.cookie));
+      };
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
 
@@ -89,7 +121,7 @@ export default function PlayJourney({navigation, route}) {
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
           setCurrentPosition(coordinates[newIndex]);
-          setSliderValue(newIndex / (coordinates.length - 1));
+          setSliderValue(newIndex / (coordinates?.length - 1));
           return newIndex;
         });
       }, 1000 / playbackSpeed);
@@ -99,17 +131,50 @@ export default function PlayJourney({navigation, route}) {
     return () => clearInterval(interval);
   }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
 
+  useEffect(() => {
+    if (gpsStopsData && gpsStopsData?.length > 0) {
+      setCurrentStop(gpsStopsData[0]);
+    }
+  }, [gpsStopsData]);
+
+  const goToNextStop = () => {
+    if (currentStopIndex < gpsStopsData?.length - 1) {
+      const newIndex = currentStopIndex + 1;
+      setCurrentStopIndex(newIndex);
+      const nextStop = gpsStopsData[newIndex];
+      setCurrentPosition({
+        latitude: nextStop.latitude,
+        longitude: nextStop.longitude,
+      });
+      setCurrentStop(nextStop); // Update current stop
+    }
+  };
+
+  const goToPrevStop = () => {
+    if (currentStopIndex > 0) {
+      const newIndex = currentStopIndex - 1;
+      setCurrentStopIndex(newIndex);
+      const prevStop = gpsStopsData[newIndex];
+      setCurrentPosition({
+        latitude: prevStop.latitude,
+        longitude: prevStop.longitude,
+      });
+      setCurrentStop(prevStop); // Update current stop
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Stop</Text>
-          <Text style={styles.stopCount}>02</Text>
+          <Text style={styles.stopCount}>{currentStopIndex + 1}</Text>
         </View>
         <View style={styles.verticalLine} />
         <Text style={styles.addressText}>
-          Road number - C/33, Gali number 03, new Ashok Nagar, demo address for
-          length, Delhi - 110030
+          {currentStop && currentStop.address
+            ? `${currentStop.address}`
+            : 'No address available'}
         </Text>
         <View>
           <TouchableOpacity
@@ -120,7 +185,7 @@ export default function PlayJourney({navigation, route}) {
                 navigationPath: 'PlayJourney',
               })
             }>
-            <CalendarIcon size={30} />
+            <FilterIcon size={30} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
       </View>
@@ -151,6 +216,18 @@ export default function PlayJourney({navigation, route}) {
                     <BatteryIcon size={20} fill={backgroundColorNew} />
                   </Marker>
                 )}
+                {gpsStopsData?.map((stop, index) => (
+                  <Marker
+                    key={index}
+                    coordinate={{
+                      latitude: stop.latitude,
+                      longitude: stop.longitude,
+                    }}
+                    pinColor={index === currentStopIndex ? 'blue' : 'red'} // Highlight current stop
+                    title={`Stop ${index + 1}`}
+                    description={`Lat: ${stop.latitude}, Lon: ${stop.longitude}`}
+                  />
+                ))}
               </MapView>
             )}
             <View style={styles.extraButtonBox}>
@@ -159,6 +236,12 @@ export default function PlayJourney({navigation, route}) {
                 style={styles.stopsBtnStyle}>
                 <AlertsIcon size={20} />
                 <Text style={styles.alertButtonText}>Stops</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.ctrlBtn} onPress={goToPrevStop}>
+                <PrevIcon size={30} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.ctrlBtn} onPress={goToNextStop}>
+                <NextIcon size={30} />
               </TouchableOpacity>
             </View>
           </View>
@@ -186,7 +269,7 @@ export default function PlayJourney({navigation, route}) {
               value={sliderValue}
               onValueChange={value => {
                 setSliderValue(value);
-                const newIndex = Math.round(value * (coordinates.length - 1));
+                const newIndex = Math.round(value * (coordinates?.length - 1));
                 setCurrentIndex(newIndex);
                 setCurrentPosition(coordinates[newIndex]);
               }}
