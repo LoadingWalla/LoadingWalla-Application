@@ -58,7 +58,7 @@ const CompleteBooking = ({navigation, route}) => {
     completeDocumentStatus,
     completeDocumentData,
   } = useSelector(state => {
-    console.log('complete bookings', state.data);
+    // console.log('complete bookings', state.data);
     return state.data;
   });
 
@@ -77,7 +77,7 @@ const CompleteBooking = ({navigation, route}) => {
       );
       return;
     }
-    console.log(222222, id, selectedDocumentType, documentImage);
+    // console.log(222222, id, selectedDocumentType, documentImage);
     dispatch(
       initCompleteBookingDocumentRequest(
         id,

@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  VirtualizedList,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import GpsItem from '../../Components/GpsItem';
@@ -12,14 +11,20 @@ import Button from '../../Components/Button';
 import {backgroundColorNew, textColor} from '../../Color/color';
 import {
   fetchGpsDevicesRequest,
+  fetchTokenFailure,
   fetchTokenRequest,
+  websocketConnect,
+  websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
-  const getItemCount = data => data?.length;
-  const getItem = (data, index) => data[index];
+  const latestDevice = useSelector(state => state.data.wsDevices);
+  const allPositions = useSelector(state => state.data.wsPositions);
+  const allEvents = useSelector(state => state.data.wsEvents);
+  // console.log(444, allPositions);
 
   const {
     gpsTokenLoading,
@@ -28,22 +33,47 @@ const GpsTrackings = ({navigation}) => {
     gpsDeviceLoading,
     gpsDeviceData,
     gpsDeviceStatus,
+    wsMessages,
   } = useSelector(state => {
-    // console.log('profile Data', state.data);
+    console.log('Gps Tracking', state.data);
     return state.data;
   });
 
   useEffect(() => {
-    dispatch(fetchTokenRequest());
-  }, [dispatch]);
-
-  useEffect(() => {
     if (gpsTokenData) {
+      const cookie = gpsTokenData.cookie;
+      dispatch(websocketConnect(cookie));
       dispatch(
         fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
       );
+    } else {
+      dispatch(fetchTokenRequest());
     }
   }, [dispatch, gpsTokenData]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        console.log('WebSocket disconnecting on screen leave');
+        dispatch(websocketDisconnect());
+        dispatch(fetchTokenFailure());
+      };
+    }, [dispatch]),
+  );
+
+  // Merge gpsDeviceData with latestDevice, positions, and events
+  const mergedDeviceData = gpsDeviceData?.map(device => {
+    const latest = latestDevice.find(d => d.id === device.id);
+    const position = allPositions.filter(p => p.deviceId === device.id);
+    const events = allEvents.filter(e => e.deviceId === device.id);
+    // console.log(
+    //   55555,
+    //   latest ? {...device, ...latest, position, events} : device,
+    // );
+    return latest
+      ? {...device, ...latest, position, events}
+      : {...device, position, events};
+  });
 
   return (
     <View style={styles.conatiner}>
@@ -55,19 +85,8 @@ const GpsTrackings = ({navigation}) => {
           <ActivityIndicator size={'large'} color={backgroundColorNew} />
         </View>
       ) : (
-        // <VirtualizedList
-        //   data={gpsDeviceData}
-        //   initialNumToRender={6}
-        //   showsVerticalScrollIndicator={false}
-        //   renderItem={({item}) => (
-        //     <GpsItem item={item} icon={true} navigation={navigation} />
-        //   )}
-        //   keyExtractor={item => item.id.toString()}
-        //   getItemCount={getItemCount}
-        //   getItem={getItem}
-        // />
         <FlatList
-          data={gpsDeviceData}
+          data={mergedDeviceData}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (

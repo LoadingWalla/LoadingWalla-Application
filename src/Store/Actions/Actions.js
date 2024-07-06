@@ -1006,3 +1006,195 @@ export const fetchGpsDevicesFailure = payload => ({
 });
 
 // Gps Websocket Connect
+
+export const websocketConnect = cookie => ({
+  type: actionTypes.WEBSOCKET_CONNECT,
+  payload: {cookie},
+});
+
+export const websocketDisconnect = () => ({
+  type: actionTypes.WEBSOCKET_DISCONNECT,
+});
+
+export const websocketMessage = message => ({
+  type: actionTypes.WEBSOCKET_MESSAGE,
+  payload: message,
+});
+
+export const websocketError = error => ({
+  type: actionTypes.WEBSOCKET_ERROR,
+  payload: error,
+});
+
+export const websocketClosed = () => ({
+  type: actionTypes.WEBSOCKET_CLOSED,
+});
+
+export const websocketRetry = () => ({
+  type: actionTypes.WEBSOCKET_RETRY,
+});
+
+export const updateDevices = devices => ({
+  type: actionTypes.UPDATE_DEVICES,
+  payload: devices,
+});
+
+export const updatePositions = positions => ({
+  type: actionTypes.UPDATE_POSITIONS,
+  payload: positions,
+});
+
+export const updateEvents = events => ({
+  type: actionTypes.UPDATE_EVENTS,
+  payload: events,
+});
+
+// GPS Address
+export const fetchGpsAddressRequest = (
+  username,
+  password,
+  latitude,
+  longitude,
+) => {
+  // console.log('actions3333', username, password, latitude, longitude);
+  return {
+    type: actionTypes.FETCH_GPS_ADDRESS_REQUEST,
+    username,
+    password,
+    latitude,
+    longitude,
+  };
+};
+
+export const fetchGpsAddressSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_ADDRESS_SUCCESS,
+  payload,
+});
+
+export const fetchGpsAddressFailure = payload => ({
+  type: actionTypes.FETCH_GPS_ADDRESS_FAILURE,
+  payload,
+});
+
+// GPS summary report
+export const fetchSummaryReportRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+  daily,
+) => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+  daily,
+});
+
+export const fetchSummaryReportSuccess = data => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_SUCCESS,
+  payload: data,
+});
+
+export const fetchSummaryReportFailure = error => ({
+  type: actionTypes.FETCH_SUMMARY_REPORT_FAILURE,
+  payload: error,
+});
+
+// GPS Notifications
+export const fetchGpsNotificationsRequest = (username, password) => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
+  username,
+  password,
+});
+
+export const fetchGpsNotificationsSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS,
+  payload,
+});
+
+export const fetchGpsNotificationsFailure = error => ({
+  type: actionTypes.FETCH_GPS_NOTIFICATIONS_FAILURE,
+  payload: error,
+});
+
+// GPS Replay
+export const fetchPositionsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_POSITIONS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchPositionsSuccess = data => ({
+  type: actionTypes.FETCH_POSITIONS_SUCCESS,
+  payload: data,
+});
+
+export const fetchPositionsFailure = error => ({
+  type: actionTypes.FETCH_POSITIONS_FAILURE,
+  payload: error,
+});
+
+// GPS Stops
+export const fetchGpsStopsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_GPS_STOPS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchGpsStopsSuccess = data => ({
+  type: actionTypes.FETCH_GPS_STOPS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsStopsFailure = error => ({
+  type: actionTypes.FETCH_GPS_STOPS_FAILURE,
+  payload: error,
+});
+
+// GPS Tripa
+export const fetchGpsTripsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_GPS_TRIPS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchGpsTripsSuccess = data => ({
+  type: actionTypes.FETCH_GPS_TRIPS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsTripsFailure = error => ({
+  type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
+  payload: error,
+});

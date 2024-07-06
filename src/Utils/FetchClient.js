@@ -21,7 +21,7 @@ const instanceFunction = instanceObj => {
   // Add a response interceptor
   instanceObj.interceptors.response.use(
     function (response) {
-      console.log('fetch client', response.status);
+      // console.log('fetch client', response.status);
       // Any status code that lie within the range of 2xx will come here
       let respObj = {
         data: response.data ? response.data : [],
@@ -30,9 +30,9 @@ const instanceFunction = instanceObj => {
       return respObj;
     },
     async function (error) {
-      console.log('fetch Client', error);
+      // console.log('fetch Client', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        console.log('Network Request', error.code);
+        // console.log('Network Request', error.code);
         Snackbar.show({
           text: 'Slow Internet Connection.',
           duration: Snackbar.LENGTH_LONG,

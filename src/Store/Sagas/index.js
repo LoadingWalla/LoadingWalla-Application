@@ -1,8 +1,11 @@
-import {takeLatest} from 'redux-saga/effects';
+import {fork, takeLatest} from 'redux-saga/effects';
 import * as actions from './../Actions/ActionTypes';
 import * as saga from './Saga';
+import watchWebSocket from './websocketSaga';
 
 function* rootSaga() {
+  yield fork(watchWebSocket); // Fork the WebSocket saga to run it concurrently
+
   yield takeLatest(actions.INIT_LOGIN, saga.authenticate);
   yield takeLatest(actions.INIT_VERIFY_OTP, saga.verifyOtp);
   yield takeLatest(actions.INIT_PROFILE_SETUP, saga.profileSetup);
@@ -57,6 +60,15 @@ function* rootSaga() {
   );
   yield takeLatest(actions.FETCH_GPS_TOKEN_REQUEST, saga.fetchTokenSaga);
   yield takeLatest(actions.FETCH_GPS_DEVICES_REQUEST, saga.fetchGpsDevices);
+  yield takeLatest(actions.FETCH_GPS_ADDRESS_REQUEST, saga.fetchGpsAddress);
+  yield takeLatest(actions.FETCH_SUMMARY_REPORT_REQUEST, saga.fetchGpsSummary);
+  yield takeLatest(actions.FETCH_POSITIONS_REQUEST, saga.fetchGpsReplay);
+  yield takeLatest(actions.FETCH_GPS_STOPS_REQUEST, saga.fetchGpsStops);
+  yield takeLatest(actions.FETCH_GPS_TRIPS_REQUEST, saga.fetchGpsTrips);
+  yield takeLatest(
+    actions.FETCH_GPS_NOTIFICATIONS_REQUEST,
+    saga.fetchGpsNotifications,
+  );
 }
 
 export default rootSaga;

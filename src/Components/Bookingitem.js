@@ -23,7 +23,11 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
       <CardHeader
         from={detail?.from}
         to={detail?.to}
-        icon={detail?.icon}
+        icon={
+          userType == '1'
+            ? 'https://loadingwalla.com/public/truck_tyre/6%20Tyre.png'
+            : 'https://loadingwalla.com/public/loado.png'
+        }
         t={t}
       />
       <View style={styles.horizontalLine} />

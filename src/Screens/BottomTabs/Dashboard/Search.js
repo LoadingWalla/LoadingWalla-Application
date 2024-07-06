@@ -25,7 +25,7 @@ import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 
 const Search = forwardRef(({navigation, route}, ref) => {
-  console.log(423423, route);
+  // console.log(423423, route);
   const [value, setValue] = useState(null);
   const txtInput = useRef('');
   const dispatch = useDispatch();

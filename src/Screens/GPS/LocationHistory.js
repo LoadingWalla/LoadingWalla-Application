@@ -1,64 +1,208 @@
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import {titleColor} from '../../Color/color';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import {backgroundColorNew, titleColor} from '../../Color/color';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {
+  fetchGpsTripsRequest,
+  fetchSummaryReportRequest,
+  websocketDisconnect,
+} from '../../Store/Actions/Actions';
+import {formatDate} from '../../Utils/dateUtils';
+import useAddress from '../../hooks/useAddress';
+import moment from 'moment';
+import {TabView, SceneMap} from 'react-native-tab-view';
+import RenderTabBar from '../Requests/RenderTabBar';
 
-const LocationHistory = ({navigation}) => {
-  const data = [
-    {
-      id: 1,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-    {
-      id: 2,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-    {
-      id: 3,
-      date: 'Aug 12, 2024',
-      distance: '1,334 KM',
-      fuel: '126 Lit',
-      mileage: '3.2 KMPL',
-    },
-  ];
+const SummaryList = ({data, renderItem, loading}) =>
+  loading ? (
+    <ActivityIndicator
+      size="large"
+      color={backgroundColorNew}
+      style={styles.loader}
+    />
+  ) : (
+    <FlatList
+      data={data}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      ListHeaderComponent={
+        <View style={styles.tableHeader}>
+          <Text style={styles.headerText}>Start Date</Text>
+          <Text style={styles.headerText}>Distance</Text>
+          <Text style={styles.headerText}>Avg. Speed</Text>
+          <Text style={styles.headerText}>Max. Speed</Text>
+        </View>
+      }
+      style={styles.tableContainer}
+    />
+  );
+
+const LocationHistory = ({navigation, route}) => {
+  const {deviceId, name, from, to} = route.params;
+  const dispatch = useDispatch();
+
+  const {
+    gpsSummaryLoading,
+    gpsSummaryError,
+    gpsSummaryData,
+    gpsTokenData,
+    wsPositions,
+    gpsTripsLoading,
+    gpsTripsError,
+    gpsTripsData,
+  } = useSelector(state => state.data);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const defaultFrom = from || moment().utc().startOf('day').toISOString();
+      const defaultTo = to || moment().utc().endOf('day').toISOString();
+
+      // Disconnect WebSocket first
+      dispatch(websocketDisconnect());
+
+      // Fetch summary report
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+          true,
+        ),
+      );
+
+      // Fetch GPS trips
+      dispatch(
+        fetchGpsTripsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+          true,
+        ),
+      );
+
+      // Optional cleanup function
+      return () => {
+        // Any cleanup actions
+      };
+    }, [gpsTokenData, deviceId, from, to, dispatch]),
+  );
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const defaultFrom = from || moment().utc().startOf('day').toISOString();
+  //     const defaultTo = to || moment().utc().endOf('day').toISOString();
+  //     dispatch(
+  //       fetchSummaryReportRequest(
+  //         gpsTokenData.email,
+  //         gpsTokenData.password,
+  //         deviceId,
+  //         defaultFrom,
+  //         defaultTo,
+  //         true,
+  //       ),
+  //     );
+  //     dispatch(
+  //       fetchGpsTripsRequest(
+  //         gpsTokenData.email,
+  //         gpsTokenData.password,
+  //         deviceId,
+  //         defaultFrom,
+  //         defaultTo,
+  //         true,
+  //       ),
+  //     );
+  //     return () => {
+  //       // Any cleanup actions
+  //     };
+  //   }, [gpsTokenData, deviceId, from, to, dispatch]),
+  // );
+
+  // const {address, fetchAddress} = useAddress(wsPositions);
 
   const renderItem = ({item}) => (
     <View style={styles.tableRow}>
-      <Text style={styles.rowText}>{item.date}</Text>
-      <Text style={styles.rowText}>{item.distance}</Text>
-      <Text style={styles.rowText}>{item.fuel}</Text>
-      <Text style={styles.rowText}>{item.mileage}</Text>
+      <Text style={styles.rowText}>{formatDate(item?.startTime)}</Text>
+      <Text style={styles.rowText}>{`${(item?.distance / 1000).toFixed(
+        2,
+      )} KM`}</Text>
+      <Text style={styles.rowText}>{`${(item?.averageSpeed * 1.852).toFixed(
+        2,
+      )} km/h`}</Text>
+      <Text style={styles.rowText}>{`${(item?.maxSpeed * 1.852).toFixed(
+        2,
+      )} km/h`}</Text>
     </View>
   );
+
+  const FirstRoute = () => (
+    <SummaryList
+      data={gpsTripsData}
+      renderItem={renderItem}
+      loading={gpsTripsLoading}
+    />
+  );
+
+  const SecondRoute = () => (
+    <SummaryList
+      data={gpsSummaryData}
+      renderItem={renderItem}
+      loading={gpsSummaryLoading}
+    />
+  );
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    {key: 'first', title: 'Trips'},
+    {key: 'second', title: 'Summary'},
+  ]);
 
   return (
     <View style={{flex: 1}}>
       <View style={styles.headerBox}>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Total distance</Text>
-          <Text style={styles.stopCount}>1,300KM</Text>
+          <Text style={styles.stopCount}>
+            {wsPositions[0]?.attributes?.totalDistance
+              ? `${(wsPositions[0]?.attributes?.totalDistance / 1000).toFixed(
+                  2,
+                )} KM`
+              : '0 KM'}
+          </Text>
         </View>
         <View style={styles.stopBox}>
-          <Text style={styles.stopText}>Total Fuel consumption</Text>
-          <Text style={styles.stopCount}>433 Liters</Text>
+          <Text style={styles.stopText}>Vechile Name/Number</Text>
+          <Text style={styles.stopCount}>{name}</Text>
         </View>
-        <View style={{paddingBottom: 10}}>
+        <View>
           <TouchableOpacity
             style={styles.calendarIconBox}
-            onPress={() => navigation.navigate('quickfilters')}>
-            <CalendarIcon size={40} />
+            onPress={() =>
+              navigation.navigate('quickfilters', {
+                deviceId,
+                name,
+                navigationPath: 'LocationHistory',
+              })
+            }>
+            <CalendarIcon size={35} />
           </TouchableOpacity>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
-          // borderWidth: 1,
           paddingTop: 20,
           padding: 10,
           borderRadius: 3,
@@ -67,26 +211,25 @@ const LocationHistory = ({navigation}) => {
           margin: 10,
         }}>
         <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Text style={styles.stopText}>DEL 0212 DP1</Text>
+          <Text style={styles.stopText}>{name}</Text>
           <View style={styles.verticalLine2} />
-          <Text style={styles.stopText}>
-            Current Location: Jamshedpur, Jharkhand
-          </Text>
+          <TouchableOpacity onPress={fetchAddress}>
+            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
+              {address}
+            </Text>
+          </TouchableOpacity>
         </View>
-      </View>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
-        ListHeaderComponent={
-          <View style={styles.tableHeader}>
-            <Text style={styles.headerText}>Date</Text>
-            <Text style={styles.headerText}>Distance</Text>
-            <Text style={styles.headerText}>Fuel</Text>
-            <Text style={styles.headerText}>Mileage</Text>
-          </View>
-        }
-        style={styles.tableContainer}
+      </View> */}
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={SceneMap({
+          first: FirstRoute,
+          second: SecondRoute,
+          // third: ThirdRoute,
+        })}
+        onIndexChange={setIndex}
+        renderTabBar={RenderTabBar}
+        style={{marginTop: -10}}
       />
     </View>
   );
@@ -96,7 +239,6 @@ export default LocationHistory;
 
 const styles = StyleSheet.create({
   headerBox: {
-    // borderWidth: 1,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -117,7 +259,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
     textAlign: 'center',
-    // borderWidth: 1,
   },
   stopCount: {
     color: titleColor,
@@ -125,10 +266,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
     marginTop: -5,
-    // borderWidth: 1,
   },
   calendarIconBox: {
-    // borderWidth: 1,
     padding: 10,
     width: 50,
     height: 50,
@@ -146,19 +285,13 @@ const styles = StyleSheet.create({
   },
   tableContainer: {
     flex: 1,
-    // padding: 10,
-    // paddingRight: 0,
     backgroundColor: '#ffffff',
-    // justifyContent: 'center',
-    // marginVertical: 10,
-    // borderWidth: 1,
     paddingVertical: 10,
+    // borderWidth: 1,
   },
   tableHeader: {
-    // borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginBottom: 10,
     borderBottomWidth: 1,
     borderColor: '#ccc',
     paddingBottom: 10,
@@ -167,7 +300,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 10,
-    // paddingHorizontal: 5,
     borderBottomWidth: 1,
     borderColor: '#ccc',
   },
@@ -176,17 +308,18 @@ const styles = StyleSheet.create({
     color: titleColor,
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-ExtraBold',
-    // borderWidth: 1,
     minWidth: 90,
-    // flex: 1,
   },
   rowText: {
     fontSize: 14,
     fontFamily: 'PlusJakartaSans-SemiBold',
     color: titleColor,
     textAlign: 'center',
-    // borderWidth: 1,
     minWidth: 90,
-    // flex: 1,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

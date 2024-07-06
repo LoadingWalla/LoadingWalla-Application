@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import {PrivacyPolicy, white} from '../Color/color';
 
 const CommonItem = ({item, color}) => {
-  console.log(8888888, item);
+  // console.log(8888888, item);
   const date = new Date(item?.updated_at);
   const now = new Date();
 

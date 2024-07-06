@@ -5,18 +5,191 @@ import {
   TouchableOpacity,
   View,
   Platform,
-  TextInput, // Importing Platform to determine the OS
+  TextInput,
 } from 'react-native';
 import React, {useState} from 'react';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 
-const QuickFilters = ({navigation}) => {
-  const filters = ['Yesterday', 'Today', 'Tomorrow', '7 Days', '1 Month'];
+const QuickFilters = ({navigation, route}) => {
+  const {deviceId, name, navigationPath} = route.params;
+  // console.log(33333333333333, deviceId);
+  const filters = [
+    'Yesterday',
+    'Today',
+    'This Week',
+    'Previous Week',
+    'This Month',
+    'Previous Month',
+    'Custom',
+  ];
   const [activeFilter, setActiveFilter] = useState('Today');
+  const [date, setDate] = useState(new Date());
+  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+  const [showEndTimePicker, setShowEndTimePicker] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   const handlePress = filter => {
     setActiveFilter(filter);
+    if (filter !== 'Custom') {
+      setStartDate('');
+      setStartTime('');
+      setEndDate('');
+      setEndTime('');
+
+      let start, end;
+
+      switch (filter) {
+        case 'Today':
+          start = moment().utc().startOf('day').toISOString();
+          end = moment().utc().endOf('day').toISOString();
+          break;
+        case 'Yesterday':
+          start = moment()
+            .utc()
+            .subtract(1, 'days')
+            .startOf('day')
+            .toISOString();
+          end = moment().utc().subtract(1, 'days').endOf('day').toISOString();
+          break;
+        case 'This Week':
+          start = moment().utc().startOf('week').toISOString();
+          end = moment().utc().endOf('week').toISOString();
+          break;
+        case 'Previous Week':
+          start = moment()
+            .utc()
+            .subtract(1, 'weeks')
+            .startOf('week')
+            .toISOString();
+          end = moment().utc().subtract(1, 'weeks').endOf('week').toISOString();
+          break;
+        case 'This Month':
+          start = moment().utc().startOf('month').toISOString();
+          end = moment().utc().endOf('month').toISOString();
+          break;
+        case 'Previous Month':
+          start = moment()
+            .utc()
+            .subtract(1, 'months')
+            .startOf('month')
+            .toISOString();
+          end = moment()
+            .utc()
+            .subtract(1, 'months')
+            .endOf('month')
+            .toISOString();
+          break;
+        default:
+          return;
+      }
+
+      // console.log(`From: ${start}`);
+      // console.log(`To: ${end}`);
+    }
+  };
+
+  const handleSave = () => {
+    let from, to;
+
+    if (activeFilter === 'Custom') {
+      from = `${startDate}`;
+      to = `${endDate}`;
+    } else {
+      switch (activeFilter) {
+        case 'Today':
+          from = moment().utc().startOf('day').toISOString();
+          to = moment().utc().endOf('day').toISOString();
+          break;
+        case 'Yesterday':
+          from = moment()
+            .utc()
+            .subtract(1, 'days')
+            .startOf('day')
+            .toISOString();
+          to = moment().utc().subtract(1, 'days').endOf('day').toISOString();
+          break;
+        case 'This Week':
+          from = moment().utc().startOf('week').toISOString();
+          to = moment().utc().endOf('week').toISOString();
+          break;
+        case 'Previous Week':
+          from = moment()
+            .utc()
+            .subtract(1, 'weeks')
+            .startOf('week')
+            .toISOString();
+          to = moment().utc().subtract(1, 'weeks').endOf('week').toISOString();
+          break;
+        case 'This Month':
+          from = moment().utc().startOf('month').toISOString();
+          to = moment().utc().endOf('month').toISOString();
+          break;
+        case 'Previous Month':
+          from = moment()
+            .utc()
+            .subtract(1, 'months')
+            .startOf('month')
+            .toISOString();
+          to = moment()
+            .utc()
+            .subtract(1, 'months')
+            .endOf('month')
+            .toISOString();
+          break;
+        default:
+          return;
+      }
+    }
+    // console.log(`From: ${from}`);
+    // console.log(`To: ${to}`);
+    // navigation.navigate('LocationHistory', {from, to, deviceId, name});
+    navigation.navigate(navigationPath, {from, to, deviceId, name});
+  };
+
+  const formatDate = date => {
+    return date.toISOString().split('.')[0] + 'Z';
+  };
+
+  const onStartDateChange = (event, selectedDate) => {
+    setShowStartDatePicker(false);
+    if (selectedDate && selectedDate <= new Date()) {
+      setStartDate(formatDate(selectedDate));
+      setShowStartTimePicker(true);
+    } else {
+      alert('You cannot select a future date.');
+    }
+  };
+
+  const onStartTimeChange = (event, selectedDate) => {
+    setShowStartTimePicker(false);
+    if (selectedDate) {
+      setStartTime(formatDate(selectedDate));
+    }
+  };
+
+  const onEndDateChange = (event, selectedDate) => {
+    setShowEndDatePicker(false);
+    if (selectedDate && selectedDate <= new Date()) {
+      setEndDate(formatDate(selectedDate));
+      setShowEndTimePicker(true);
+    } else {
+      alert('You cannot select a future date.');
+    }
+  };
+
+  const onEndTimeChange = (event, selectedDate) => {
+    setShowEndTimePicker(false);
+    if (selectedDate) {
+      setEndTime(formatDate(selectedDate));
+    }
   };
 
   return (
@@ -46,55 +219,128 @@ const QuickFilters = ({navigation}) => {
           </TouchableOpacity>
         ))}
       </View>
-      <View style={{flex: 0.75}}>
-        <Text
-          style={{
-            fontSize: 16,
-            color: titleColor,
-            fontFamily: 'PlusJakartaSans-SemiBold',
-            padding: 10,
-          }}>
-          Pickup Dates
-        </Text>
-        <View
-          style={{
-            // borderWidth: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}>
-          <TextInput
-            style={styles.input}
-            // onChangeText={onChangeText}
-            // value={text}
-            placeholder="--/--/--"
-            placeholderTextColor={backgroundColorNew}
-          />
-          <Text
-            style={{
-              fontSize: 14,
-              color: backgroundColorNew,
-              fontFamily: 'PlusJakartaSans-Bold',
-              //   padding: 10,
-            }}>
-            --
-          </Text>
-          <TextInput
-            style={styles.input}
-            // onChangeText={onChangeText}
-            // value={text}
-            placeholder="--/--/--"
-            placeholderTextColor={backgroundColorNew}
-          />
-        </View>
+      <View style={{flex: 0.7, paddingHorizontal: 10}}>
+        {activeFilter === 'Custom' && (
+          <>
+            <Text
+              style={{
+                fontSize: 16,
+                color: titleColor,
+                fontFamily: 'PlusJakartaSans-SemiBold',
+                padding: 10,
+              }}>
+              Pickup Dates and Times
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity onPress={() => setShowStartDatePicker(true)}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="--/--/--"
+                  placeholderTextColor={backgroundColorNew}
+                  value={startDate.split('T')[0]} // Display only date part
+                  editable={false}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: backgroundColorNew,
+                  fontFamily: 'PlusJakartaSans-Bold',
+                }}>
+                --
+              </Text>
+              <TouchableOpacity onPress={() => setShowEndDatePicker(true)}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="--/--/--"
+                  placeholderTextColor={backgroundColorNew}
+                  value={endDate.split('T')[0]} // Display only date part
+                  editable={false}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                marginTop: 10,
+              }}>
+              <TouchableOpacity onPress={() => setShowStartTimePicker(true)}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="--:--"
+                  placeholderTextColor={backgroundColorNew}
+                  value={startDate.split('T')[1]?.split('Z')[0]} // Display only time part
+                  editable={false}
+                />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: backgroundColorNew,
+                  fontFamily: 'PlusJakartaSans-Bold',
+                }}>
+                --
+              </Text>
+              <TouchableOpacity onPress={() => setShowEndTimePicker(true)}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="--:--"
+                  placeholderTextColor={backgroundColorNew}
+                  value={endDate.split('T')[1]?.split('Z')[0]} // Display only time part
+                  editable={false}
+                />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
       <Button
-        title={'Buy GPS'}
-        onPress={() => navigation.navigate('LocationHistory')}
-        // loading={statusChangeLoading}
+        title={'Save'}
+        onPress={handleSave}
         textStyle={styles.btnText}
         style={styles.btnStyle}
       />
+      {showStartDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={onStartDateChange}
+          maximumDate={new Date()}
+        />
+      )}
+      {showStartTimePicker && (
+        <DateTimePicker
+          value={date}
+          mode="time"
+          display="default"
+          onChange={onStartTimeChange}
+        />
+      )}
+      {showEndDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={onEndDateChange}
+          maximumDate={new Date()}
+        />
+      )}
+      {showEndTimePicker && (
+        <DateTimePicker
+          value={date}
+          mode="time"
+          display="default"
+          onChange={onEndTimeChange}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -103,13 +349,13 @@ export default QuickFilters;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.25,
+    flex: 0.4,
     flexDirection: 'row',
     padding: 10,
     flexWrap: 'wrap',
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   button: {
     borderRadius: 20,
@@ -117,10 +363,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     margin: 5,
     elevation: 3,
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
-    // shadowColor: '#000',
-    // shadowOffset: {height: 2, width: 0},
   },
   activeButton: {
     backgroundColor: '#ff6347',
@@ -141,7 +383,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   input: {
-    // borderWidth: 1,
     elevation: 3,
     width: 150,
     backgroundColor: '#FFFFFF',

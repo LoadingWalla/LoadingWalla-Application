@@ -14,9 +14,21 @@ import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
+import AlertBox from './AlertBox';
 
 const GpsItem = ({navigation, item, icon}) => {
   console.log(66666, item);
+
+  const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
+  // const todayDistance = item?.position[0]?.attributes?.distance;
+  const totalDistance = item?.position[0]?.attributes?.totalDistance;
+  const batteryLevel = item?.position[0]?.attributes?.batteryLevel;
+  const isNavigationDisabled = item.disabled || item.positionId === 0;
+
+  const showAlert = () => {
+    AlertBox('Service unavailable', 'Navigation is disabled for this item.');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -32,7 +44,13 @@ const GpsItem = ({navigation, item, icon}) => {
           <View />
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate('trackingtruck', {item: item})}
+          onPress={() => {
+            if (isNavigationDisabled) {
+              showAlert();
+            } else {
+              navigation.navigate('trackingtruck', {deviceId: item.id});
+            }
+          }}
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{item.name}</Text>
           <View style={styles.ignBox}>
@@ -40,11 +58,21 @@ const GpsItem = ({navigation, item, icon}) => {
               {item.status}
             </Text>
             <View style={styles.verticalLine} />
-            <Text>Ignition on</Text>
+            <View style={{flexDirection: 'row', borderWidth: 0}}>
+              <Text>Ignition</Text>
+              <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
+                {ignition ? (ignition ? 'on' : 'off') : 'off'}
+              </Text>
+            </View>
           </View>
           <View style={styles.iconBox}>
-            <FuelIcon size={20} />
-            <BatteryIcon size={20} />
+            <FuelIcon size={20} color={'#727272'} />
+            <BatteryIcon
+              size={20}
+              color={
+                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
+              }
+            />
             <NetworkIcon size={20} />
             <GeoFencingIcon size={20} />
             <DamageIcon size={20} />
@@ -52,8 +80,10 @@ const GpsItem = ({navigation, item, icon}) => {
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>300 KM</Text>
-            <Text style={styles.distanceText}>Today Distance</Text>
+            <Text style={styles.highlightText}>
+              {totalDistance ? `${Math.ceil(totalDistance / 1000)} KM` : '0 KM'}
+            </Text>
+            <Text style={styles.distanceText}>Total Distance</Text>
           </View>
         </View>
       </View>
@@ -64,7 +94,14 @@ const GpsItem = ({navigation, item, icon}) => {
           }>
           Expire on Feb 20, 2025
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('GpsSetting')}>
+        <TouchableOpacity
+          onPress={() => {
+            if (isNavigationDisabled) {
+              showAlert();
+            } else {
+              navigation.navigate('GpsSetting');
+            }
+          }}>
           <SettingIcon
             size={20}
             color={
