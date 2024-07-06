@@ -219,7 +219,7 @@ const QuickFilters = ({navigation, route}) => {
           </TouchableOpacity>
         ))}
       </View>
-      <View style={{flex: 0.75}}>
+      <View style={{flex: 0.7, paddingHorizontal: 10}}>
         {activeFilter === 'Custom' && (
           <>
             <Text
@@ -349,12 +349,13 @@ export default QuickFilters;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.25,
+    flex: 0.4,
     flexDirection: 'row',
     padding: 10,
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   button: {
     borderRadius: 20,

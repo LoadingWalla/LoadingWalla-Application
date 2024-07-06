@@ -180,6 +180,10 @@ const initialState = {
   gpsStopsLoading: false,
   gpsStopsError: null,
   gpsStopsData: null,
+  // gps trips
+  gpsTripsLoading: false,
+  gpsTripsError: null,
+  gpsTripsData: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1230,17 +1234,20 @@ const reducer = (state = initialState, action) => {
     case actionTypes.WEBSOCKET_DISCONNECT:
       return updateState(state, {wsConnected: false, wsError: null});
     case actionTypes.WEBSOCKET_MESSAGE:
-      return updateState(state, {wsMessages: [...state.wsMessages, payload]});
+      return updateState(state, {
+        wsMessages: [...state.wsMessages, payload],
+        wsConnected: true,
+      });
     case actionTypes.WEBSOCKET_ERROR:
-      return updateState(state, {wsError: payload});
+      return updateState(state, {wsError: payload, wsConnected: false});
     case actionTypes.WEBSOCKET_CLOSED:
       return updateState(state, {wsConnected: false});
     case actionTypes.UPDATE_DEVICES:
-      return updateState(state, {wsDevices: payload});
+      return updateState(state, {wsDevices: payload, wsConnected: true});
     case actionTypes.UPDATE_POSITIONS:
-      return updateState(state, {wsPositions: payload});
+      return updateState(state, {wsPositions: payload, wsConnected: true});
     case actionTypes.UPDATE_EVENTS:
-      return updateState(state, {wsEvents: payload});
+      return updateState(state, {wsEvents: payload, wsConnected: true});
 
     // GPS Address
     case actionTypes.FETCH_GPS_ADDRESS_REQUEST:
@@ -1338,6 +1345,27 @@ const reducer = (state = initialState, action) => {
         gpsStopsLoading: false,
         gpsStopsError: payload,
         gpsStopsData: null,
+      });
+
+    // GPS Trips
+    case actionTypes.FETCH_GPS_TRIPS_REQUEST:
+      return {
+        ...state,
+        gpsTripsLoading: true,
+        gpsTripsError: null,
+        gpsTripsData: null,
+      };
+    case actionTypes.FETCH_GPS_TRIPS_SUCCESS:
+      return updateState(state, {
+        gpsTripsLoading: false,
+        gpsTripsError: null,
+        gpsTripsData: payload,
+      });
+    case actionTypes.FETCH_GPS_TRIPS_FAILURE:
+      return updateState(state, {
+        gpsTripsLoading: false,
+        gpsTripsError: payload,
+        gpsTripsData: null,
       });
 
     // default state

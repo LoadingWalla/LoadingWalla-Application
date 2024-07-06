@@ -19,12 +19,10 @@ import {
   initBooking,
 } from '../../../Store/Actions/Actions';
 import BookingItem from '../../../Components/Bookingitem';
-
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
-import {PrivacyPolicy, backgroundColorNew} from '../../../Color/color';
+import {backgroundColorNew} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
-import InnerButton from '../../../Components/InnerButton';
 import {useTranslation} from 'react-i18next';
 
 const Booking = ({navigation}) => {

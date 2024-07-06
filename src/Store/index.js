@@ -9,8 +9,8 @@ const store = configureStore({
   //   middleware: () => [sagaMiddleware],
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      immutableCheck: false, // Disable immutable state check middleware
-      serializableCheck: false, // Disable serializable state check middleware if necessary
+      // immutableCheck: false, // Disable immutable state check middleware
+      // serializableCheck: false, // Disable serializable state check middleware if necessary
     }).concat(sagaMiddleware),
 });
 

@@ -1172,3 +1172,29 @@ export const fetchGpsStopsFailure = error => ({
   type: actionTypes.FETCH_GPS_STOPS_FAILURE,
   payload: error,
 });
+
+// GPS Tripa
+export const fetchGpsTripsRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => ({
+  type: actionTypes.FETCH_GPS_TRIPS_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchGpsTripsSuccess = data => ({
+  type: actionTypes.FETCH_GPS_TRIPS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsTripsFailure = error => ({
+  type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
+  payload: error,
+});

@@ -33,6 +33,7 @@ const GpsTrackings = ({navigation}) => {
     gpsDeviceLoading,
     gpsDeviceData,
     gpsDeviceStatus,
+    wsMessages,
   } = useSelector(state => {
     console.log('Gps Tracking', state.data);
     return state.data;

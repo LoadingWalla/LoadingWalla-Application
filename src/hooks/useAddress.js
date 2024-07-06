@@ -8,6 +8,7 @@ import {
 const useAddress = positions => {
   const [address, setAddress] = useState('Show Address');
   const dispatch = useDispatch();
+  // console.log(99999, positions);
 
   const {gpsTokenData, gpsAddressData, gpsAddressLoading} = useSelector(
     state => {
@@ -34,8 +35,8 @@ const useAddress = positions => {
         fetchGpsAddressRequest(
           gpsTokenData.email,
           gpsTokenData.password,
-          positions[0].latitude,
-          positions[0].longitude,
+          positions[positions.length - 1].latitude,
+          positions[positions.length - 1].longitude,
         ),
       );
     } else {

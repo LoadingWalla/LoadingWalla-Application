@@ -238,7 +238,7 @@ export default function PlayJourney({navigation, route}) {
                     }}
                     title={`Current Position`}
                     description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}>
-                    <BatteryIcon size={20} fill={backgroundColorNew} />
+                    <BatteryIcon size={30} color={'green'} />
                   </Marker>
                 )}
                 {gpsStopsData?.map((stop, index) => (
