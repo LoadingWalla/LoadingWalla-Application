@@ -163,6 +163,31 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
+  const totalStops = gpsStopsData ? gpsStopsData.length : 0;
+  const totalRun =
+    gpsStopsData && gpsStopsData.length > 0
+      ? (gpsStopsData[gpsStopsData.length - 1].endOdometer -
+          gpsStopsData[0].startOdometer) /
+        1000
+      : 0;
+
+  const totalDuration =
+    gpsStopsData && gpsStopsData.length > 0
+      ? gpsStopsData.reduce((acc, stop) => acc + stop.duration, 0)
+      : 0;
+
+  const formatDuration = duration => {
+    const seconds = Math.floor((duration / 1000) % 60);
+    const minutes = Math.floor((duration / (1000 * 60)) % 60);
+    const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+    const hoursStr = hours < 10 ? `0${hours}` : hours;
+    const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+    const secondsStr = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${hoursStr}:${minutesStr}:${secondsStr}`;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -308,18 +333,26 @@ export default function PlayJourney({navigation, route}) {
         </View>
         <View style={styles.totalBox}>
           <View style={styles.stopBox}>
-            <Text style={styles.stopText}>Total run: 307 KM</Text>
-            <Text style={styles.stopCount}>06 : 37 : 42</Text>
+            <Text style={[styles.stopText, {color: '#3BA700'}]}>
+              Total run: {Math.ceil(totalRun)} KM
+            </Text>
+            <Text style={styles.stopCount}>00:00:00</Text>
           </View>
           <View style={styles.verticalLine} />
           <View style={styles.stopBox}>
-            <Text style={styles.stopText}>Total Stops: 12</Text>
-            <Text style={styles.stopCount}>06 : 37 : 42</Text>
+            <Text style={[styles.stopText, {color: '#F50000'}]}>
+              Total Stops: {totalStops}
+            </Text>
+            <Text style={styles.stopCount}>
+              {formatDuration(totalDuration)}
+            </Text>
           </View>
           <View style={styles.verticalLine} />
           <View style={styles.stopBox}>
-            <Text style={styles.stopText}>Signal Losts: 2KM</Text>
-            <Text style={styles.stopCount}>06 : 37 : 42</Text>
+            <Text style={[styles.stopText, {color: '#E0BD00'}]}>
+              Signal Losts: 0 KM
+            </Text>
+            <Text style={styles.stopCount}>00:00:00</Text>
           </View>
         </View>
       </View>

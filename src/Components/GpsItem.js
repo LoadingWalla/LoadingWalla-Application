@@ -19,7 +19,8 @@ const GpsItem = ({navigation, item, icon}) => {
   // console.log(66666, item);
 
   const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
-  const todayDistance = item?.position[0]?.attributes?.distance;
+  // const todayDistance = item?.position[0]?.attributes?.distance;
+  const totalDistance = item?.position[0]?.attributes?.totalDistance;
   const batteryLevel = item?.position[0]?.attributes?.batteryLevel;
 
   return (
@@ -70,7 +71,7 @@ const GpsItem = ({navigation, item, icon}) => {
         <View>
           <View style={styles.distanceBox}>
             <Text style={styles.highlightText}>
-              {todayDistance ? `${Math.ceil(todayDistance)} KM` : '0 KM'}
+              {totalDistance ? `${Math.ceil(totalDistance / 1000)} KM` : '0 KM'}
             </Text>
             <Text style={styles.distanceText}>Today Distance</Text>
           </View>

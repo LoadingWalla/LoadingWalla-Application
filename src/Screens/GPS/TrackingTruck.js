@@ -457,9 +457,11 @@ const TrackingTruck = ({navigation, route}) => {
           <View style={styles.distanceBox}>
             <Text style={styles.distanceText}>Total distance:</Text>
             <Text style={styles.highlightText}>
-              {`${Math.ceil(
-                positions[0]?.attributes?.totalDistance / 1000,
-              )} KM`}
+              {positions[0]?.attributes?.todayDistance
+                ? `${Math.ceil(
+                    positions[0]?.attributes?.todayDistance / 1000,
+                  )} KM`
+                : '0 KM'}
             </Text>
           </View>
           <View style={styles.horizontalLine} />
