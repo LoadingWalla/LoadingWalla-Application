@@ -9,6 +9,12 @@ import React from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
 import {titleColor} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
+import {useFocusEffect} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  websocketConnect,
+  websocketDisconnect,
+} from '../../Store/Actions/Actions';
 
 const Plan = () => {
   return (
@@ -30,7 +36,8 @@ const Plan = () => {
 const Rates = ({navigation}) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('paymentGPS')}
+      // onPress={() => navigation.navigate('paymentGPS')}
+      onPress={() => navigation.navigate('GpsType')}
       style={{
         margin: 10,
         // borderWidth: 1,
@@ -117,6 +124,18 @@ const Rates = ({navigation}) => {
 };
 
 const BuyGps = ({navigation}) => {
+  const dispatch = useDispatch();
+  const {gpsTokenData} = useSelector(state => state.data);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Disconnect WebSocket and call REST APIs
+      dispatch(websocketDisconnect());
+      return () => {
+        dispatch(websocketConnect(gpsTokenData?.cookie));
+      };
+    }, [dispatch, gpsTokenData]),
+  );
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Rates navigation={navigation} />

@@ -18,6 +18,7 @@ import {
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Components/Button';
+import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 
 const ReusableItem = ({title, value}) => {
   return (
@@ -35,7 +36,7 @@ const ReusableItem = ({title, value}) => {
   );
 };
 
-const PaymentGPS = () => {
+const PaymentGPS = ({navigation}) => {
   const [isChecked, setIsChecked] = useState(true);
   const handleCheckBoxChange = () => {
     setIsChecked(!isChecked);
@@ -43,88 +44,10 @@ const PaymentGPS = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{padding: 10}}>
-        <View
-          style={{
-            //   borderWidth: 1,
-            backgroundColor: '#FFFFFF',
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-            borderRadius: 8,
-            zIndex: 10,
-            elevation: 2,
-          }}>
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderBottomColor: '#00000029',
-                paddingBottom: 30,
-                padding: 10,
-              }}>
-              <Text
-                style={{
-                  color: titleColor,
-                  fontFamily: 'PlusJakartaSans-Bold',
-                  fontSize: 16,
-                }}>
-                1 Year GPS plan
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  borderRadius: 20,
-                  // borderWidth: 1,
-                  paddingHorizontal: 15,
-                  paddingVertical: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#F7F7F7',
-                }}>
-                <EditIcon size={13} color={backgroundColorNew} />
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    color: backgroundColorNew,
-                    fontFamily: 'PlusJakartaSans-SemiBold',
-                    fontSize: 14,
-                  }}>
-                  Edit
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View style={{paddingHorizontal: 10, paddingVertical: 15}}>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontFamily: 'PlusJakartaSans-SemiBold',
-                fontSize: 14,
-              }}>
-              The plan will be valid till JUNE 20, 2025
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            //   borderWidth: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 8,
-            paddingTop: 20,
-            paddingBottom: 10,
-            marginTop: -10,
-            backgroundColor: '#EFFFE6',
-          }}>
-          <PercentageIcon size={20} color={'#3BA700'} />
-          <Text style={{marginLeft: 5, color: '#3BA700'}}>
-            YAY! You saved ₹ 200 on this purchase
-          </Text>
-        </View>
-      </View>
+      <PurchaseGpsHeader
+        icon={true}
+        footertitle={'YAY! You saved ₹ 200 on this purchase'}
+      />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <View style={styles.scrollContainer}>
           <View
@@ -255,7 +178,7 @@ const PaymentGPS = () => {
         </View>
         <Button
           title={'Pay Now'}
-          //   onPress={() => navigation.navigate('trackingtruck', {item: truck})}
+          // onPress={() => navigation.navigate('')}
           // loading={statusChangeLoading}
           textStyle={styles.btnText}
           style={styles.btnStyle}

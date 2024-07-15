@@ -89,6 +89,8 @@ import QuickFilters from '../Screens/GPS/QuickFilters';
 import OwnedGPS from '../Screens/GPS/OwnedGPS';
 import PaymentGPS from '../Screens/GPS/PaymentGPS';
 import GpsTrackings from '../Screens/GPS/GpsTrackings';
+import SelectGpsType from '../Screens/GPS/SelectGpsType';
+import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1476,6 +1478,26 @@ const Navigation = ({language}) => {
         })}
       />
       <Stack.Screen
+        name="GpsType"
+        component={SelectGpsType}
+        options={({route}) => ({
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
         name="paymentGPS"
         component={PaymentGPS}
         options={({route}) => ({
@@ -1489,6 +1511,32 @@ const Navigation = ({language}) => {
           headerRight: () => (
             <HeaderHelpButton shareIcon={false} navigation={navigation} />
           ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="DeliveryDetails"
+        component={DeliveryDetails}
+        options={({route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Provide delivery details',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerShadowVisible: false,
+          // headerRight: () => (
+          //   <HeaderHelpButton shareIcon={false} navigation={navigation} />
+          // ),
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

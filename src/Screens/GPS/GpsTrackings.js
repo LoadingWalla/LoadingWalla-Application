@@ -98,6 +98,7 @@ const GpsTrackings = ({navigation}) => {
       <Button
         title={'Buy GPS'}
         onPress={() => navigation.navigate('BuyGPS')}
+        // onPress={() => navigation.navigate('GpsType')}
         // loading={statusChangeLoading}
         textStyle={styles.btnText}
         style={styles.btnStyle}
