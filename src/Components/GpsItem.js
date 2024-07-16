@@ -1,11 +1,4 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
@@ -19,11 +12,12 @@ import AlertBox from './AlertBox';
 const GpsItem = ({navigation, item, icon}) => {
   console.log(66666, item);
 
-  const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
-  // const todayDistance = item?.position[0]?.attributes?.distance;
-  const totalDistance = item?.position[0]?.attributes?.totalDistance;
-  const batteryLevel = item?.position[0]?.attributes?.batteryLevel;
-  const isNavigationDisabled = item.disabled || item.positionId === 0;
+  const ignition =
+    item?.position?.[0]?.attributes?.ignition ||
+    item?.position?.[0]?.attributes?.motion;
+  const totalDistance = item?.position?.[0]?.attributes?.totalDistance;
+  const batteryLevel = item?.position?.[0]?.attributes?.batteryLevel;
+  const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
   const showAlert = () => {
     AlertBox('Service unavailable', 'Navigation is disabled for this item.');
@@ -48,20 +42,20 @@ const GpsItem = ({navigation, item, icon}) => {
             if (isNavigationDisabled) {
               showAlert();
             } else {
-              navigation.navigate('trackingtruck', {deviceId: item.id});
+              navigation.navigate('trackingtruck', {deviceId: item?.id});
             }
           }}
           style={styles.textContainer}>
-          <Text style={styles.highlightText}>{item.name}</Text>
+          <Text style={styles.highlightText}>{item?.name}</Text>
           <View style={styles.ignBox}>
-            <Text style={{color: item.status === 'online' ? 'green' : 'red'}}>
-              {item.status}
+            <Text style={{color: item?.status === 'online' ? 'green' : 'red'}}>
+              {item?.status}
             </Text>
             <View style={styles.verticalLine} />
             <View style={{flexDirection: 'row', borderWidth: 0}}>
               <Text>Ignition</Text>
               <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
-                {ignition ? (ignition ? 'on' : 'off') : 'off'}
+                {ignition ? 'on' : 'off'}
               </Text>
             </View>
           </View>
@@ -90,7 +84,7 @@ const GpsItem = ({navigation, item, icon}) => {
       <View style={styles.expiryDate}>
         <Text
           style={
-            item.status === 'Expired' ? styles.expiredText : styles.activeText
+            item?.status === 'Expired' ? styles.expiredText : styles.activeText
           }>
           Expire on Feb 20, 2025
         </Text>
@@ -105,7 +99,7 @@ const GpsItem = ({navigation, item, icon}) => {
           <SettingIcon
             size={20}
             color={
-              item.status === 'Expired' ? backgroundColorNew : PrivacyPolicy
+              item?.status === 'Expired' ? backgroundColorNew : PrivacyPolicy
             }
           />
         </TouchableOpacity>
@@ -150,7 +144,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   expiryDate: {
-    // borderWidth: 1,
     backgroundColor: '#F7F7F7',
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -165,11 +158,9 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   distanceBox: {
-    // borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 6,
-    // elevation: 2,
     backgroundColor: '#f7f7f7',
   },
   distanceText: {
@@ -182,9 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // borderWidth: 1,
     marginVertical: 10,
-    // paddingVertical: 5,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
@@ -194,7 +183,6 @@ const styles = StyleSheet.create({
   },
   ignBox: {flexDirection: 'row', alignItems: 'center'},
   imgContainer: {
-    // borderWidth: 1,
     padding: 5,
     justifyContent: 'center',
     flexDirection: 'row',

@@ -1,14 +1,5 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import React, {useEffect} from 'react';
-import GpsItem from '../../Components/GpsItem';
-import Button from '../../Components/Button';
-import {backgroundColorNew, textColor} from '../../Color/color';
+import {useDispatch, useSelector} from 'react-redux';
+import React, {useEffect, useState} from 'react';
 import {
   fetchGpsDevicesRequest,
   fetchTokenFailure,
@@ -16,28 +7,32 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
-import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import GpsItem from '../../Components/GpsItem';
+import Button from '../../Components/Button';
+import {backgroundColorNew, textColor} from '../../Color/color';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
-  const latestDevice = useSelector(state => state.data.wsDevices);
-  const allPositions = useSelector(state => state.data.wsPositions);
-  const allEvents = useSelector(state => state.data.wsEvents);
-  // console.log(444, allPositions);
 
   const {
     gpsTokenLoading,
     gpsTokenData,
-    gpsTokenStatus,
     gpsDeviceLoading,
     gpsDeviceData,
-    gpsDeviceStatus,
-    wsMessages,
-  } = useSelector(state => {
-    console.log('Gps Tracking', state.data);
-    return state.data;
-  });
+    wsPositions,
+    wsDevices,
+    wsEvents,
+  } = useSelector(state => state.data);
+
+  const [mergedDeviceData, setMergedDeviceData] = useState([]);
 
   useEffect(() => {
     if (gpsTokenData) {
@@ -61,28 +56,63 @@ const GpsTrackings = ({navigation}) => {
     }, [dispatch]),
   );
 
-  // Merge gpsDeviceData with latestDevice, positions, and events
-  const mergedDeviceData = gpsDeviceData?.map(device => {
-    const latest = latestDevice.find(d => d.id === device.id);
-    const position = allPositions.filter(p => p.deviceId === device.id);
-    const events = allEvents.filter(e => e.deviceId === device.id);
-    // console.log(
-    //   55555,
-    //   latest ? {...device, ...latest, position, events} : device,
-    // );
-    return latest
-      ? {...device, ...latest, position, events}
-      : {...device, position, events};
-  });
+  const mergeDeviceData = (devices, latestDevices, positions, events) => {
+    const deviceMap = new Map();
+
+    devices.forEach(device => {
+      deviceMap.set(device.id, {...device});
+    });
+
+    latestDevices.forEach(latest => {
+      if (deviceMap.has(latest.id)) {
+        deviceMap.set(latest.id, {
+          ...deviceMap.get(latest.id),
+          ...latest,
+        });
+      }
+    });
+
+    positions.forEach(position => {
+      if (deviceMap.has(position.deviceId)) {
+        const device = deviceMap.get(position.deviceId);
+        device.position = device.position
+          ? [...device.position, position]
+          : [position];
+        deviceMap.set(position.deviceId, device);
+      }
+    });
+
+    events.forEach(event => {
+      if (deviceMap.has(event.deviceId)) {
+        const device = deviceMap.get(event.deviceId);
+        device.events = device.events ? [...device.events, event] : [event];
+        deviceMap.set(event.deviceId, device);
+      }
+    });
+
+    return Array.from(deviceMap.values());
+  };
+
+  useEffect(() => {
+    if (gpsDeviceData) {
+      const updatedData = mergeDeviceData(
+        gpsDeviceData,
+        wsDevices,
+        wsPositions,
+        wsEvents,
+      );
+      setMergedDeviceData(updatedData);
+    }
+  }, [gpsDeviceData, wsDevices, wsPositions, wsEvents]);
 
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>GPS Purchases</Text>
       </View>
       {gpsDeviceLoading ? (
         <View style={styles.loadingStyle}>
-          <ActivityIndicator size={'large'} color={backgroundColorNew} />
+          <ActivityIndicator size="large" color={backgroundColorNew} />
         </View>
       ) : (
         <FlatList
@@ -96,10 +126,8 @@ const GpsTrackings = ({navigation}) => {
         />
       )}
       <Button
-        title={'Buy GPS'}
+        title="Buy GPS"
         onPress={() => navigation.navigate('BuyGPS')}
-        // onPress={() => navigation.navigate('GpsType')}
-        // loading={statusChangeLoading}
         textStyle={styles.btnText}
         style={styles.btnStyle}
       />
@@ -110,7 +138,10 @@ const GpsTrackings = ({navigation}) => {
 export default GpsTrackings;
 
 const styles = StyleSheet.create({
-  conatiner: {paddingHorizontal: 10, flex: 1},
+  container: {
+    paddingHorizontal: 10,
+    flex: 1,
+  },
   headerContainer: {
     marginVertical: 10,
   },
@@ -132,5 +163,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  loadingStyle: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  loadingStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

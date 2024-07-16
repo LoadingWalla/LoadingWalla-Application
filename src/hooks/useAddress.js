@@ -12,7 +12,7 @@ const useAddress = positions => {
 
   const {gpsTokenData, gpsAddressData, gpsAddressLoading} = useSelector(
     state => {
-      console.log('Tracking truck', state.data);
+      // console.log('fetchAddressHook', state.data);
       return state.data;
     },
   );

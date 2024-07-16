@@ -53,7 +53,7 @@ const renderItem = ({item}) => {
           </View>
           <Text style={styles.headingValue}>{item?.address}</Text>
         </View>
-        <View style={{justifyContent: 'flex-end', padding: 5}}>
+        {/* <View style={{justifyContent: 'flex-end', padding: 5}}>
           <TouchableOpacity
             style={{
               //   borderWidth: 1,
@@ -68,7 +68,7 @@ const renderItem = ({item}) => {
             }}>
             <ShareIcon size={20} color={'#000000'} />
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
       {/* <View
         style={{

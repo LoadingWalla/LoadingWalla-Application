@@ -62,19 +62,11 @@ const TrackingTruck = ({navigation, route}) => {
     state.data.wsEvents.filter(e => e.deviceId === deviceId),
   );
 
-  // console.log('positons444444', positions);
+  const {wsMessages, wsConnected} = useSelector(state => {
+    console.log('Tracking truck', state.data);
+    return state.data;
+  });
 
-  const {wsPositions, wsMessages, wsError, wsDevices, wsConnected} =
-    useSelector(state => {
-      console.log('Tracking truck', state.data);
-      return state.data;
-    });
-
-  // useEffect(() => {
-  //   const position = getLivePositions(wsMessages);
-  //   // console.log(343434343, position);
-  //   setLivePositions(position);
-  // }, [wsMessages]);
   useEffect(() => {
     if (!wsConnected) {
       setError('Service unavailable. Please try again later.');
@@ -125,17 +117,27 @@ const TrackingTruck = ({navigation, route}) => {
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
             <ToggleIconText
-              IconComponent={FuelIcon}
-              text="Fuel"
-              iconSize={30}
-              color={'#727272'}
-              index={0}
+              IconComponent={KeyIcon}
+              text={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'ON'
+                  : 'OFF'
+              }
+              iconSize={25}
+              color={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'green'
+                  : 'red'
+              }
+              index={4}
               activeIndex={activeIndex}
-              onPress={() => handlePress(0)}
+              onPress={() => handlePress(4)}
             />
             <ToggleIconText
               IconComponent={BatteryIcon}
-              text="Battery"
+              text={positions[0]?.attributes?.batteryLevel || 'Battery'}
               iconSize={30}
               color={
                 positions[0]?.attributes?.batteryLevel
@@ -167,15 +169,6 @@ const TrackingTruck = ({navigation, route}) => {
               onPress={() => handlePress(3)}
             />
             <ToggleIconText
-              IconComponent={KeyIcon}
-              text="Key"
-              iconSize={25}
-              color={'#727272'}
-              index={4}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(4)}
-            />
-            <ToggleIconText
               IconComponent={DamageIcon}
               text="Damage"
               iconSize={25}
@@ -183,6 +176,15 @@ const TrackingTruck = ({navigation, route}) => {
               index={5}
               activeIndex={activeIndex}
               onPress={() => handlePress(5)}
+            />
+            <ToggleIconText
+              IconComponent={FuelIcon}
+              text="Fuel"
+              iconSize={30}
+              color={'#727272'}
+              index={0}
+              activeIndex={activeIndex}
+              onPress={() => handlePress(0)}
             />
           </View>
         </View>
@@ -223,9 +225,10 @@ const TrackingTruck = ({navigation, route}) => {
             {livePositions.length > 0 && (
               <Marker
                 coordinate={livePositions[livePositions.length - 1]}
-                title="Current Location">
-                <BatteryIcon color={'red'} size={30} />
-              </Marker>
+                pinColor="red"
+                // title="Current Location"
+                // description={address}
+              />
             )}
           </MapView>
           <TouchableOpacity

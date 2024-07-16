@@ -25,7 +25,7 @@ const ToggleIconText = ({
       <IconComponent size={iconSize} color={color} />
       {activeIndex === index && (
         <Animated.View style={{opacity}}>
-          <Text style={styles.hiddenText}>{text}</Text>
+          <Text style={styles.hiddenText(color)}>{text}</Text>
         </Animated.View>
       )}
     </TouchableOpacity>
@@ -38,12 +38,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  hiddenText: {
+  hiddenText: color => ({
     marginLeft: 5,
     textAlign: 'center',
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-SemiBold',
-  },
+    color: color,
+  }),
 });
 
 export default ToggleIconText;

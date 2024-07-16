@@ -5,13 +5,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import MapView, {Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
@@ -23,7 +22,6 @@ import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
@@ -37,6 +35,8 @@ export default function PlayJourney({navigation, route}) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [currentStop, setCurrentStop] = useState(null);
+
+  const mapRef = useRef(null);
 
   const dispatch = useDispatch();
   const {
@@ -147,6 +147,12 @@ export default function PlayJourney({navigation, route}) {
         longitude: nextStop.longitude,
       });
       setCurrentStop(nextStop); // Update current stop
+      mapRef.current?.animateToRegion({
+        latitude: nextStop.latitude,
+        longitude: nextStop.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }); // Animate to the new stop location
     }
   };
 
@@ -160,6 +166,12 @@ export default function PlayJourney({navigation, route}) {
         longitude: prevStop.longitude,
       });
       setCurrentStop(prevStop); // Update current stop
+      mapRef.current?.animateToRegion({
+        latitude: prevStop.latitude,
+        longitude: prevStop.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }); // Animate to the new stop location
     }
   };
 
@@ -223,6 +235,7 @@ export default function PlayJourney({navigation, route}) {
           <View style={styles.mapView}>
             {initialRegion && (
               <MapView
+                ref={mapRef}
                 style={StyleSheet.absoluteFillObject}
                 initialRegion={initialRegion}>
                 <Polyline
@@ -236,9 +249,10 @@ export default function PlayJourney({navigation, route}) {
                       latitude: currentPosition.latitude,
                       longitude: currentPosition.longitude,
                     }}
-                    title={`Current Position`}
-                    description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}>
-                    <BatteryIcon size={30} color={'green'} />
+                    // title={'Current Position'}
+                    // description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}
+                  >
+                    <BatteryIcon size={30} color={'red'} />
                   </Marker>
                 )}
                 {gpsStopsData?.map((stop, index) => (
@@ -250,7 +264,7 @@ export default function PlayJourney({navigation, route}) {
                     }}
                     pinColor={index === currentStopIndex ? 'blue' : 'red'} // Highlight current stop
                     title={`Stop ${index + 1}`}
-                    description={`Lat: ${stop.latitude}, Lon: ${stop.longitude}`}
+                    description={stop.address}
                   />
                 ))}
               </MapView>
