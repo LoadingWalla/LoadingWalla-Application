@@ -184,6 +184,11 @@ const initialState = {
   gpsTripsLoading: false,
   gpsTripsError: null,
   gpsTripsData: null,
+  // gps plans
+  gpsPlansData: [],
+  rechargePlansData: [],
+  gpsPlansLoading: false,
+  gpsPlansError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1366,6 +1371,36 @@ const reducer = (state = initialState, action) => {
         gpsTripsLoading: false,
         gpsTripsError: payload,
         gpsTripsData: null,
+      });
+
+    // GPS Plans
+    case actionTypes.FETCH_GPS_PLANS_REQUEST:
+      return {
+        ...state,
+        gpsPlansLoading: true,
+        gpsPlansError: null,
+        gpsPlansData: null,
+      };
+    // case actionTypes.FETCH_GPS_PLANS_SUCCESS:
+    //   return updateState(state, {
+    //     gpsPlansLoading: false,
+    //     gpsPlansError: null,
+    //     gpsPlansData: payload,
+    //   });
+    case actionTypes.FETCH_GPS_PLANS_SUCCESS:
+      const gpsPlans = action.payload.filter(plan => plan.plan_type === 1);
+      const rechargePlans = action.payload.filter(plan => plan.plan_type !== 1);
+      return updateState(state, {
+        gpsPlansLoading: false,
+        gpsPlansError: null,
+        gpsPlansData: gpsPlans,
+        rechargePlansData: rechargePlans,
+      });
+    case actionTypes.FETCH_GPS_PLANS_FAILURE:
+      return updateState(state, {
+        gpsPlansLoading: false,
+        gpsPlansError: payload,
+        gpsPlansData: null,
       });
 
     // default state

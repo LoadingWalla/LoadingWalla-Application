@@ -1181,7 +1181,7 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
 // gps trips
 export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   try {
-    console.log(99888999, username, password, deviceId, from, to);
+    // console.log(99888999, username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/trips?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
@@ -1198,6 +1198,24 @@ export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   } catch (error) {
     yield put(actions.fetchGpsTripsFailure(error.message));
     // console.log('error4444', error);
+  }
+}
+
+// gps plans
+export function* fetchGpsPlans() {
+  try {
+    const data = yield API.get('gps-plans');
+    console.log('Gps Plan', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsPlansSuccess(data?.data?.gps_plans));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsPlansFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsPlansFailure(error.message));
+    // console.log('error', error);
   }
 }
 

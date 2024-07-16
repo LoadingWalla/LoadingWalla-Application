@@ -10,7 +10,7 @@ import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 import AlertBox from './AlertBox';
 
 const GpsItem = ({navigation, item, icon}) => {
-  console.log(66666, item);
+  // console.log(66666, item);
 
   const ignition =
     item?.position?.[0]?.attributes?.ignition ||

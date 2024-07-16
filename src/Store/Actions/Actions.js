@@ -1173,7 +1173,7 @@ export const fetchGpsStopsFailure = error => ({
   payload: error,
 });
 
-// GPS Tripa
+// GPS Trips
 export const fetchGpsTripsRequest = (
   username,
   password,
@@ -1196,5 +1196,20 @@ export const fetchGpsTripsSuccess = data => ({
 
 export const fetchGpsTripsFailure = error => ({
   type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
+  payload: error,
+});
+
+// GPS Tripa
+export const fetchGpsPlansRequest = () => ({
+  type: actionTypes.FETCH_GPS_PLANS_REQUEST,
+});
+
+export const fetchGpsPlansSuccess = data => ({
+  type: actionTypes.FETCH_GPS_PLANS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsPlansFailure = error => ({
+  type: actionTypes.FETCH_GPS_PLANS_FAILURE,
   payload: error,
 });
