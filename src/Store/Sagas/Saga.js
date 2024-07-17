@@ -933,9 +933,9 @@ export function* fetchMapDataSaga({from_id, to_id}) {
 }
 
 // Create Order
-export function* createOrder({amount, userId}) {
+export function* createOrder({amount, userId, order_type}) {
   try {
-    const body = {amount, userId};
+    const body = {amount, userId, order_type};
     // console.log(8888888, body);
     const data = yield API.post('payment/order', body);
     // console.log('API response------createOrder', data);
@@ -1094,13 +1094,13 @@ export function* fetchGpsSummary({
   daily,
 }) {
   try {
-    console.log(33333, username, password, deviceId, from, to, daily);
+    // console.log(33333, username, password, deviceId, from, to, daily);
     const data = yield gpsApi.get(
       `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
       username,
       password,
     );
-    console.log('Gps Summary', data);
+    // console.log('Gps Summary', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchSummaryReportSuccess(data?.data));
@@ -1117,9 +1117,9 @@ export function* fetchGpsSummary({
 // gps summary
 export function* fetchGpsNotifications({username, password}) {
   try {
-    console.log(33333, username, password);
+    // console.log(33333, username, password);
     const data = yield gpsApi.get('notifications', username, password);
-    console.log('Gps Notification', data);
+    // console.log('Gps Notification', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsNotificationsSuccess(data?.data));
@@ -1215,6 +1215,41 @@ export function* fetchGpsPlans() {
     }
   } catch (error) {
     yield put(actions.fetchGpsPlansFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+// gps delivery details
+export function* placeGpsOrderSaga({
+  name,
+  mobile,
+  plan_id,
+  qty,
+  rc_numbers,
+  address,
+}) {
+  console.log(name, mobile, plan_id, qty, rc_numbers, address);
+  try {
+    const body = new FormData();
+    body.append('name', name);
+    body.append('mobile', mobile);
+    body.append('plan_id', plan_id);
+    body.append('qty', qty.toString());
+    rc_numbers.forEach(rc_number => {
+      body.append('rc_numbers[]', rc_number);
+    });
+    body.append('address', address);
+    // console.log(9999999, body);
+    const data = yield multiPartApi.post('gps-order', body);
+    // console.log('API response------PaymentVerify', data);
+    if (data?.status === 200) {
+      yield put(actions.placeGpsOrderSuccess(data));
+    } else {
+      yield put(actions.placeGpsOrderFailure(data.status));
+      // console.log('else', data);
+    }
+  } catch (error) {
+    yield put(actions.placeGpsOrderFailure());
     // console.log('error', error);
   }
 }

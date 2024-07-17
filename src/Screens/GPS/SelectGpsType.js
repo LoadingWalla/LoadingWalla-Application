@@ -17,11 +17,15 @@ import Button from '../../Components/Button';
 import PlusIcon from '../../../assets/SVG/svg/PlusIcon';
 import MinusIcon from '../../../assets/SVG/svg/MinusIcon';
 
-const SelectGpsType = ({navigation}) => {
+const SelectGpsType = ({navigation, route}) => {
   const dispatch = useDispatch();
-  const {gpsTokenData} = useSelector(state => state.data);
+  const {gpsTokenData, gpsPlansData} = useSelector(state => state.data);
   const [gpsCount, setGpsCount] = useState(1);
-  const pricePerDevice = 2000; // Assuming 2000 is the price per device
+  // const pricePerDevice =
+  //   gpsPlansData[0].gps_price +
+  //   gpsPlansData[0].recharge_price -
+  //   gpsPlansData[0].discount; // Assuming 2000 is the price per device
+  const pricePerDevice = route.params.sellingPrice;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -101,7 +105,10 @@ const SelectGpsType = ({navigation}) => {
               // loading={loading}
               onPress={() => {
                 navigation.goBack();
-                navigation.navigate('DeliveryDetails', {gpsCount});
+                navigation.navigate('DeliveryDetails', {
+                  gpsCount,
+                  pricePerDevice,
+                });
               }}
               title={'Continue'}
               textStyle={styles.buttonTitile}

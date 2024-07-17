@@ -1,20 +1,20 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {backgroundColorNew, titleColor} from '../Color/color';
 import EditIcon from '../../assets/SVG/svg/EditIcon';
 import PercentageIcon from '../../assets/SVG/svg/PercentageIcon';
 
-const PurchaseGpsHeader = ({icon, footertitle}) => {
+const PurchaseGpsHeader = ({icon, footertitle, onPress}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mainBox}>
         <View>
           <View style={styles.mainBoxHeader}>
             <Text style={styles.planText}>1 Year GPS plan</Text>
-            <View style={styles.editButton}>
+            <TouchableOpacity style={styles.editButton} onPress={onPress}>
               <EditIcon size={13} color={backgroundColorNew} />
               <Text style={styles.editButtonText}>Edit</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.mainBoxBottom}>

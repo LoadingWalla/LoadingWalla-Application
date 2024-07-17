@@ -1,5 +1,4 @@
 import {
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,27 +20,25 @@ import {
 
 const Plan = ({text}) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginVertical: 8,
-      }}>
+    <View style={styles.planContainer}>
       <CheckOutline size={15} color={'green'} style={{marginHorizontal: 10}} />
-      <Text style={{fontFamily: 'PlusJakartaSans-Medium', fontSize: 14}}>
-        {text}
-      </Text>
+      <Text style={styles.planText}>{text}</Text>
     </View>
   );
 };
 
 const Rates = ({item, navigation}) => {
   const features = item.description.split('\n\n');
+  const markedPrice =
+    Math.ceil(item.gps_price * 1.18) + Math.ceil(item.recharge_price * 1.18);
+  const sellingPrice = markedPrice - item.discount;
+  const percentageDiscount = Math.ceil(
+    ((markedPrice - sellingPrice) / markedPrice) * 100,
+  );
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('GpsType')}
+      onPress={() => navigation.navigate('GpsType', {sellingPrice})}
       style={styles.rateContainer}>
       <View style={styles.rateHeader}>
         <View style={{borderWidth: 0, padding: 8}}>
@@ -49,16 +46,13 @@ const Rates = ({item, navigation}) => {
           <View style={styles.discountContainer}>
             <PercentageIcon size={15} color={'#0F8B00'} />
             <Text style={styles.discountText}>
-              {Math.round(
-                ((item.price - item.selling_price) / item.price) * 100,
-              )}
-              % discount on current plan
+              {percentageDiscount}% discount on current plan
             </Text>
           </View>
         </View>
         <View style={styles.priceContainer}>
-          <Text style={styles.oldPrice}>₹ {item.price}/year</Text>
-          <Text style={styles.newPrice}>₹ {item.selling_price}/ year</Text>
+          <Text style={styles.oldPrice}>₹ {markedPrice}/year</Text>
+          <Text style={styles.newPrice}>₹ {sellingPrice}/ year</Text>
         </View>
       </View>
       <View>
@@ -94,7 +88,7 @@ const BuyGps = ({navigation}) => {
   const renderRates = ({item}) => <Rates item={item} navigation={navigation} />;
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <View>
       {gpsPlansLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : gpsPlansError ? (
@@ -104,9 +98,10 @@ const BuyGps = ({navigation}) => {
           data={gpsPlansData}
           renderItem={renderRates}
           keyExtractor={item => item.id.toString()}
+          showsVerticalScrollIndicator={false}
         />
       )}
-    </ScrollView>
+    </View>
   );
 };
 
@@ -158,5 +153,16 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     color: '#0F8B00',
+  },
+  planContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  planText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 14,
+    textTransform: 'capitalize',
   },
 });

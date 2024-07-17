@@ -1,19 +1,27 @@
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 import TextInputField from '../../Components/TextInputField';
 import {textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  placeGpsOrderFailure,
+  placeGpsOrderRequest,
+} from '../../Store/Actions/Actions';
 
 const DeliveryDetails = ({navigation, route}) => {
-  const {gpsCount} = route.params;
-  //   console.log(4444, route);
+  const {gpsCount, pricePerDevice} = route.params;
+  //   console.log(4444, route);gpsOrderStatus
 
   // State variables to store input values
   const [fullName, setFullName] = useState('');
   const [alternativePhoneNumber, setAlternativePhoneNumber] = useState('');
   const [rcNumbers, setRcNumbers] = useState(Array(gpsCount).fill(''));
   const [deliveryAddress, setDeliveryAddress] = useState('');
+  const dispatch = useDispatch();
+
+  const {gpsOrderStatus} = useSelector(state => state.data);
 
   // Handler for RC Number input changes
   const handleRcNumberChange = (text, index) => {
@@ -24,22 +32,39 @@ const DeliveryDetails = ({navigation, route}) => {
 
   // Handler for Continue button press
   const handleContinue = () => {
-    console.log({
-      fullName,
-      alternativePhoneNumber,
-      rcNumbers,
-      deliveryAddress,
-    });
-
-    // Navigate to paymentGPS
-    navigation.navigate('paymentGPS');
+    dispatch(
+      placeGpsOrderRequest(
+        fullName,
+        alternativePhoneNumber,
+        5,
+        gpsCount,
+        rcNumbers,
+        deliveryAddress,
+      ),
+    );
   };
+
+  useEffect(() => {
+    if (gpsOrderStatus !== null) {
+      if (gpsOrderStatus === 200) {
+        navigation.navigate('paymentGPS');
+        dispatch(placeGpsOrderFailure());
+      }
+    }
+    return () => {
+      setFullName('');
+      setAlternativePhoneNumber('');
+      setRcNumbers(Array(gpsCount).fill(''));
+      setDeliveryAddress('');
+    };
+  }, [gpsOrderStatus]);
 
   return (
     <View style={{flex: 1}}>
       <PurchaseGpsHeader
-        footertitle={`Total amount to be paid: ₹ ${gpsCount * 2000}*`}
+        footertitle={`Total amount to be paid: ₹ ${gpsCount * pricePerDevice}`}
         icon={false}
+        onPress={() => navigation.navigate('BuyGPS')}
       />
       <ScrollView
         style={styles.listContainer}
@@ -58,6 +83,7 @@ const DeliveryDetails = ({navigation, route}) => {
             value={alternativePhoneNumber}
             hint={'Enter Alternative Phone Number'}
             onChangeText={setAlternativePhoneNumber}
+            isPhone={true}
           />
         </View>
 

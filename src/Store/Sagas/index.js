@@ -66,6 +66,7 @@ function* rootSaga() {
   yield takeLatest(actions.FETCH_GPS_STOPS_REQUEST, saga.fetchGpsStops);
   yield takeLatest(actions.FETCH_GPS_TRIPS_REQUEST, saga.fetchGpsTrips);
   yield takeLatest(actions.FETCH_GPS_PLANS_REQUEST, saga.fetchGpsPlans);
+  yield takeLatest(actions.PLACE_GPS_ORDER_REQUEST, saga.placeGpsOrderSaga);
   yield takeLatest(
     actions.FETCH_GPS_NOTIFICATIONS_REQUEST,
     saga.fetchGpsNotifications,

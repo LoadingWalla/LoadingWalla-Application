@@ -189,6 +189,10 @@ const initialState = {
   rechargePlansData: [],
   gpsPlansLoading: false,
   gpsPlansError: null,
+  // gps order
+  gpsOrderLoading: false,
+  gpsOrderData: null,
+  gpsOrderStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1381,12 +1385,6 @@ const reducer = (state = initialState, action) => {
         gpsPlansError: null,
         gpsPlansData: null,
       };
-    // case actionTypes.FETCH_GPS_PLANS_SUCCESS:
-    //   return updateState(state, {
-    //     gpsPlansLoading: false,
-    //     gpsPlansError: null,
-    //     gpsPlansData: payload,
-    //   });
     case actionTypes.FETCH_GPS_PLANS_SUCCESS:
       const gpsPlans = action.payload.filter(plan => plan.plan_type === 1);
       const rechargePlans = action.payload.filter(plan => plan.plan_type !== 1);
@@ -1401,6 +1399,26 @@ const reducer = (state = initialState, action) => {
         gpsPlansLoading: false,
         gpsPlansError: payload,
         gpsPlansData: null,
+      });
+
+    case actionTypes.PLACE_GPS_ORDER_REQUEST:
+      return {
+        ...state,
+        gpsOrderLoading: true,
+        gpsOrderData: null,
+        gpsOrderStatus: null,
+      };
+    case actionTypes.PLACE_GPS_ORDER_SUCCESS:
+      return updateState(state, {
+        gpsOrderLoading: false,
+        gpsOrderData: payload,
+        gpsOrderStatus: payload?.status,
+      });
+    case actionTypes.PLACE_GPS_ORDER_FAILURE:
+      return updateState(state, {
+        gpsOrderLoading: false,
+        gpsOrderStatus: null,
+        gpsOrderData: null,
       });
 
     // default state

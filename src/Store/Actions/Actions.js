@@ -893,12 +893,13 @@ export const fetchMapDataFailure = error => ({
 });
 
 // create order
-export const initCreateOrder = (amount, userId) => {
+export const initCreateOrder = (amount, userId, order_type) => {
   // console.log(333333333, amount, userId);
   return {
     type: actionTypes.CREATE_ORDER_REQUEST,
     amount,
     userId,
+    order_type,
   };
 };
 
@@ -1211,5 +1212,33 @@ export const fetchGpsPlansSuccess = data => ({
 
 export const fetchGpsPlansFailure = error => ({
   type: actionTypes.FETCH_GPS_PLANS_FAILURE,
+  payload: error,
+});
+
+// GPS delivery details
+export const placeGpsOrderRequest = (
+  name,
+  mobile,
+  plan_id,
+  qty,
+  rc_numbers,
+  address,
+) => ({
+  type: actionTypes.PLACE_GPS_ORDER_REQUEST,
+  name,
+  mobile,
+  plan_id,
+  qty,
+  rc_numbers,
+  address,
+});
+
+export const placeGpsOrderSuccess = payload => ({
+  type: actionTypes.PLACE_GPS_ORDER_SUCCESS,
+  payload,
+});
+
+export const placeGpsOrderFailure = error => ({
+  type: actionTypes.PLACE_GPS_ORDER_FAILURE,
   payload: error,
 });
