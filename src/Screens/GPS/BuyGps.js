@@ -38,7 +38,9 @@ const Rates = ({item, navigation}) => {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('GpsType', {sellingPrice})}
+      onPress={() =>
+        navigation.navigate('GpsType', {sellingPrice, plan_id: item.id})
+      }
       style={styles.rateContainer}>
       <View style={styles.rateHeader}>
         <View style={{borderWidth: 0, padding: 8}}>
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     color: titleColor,
+    textTransform: 'capitalize',
   },
   discountContainer: {
     flexDirection: 'row',

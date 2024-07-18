@@ -21,11 +21,13 @@ const SelectGpsType = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData} = useSelector(state => state.data);
   const [gpsCount, setGpsCount] = useState(1);
+  // console.log(33333, route);
   // const pricePerDevice =
   //   gpsPlansData[0].gps_price +
   //   gpsPlansData[0].recharge_price -
   //   gpsPlansData[0].discount; // Assuming 2000 is the price per device
   const pricePerDevice = route.params.sellingPrice;
+  const plan_id = route.params.plan_id;
 
   useFocusEffect(
     React.useCallback(() => {
@@ -108,6 +110,7 @@ const SelectGpsType = ({navigation, route}) => {
                 navigation.navigate('DeliveryDetails', {
                   gpsCount,
                   pricePerDevice,
+                  plan_id,
                 });
               }}
               title={'Continue'}

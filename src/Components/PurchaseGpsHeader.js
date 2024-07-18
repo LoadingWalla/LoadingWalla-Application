@@ -4,22 +4,31 @@ import {backgroundColorNew, titleColor} from '../Color/color';
 import EditIcon from '../../assets/SVG/svg/EditIcon';
 import PercentageIcon from '../../assets/SVG/svg/PercentageIcon';
 
-const PurchaseGpsHeader = ({icon, footertitle, onPress}) => {
+const PurchaseGpsHeader = ({
+  icon,
+  footertitle,
+  onPress,
+  edit,
+  planName,
+  planValidity,
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mainBox}>
         <View>
-          <View style={styles.mainBoxHeader}>
-            <Text style={styles.planText}>1 Year GPS plan</Text>
-            <TouchableOpacity style={styles.editButton} onPress={onPress}>
-              <EditIcon size={13} color={backgroundColorNew} />
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
+          <View style={styles.mainBoxHeader(edit)}>
+            <Text style={styles.planText}>{planName}</Text>
+            {edit && (
+              <TouchableOpacity style={styles.editButton} onPress={onPress}>
+                <EditIcon size={13} color={backgroundColorNew} />
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <View style={styles.mainBoxBottom}>
           <Text style={styles.mainBoxBottomText}>
-            The plan will be valid till JUNE 20, 2025
+            This plan will be valid for {planValidity} days
           </Text>
         </View>
       </View>
@@ -47,19 +56,20 @@ const styles = StyleSheet.create({
     zIndex: 10,
     elevation: 2,
   },
-  mainBoxHeader: {
+  mainBoxHeader: edit => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: '#00000029',
-    paddingBottom: 30,
+    paddingBottom: edit ? 30 : 15,
     paddingVertical: 10,
-  },
+  }),
   planText: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
     marginLeft: 10,
+    textTransform: 'capitalize',
   },
   editButton: {
     flexDirection: 'row',

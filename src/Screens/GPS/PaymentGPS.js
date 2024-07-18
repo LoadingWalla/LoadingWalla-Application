@@ -19,6 +19,7 @@ import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import CheckBox from '@react-native-community/checkbox';
 import Button from '../../Components/Button';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
+import {useSelector} from 'react-redux';
 
 const ReusableItem = ({title, value}) => {
   return (
@@ -36,20 +37,31 @@ const ReusableItem = ({title, value}) => {
   );
 };
 
-const PaymentGPS = ({navigation}) => {
+const PaymentGPS = ({navigation, route}) => {
+  const {plan_id, gpsCount} = route.params;
+  // console.log(3333, route);
   const [isChecked, setIsChecked] = useState(true);
   const handleCheckBoxChange = () => {
     setIsChecked(!isChecked);
   };
 
+  const {gpsPlansData} = useSelector(state => state.data);
+  const filteredPlanData = gpsPlansData.find(plan => plan.id === plan_id);
+  // console.log(55555, filteredPlanData);
+
   return (
     <View style={styles.container}>
       <PurchaseGpsHeader
         icon={true}
-        footertitle={'YAY! You saved ₹ 200 on this purchase'}
+        edit={false}
+        planName={filteredPlanData?.plan_name}
+        planValidity={filteredPlanData?.validity}
+        footertitle={`YAY! You saved ₹ ${
+          filteredPlanData.discount * gpsCount
+        } on this purchase`}
       />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-        <View style={styles.scrollContainer}>
+        {/* <View style={styles.scrollContainer}>
           <View
             style={{
               //   borderWidth: 1,
@@ -63,10 +75,6 @@ const PaymentGPS = ({navigation}) => {
             <View>
               <View
                 style={{
-                  //   flexDirection: 'row',
-                  //   justifyContent: 'space-between',
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#00000029',
                   paddingBottom: 10,
                   padding: 10,
                 }}>
@@ -91,39 +99,35 @@ const PaymentGPS = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
+          </View>
+        </View> */}
+        <View style={styles.scrollContainer}>
+          <View
+            style={{borderRadius: 8, backgroundColor: '#FFFFFF', elevation: 2}}>
+            <Text style={styles.paymentDetailText}>Payment Details</Text>
             <View
               style={{
+                // borderWidth: 1,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                padding: 5,
-                alignItems: 'center',
+                padding: 10,
+                paddingBottom: 15,
+                borderBottomWidth: 1,
+                borderColor: '#00000029',
               }}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontFamily: 'PlusJakartaSans-SemiBold',
-                  fontSize: 14,
-                  color: PrivacyPolicy,
-                }}>
-                Use Loading Walla coins?
-              </Text>
-              <CheckBox
-                value={isChecked}
-                onValueChange={handleCheckBoxChange}
-                tintColors={{true: GradientColor2, false: GradientColor4}}
-                style={styles.checkBoxStyle}
-              />
+              <View style={{flexDirection: 'row'}}>
+                <Text>Total Amount</Text>
+                <Text>(Inc. of taxes)</Text>
+              </View>
+              <Text>₹ 99</Text>
             </View>
-            <Text
-              style={{
-                // borderWidth: 1,
-                paddingHorizontal: 5,
-                fontFamily: 'PlusJakartaSans-Bold',
-                fontSize: 16,
-                paddingBottom: 10,
-              }}>
-              ₹ 2,000 Available
-            </Text>
+            <ReusableItem title={'Plan Amount'} value={'₹ 99'} />
+            <ReusableItem title={'Coupon discount'} value={'₹ 0'} />
+            <ReusableItem title={'Loading Walla Coins used'} value={'₹ 99'} />
+            <ReusableItem
+              title={'Available Loading Walla coins'}
+              value={'₹ 1,899'}
+            />
           </View>
         </View>
         <View style={styles.scrollContainer}>

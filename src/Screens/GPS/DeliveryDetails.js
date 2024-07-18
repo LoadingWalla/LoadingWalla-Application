@@ -5,14 +5,15 @@ import TextInputField from '../../Components/TextInputField';
 import {textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 import {
   placeGpsOrderFailure,
   placeGpsOrderRequest,
 } from '../../Store/Actions/Actions';
 
 const DeliveryDetails = ({navigation, route}) => {
-  const {gpsCount, pricePerDevice} = route.params;
-  //   console.log(4444, route);gpsOrderStatus
+  const {gpsCount, pricePerDevice, plan_id} = route.params;
+  // console.log(4444, route);
 
   // State variables to store input values
   const [fullName, setFullName] = useState('');
@@ -21,7 +22,9 @@ const DeliveryDetails = ({navigation, route}) => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const dispatch = useDispatch();
 
-  const {gpsOrderStatus} = useSelector(state => state.data);
+  const {gpsOrderStatus, gpsPlansData} = useSelector(state => state.data);
+  const filteredPlanData = gpsPlansData.find(plan => plan.id === plan_id);
+  // console.log(55555, filteredPlanData);
 
   // Handler for RC Number input changes
   const handleRcNumberChange = (text, index) => {
@@ -32,22 +35,40 @@ const DeliveryDetails = ({navigation, route}) => {
 
   // Handler for Continue button press
   const handleContinue = () => {
-    dispatch(
-      placeGpsOrderRequest(
-        fullName,
-        alternativePhoneNumber,
-        5,
-        gpsCount,
-        rcNumbers,
-        deliveryAddress,
-      ),
-    );
+    // console.log(
+    //   fullName,
+    //   alternativePhoneNumber,
+    //   plan_id,
+    //   gpsCount,
+    //   rcNumbers,
+    //   deliveryAddress,
+    // );
+    navigation.navigate('paymentGPS', {plan_id, gpsCount});
+    // if (
+    //   !fullName ||
+    //   !alternativePhoneNumber ||
+    //   !deliveryAddress ||
+    //   rcNumbers.includes('')
+    // ) {
+    //   Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+    //   return;
+    // }
+    // dispatch(
+    //   placeGpsOrderRequest(
+    //     fullName,
+    //     alternativePhoneNumber,
+    //     plan_id,
+    //     gpsCount,
+    //     rcNumbers,
+    //     deliveryAddress,
+    //   ),
+    // );
   };
 
   useEffect(() => {
     if (gpsOrderStatus !== null) {
       if (gpsOrderStatus === 200) {
-        navigation.navigate('paymentGPS');
+        navigation.navigate('paymentGPS', {plan_id, gpsCount});
         dispatch(placeGpsOrderFailure());
       }
     }
@@ -64,6 +85,9 @@ const DeliveryDetails = ({navigation, route}) => {
       <PurchaseGpsHeader
         footertitle={`Total amount to be paid: ₹ ${gpsCount * pricePerDevice}`}
         icon={false}
+        edit={true}
+        planName={filteredPlanData?.plan_name}
+        planValidity={filteredPlanData?.validity}
         onPress={() => navigation.navigate('BuyGPS')}
       />
       <ScrollView
