@@ -894,7 +894,7 @@ export const fetchMapDataFailure = error => ({
 
 // create order
 export const initCreateOrder = (amount, userId, order_type) => {
-  // console.log(333333333, amount, userId);
+  // console.log('createorder', amount, userId, order_type);
   return {
     type: actionTypes.CREATE_ORDER_REQUEST,
     amount,
@@ -1240,5 +1240,21 @@ export const placeGpsOrderSuccess = payload => ({
 
 export const placeGpsOrderFailure = error => ({
   type: actionTypes.PLACE_GPS_ORDER_FAILURE,
+  payload: error,
+});
+
+// gps order details
+export const fetchGpsOrderDetailRequest = id => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_REQUEST,
+  id,
+});
+
+export const fetchGpsOrderDetailSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_SUCCESS,
+  payload,
+});
+
+export const fetchGpsOrderDetailFailure = error => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_FAILURE,
   payload: error,
 });

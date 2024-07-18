@@ -936,7 +936,7 @@ export function* fetchMapDataSaga({from_id, to_id}) {
 export function* createOrder({amount, userId, order_type}) {
   try {
     const body = {amount, userId, order_type};
-    // console.log(8888888, body);
+    // console.log('createordersaga', body);
     const data = yield API.post('payment/order', body);
     // console.log('API response------createOrder', data);
     if (data?.status === 200) {
@@ -959,7 +959,7 @@ export function* verifyPayment({paymentId, orderId}) {
     const body = {razorpay_payment_id: paymentId, razorpay_order_id: orderId};
     // console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
-    // console.log('API response------PaymentVerify', data);
+    console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.verifyPaymentSuccess(data));
     } else {
@@ -1165,7 +1165,7 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
       username,
       password,
     );
-    console.log('Gps Replay', data);
+    // console.log('Gps Replay', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsStopsSuccess(data?.data));
@@ -1187,7 +1187,7 @@ export function* fetchGpsTrips({username, password, deviceId, from, to}) {
       username,
       password,
     );
-    console.log('Gps Trips', data);
+    // console.log('Gps Trips', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsTripsSuccess(data?.data));
@@ -1205,7 +1205,7 @@ export function* fetchGpsTrips({username, password, deviceId, from, to}) {
 export function* fetchGpsPlans() {
   try {
     const data = yield API.get('gps-plans');
-    console.log('Gps Plan', data);
+    // console.log('Gps Plan', data);
     if (data?.data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsPlansSuccess(data?.data?.gps_plans));
@@ -1228,7 +1228,7 @@ export function* placeGpsOrderSaga({
   rc_numbers,
   address,
 }) {
-  console.log(name, mobile, plan_id, qty, rc_numbers, address);
+  // console.log(name, mobile, plan_id, qty, rc_numbers, address);
   try {
     const body = new FormData();
     body.append('name', name);
@@ -1250,6 +1250,24 @@ export function* placeGpsOrderSaga({
     }
   } catch (error) {
     yield put(actions.placeGpsOrderFailure());
+    // console.log('error', error);
+  }
+}
+
+// gps gps order details
+export function* fetchGpsOrderDetail({id}) {
+  try {
+    const data = yield API.get(`gps-order-get/${id}`);
+    // console.log('Gps Plan', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsOrderDetailSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsOrderDetailFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsOrderDetailFailure(error.message));
     // console.log('error', error);
   }
 }

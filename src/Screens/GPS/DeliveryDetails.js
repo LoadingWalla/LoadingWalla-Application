@@ -22,8 +22,10 @@ const DeliveryDetails = ({navigation, route}) => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const dispatch = useDispatch();
 
-  const {gpsOrderStatus, gpsPlansData} = useSelector(state => state.data);
-  const filteredPlanData = gpsPlansData.find(plan => plan.id === plan_id);
+  const {gpsOrderStatus, gpsPlansData, gpsOrderData} = useSelector(
+    state => state.data,
+  );
+  const filteredPlanData = gpsPlansData?.find(plan => plan.id === plan_id);
   // console.log(55555, filteredPlanData);
 
   // Handler for RC Number input changes
@@ -43,32 +45,37 @@ const DeliveryDetails = ({navigation, route}) => {
     //   rcNumbers,
     //   deliveryAddress,
     // );
-    navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    // if (
-    //   !fullName ||
-    //   !alternativePhoneNumber ||
-    //   !deliveryAddress ||
-    //   rcNumbers.includes('')
-    // ) {
-    //   Toast.show('Please fill all the fields before continuing.', Toast.LONG);
-    //   return;
-    // }
-    // dispatch(
-    //   placeGpsOrderRequest(
-    //     fullName,
-    //     alternativePhoneNumber,
-    //     plan_id,
-    //     gpsCount,
-    //     rcNumbers,
-    //     deliveryAddress,
-    //   ),
-    // );
+    // navigation.navigate('paymentGPS', {plan_id, gpsCount});
+    if (
+      !fullName ||
+      !alternativePhoneNumber ||
+      !deliveryAddress ||
+      rcNumbers.includes('')
+    ) {
+      Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+      return;
+    }
+    dispatch(
+      placeGpsOrderRequest(
+        fullName,
+        alternativePhoneNumber,
+        plan_id,
+        gpsCount,
+        rcNumbers,
+        deliveryAddress,
+      ),
+    );
   };
 
   useEffect(() => {
     if (gpsOrderStatus !== null) {
       if (gpsOrderStatus === 200) {
-        navigation.navigate('paymentGPS', {plan_id, gpsCount});
+        navigation.navigate('paymentGPS', {
+          plan_id,
+          gpsCount,
+          gpsOrderId: gpsOrderData.id,
+          totalAmount: gpsCount * pricePerDevice,
+        });
         dispatch(placeGpsOrderFailure());
       }
     }

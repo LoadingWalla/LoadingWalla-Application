@@ -91,6 +91,7 @@ import PaymentGPS from '../Screens/GPS/PaymentGPS';
 import GpsTrackings from '../Screens/GPS/GpsTrackings';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
+import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1641,6 +1642,25 @@ const Navigation = ({language}) => {
           headerRight: () => (
             <HeaderHelpButton shareIcon={false} navigation={navigation} />
           ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="purchasingStatus"
+        component={PurchasingStatus}
+        options={({route}) => ({
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

@@ -33,9 +33,6 @@ const SelectGpsType = ({navigation, route}) => {
     React.useCallback(() => {
       // Disconnect WebSocket and call REST APIs
       dispatch(websocketDisconnect());
-      return () => {
-        dispatch(websocketConnect(gpsTokenData?.cookie));
-      };
     }, [dispatch, gpsTokenData]),
   );
 

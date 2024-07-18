@@ -193,6 +193,11 @@ const initialState = {
   gpsOrderLoading: false,
   gpsOrderData: null,
   gpsOrderStatus: null,
+  // gps order Details
+  gpsOrderDetailsLoading: false,
+  gpsOrderDetailsData: null,
+  gpsOrderDetailsStatus: null,
+  gpsPriceDetailsData: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1411,14 +1416,38 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PLACE_GPS_ORDER_SUCCESS:
       return updateState(state, {
         gpsOrderLoading: false,
-        gpsOrderData: payload,
+        gpsOrderData: payload?.data?.data,
         gpsOrderStatus: payload?.status,
       });
     case actionTypes.PLACE_GPS_ORDER_FAILURE:
       return updateState(state, {
         gpsOrderLoading: false,
         gpsOrderStatus: null,
-        gpsOrderData: null,
+        // gpsOrderData: null,
+      });
+
+    // gps order details
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_REQUEST:
+      return {
+        ...state,
+        gpsOrderDetailsLoading: true,
+        gpsOrderDetailsData: null,
+        gpsPriceDetailsData: null,
+        gpsOrderDetailsStatus: null,
+      };
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_SUCCESS:
+      return updateState(state, {
+        gpsOrderDetailsLoading: false,
+        gpsOrderDetailsData: payload?.data?.order,
+        gpsPriceDetailsData: payload?.data?.pricing,
+        gpsOrderDetailsStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_FAILURE:
+      return updateState(state, {
+        gpsOrderDetailsLoading: false,
+        gpsOrderDetailsStatus: null,
+        gpsOrderDetailsData: null,
+        gpsPriceDetailsData: null,
       });
 
     // default state
