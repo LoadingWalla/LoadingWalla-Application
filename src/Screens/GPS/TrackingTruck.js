@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
@@ -51,6 +51,7 @@ const TrackingTruck = ({navigation, route}) => {
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const mapRef = useRef(null);
 
   const device = useSelector(state =>
     state.data.wsDevices.find(d => d.id === deviceId),
@@ -76,9 +77,21 @@ const TrackingTruck = ({navigation, route}) => {
       setLivePositions(position);
       if (position.length > 0) {
         setLoading(false);
+        animateToPosition(position[position.length - 1]);
       }
     }
   }, [wsMessages, wsConnected]);
+
+  const animateToPosition = position => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
+  };
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -204,16 +217,19 @@ const TrackingTruck = ({navigation, route}) => {
         </View>
         <View style={styles.mapView}>
           <MapView
+            ref={mapRef}
             style={StyleSheet.absoluteFillObject}
             initialRegion={{
-              latitude:
-                // livePositions[livePositions.length - 1]?.latitude ||
-                positions[positions.length - 1]?.latitude,
-              longitude:
-                // livePositions[livePositions.length - 1]?.longitude ||
-                positions[positions.length - 1]?.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+              latitude: positions[positions.length - 1]?.latitude,
+              longitude: positions[positions.length - 1]?.longitude,
+              // latitude: livePositions
+              //   ? livePositions[0]?.latitude
+              //   : positions[positions.length - 1]?.latitude,
+              // longitude: livePositions
+              //   ? livePositions[0]?.longitude
+              //   : positions[positions.length - 1]?.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
             }}>
             {positions[0]?.attributes?.motion && (
               <Polyline

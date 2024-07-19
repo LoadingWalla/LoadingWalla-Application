@@ -21,7 +21,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
@@ -120,8 +119,17 @@ export default function PlayJourney({navigation, route}) {
       interval = setInterval(() => {
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
-          setCurrentPosition(coordinates[newIndex]);
+          const newPosition = coordinates[newIndex];
+          setCurrentPosition(newPosition);
           setSliderValue(newIndex / (coordinates?.length - 1));
+          if (mapRef.current && newPosition) {
+            mapRef.current.animateToRegion({
+              latitude: newPosition.latitude,
+              longitude: newPosition.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+          }
           return newIndex;
         });
       }, 1000 / playbackSpeed);
@@ -249,11 +257,8 @@ export default function PlayJourney({navigation, route}) {
                       latitude: currentPosition.latitude,
                       longitude: currentPosition.longitude,
                     }}
-                    // title={'Current Position'}
-                    // description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}
-                  >
-                    <BatteryIcon size={30} color={'red'} />
-                  </Marker>
+                    pinColor="green"
+                  />
                 )}
                 {gpsStopsData?.map((stop, index) => (
                   <Marker
@@ -310,7 +315,16 @@ export default function PlayJourney({navigation, route}) {
                 setSliderValue(value);
                 const newIndex = Math.round(value * (coordinates?.length - 1));
                 setCurrentIndex(newIndex);
-                setCurrentPosition(coordinates[newIndex]);
+                const newPosition = coordinates[newIndex];
+                setCurrentPosition(newPosition);
+                if (mapRef.current && newPosition) {
+                  mapRef.current.animateToRegion({
+                    latitude: newPosition.latitude,
+                    longitude: newPosition.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  });
+                }
               }}
             />
           </View>
@@ -517,7 +531,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   calendarIconBox: {
-    // borderWidth: 1,
     padding: 8,
     width: 40,
     height: 40,

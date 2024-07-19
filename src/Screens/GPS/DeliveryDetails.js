@@ -37,34 +37,26 @@ const DeliveryDetails = ({navigation, route}) => {
 
   // Handler for Continue button press
   const handleContinue = () => {
-    // console.log(
-    //   fullName,
-    //   alternativePhoneNumber,
-    //   plan_id,
-    //   gpsCount,
-    //   rcNumbers,
-    //   deliveryAddress,
+    navigation.navigate('paymentGPS', {plan_id, gpsCount});
+    // if (
+    //   !fullName ||
+    //   !alternativePhoneNumber ||
+    //   !deliveryAddress ||
+    //   rcNumbers.includes('')
+    // ) {
+    //   Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+    //   return;
+    // }
+    // dispatch(
+    //   placeGpsOrderRequest(
+    //     fullName,
+    //     alternativePhoneNumber,
+    //     plan_id,
+    //     gpsCount,
+    //     rcNumbers,
+    //     deliveryAddress,
+    //   ),
     // );
-    // navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    if (
-      !fullName ||
-      !alternativePhoneNumber ||
-      !deliveryAddress ||
-      rcNumbers.includes('')
-    ) {
-      Toast.show('Please fill all the fields before continuing.', Toast.LONG);
-      return;
-    }
-    dispatch(
-      placeGpsOrderRequest(
-        fullName,
-        alternativePhoneNumber,
-        plan_id,
-        gpsCount,
-        rcNumbers,
-        deliveryAddress,
-      ),
-    );
   };
 
   useEffect(() => {

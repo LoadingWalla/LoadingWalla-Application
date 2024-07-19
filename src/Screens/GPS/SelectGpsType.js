@@ -22,10 +22,6 @@ const SelectGpsType = ({navigation, route}) => {
   const {gpsTokenData, gpsPlansData} = useSelector(state => state.data);
   const [gpsCount, setGpsCount] = useState(1);
   // console.log(33333, route);
-  // const pricePerDevice =
-  //   gpsPlansData[0].gps_price +
-  //   gpsPlansData[0].recharge_price -
-  //   gpsPlansData[0].discount; // Assuming 2000 is the price per device
   const pricePerDevice = route.params.sellingPrice;
   const plan_id = route.params.plan_id;
 
@@ -124,21 +120,19 @@ const SelectGpsType = ({navigation, route}) => {
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
+    justifyContent: 'flex-end',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   screenModalView: {
-    marginTop: '90%',
     flex: 1,
     justifyContent: 'center',
-    // alignItems: 'center',
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     backgroundColor: pageBackground,
-    // borderWidth: 3,
-    // borderColor: 'red',
+    maxHeight: 250,
   },
   closeButton: {
     position: 'absolute',
@@ -146,7 +140,6 @@ const styles = StyleSheet.create({
     top: 15,
     zIndex: 10,
     color: titleColor,
-    // borderWidth: 1,
   },
   header: {
     position: 'absolute',
@@ -157,7 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 10,
-    // borderWidth: 1,
   },
   headerTitle: {
     color: titleColor,
@@ -165,13 +157,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     justifyContent: 'center',
     fontFamily: 'PlusJakartaSans-SemiBold',
-    // borderWidth: 1,
-    // flexWrap: 'wrap',
     maxWidth: 200,
     marginLeft: 10,
   },
   centeredView: {
-    // borderWidth: 1,
     paddingHorizontal: 20,
   },
   buttonTitile: {

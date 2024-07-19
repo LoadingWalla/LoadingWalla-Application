@@ -6,7 +6,12 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect} from 'react';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import {
+  backgroundColorNew,
+  pageBackground,
+  textColor,
+  titleColor,
+} from '../../Color/color';
 import Button from '../../Components/Button';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,7 +20,6 @@ import {
   createOrderFailure,
   fetchGpsOrderDetailRequest,
   initCreateOrder,
-  initProfile,
   initVerifyPaymentRequest,
 } from '../../Store/Actions/Actions';
 import AnimatedText from '../../Components/AnimatedText';
@@ -30,10 +34,23 @@ const ReusableSummaryItem = ({title, value}) => (
   </View>
 );
 
-const ReusableItem = ({title, value}) => {
+const ReusableItem = ({title, value, isTax}) => {
   return (
     <View style={styles.reusableItemContainer}>
-      <Text style={styles.reusableItemContainerText}>{title}</Text>
+      <View style={{flexDirection: 'row'}}>
+        <Text style={styles.reusableItemContainerText}>{title}</Text>
+        {isTax && (
+          <Text
+            style={{
+              fontFamily: 'PlusJakartaSans-Regular',
+              fontSize: 12,
+              textAlign: 'center',
+              marginTop: 5,
+            }}>
+            {'  (Inc. of taxes)'}
+          </Text>
+        )}
+      </View>
       <Text style={styles.reusableItemContainerText}>{value}</Text>
     </View>
   );
@@ -53,6 +70,13 @@ const PaymentGPS = ({navigation, route}) => {
     verifyPaymentStatus,
   } = useSelector(state => state.data);
   const filteredPlanData = gpsPlansData?.find(plan => plan.id === plan_id);
+  const markedPrice =
+    Math.ceil(filteredPlanData.gps_price * 1.18) +
+    Math.ceil(filteredPlanData.recharge_price * 1.18);
+  const sellingPrice = markedPrice - filteredPlanData.discount;
+  // const percentageDiscount = Math.ceil(
+  //   ((markedPrice - sellingPrice) / markedPrice) * 100,
+  // );
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -202,25 +226,78 @@ const PaymentGPS = ({navigation, route}) => {
             </View>
             <View style={styles.totalAmountContainer}>
               <View style={styles.totalAmountTextContainer}>
-                <Text>Total Amount</Text>
-                <Text>(Inc. of taxes)</Text>
+                <Text
+                  style={{fontFamily: 'PlusJakartaSans-Bold', fontSize: 16}}>
+                  Total Amount{' '}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'PlusJakartaSans-Regular',
+                    fontSize: 12,
+                    textAlign: 'center',
+                    marginTop: 5,
+                  }}>
+                  (Inc. of taxes)
+                </Text>
               </View>
-              <Text>₹ 99</Text>
+              <Text style={{fontFamily: 'PlusJakartaSans-Bold', fontSize: 16}}>
+                ₹ {markedPrice}
+              </Text>
             </View>
-            <ReusableItem title={'Plan Amount'} value={'₹ 99'} />
-            <ReusableItem title={'Coupon discount'} value={'₹ 0'} />
-            <ReusableItem title={'Loading Walla Coins used'} value={'₹ 99'} />
-            <ReusableItem
-              title={'Available Loading Walla coins'}
-              value={'₹ 1,899'}
-            />
+            <View style={{backgroundColor: '#FAFAFA'}}>
+              <ReusableItem title={'GPS'} value={'₹ 99'} isTax={true} />
+              <View style={{paddingHorizontal: 10, marginTop: -10}}>
+                <ReusableItem title={'GPS Charges'} value={'₹ 0'} />
+              </View>
+              <View style={{paddingHorizontal: 10, marginTop: -10}}>
+                <ReusableItem
+                  title={'GPS GST Charges'}
+                  value={'₹ 0'}
+                  isTax={true}
+                />
+              </View>
+            </View>
+            <View style={{backgroundColor: '#FAFAFA'}}>
+              <ReusableItem
+                title={'Recharge + Services'}
+                value={'₹ 99'}
+                isTax={true}
+              />
+              <View style={{paddingHorizontal: 10, marginTop: -10}}>
+                <ReusableItem
+                  title={'Recharge + Services Charges'}
+                  value={'₹ 0'}
+                />
+              </View>
+              <View style={{paddingHorizontal: 10, marginTop: -10}}>
+                <ReusableItem
+                  title={'Recharge + Services GST'}
+                  value={'₹ 0'}
+                  isTax={true}
+                />
+              </View>
+            </View>
+            <View style={styles.discountView}>
+              <Text style={styles.discountText}>Loading Walla discount</Text>
+              <Text style={styles.discountText}>
+                ₹ {filteredPlanData?.discount * gpsCount}
+              </Text>
+            </View>
           </View>
         </View>
       </ScrollView>
       <View style={styles.footerContainer}>
         <View style={styles.footerTextContainer}>
           <Text style={styles.amountText}>Amount to be paid</Text>
-          <Text style={styles.amountValue}>₹ {totalAmount}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+            }}>
+            <Text style={styles.markedPriceText}>₹ {markedPrice}</Text>
+            <Text style={styles.sellingPriceText}>₹ {totalAmount}</Text>
+          </View>
         </View>
         <Button
           title={'Pay Now'}
@@ -261,7 +338,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     paddingBottom: 15,
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: '#00000029',
   },
   totalAmountTextContainer: {
@@ -291,14 +368,25 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
+  discountView: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF3F0',
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
   paymentDetailText: {
     fontSize: 14,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    // padding: 10,
-    // backgroundColor: '#FFF3F0',
-    // borderTopLeftRadius: 6,
-    // borderTopRightRadius: 6,
+  },
+  discountText: {
+    fontSize: 14,
+    color: '#3BA700',
+    fontFamily: 'PlusJakartaSans-SemiBold',
   },
   footerContainer: {
     flexDirection: 'row',
@@ -320,6 +408,18 @@ const styles = StyleSheet.create({
   amountValue: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 18,
+  },
+  markedPriceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    color: '#EF4D23',
+    textDecorationLine: 'line-through',
+    marginRight: 10,
+  },
+  sellingPriceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 20,
+    color: '#3BA700',
   },
   editButton: {
     flexDirection: 'row',

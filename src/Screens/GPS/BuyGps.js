@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect} from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
-import {titleColor} from '../../Color/color';
+import {backgroundColorNew, titleColor} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -90,9 +90,11 @@ const BuyGps = ({navigation}) => {
   const renderRates = ({item}) => <Rates item={item} navigation={navigation} />;
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       {gpsPlansLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color={backgroundColorNew} />
+        </View>
       ) : gpsPlansError ? (
         <Text>Error: {gpsPlansError}</Text>
       ) : (
@@ -168,4 +170,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textTransform: 'capitalize',
   },
+  loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
 });
