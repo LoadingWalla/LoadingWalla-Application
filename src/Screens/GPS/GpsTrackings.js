@@ -41,11 +41,9 @@ const GpsTrackings = ({navigation}) => {
 
   useEffect(() => {
     if (gpsTokenData) {
-      const cookie = gpsTokenData.cookie;
+      const {cookie, email, password} = gpsTokenData;
       dispatch(websocketConnect(cookie));
-      dispatch(
-        fetchGpsDevicesRequest(gpsTokenData.email, gpsTokenData.password),
-      );
+      dispatch(fetchGpsDevicesRequest(email, password));
     } else {
       dispatch(fetchTokenRequest());
     }
@@ -59,7 +57,7 @@ const GpsTrackings = ({navigation}) => {
         fontFamily: 'PlusJakartaSans-SemiBold',
         textColor: '#000000',
         backgroundColor: '#FFD7CC',
-        marginBottom: 70,
+        // marginBottom: 70,
       });
     }
   }, [wsError]);
@@ -67,7 +65,7 @@ const GpsTrackings = ({navigation}) => {
   useFocusEffect(
     React.useCallback(() => {
       return () => {
-        console.log('WebSocket disconnecting on screen leave');
+        // console.log('WebSocket disconnecting on screen leave');
         dispatch(websocketDisconnect());
         dispatch(fetchTokenFailure());
         Snackbar.dismiss();
@@ -75,42 +73,45 @@ const GpsTrackings = ({navigation}) => {
     }, [dispatch]),
   );
 
-  const mergeDeviceData = (devices, latestDevices, positions, events) => {
-    const deviceMap = new Map();
+  const mergeDeviceData = React.useCallback(
+    (devices, latestDevices, positions, events) => {
+      const deviceMap = new Map();
 
-    devices.forEach(device => {
-      deviceMap.set(device.id, {...device});
-    });
+      devices.forEach(device => {
+        deviceMap.set(device.id, {...device});
+      });
 
-    latestDevices.forEach(latest => {
-      if (deviceMap.has(latest.id)) {
-        deviceMap.set(latest.id, {
-          ...deviceMap.get(latest.id),
-          ...latest,
-        });
-      }
-    });
+      latestDevices.forEach(latest => {
+        if (deviceMap.has(latest.id)) {
+          deviceMap.set(latest.id, {
+            ...deviceMap.get(latest.id),
+            ...latest,
+          });
+        }
+      });
 
-    positions.forEach(position => {
-      if (deviceMap.has(position.deviceId)) {
-        const device = deviceMap.get(position.deviceId);
-        device.position = device.position
-          ? [...device.position, position]
-          : [position];
-        deviceMap.set(position.deviceId, device);
-      }
-    });
+      positions.forEach(position => {
+        if (deviceMap.has(position.deviceId)) {
+          const device = deviceMap.get(position.deviceId);
+          device.position = device.position
+            ? [...device.position, position]
+            : [position];
+          deviceMap.set(position.deviceId, device);
+        }
+      });
 
-    events.forEach(event => {
-      if (deviceMap.has(event.deviceId)) {
-        const device = deviceMap.get(event.deviceId);
-        device.events = device.events ? [...device.events, event] : [event];
-        deviceMap.set(event.deviceId, device);
-      }
-    });
+      events.forEach(event => {
+        if (deviceMap.has(event.deviceId)) {
+          const device = deviceMap.get(event.deviceId);
+          device.events = device.events ? [...device.events, event] : [event];
+          deviceMap.set(event.deviceId, device);
+        }
+      });
 
-    return Array.from(deviceMap.values());
-  };
+      return Array.from(deviceMap.values());
+    },
+    [],
+  );
 
   useEffect(() => {
     if (gpsDeviceData) {
@@ -122,7 +123,68 @@ const GpsTrackings = ({navigation}) => {
       );
       setMergedDeviceData(updatedData);
     }
-  }, [gpsDeviceData, wsDevices, wsPositions, wsEvents]);
+  }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
+
+  const renderGpsItem = React.useCallback(
+    ({item}) => (
+      <GpsItem
+        item={item}
+        icon={true}
+        navigation={navigation}
+        isDisable={!wsConnected}
+      />
+    ),
+    [navigation, wsConnected],
+  );
+
+  // const mergeDeviceData = (devices, latestDevices, positions, events) => {
+  //   const deviceMap = new Map();
+
+  //   devices.forEach(device => {
+  //     deviceMap.set(device.id, {...device});
+  //   });
+
+  //   latestDevices.forEach(latest => {
+  //     if (deviceMap.has(latest.id)) {
+  //       deviceMap.set(latest.id, {
+  //         ...deviceMap.get(latest.id),
+  //         ...latest,
+  //       });
+  //     }
+  //   });
+
+  //   positions.forEach(position => {
+  //     if (deviceMap.has(position.deviceId)) {
+  //       const device = deviceMap.get(position.deviceId);
+  //       device.position = device.position
+  //         ? [...device.position, position]
+  //         : [position];
+  //       deviceMap.set(position.deviceId, device);
+  //     }
+  //   });
+
+  //   events.forEach(event => {
+  //     if (deviceMap.has(event.deviceId)) {
+  //       const device = deviceMap.get(event.deviceId);
+  //       device.events = device.events ? [...device.events, event] : [event];
+  //       deviceMap.set(event.deviceId, device);
+  //     }
+  //   });
+
+  //   return Array.from(deviceMap.values());
+  // };
+
+  // useEffect(() => {
+  //   if (gpsDeviceData) {
+  //     const updatedData = mergeDeviceData(
+  //       gpsDeviceData,
+  //       wsDevices,
+  //       wsPositions,
+  //       wsEvents,
+  //     );
+  //     setMergedDeviceData(updatedData);
+  //   }
+  // }, [gpsDeviceData, wsDevices, wsPositions, wsEvents]);
 
   return (
     <View style={styles.container}>
@@ -142,14 +204,15 @@ const GpsTrackings = ({navigation}) => {
           data={mergedDeviceData}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
-          renderItem={({item}) => (
-            <GpsItem
-              item={item}
-              icon={true}
-              navigation={navigation}
-              isDisable={!wsConnected}
-            />
-          )}
+          renderItem={renderGpsItem}
+          // renderItem={({item}) => (
+          //   <GpsItem
+          //     item={item}
+          //     icon={true}
+          //     navigation={navigation}
+          //     isDisable={!wsConnected}
+          //   />
+          // )}
           keyExtractor={item => item.id.toString()}
           ListEmptyComponent={
             <View style={styles.noGpsContainer}>
