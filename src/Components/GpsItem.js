@@ -9,18 +9,19 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 import AlertBox from './AlertBox';
 
-const GpsItem = ({navigation, item, icon}) => {
-  // console.log(66666, item);
+const GpsItem = ({navigation, item, icon, isDisable}) => {
+  console.log(66666, item);
 
   const ignition =
     item?.position?.[0]?.attributes?.ignition ||
     item?.position?.[0]?.attributes?.motion;
   const totalDistance = item?.position?.[0]?.attributes?.totalDistance;
   const batteryLevel = item?.position?.[0]?.attributes?.batteryLevel;
+  const damage = item?.position?.[0]?.attributes?.damage;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
   const showAlert = () => {
-    AlertBox('Service unavailable', 'Navigation is disabled for this item.');
+    AlertBox('Service unavailable! Your Plan has been Expired.');
   };
 
   return (
@@ -38,6 +39,7 @@ const GpsItem = ({navigation, item, icon}) => {
           <View />
         </View>
         <TouchableOpacity
+          disabled={isDisable}
           onPress={() => {
             if (isNavigationDisabled) {
               showAlert();
@@ -52,7 +54,7 @@ const GpsItem = ({navigation, item, icon}) => {
               {item?.status}
             </Text>
             <View style={styles.verticalLine} />
-            <View style={{flexDirection: 'row', borderWidth: 0}}>
+            <View style={styles.ignitionStatus}>
               <Text>Ignition</Text>
               <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
                 {ignition ? 'on' : 'off'}
@@ -69,7 +71,7 @@ const GpsItem = ({navigation, item, icon}) => {
             />
             <NetworkIcon size={20} />
             <GeoFencingIcon size={20} />
-            <DamageIcon size={20} />
+            <DamageIcon size={20} color={damage ? 'red' : '#727272'} />
           </View>
         </TouchableOpacity>
         <View>
@@ -89,6 +91,7 @@ const GpsItem = ({navigation, item, icon}) => {
           Expire on Feb 20, 2025
         </Text>
         <TouchableOpacity
+          disabled={isDisable}
           onPress={() => {
             if (isNavigationDisabled) {
               showAlert();
@@ -196,4 +199,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  ignitionStatus: {flexDirection: 'row', borderWidth: 0},
 });

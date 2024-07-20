@@ -118,12 +118,10 @@ const TrackingTruck = ({navigation, route}) => {
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Total distance:</Text>
+            <Text style={styles.distanceText}>Today distance:</Text>
             <Text style={styles.highlightText}>
-              {positions[0]?.attributes?.todayDistance
-                ? `${(positions[0]?.attributes?.todayDistance / 1000).toFixed(
-                    2,
-                  )} KM`
+              {positions[0]?.attributes?.distance
+                ? `${positions[0]?.attributes?.distance} KM`
                 : '0 KM'}
             </Text>
           </View>

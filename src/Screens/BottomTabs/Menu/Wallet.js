@@ -96,14 +96,14 @@ const Wallet = ({navigation}) => {
   };
 
   const addAmount = () => {
-    // if (
-    //   parseInt(amount, 10) === 0 ||
-    //   parseInt(amount, 10) < 100 ||
-    //   parseInt(amount, 10) > 100000
-    // ) {
-    //   Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
-    //   return;
-    // }
+    if (
+      parseInt(amount, 10) === 0 ||
+      parseInt(amount, 10) < 100 ||
+      parseInt(amount, 10) > 100000
+    ) {
+      Toast.show('Please enter an amount between 100 and 1,00,000', Toast.LONG);
+      return;
+    }
     dispatch(initCreateOrder(parseInt(amount, 10), getWallletData.id, 0));
     // for testing only
     // dispatch(

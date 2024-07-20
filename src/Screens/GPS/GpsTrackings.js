@@ -18,19 +18,24 @@ import {
 import GpsItem from '../../Components/GpsItem';
 import Button from '../../Components/Button';
 import {backgroundColorNew, textColor} from '../../Color/color';
+import Snackbar from 'react-native-snackbar';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {
-    gpsTokenLoading,
     gpsTokenData,
     gpsDeviceLoading,
     gpsDeviceData,
     wsPositions,
     wsDevices,
     wsEvents,
-  } = useSelector(state => state.data);
+    wsError,
+    wsConnected,
+  } = useSelector(state => {
+    console.log('GpsTrackings', state.data);
+    return state.data;
+  });
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
 
@@ -46,12 +51,26 @@ const GpsTrackings = ({navigation}) => {
     }
   }, [dispatch, gpsTokenData]);
 
+  useEffect(() => {
+    if (wsError) {
+      Snackbar.show({
+        text: 'Something Error in Connecting in GPS',
+        duration: Snackbar.LENGTH_LONG,
+        fontFamily: 'PlusJakartaSans-SemiBold',
+        textColor: '#000000',
+        backgroundColor: '#FFD7CC',
+        marginBottom: 70,
+      });
+    }
+  }, [wsError]);
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
         console.log('WebSocket disconnecting on screen leave');
         dispatch(websocketDisconnect());
         dispatch(fetchTokenFailure());
+        Snackbar.dismiss();
       };
     }, [dispatch]),
   );
@@ -114,15 +133,29 @@ const GpsTrackings = ({navigation}) => {
         <View style={styles.loadingStyle}>
           <ActivityIndicator size="large" color={backgroundColorNew} />
         </View>
+      ) : gpsDeviceData === null ? (
+        <View style={styles.noGpsContainer}>
+          <Text style={styles.noGpsText}>No GPS found</Text>
+        </View>
       ) : (
         <FlatList
           data={mergedDeviceData}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
-            <GpsItem item={item} icon={true} navigation={navigation} />
+            <GpsItem
+              item={item}
+              icon={true}
+              navigation={navigation}
+              isDisable={!wsConnected}
+            />
           )}
           keyExtractor={item => item.id.toString()}
+          ListEmptyComponent={
+            <View style={styles.noGpsContainer}>
+              <Text style={styles.noGpsText}>No GPS found</Text>
+            </View>
+          }
         />
       )}
       <Button
@@ -167,5 +200,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  noGpsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noGpsText: {
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: backgroundColorNew,
   },
 });

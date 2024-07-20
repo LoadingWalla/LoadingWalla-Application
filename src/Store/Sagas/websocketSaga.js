@@ -24,7 +24,7 @@ function createWebSocketChannel(cookie) {
 
     ws.onerror = error => {
       console.log('websocket onerror', error);
-      emit(actions.websocketError(error.message));
+      emit(actions.websocketError(error));
     };
 
     ws.onclose = event => {

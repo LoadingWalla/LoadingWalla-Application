@@ -53,6 +53,7 @@ import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
 // import InAppReview from 'react-native-in-app-review';
 import {useTranslation} from 'react-i18next';
+import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
@@ -66,7 +67,7 @@ const Profile = ({navigation, route}) => {
 
   const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
     useSelector(state => {
-      // console.log('profile Data', state.data);
+      console.log('profile Data', state.data);
       return state.data;
     });
 
@@ -298,7 +299,7 @@ const Profile = ({navigation, route}) => {
                 <MenuItem
                   title={'GPS Tracking'}
                   onPress={() => navigation.navigate('GPS')}
-                  Icon={<GpsIcon size={30} color={GradientColor1} />}
+                  Icon={<GpsTrackingIcon size={30} color={GradientColor1} />}
                 />
               </View>
             </View>

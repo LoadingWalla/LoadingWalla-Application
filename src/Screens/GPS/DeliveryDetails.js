@@ -13,7 +13,7 @@ import {
 
 const DeliveryDetails = ({navigation, route}) => {
   const {gpsCount, pricePerDevice, plan_id} = route.params;
-  // console.log(4444, route);
+  console.log(4444, route);
 
   // State variables to store input values
   const [fullName, setFullName] = useState('');
@@ -37,26 +37,26 @@ const DeliveryDetails = ({navigation, route}) => {
 
   // Handler for Continue button press
   const handleContinue = () => {
-    navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    // if (
-    //   !fullName ||
-    //   !alternativePhoneNumber ||
-    //   !deliveryAddress ||
-    //   rcNumbers.includes('')
-    // ) {
-    //   Toast.show('Please fill all the fields before continuing.', Toast.LONG);
-    //   return;
-    // }
-    // dispatch(
-    //   placeGpsOrderRequest(
-    //     fullName,
-    //     alternativePhoneNumber,
-    //     plan_id,
-    //     gpsCount,
-    //     rcNumbers,
-    //     deliveryAddress,
-    //   ),
-    // );
+    // navigation.navigate('paymentGPS', {plan_id, gpsCount});
+    if (
+      !fullName ||
+      !alternativePhoneNumber ||
+      !deliveryAddress ||
+      rcNumbers.includes('')
+    ) {
+      Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+      return;
+    }
+    dispatch(
+      placeGpsOrderRequest(
+        fullName,
+        alternativePhoneNumber,
+        plan_id,
+        gpsCount,
+        rcNumbers,
+        deliveryAddress,
+      ),
+    );
   };
 
   useEffect(() => {
