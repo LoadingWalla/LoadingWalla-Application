@@ -10,17 +10,119 @@ import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 import AlertBox from './AlertBox';
 import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 
-const GpsItem = ({navigation, item, icon, isDisable}) => {
-  console.log(66666, item);
+// const GpsItem = ({navigation, item, icon, isDisable}) => {
+//   console.log(66666, item);
+//   const rechageValidity = 'Active';
 
-  const ignition =
-    item?.position?.[0]?.attributes?.ignition ||
-    item?.position?.[0]?.attributes?.motion;
-  const totalDistance = (
-    item?.position?.[0]?.attributes?.totalDistance / 1000
-  ).toFixed(2);
-  const batteryLevel = item?.position?.[0]?.attributes?.batteryLevel;
-  const damage = item?.position?.[0]?.attributes?.damage;
+//   const ignition =
+//     item?.position?.[0]?.attributes?.ignition ||
+//     item?.position?.[0]?.attributes?.motion;
+//   const totalDistance = (
+//     item?.position?.[0]?.attributes?.totalDistance / 1000
+//   ).toFixed(2);
+//   const batteryLevel = item?.position?.[0]?.attributes?.batteryLevel;
+//   const damage = item?.position?.[0]?.attributes?.damage;
+//   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
+
+//   const showAlert = () => {
+//     AlertBox('Service unavailable! Your Plan has been Expired.');
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.itemContainer}>
+//         <View style={styles.imgContainer}>
+//           <View style={styles.imgBox}>
+//             <Image
+//               source={{
+//                 uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+//               }}
+//               style={styles.image}
+//             />
+//           </View>
+//           <View />
+//         </View>
+//         <TouchableOpacity
+//           disabled={isDisable}
+//           onPress={() => {
+//             if (isNavigationDisabled) {
+//               showAlert();
+//             } else {
+//               navigation.navigate('trackingtruck', {deviceId: item?.id});
+//             }
+//           }}
+//           style={styles.textContainer}>
+//           <Text style={styles.highlightText}>{item?.name}</Text>
+//           <View style={styles.ignBox}>
+//             <Text style={{color: item?.status === 'online' ? 'green' : 'red'}}>
+//               {item?.status}
+//             </Text>
+//           </View>
+//           <View style={styles.iconBox}>
+//             <KeyIcon size={20} color={ignition ? 'green' : 'red'} />
+//             <FuelIcon size={20} color={'#727272'} />
+//             <BatteryIcon
+//               size={20}
+//               color={
+//                 batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
+//               }
+//             />
+//             <NetworkIcon size={20} />
+//             <GeoFencingIcon size={20} />
+//             <DamageIcon size={20} color={damage ? 'red' : '#727272'} />
+//           </View>
+//         </TouchableOpacity>
+//         <View>
+//           <View style={styles.distanceBox}>
+//             <Text style={styles.highlightText}>
+//               {totalDistance ? `${totalDistance} KM` : '0 KM'}
+//             </Text>
+//             <Text style={styles.distanceText}>Total Distance</Text>
+//           </View>
+//         </View>
+//       </View>
+//       <View style={styles.expiryDate}>
+//         <Text
+//           style={
+//             rechageValidity === 'Expired'
+//               ? styles.expiredText
+//               : styles.activeText
+//           }>
+//           Expire on Feb 20, 2025
+//         </Text>
+//         <TouchableOpacity
+//           disabled={isDisable}
+//           onPress={() => {
+//             if (isNavigationDisabled) {
+//               showAlert();
+//             } else {
+//               navigation.navigate('GpsSetting');
+//             }
+//           }}>
+//           <SettingIcon
+//             size={20}
+//             color={
+//               rechageValidity === 'Expired' ? backgroundColorNew : PrivacyPolicy
+//             }
+//           />
+//         </TouchableOpacity>
+//       </View>
+//     </View>
+//   );
+// };
+
+const GpsItem = ({navigation, item, icon, isDisable}) => {
+  // console.log(66666, item);
+  const rechageValidity = 'Active';
+
+  const attributes = item?.position?.[0]?.attributes || {};
+  // console.log(4444, attributes);
+  const ignition = attributes?.ignition || attributes?.motion;
+  const totalDistance = attributes?.totalDistance
+    ? (attributes.totalDistance / 1000).toFixed(2)
+    : '0.00';
+  const batteryLevel = attributes?.batteryLevel;
+  const damage = attributes?.damage;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
   const showAlert = () => {
@@ -56,37 +158,29 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             <Text style={{color: item?.status === 'online' ? 'green' : 'red'}}>
               {item?.status}
             </Text>
-            {/* <View style={styles.verticalLine} />
-            <View style={styles.ignitionStatus}>
-              <Text style={styles.ignitionText}>Ignition</Text>
-              <Text
-                style={[
-                  styles.ignitionText,
-                  {color: ignition ? 'green' : 'red', marginLeft: 5},
-                ]}>
-                {ignition ? 'on' : 'off'}
-              </Text>
-            </View> */}
           </View>
           <View style={styles.iconBox}>
             <KeyIcon size={20} color={ignition ? 'green' : 'red'} />
-            <FuelIcon size={20} color={'#727272'} />
             <BatteryIcon
               size={20}
-              color={
-                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
-              }
+              color={batteryLevel > 60 ? 'green' : 'red'}
             />
-            <NetworkIcon size={20} />
-            <GeoFencingIcon size={20} />
-            <DamageIcon size={20} color={damage ? 'red' : '#727272'} />
+            {attributes.network !== null && (
+              <NetworkIcon
+                color={attributes.network ? 'green' : 'red'}
+                size={20}
+              />
+            )}
+            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
+            {attributes.ger && <GeoFencingIcon size={20} />}
+            {attributes.alarm && (
+              <DamageIcon size={20} color={damage ? 'red' : '#727272'} />
+            )}
           </View>
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>
-              {totalDistance ? `${totalDistance} KM` : '0 KM'}
-            </Text>
+            <Text style={styles.highlightText}>{`${totalDistance} KM`}</Text>
             <Text style={styles.distanceText}>Total Distance</Text>
           </View>
         </View>
@@ -94,7 +188,9 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
       <View style={styles.expiryDate}>
         <Text
           style={
-            item?.status === 'Expired' ? styles.expiredText : styles.activeText
+            rechageValidity === 'Expired'
+              ? styles.expiredText
+              : styles.activeText
           }>
           Expire on Feb 20, 2025
         </Text>
@@ -110,7 +206,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           <SettingIcon
             size={20}
             color={
-              item?.status === 'Expired' ? backgroundColorNew : PrivacyPolicy
+              rechageValidity === 'Expired' ? backgroundColorNew : PrivacyPolicy
             }
           />
         </TouchableOpacity>

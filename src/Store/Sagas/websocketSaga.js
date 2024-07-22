@@ -61,15 +61,33 @@ function* handleWebSocketConnection(cookie) {
       yield put(action);
 
       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-        const {devices, positions, events} = action.payload;
-        if (devices) {
-          yield put(actions.updateDevices(devices));
-        }
-        if (positions) {
-          yield put(actions.updatePositions(positions));
-        }
-        if (events) {
-          yield put(actions.updateEvents(events));
+        // console.log(123456789, action.payload);
+
+        // Add checks to ensure action.payload is not null or undefined and not an empty object
+        if (action.payload && Object.keys(action.payload).length !== 0) {
+          const {devices, positions, events} = action.payload;
+
+          // console.log(987654321, devices, 11111, positions, 222222, events);
+
+          // Update devices if they exist and are not empty
+          if (devices && devices.length > 0) {
+            // console.log(33333, devices);
+            yield put(actions.updateDevices(devices));
+          }
+
+          // Update positions if they exist and are not empty
+          if (positions && positions.length > 0) {
+            // console.log(11111, positions);
+            yield put(actions.updatePositions(positions));
+          }
+
+          // Update events if they exist and are not empty
+          if (events && events.length > 0) {
+            // console.log(222222, events);
+            yield put(actions.updateEvents(events));
+          }
+        } else {
+          console.log('Received empty payload in WEBSOCKET_MESSAGE');
         }
       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
         console.log('WebSocket connection closed');
@@ -104,7 +122,7 @@ function* websocketSaga() {
     if (action.type === actionTypes.WEBSOCKET_DISCONNECT) {
       console.log('WebSocket disconnect requested');
       yield cancel(connectionTask);
-      console.log('WebSocket connection task cancelled');
+      console.log('WebSocket connection cancelled Successfully');
     } else if (action.type === actionTypes.WEBSOCKET_RETRY) {
       retryCount++;
       if (retryCount <= 5) {
