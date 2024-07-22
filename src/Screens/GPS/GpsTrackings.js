@@ -137,55 +137,6 @@ const GpsTrackings = ({navigation}) => {
     [navigation, wsConnected],
   );
 
-  // const mergeDeviceData = (devices, latestDevices, positions, events) => {
-  //   const deviceMap = new Map();
-
-  //   devices.forEach(device => {
-  //     deviceMap.set(device.id, {...device});
-  //   });
-
-  //   latestDevices.forEach(latest => {
-  //     if (deviceMap.has(latest.id)) {
-  //       deviceMap.set(latest.id, {
-  //         ...deviceMap.get(latest.id),
-  //         ...latest,
-  //       });
-  //     }
-  //   });
-
-  //   positions.forEach(position => {
-  //     if (deviceMap.has(position.deviceId)) {
-  //       const device = deviceMap.get(position.deviceId);
-  //       device.position = device.position
-  //         ? [...device.position, position]
-  //         : [position];
-  //       deviceMap.set(position.deviceId, device);
-  //     }
-  //   });
-
-  //   events.forEach(event => {
-  //     if (deviceMap.has(event.deviceId)) {
-  //       const device = deviceMap.get(event.deviceId);
-  //       device.events = device.events ? [...device.events, event] : [event];
-  //       deviceMap.set(event.deviceId, device);
-  //     }
-  //   });
-
-  //   return Array.from(deviceMap.values());
-  // };
-
-  // useEffect(() => {
-  //   if (gpsDeviceData) {
-  //     const updatedData = mergeDeviceData(
-  //       gpsDeviceData,
-  //       wsDevices,
-  //       wsPositions,
-  //       wsEvents,
-  //     );
-  //     setMergedDeviceData(updatedData);
-  //   }
-  // }, [gpsDeviceData, wsDevices, wsPositions, wsEvents]);
-
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -205,14 +156,6 @@ const GpsTrackings = ({navigation}) => {
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           renderItem={renderGpsItem}
-          // renderItem={({item}) => (
-          //   <GpsItem
-          //     item={item}
-          //     icon={true}
-          //     navigation={navigation}
-          //     isDisable={!wsConnected}
-          //   />
-          // )}
           keyExtractor={item => item.id.toString()}
           ListEmptyComponent={
             <View style={styles.noGpsContainer}>

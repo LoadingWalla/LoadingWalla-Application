@@ -8,6 +8,7 @@ import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 import AlertBox from './AlertBox';
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   console.log(66666, item);
@@ -15,7 +16,9 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
   const ignition =
     item?.position?.[0]?.attributes?.ignition ||
     item?.position?.[0]?.attributes?.motion;
-  const totalDistance = item?.position?.[0]?.attributes?.totalDistance;
+  const totalDistance = (
+    item?.position?.[0]?.attributes?.totalDistance / 1000
+  ).toFixed(2);
   const batteryLevel = item?.position?.[0]?.attributes?.batteryLevel;
   const damage = item?.position?.[0]?.attributes?.damage;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
@@ -53,15 +56,20 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             <Text style={{color: item?.status === 'online' ? 'green' : 'red'}}>
               {item?.status}
             </Text>
-            <View style={styles.verticalLine} />
+            {/* <View style={styles.verticalLine} />
             <View style={styles.ignitionStatus}>
-              <Text>Ignition</Text>
-              <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
+              <Text style={styles.ignitionText}>Ignition</Text>
+              <Text
+                style={[
+                  styles.ignitionText,
+                  {color: ignition ? 'green' : 'red', marginLeft: 5},
+                ]}>
                 {ignition ? 'on' : 'off'}
               </Text>
-            </View>
+            </View> */}
           </View>
           <View style={styles.iconBox}>
+            <KeyIcon size={20} color={ignition ? 'green' : 'red'} />
             <FuelIcon size={20} color={'#727272'} />
             <BatteryIcon
               size={20}
@@ -77,7 +85,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <View>
           <View style={styles.distanceBox}>
             <Text style={styles.highlightText}>
-              {totalDistance ? `${Math.ceil(totalDistance / 1000)} KM` : '0 KM'}
+              {totalDistance ? `${totalDistance} KM` : '0 KM'}
             </Text>
             <Text style={styles.distanceText}>Total Distance</Text>
           </View>
@@ -200,4 +208,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   ignitionStatus: {flexDirection: 'row', borderWidth: 0},
+  ignitionText: {fontFamily: 'PlusJakartaSans-SemiBold'},
 });
