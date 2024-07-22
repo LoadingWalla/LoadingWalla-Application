@@ -54,7 +54,7 @@ const GpsAlert = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log(4444, gpsTokenData?.email, gpsTokenData?.password);
+      // console.log(4444, gpsTokenData?.email, gpsTokenData?.password);
       dispatch(
         fetchGpsNotificationsRequest(
           gpsTokenData?.email,

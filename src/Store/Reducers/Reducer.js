@@ -198,6 +198,10 @@ const initialState = {
   gpsOrderDetailsData: null,
   gpsOrderDetailsStatus: null,
   gpsPriceDetailsData: null,
+  // single gps devices
+  singleGpsDevice: null,
+  singleGpsDeviceLoading: false,
+  singleGpsDeviceError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1240,6 +1244,25 @@ const reducer = (state = initialState, action) => {
         gpsDeviceLoading: false,
         gpsDeviceData: null,
         gpsDeviceStatus: null,
+      });
+
+    // Single GPS device cases
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST:
+      return updateState(state, {
+        singleGpsDeviceLoading: true,
+        singleGpsDeviceError: null,
+        singleGpsDevice: null,
+      });
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_SUCCESS:
+      return updateState(state, {
+        singleGpsDevice: payload,
+        singleGpsDeviceLoading: false,
+      });
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_FAILURE:
+      return updateState(state, {
+        singleGpsDeviceError: payload,
+        singleGpsDeviceLoading: false,
+        singleGpsDevice: null,
       });
 
     // Gps Websocket Connect

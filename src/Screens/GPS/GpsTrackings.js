@@ -108,7 +108,12 @@ const GpsTrackings = ({navigation}) => {
         }
       });
 
-      return Array.from(deviceMap.values());
+      return Array.from(deviceMap.values()).map(device => {
+        // Ensure device.position and device.events are always arrays
+        device.position = device.position || [];
+        device.events = device.events || [];
+        return device;
+      });
     },
     [],
   );

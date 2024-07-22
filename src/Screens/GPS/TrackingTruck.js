@@ -7,73 +7,73 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
-import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
+import {backgroundColorNew, titleColor} from '../../Color/color';
+import ToggleIconText from '../../Components/ToggleIconText';
+import MapView, {Marker, Polyline} from 'react-native-maps';
+import {useDispatch, useSelector} from 'react-redux';
+import useAddress from '../../hooks/useAddress';
+import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import DamageIcon from '../../../assets/SVG/svg/DamageIcon';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import AlertIcon from '../../../assets/SVG/AlertIcon';
+import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
+import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import ToggleIconText from '../../Components/ToggleIconText';
+import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
-import {useDispatch, useSelector} from 'react-redux';
-import useAddress from '../../hooks/useAddress';
+import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 
-const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
-  return (
-    <TouchableOpacity style={styles.iconView} onPress={onPress}>
-      <IconComponent size={iconSize} />
-      <Text style={styles.iconText}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
+const IconWithName = ({title, IconComponent, iconSize, onPress}) => (
+  <TouchableOpacity style={styles.iconView} onPress={onPress}>
+    <IconComponent size={iconSize} />
+    <Text style={styles.iconText}>{title}</Text>
+  </TouchableOpacity>
+);
 
-const getLivePositions = wsMessages => {
+const getLivePositions = (wsMessages, deviceId) => {
+  // console.log(11111, wsMessages);
+
   return wsMessages
     .flatMap(message => message.positions || [])
+    .filter(position => position.deviceId === deviceId)
     .map(position => ({
+      deviceId: position.deviceId,
       latitude: position.latitude,
       longitude: position.longitude,
     }));
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  const {deviceId} = route.params;
-  // console.log(444, deviceId);
+  // console.log(55555, route.params);
+  const {deviceId, lat, long} = route.params;
   const dispatch = useDispatch();
+  const mapRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const mapRef = useRef(null);
 
-  const device = useSelector(state =>
-    state.data.wsDevices.find(d => d.id === deviceId),
-  );
-  const positions = useSelector(state =>
-    state.data.wsPositions.filter(p => p.deviceId === deviceId),
-  );
-  const events = useSelector(state =>
-    state.data.wsEvents.filter(e => e.deviceId === deviceId),
-  );
+  const {
+    wsMessages,
+    wsConnected,
+    gpsTokenData,
+    wsDevices,
+    wsPositions,
+    wsEvents,
+  } = useSelector(state => state.data);
 
-  const {wsMessages, wsConnected} = useSelector(state => {
-    console.log('Tracking truck', state.data);
-    return state.data;
-  });
+  const device = wsDevices.find(d => d.id === deviceId);
+  const positions = wsPositions.filter(p => p.deviceId === deviceId);
+  const events = wsEvents.filter(e => e.deviceId === deviceId);
 
   useEffect(() => {
     if (!wsConnected) {
       setError('Service unavailable. Please try again later.');
       setLoading(false);
     } else {
-      const position = getLivePositions(wsMessages);
+      const position = getLivePositions(wsMessages, deviceId);
       setLivePositions(position);
       if (position.length > 0) {
         setLoading(false);
@@ -87,8 +87,8 @@ const TrackingTruck = ({navigation, route}) => {
       mapRef.current.animateToRegion({
         latitude: position.latitude,
         longitude: position.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
       });
     }
   };
@@ -98,8 +98,6 @@ const TrackingTruck = ({navigation, route}) => {
   };
 
   const {address, fetchAddress} = useAddress(livePositions);
-
-  // console.log('livepositons22222', livePositions);
 
   const handleNavigate = () => {
     const destination =
@@ -113,8 +111,10 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
+  console.log(66666666, livePositions);
+
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
@@ -180,7 +180,7 @@ const TrackingTruck = ({navigation, route}) => {
               onPress={() => handlePress(3)}
             />
             <ToggleIconText
-              IconComponent={DamageIcon}
+              IconComponent={AlertIcon}
               text="Damage"
               iconSize={25}
               color={'#727272'}
@@ -218,16 +218,10 @@ const TrackingTruck = ({navigation, route}) => {
             ref={mapRef}
             style={StyleSheet.absoluteFillObject}
             initialRegion={{
-              latitude: positions[positions.length - 1]?.latitude,
-              longitude: positions[positions.length - 1]?.longitude,
-              // latitude: livePositions
-              //   ? livePositions[0]?.latitude
-              //   : positions[positions.length - 1]?.latitude,
-              // longitude: livePositions
-              //   ? livePositions[0]?.longitude
-              //   : positions[positions.length - 1]?.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitude: lat,
+              longitude: long,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
             }}>
             {positions[0]?.attributes?.motion && (
               <Polyline
@@ -240,8 +234,6 @@ const TrackingTruck = ({navigation, route}) => {
               <Marker
                 coordinate={livePositions[livePositions.length - 1]}
                 pinColor="red"
-                // title="Current Location"
-                // description={address}
               />
             )}
           </MapView>
@@ -251,9 +243,6 @@ const TrackingTruck = ({navigation, route}) => {
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.gpsButton}>
-            <GpsIcon size={30} />
-          </TouchableOpacity> */}
         </View>
       </View>
       <View style={styles.bottomContainer}>
@@ -317,7 +306,7 @@ const TrackingTruck = ({navigation, route}) => {
 export default TrackingTruck;
 
 const styles = StyleSheet.create({
-  conatiner: {flex: 1},
+  container: {flex: 1},
   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 5},
   btnContainer: {
     flexDirection: 'row',
@@ -352,7 +341,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     position: 'absolute',
     bottom: 100,
-    // left: 10,
     right: 10,
     paddingVertical: 10,
   },
@@ -374,7 +362,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topContainer: {
-    //   borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -383,7 +370,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   leftTopContainer: {minWidth: '70%', paddingHorizontal: 5},
-
   mapContainer: {flex: 1},
   mapHeader: {
     flexDirection: 'row',

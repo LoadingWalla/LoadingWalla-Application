@@ -1006,6 +1006,27 @@ export const fetchGpsDevicesFailure = payload => ({
   payload,
 });
 
+// single gps devices
+export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
+  console.log(999999, username, password, deviceId);
+  return {
+    type: actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST,
+    username,
+    password,
+    deviceId,
+  };
+};
+
+export const fetchSingleGpsDeviceSuccess = payload => ({
+  type: actionTypes.FETCH_SINGLE_GPS_DEVICE_SUCCESS,
+  payload,
+});
+
+export const fetchSingleGpsDeviceFailure = payload => ({
+  type: actionTypes.FETCH_SINGLE_GPS_DEVICE_FAILURE,
+  payload,
+});
+
 // Gps Websocket Connect
 
 export const websocketConnect = cookie => ({

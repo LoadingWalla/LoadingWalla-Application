@@ -1061,6 +1061,21 @@ export function* fetchGpsDevices({username, password}) {
   }
 }
 
+// single gps device
+export function* fetchSingleGpsDevice({username, password, deviceId}) {
+  try {
+    const data = yield gpsApi.get(`devices?id=${deviceId}`, username, password);
+    // console.log(77777, data);
+    if (data?.status === 200) {
+      yield put(actions.fetchSingleGpsDeviceSuccess(data.data));
+    } else {
+      yield put(actions.fetchSingleGpsDeviceFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchSingleGpsDeviceFailure(error.message));
+  }
+}
+
 // gps token generate
 export function* fetchGpsAddress({username, password, latitude, longitude}) {
   try {
