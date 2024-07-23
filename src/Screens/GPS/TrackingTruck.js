@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Linking,
   ScrollView,
   StyleSheet,
@@ -24,17 +25,11 @@ import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-
-const IconWithName = ({title, IconComponent, iconSize, onPress}) => (
-  <TouchableOpacity style={styles.iconView} onPress={onPress}>
-    <IconComponent size={iconSize} />
-    <Text style={styles.iconText}>{title}</Text>
-  </TouchableOpacity>
-);
+import IconWithName from '../../Components/IconWithName';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   // console.log(11111, wsMessages);
-
   return wsMessages
     .flatMap(message => message.positions || [])
     .filter(position => position.deviceId === deviceId)
@@ -42,6 +37,7 @@ const getLivePositions = (wsMessages, deviceId) => {
       deviceId: position.deviceId,
       latitude: position.latitude,
       longitude: position.longitude,
+      course: position.course,
     }));
 };
 
@@ -53,16 +49,9 @@ const TrackingTruck = ({navigation, route}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  const {
-    wsMessages,
-    wsConnected,
-    gpsTokenData,
-    wsDevices,
-    wsPositions,
-    wsEvents,
-  } = useSelector(state => state.data);
+  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
+    useSelector(state => state.data);
 
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
@@ -70,7 +59,6 @@ const TrackingTruck = ({navigation, route}) => {
 
   useEffect(() => {
     if (!wsConnected) {
-      setError('Service unavailable. Please try again later.');
       setLoading(false);
     } else {
       const position = getLivePositions(wsMessages, deviceId);
@@ -78,6 +66,8 @@ const TrackingTruck = ({navigation, route}) => {
       if (position.length > 0) {
         setLoading(false);
         animateToPosition(position[position.length - 1]);
+      } else {
+        setLoading(false);
       }
     }
   }, [wsMessages, wsConnected]);
@@ -111,14 +101,15 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  console.log(66666666, livePositions);
+  // console.log(66666666, livePositions);
+  // console.log(555555, positions);
 
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Today distance:</Text>
+            <Text style={styles.distanceText}>Distance:</Text>
             <Text style={styles.highlightText}>
               {positions[0]?.attributes?.distance
                 ? `${positions[0]?.attributes?.distance} KM`
@@ -199,7 +190,8 @@ const TrackingTruck = ({navigation, route}) => {
             />
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('GpsSetting')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
           <SettingIcon size={30} color={backgroundColorNew} />
         </TouchableOpacity>
       </View>
@@ -214,29 +206,54 @@ const TrackingTruck = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
         <View style={styles.mapView}>
-          <MapView
-            ref={mapRef}
-            style={StyleSheet.absoluteFillObject}
-            initialRegion={{
-              latitude: lat,
-              longitude: long,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}>
-            {positions[0]?.attributes?.motion && (
-              <Polyline
-                coordinates={livePositions}
-                strokeColor="#000"
-                strokeWidth={6}
-              />
-            )}
-            {livePositions.length > 0 && (
-              <Marker
-                coordinate={livePositions[livePositions.length - 1]}
-                pinColor="red"
-              />
-            )}
-          </MapView>
+          {loading ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color={backgroundColorNew} />
+            </View>
+          ) : (
+            <MapView
+              ref={mapRef}
+              style={StyleSheet.absoluteFillObject}
+              initialRegion={{
+                latitude: lat || livePositions[0]?.latitude || 0,
+                longitude: long || livePositions[0]?.longitude || 0,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}>
+              {positions[0]?.attributes?.motion && (
+                <Polyline
+                  coordinates={livePositions}
+                  strokeColor="#000"
+                  strokeWidth={6}
+                />
+              )}
+              {livePositions.length > 0 && (
+                <Marker
+                  coordinate={livePositions[livePositions.length - 1]}
+                  title={'Speed'}
+                  description={`${(positions[0]?.speed * 1.852).toFixed(
+                    2,
+                  )} km/h`}
+                  rotation={
+                    livePositions[livePositions.length - 1].course || 0
+                  }>
+                  <TruckNavigationIcon
+                    width={60}
+                    height={50}
+                    style={{
+                      transform: [
+                        {
+                          rotate: `${
+                            livePositions[livePositions.length - 1].course || 0
+                          }deg`,
+                        },
+                      ],
+                    }}
+                  />
+                </Marker>
+              )}
+            </MapView>
+          )}
           <TouchableOpacity
             style={styles.alertButton}
             onPress={() => navigation.navigate('GpsAlert')}>
@@ -272,7 +289,10 @@ const TrackingTruck = ({navigation, route}) => {
             iconSize={30}
             title={'Fuel Pump'}
             onPress={() =>
-              navigation.navigate('FuelPump', {headerTitle: 'Fuel Pump'})
+              navigation.navigate('FuelPump', {
+                headerTitle: 'Fuel Pump',
+                theft: false,
+              })
             }
           />
           <IconWithName
@@ -282,6 +302,7 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('FuelPump', {
                 headerTitle: 'Nearby Police Station',
+                theft: true,
               })
             }
           />
@@ -418,16 +439,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginRight: 5,
   },
-  iconView: {
-    flexDirection: 'column',
+  loaderContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 5,
-    padding: 5,
-    marginHorizontal: 10,
-  },
-  iconText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Regular',
   },
 });

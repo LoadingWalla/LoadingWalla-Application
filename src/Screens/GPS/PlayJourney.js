@@ -24,6 +24,7 @@ import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
@@ -53,6 +54,8 @@ export default function PlayJourney({navigation, route}) {
       gpsReplayData?.map(point => ({
         latitude: point.latitude,
         longitude: point.longitude,
+        course: point.course,
+        speed: point.speed,
       })),
     [gpsReplayData],
   );
@@ -208,6 +211,8 @@ export default function PlayJourney({navigation, route}) {
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   };
 
+  console.log(4444, currentPosition);
+
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -257,8 +262,27 @@ export default function PlayJourney({navigation, route}) {
                       latitude: currentPosition.latitude,
                       longitude: currentPosition.longitude,
                     }}
-                    pinColor="green"
-                  />
+                    title="Speed"
+                    description={`${(currentPosition.speed * 1.852).toFixed(
+                      2,
+                    )} km/h`}
+                    rotation={currentPosition.course || 0}>
+                    <TruckNavigationIcon
+                      width={60}
+                      height={50}
+                      style={{
+                        transform: [
+                          {
+                            rotate: `${
+                              currentPosition.course
+                                ? currentPosition.course
+                                : 45
+                            }deg`,
+                          },
+                        ],
+                      }}
+                    />
+                  </Marker>
                 )}
                 {gpsStopsData?.map((stop, index) => (
                   <Marker
@@ -267,7 +291,7 @@ export default function PlayJourney({navigation, route}) {
                       latitude: stop.latitude,
                       longitude: stop.longitude,
                     }}
-                    pinColor={index === currentStopIndex ? 'blue' : 'red'} // Highlight current stop
+                    pinColor={index === currentStopIndex ? 'blue' : 'red'}
                     title={`Stop ${index + 1}`}
                     description={stop.address}
                   />

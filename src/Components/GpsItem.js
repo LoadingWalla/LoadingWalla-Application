@@ -1,5 +1,5 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
@@ -9,9 +9,11 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import AlertBox from './AlertBox';
 import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
+import ToggleIconText from './ToggleIconText';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
-  console.log(66666, item);
+  // console.log(66666, item);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const attributes =
     item?.position?.length > 0 ? item.position[0].attributes : {};
@@ -20,11 +22,14 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     ? (attributes.totalDistance / 1000).toFixed(2)
     : '0.00';
   const batteryLevel = attributes?.batteryLevel;
-  const damage = attributes?.damage;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
   const showAlert = message => {
     AlertBox(message);
+  };
+
+  const handlePress = index => {
+    setActiveIndex(activeIndex === index ? null : index);
   };
 
   return (
@@ -70,26 +75,37 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             </Text>
           </View>
           <View style={styles.iconBox}>
-            <KeyIcon
-              size={20}
+            <ToggleIconText
+              IconComponent={KeyIcon}
+              text={ignition ? 'On' : 'Off'}
+              iconSize={20}
               color={ignition ? 'green' : backgroundColorNew}
+              index={1}
+              activeIndex={activeIndex}
+              activeText={true}
+              onPress={() => handlePress(1)}
             />
             <BatteryIcon
               size={20}
-              color={batteryLevel > 60 ? 'green' : backgroundColorNew}
+              color={batteryLevel > 50 ? 'green' : backgroundColorNew}
+              charge={attributes.charge}
+              batteryLevel={batteryLevel}
             />
             {attributes.network !== null && (
-              <NetworkIcon
-                color={attributes.network ? 'green' : backgroundColorNew}
-                size={20}
-              />
+              <NetworkIcon color={'green'} size={20} />
             )}
             {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
-            {attributes.ger && <GeoFencingIcon size={20} />}
+            {attributes.geofence && <GeoFencingIcon size={20} />}
             {attributes.alarm && (
-              <AlertIcon
-                size={20}
-                color={damage ? backgroundColorNew : '#727272'}
+              <ToggleIconText
+                IconComponent={AlertIcon}
+                text={attributes.alarm}
+                iconSize={20}
+                color={backgroundColorNew}
+                index={2}
+                activeIndex={activeIndex}
+                activeText={false}
+                onPress={() => handlePress(2)}
               />
             )}
           </View>
@@ -117,7 +133,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             } else if (isNavigationDisabled) {
               showAlert('Service unavailable! Your Plan has been Expired.');
             } else {
-              navigation.navigate('GpsSetting');
+              navigation.navigate('GpsSetting', {deviceId: item?.id});
             }
           }}>
           <SettingIcon

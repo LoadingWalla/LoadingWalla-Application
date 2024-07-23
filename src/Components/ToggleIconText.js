@@ -9,6 +9,7 @@ const ToggleIconText = ({
   activeIndex,
   onPress,
   color,
+  activeText,
 }) => {
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -23,10 +24,14 @@ const ToggleIconText = ({
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <IconComponent size={iconSize} color={color} />
-      {activeIndex === index && (
-        <Animated.View style={{opacity}}>
-          <Text style={styles.hiddenText(color)}>{text}</Text>
-        </Animated.View>
+      {activeText ? (
+        <Text style={styles.hiddenText(color)}>{text}</Text>
+      ) : (
+        activeIndex === index && (
+          <Animated.View style={{opacity}}>
+            <Text style={styles.hiddenText(color)}>{text}</Text>
+          </Animated.View>
+        )
       )}
     </TouchableOpacity>
   );
@@ -41,7 +46,7 @@ const styles = StyleSheet.create({
   hiddenText: color => ({
     marginLeft: 5,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'PlusJakartaSans-SemiBold',
     color: color,
   }),

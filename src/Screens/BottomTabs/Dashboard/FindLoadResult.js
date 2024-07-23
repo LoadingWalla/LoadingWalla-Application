@@ -215,7 +215,7 @@ const FindLoadResult = ({navigation, route}) => {
         <NotFound
           imageName="noLoadFound"
           title={'No Load Found'}
-          height={300}
+          height={200}
           width={300}
         />
       )}
