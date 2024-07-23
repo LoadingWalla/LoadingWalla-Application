@@ -1322,7 +1322,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="trackingtruck"
         component={TrackingTruck}
-        options={{
+        options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
           title: 'Tracking truck',
@@ -1332,9 +1332,14 @@ const Navigation = ({language}) => {
           },
           headerShadowVisible: false,
           headerRight: () => (
-            <HeaderHelpButton shareIcon={true} navigation={navigation} />
+            <HeaderHelpButton
+              shareIcon={true}
+              navigation={navigation}
+              latitude={route.params.lat}
+              longitude={route.params.long}
+            />
           ),
-        }}
+        })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>
