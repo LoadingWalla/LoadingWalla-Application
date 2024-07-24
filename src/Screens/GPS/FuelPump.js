@@ -13,6 +13,8 @@ import {PrivacyPolicy} from '../../Color/color';
 
 const API_KEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
 const BASE_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+const DISTANCE_MATRIX_URL =
+  'https://maps.googleapis.com/maps/api/distancematrix/json';
 
 const fetchData = async (latitude, longitude, type) => {
   try {
@@ -31,10 +33,25 @@ const fetchData = async (latitude, longitude, type) => {
   }
 };
 
-const FuelPumpItem = ({name, distance, latitude, longitude, item}) => {
-  // console.log(111111, item);
+const fetchDistances = async (origins, destinations) => {
+  try {
+    const response = await axios.get(DISTANCE_MATRIX_URL, {
+      params: {
+        origins: origins,
+        destinations: destinations,
+        key: API_KEY,
+      },
+    });
+    return response.data.rows[0].elements;
+  } catch (error) {
+    console.error('Error fetching distances:', error);
+    throw error;
+  }
+};
+
+const FuelPumpItem = ({item, distance}) => {
   const handleNavigate = () => {
-    const url = `google.navigation:q=${latitude},${longitude}`;
+    const url = `google.navigation:q=${item?.geometry?.location?.lat},${item?.geometry?.location?.lng}`;
     Linking.openURL(url).catch(err =>
       console.error('Error opening Google Maps', err),
     );
@@ -43,8 +60,8 @@ const FuelPumpItem = ({name, distance, latitude, longitude, item}) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.headerText}>{name}</Text>
-        <Text style={styles.headerTextValue}>{distance} KM away</Text>
+        <Text style={styles.headerText}>{item.name}</Text>
+        <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
       <TouchableOpacity style={styles.iconContainer} onPress={handleNavigate}>
         <View style={{transform: [{rotate: '-45deg'}]}}>
@@ -58,18 +75,31 @@ const FuelPumpItem = ({name, distance, latitude, longitude, item}) => {
 const FuelPump = ({navigation, route}) => {
   const {theft} = route.params;
   const [locations, setLocations] = useState([]);
+  const [distances, setDistances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLocations = async () => {
+    const fetchLocationsAndDistances = async () => {
       try {
         const latitude = 25.829027; // Replace with actual latitude
         const longitude = 84.980179; // Replace with actual longitude
         const type = theft ? 'police' : 'gas_station';
         const data = await fetchData(latitude, longitude, type);
-        console.log(77777, data);
+
         setLocations(data);
+
+        const origins = `${latitude},${longitude}`;
+        const destinations = data
+          .map(
+            place =>
+              `${place.geometry.location.lat},${place.geometry.location.lng}`,
+          )
+          .join('|');
+
+        const distanceData = await fetchDistances(origins, destinations);
+
+        setDistances(distanceData);
       } catch (err) {
         setError(err);
       } finally {
@@ -77,7 +107,7 @@ const FuelPump = ({navigation, route}) => {
       }
     };
 
-    fetchLocations();
+    fetchLocationsAndDistances();
   }, [theft]);
 
   if (loading) {
@@ -101,9 +131,10 @@ const FuelPump = ({navigation, route}) => {
       {locations.map((location, index) => (
         <FuelPumpItem
           key={index}
-          name={location.name}
-          distance={(location.distance / 1000).toFixed(2)}
           item={location}
+          distance={
+            distances[index]?.distance?.text || 'Distance not available'
+          }
         />
       ))}
     </ScrollView>
@@ -133,7 +164,6 @@ const styles = StyleSheet.create({
     transform: [{rotate: '45deg'}],
     alignItems: 'center',
     justifyContent: 'center',
-    // borderWidth: 1,
   },
   headerText: {
     fontSize: 16,

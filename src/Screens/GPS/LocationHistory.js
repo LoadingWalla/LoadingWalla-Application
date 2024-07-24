@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
   ActivityIndicator,
 } from 'react-native';
 import {backgroundColorNew, titleColor} from '../../Color/color';
@@ -34,13 +33,18 @@ const SummaryList = ({data, renderItem, loading}) =>
     <FlatList
       data={data}
       renderItem={renderItem}
-      keyExtractor={item => item.id}
+      keyExtractor={(item, index) => index.toString()}
       ListHeaderComponent={
         <View style={styles.tableHeader}>
           <Text style={styles.headerText}>Start Date</Text>
           <Text style={styles.headerText}>Distance</Text>
           <Text style={styles.headerText}>Avg. Speed</Text>
           <Text style={styles.headerText}>Max. Speed</Text>
+        </View>
+      }
+      ListEmptyComponent={
+        <View style={styles.noDataView}>
+          <Text style={styles.noDataText}>No Data Found</Text>
         </View>
       }
       style={styles.tableContainer}
@@ -266,6 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'left',
     marginTop: -5,
+    textTransform: 'uppercase',
   },
   calendarIconBox: {
     padding: 10,
@@ -288,6 +293,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     paddingVertical: 10,
     // borderWidth: 1,
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
@@ -322,4 +328,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  noDataView: {
+    // borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  noDataText: {},
 });

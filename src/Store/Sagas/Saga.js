@@ -1042,7 +1042,7 @@ export function* fetchTokenSaga() {
   }
 }
 
-// gps token generate
+// gps devices
 export function* fetchGpsDevices({username, password}) {
   try {
     // console.log(33333, username, password);

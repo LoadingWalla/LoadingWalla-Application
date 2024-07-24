@@ -295,11 +295,7 @@ export default function PlayJourney({navigation, route}) {
                       style={{
                         transform: [
                           {
-                            rotate: `${
-                              currentPosition.course
-                                ? currentPosition.course
-                                : 45
-                            }deg`,
+                            rotate: `${currentPosition.course}deg`,
                           },
                         ],
                       }}
