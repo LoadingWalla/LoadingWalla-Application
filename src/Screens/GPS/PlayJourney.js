@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState, useMemo, useRef} from 'react';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
@@ -73,6 +73,15 @@ export default function PlayJourney({navigation, route}) {
     [coordinates],
   );
 
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: coordinates?.[0]?.latitude || 0,
+      longitude: coordinates?.[0]?.longitude || 0,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }),
+  ).current;
+
   const togglePlayback = () => {
     setIsPlaying(!isPlaying);
   };
@@ -124,6 +133,14 @@ export default function PlayJourney({navigation, route}) {
           const newIndex = prevIndex + 1;
           const newPosition = coordinates[newIndex];
           setCurrentPosition(newPosition);
+          animatedMarkerPosition
+            .timing({
+              latitude: newPosition.latitude,
+              longitude: newPosition.longitude,
+              duration: 1000 / playbackSpeed,
+              useNativeDriver: false,
+            })
+            .start();
           setSliderValue(newIndex / (coordinates?.length - 1));
           if (mapRef.current && newPosition) {
             mapRef.current.animateToRegion({
@@ -153,17 +170,21 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex + 1;
       setCurrentStopIndex(newIndex);
       const nextStop = gpsStopsData[newIndex];
-      setCurrentPosition({
-        latitude: nextStop.latitude,
-        longitude: nextStop.longitude,
-      });
-      setCurrentStop(nextStop); // Update current stop
+      animatedMarkerPosition
+        .timing({
+          latitude: nextStop.latitude,
+          longitude: nextStop.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
+      setCurrentStop(nextStop);
       mapRef.current?.animateToRegion({
         latitude: nextStop.latitude,
         longitude: nextStop.longitude,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      }); // Animate to the new stop location
+      });
     }
   };
 
@@ -172,17 +193,21 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex - 1;
       setCurrentStopIndex(newIndex);
       const prevStop = gpsStopsData[newIndex];
-      setCurrentPosition({
-        latitude: prevStop.latitude,
-        longitude: prevStop.longitude,
-      });
-      setCurrentStop(prevStop); // Update current stop
+      animatedMarkerPosition
+        .timing({
+          latitude: prevStop.latitude,
+          longitude: prevStop.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
+      setCurrentStop(prevStop);
       mapRef.current?.animateToRegion({
         latitude: prevStop.latitude,
         longitude: prevStop.longitude,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      }); // Animate to the new stop location
+      });
     }
   };
 
@@ -257,11 +282,8 @@ export default function PlayJourney({navigation, route}) {
                   strokeWidth={6}
                 />
                 {currentPosition && (
-                  <Marker
-                    coordinate={{
-                      latitude: currentPosition.latitude,
-                      longitude: currentPosition.longitude,
-                    }}
+                  <Marker.Animated
+                    coordinate={animatedMarkerPosition}
                     title="Speed"
                     description={`${(currentPosition.speed * 1.852).toFixed(
                       2,
@@ -282,7 +304,7 @@ export default function PlayJourney({navigation, route}) {
                         ],
                       }}
                     />
-                  </Marker>
+                  </Marker.Animated>
                 )}
                 {gpsStopsData?.map((stop, index) => (
                   <Marker
@@ -341,6 +363,14 @@ export default function PlayJourney({navigation, route}) {
                 setCurrentIndex(newIndex);
                 const newPosition = coordinates[newIndex];
                 setCurrentPosition(newPosition);
+                animatedMarkerPosition
+                  .timing({
+                    latitude: newPosition.latitude,
+                    longitude: newPosition.longitude,
+                    duration: 500,
+                    useNativeDriver: false,
+                  })
+                  .start();
                 if (mapRef.current && newPosition) {
                   mapRef.current.animateToRegion({
                     latitude: newPosition.latitude,

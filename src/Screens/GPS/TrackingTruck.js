@@ -10,7 +10,7 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import useAddress from '../../hooks/useAddress';
 import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
@@ -29,7 +29,6 @@ import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
-  // console.log(11111, wsMessages);
   return wsMessages
     .flatMap(message => message.positions || [])
     .filter(position => position.deviceId === deviceId)
@@ -42,13 +41,13 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  // console.log(55555, route.params);
   const {deviceId, lat, long} = route.params;
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [addressFetched, setAddressFetched] = useState(false);
 
   const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
     useSelector(state => state.data);
@@ -80,14 +79,32 @@ const TrackingTruck = ({navigation, route}) => {
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       });
+
+      animatedMarkerPosition
+        .timing({
+          latitude: position.latitude,
+          longitude: position.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
     }
   };
+
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: lat || 0,
+      longitude: long || 0,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }),
+  ).current;
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const {address, fetchAddress} = useAddress(livePositions);
+  const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
 
   const handleNavigate = () => {
     const destination =
@@ -101,8 +118,11 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  // console.log(66666666, livePositions);
-  // console.log(555555, positions);
+  const handleFetchAddress = () => {
+    setAddressFetched(false);
+    fetchAddress();
+    setAddressFetched(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -197,12 +217,20 @@ const TrackingTruck = ({navigation, route}) => {
       </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapHeader}>
-          <Text>{device?.name}</Text>
+          <Text style={styles.fetchedAddressText}>{device?.name}</Text>
           <View style={styles.verticalLine} />
-          <TouchableOpacity onPress={fetchAddress}>
-            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-              {address}
-            </Text>
+          <TouchableOpacity onPress={handleFetchAddress}>
+            {gpsAddressLoading ? (
+              <ActivityIndicator size="small" color={backgroundColorNew} />
+            ) : (
+              <Text
+                style={[
+                  styles.addressText,
+                  addressFetched && styles.fetchedAddressText,
+                ]}>
+                {address}
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
         <View style={styles.mapView}>
@@ -228,8 +256,8 @@ const TrackingTruck = ({navigation, route}) => {
                 />
               )}
               {livePositions.length > 0 && (
-                <Marker
-                  coordinate={livePositions[livePositions.length - 1]}
+                <Marker.Animated
+                  coordinate={animatedMarkerPosition}
                   title={'Speed'}
                   description={`${(positions[0]?.speed * 1.852).toFixed(
                     2,
@@ -250,7 +278,7 @@ const TrackingTruck = ({navigation, route}) => {
                       ],
                     }}
                   />
-                </Marker>
+                </Marker.Animated>
               )}
             </MapView>
           )}
@@ -443,5 +471,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  addressText: {
+    fontSize: 14,
+    fontFamily: 'PlusJakartaSans-Italic',
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
+  fetchedAddressText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    textTransform: 'uppercase',
+    textDecorationLine: 'none',
+    fontSize: 14,
   },
 });
