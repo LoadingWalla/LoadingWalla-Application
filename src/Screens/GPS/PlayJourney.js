@@ -236,7 +236,7 @@ export default function PlayJourney({navigation, route}) {
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   };
 
-  console.log(4444, currentPosition);
+  // console.log(4444, currentPosition);
 
   return (
     <View style={styles.container}>
