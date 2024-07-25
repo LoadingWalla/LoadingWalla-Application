@@ -27,6 +27,7 @@ import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import AnimatedText from '../../Components/AnimatedText';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -223,13 +224,20 @@ const TrackingTruck = ({navigation, route}) => {
             {gpsAddressLoading ? (
               <ActivityIndicator size="small" color={backgroundColorNew} />
             ) : (
-              <Text
+              // <Text
+              //   style={[
+              //     styles.addressText,
+              //     addressFetched && styles.fetchedAddressText,
+              //   ]}>
+              //   {address}
+              // </Text>
+              <AnimatedText
+                text={address}
                 style={[
                   styles.addressText,
                   addressFetched && styles.fetchedAddressText,
-                ]}>
-                {address}
-              </Text>
+                ]}
+              />
             )}
           </TouchableOpacity>
         </View>

@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
     flex: 1,
+    maxWidth: 200,
   },
 });
 

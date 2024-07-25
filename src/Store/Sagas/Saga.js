@@ -1046,6 +1046,9 @@ export function* fetchTokenSaga() {
 export function* fetchGpsDevices({username, password}) {
   try {
     // console.log(33333, username, password);
+    // const data = yield API.get(
+    //   `gps/devices?username=${username}&password=${password}`,
+    // );
     const data = yield gpsApi.get('devices', username, password);
     // console.log('Gps Devices', data);
     if (data?.status === 200) {

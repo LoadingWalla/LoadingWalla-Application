@@ -1235,6 +1235,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
       return updateState(state, {
         gpsDeviceLoading: false,
+        // gpsDeviceData: payload?.data?.devices,
         gpsDeviceData: payload,
         wsDevices: payload,
         gpsDeviceStatus: payload?.status,

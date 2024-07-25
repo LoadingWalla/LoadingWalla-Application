@@ -135,8 +135,8 @@ export default function PlayJourney({navigation, route}) {
           setCurrentPosition(newPosition);
           animatedMarkerPosition
             .timing({
-              latitude: newPosition.latitude,
-              longitude: newPosition.longitude,
+              latitude: newPosition?.latitude,
+              longitude: newPosition?.longitude,
               duration: 1000 / playbackSpeed,
               useNativeDriver: false,
             })
@@ -144,8 +144,8 @@ export default function PlayJourney({navigation, route}) {
           setSliderValue(newIndex / (coordinates?.length - 1));
           if (mapRef.current && newPosition) {
             mapRef.current.animateToRegion({
-              latitude: newPosition.latitude,
-              longitude: newPosition.longitude,
+              latitude: newPosition?.latitude,
+              longitude: newPosition?.longitude,
               latitudeDelta: 0.01,
               longitudeDelta: 0.01,
             });
