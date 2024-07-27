@@ -1046,11 +1046,11 @@ export function* fetchTokenSaga() {
 export function* fetchGpsDevices({username, password}) {
   try {
     // console.log(33333, username, password);
-    // const data = yield API.get(
-    //   `gps/devices?username=${username}&password=${password}`,
-    // );
-    const data = yield gpsApi.get('devices', username, password);
-    // console.log('Gps Devices', data);
+    const data = yield API.get(
+      `gps/devices?username=${username}&password=${password}`,
+    );
+    // const data = yield gpsApi.get('devices', username, password);
+    // console.log('--------Gps Devices', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsDevicesSuccess(data?.data));
@@ -1245,8 +1245,23 @@ export function* placeGpsOrderSaga({
   qty,
   rc_numbers,
   address,
+  city,
+  landmark,
+  pinCode,
+  state,
 }) {
-  // console.log(name, mobile, plan_id, qty, rc_numbers, address);
+  console.log(
+    name,
+    mobile,
+    plan_id,
+    qty,
+    rc_numbers,
+    address,
+    city,
+    state,
+    landmark,
+    pinCode,
+  );
   try {
     const body = new FormData();
     body.append('name', name);
@@ -1257,6 +1272,10 @@ export function* placeGpsOrderSaga({
       body.append('rc_numbers[]', rc_number);
     });
     body.append('address', address);
+    body.append('city', city);
+    body.append('state', state);
+    body.append('landmark', landmark);
+    body.append('pincode', pinCode);
     // console.log(9999999, body);
     const data = yield multiPartApi.post('gps-order', body);
     // console.log('API response------PaymentVerify', data);

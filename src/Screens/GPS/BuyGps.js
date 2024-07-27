@@ -6,7 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
@@ -74,11 +74,23 @@ const BuyGps = ({navigation}) => {
       return state.data;
     });
 
+  const lastNavigationDirection = useRef(null);
+  // Track navigation direction
+  navigation.addListener('beforeRemove', e => {
+    if (e.data.action.type === 'GO_BACK') {
+      lastNavigationDirection.current = 'back';
+    } else {
+      lastNavigationDirection.current = 'forward';
+    }
+  });
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(websocketDisconnect());
       return () => {
-        dispatch(websocketConnect(gpsTokenData?.cookie));
+        if (lastNavigationDirection.current === 'back') {
+          dispatch(websocketConnect(gpsTokenData?.cookie));
+        }
       };
     }, [dispatch, gpsTokenData]),
   );

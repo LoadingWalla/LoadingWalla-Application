@@ -19,13 +19,35 @@ import {
 } from '../../Store/Actions/Actions';
 import AnimatedText from '../../Components/AnimatedText';
 import RazorpayCheckout from 'react-native-razorpay';
-import AlertBox from '../../Components/AlertBox';
 import Toast from 'react-native-simple-toast';
+import TextTicker from 'react-native-text-ticker';
+
+// const createFullAddressArray = data => {
+//   return [
+//     {key: 'address', value: data.address},
+//     {key: 'landmark', value: data.landmark},
+//     {key: 'city', value: data.city},
+//     {key: 'state', value: data.state},
+//     {key: 'pincode', value: data.pincode},
+//   ];
+// };
+const createFullAddressArray = data => {
+  const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
+  return fullAddress;
+};
 
 const ReusableSummaryItem = React.memo(({title, value}) => (
   <View style={styles.reusableItemContainer}>
-    <AnimatedText text={title} style={styles.reusableItemContainerText} />
-    <AnimatedText text={value} style={styles.reusableItemContainerText} />
+    <AnimatedText
+      text={title}
+      style={styles.reusableItemContainerText}
+      showAnimation={false}
+    />
+    <AnimatedText
+      text={value}
+      style={styles.reusableItemContainerText}
+      showAnimation={true}
+    />
   </View>
 ));
 
@@ -49,10 +71,17 @@ const PaymentGPS = ({navigation, route}) => {
     orderData,
     orderLoading,
     verifyPaymentData,
+    gpsOrderData,
     verifyPaymentStatus,
   } = useSelector(state => state.data);
 
   const dispatch = useDispatch();
+
+  const fullAddressArray = useMemo(
+    () => createFullAddressArray(gpsOrderData),
+    [gpsOrderData],
+  );
+  // console.log(44444, fullAddressArray);
 
   const filteredPlanData = useMemo(
     () => gpsPlansData?.find(plan => plan.id === plan_id),
@@ -202,7 +231,7 @@ const PaymentGPS = ({navigation, route}) => {
             />
             <ReusableSummaryItem
               title={'Full address'}
-              value={gpsOrderDetailsData?.address}
+              value={fullAddressArray}
             />
             <ReusableSummaryItem
               title={'RC number #1'}

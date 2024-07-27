@@ -74,14 +74,14 @@ const GpsTrackings = ({navigation}) => {
   );
 
   const mergeDeviceData = React.useCallback(
-    (devices, latestDevices, positions, events) => {
+    (devices = [], latestDevices = [], positions = [], events = []) => {
       const deviceMap = new Map();
 
-      devices.forEach(device => {
+      devices?.forEach(device => {
         deviceMap.set(device.id, {...device});
       });
 
-      latestDevices.forEach(latest => {
+      latestDevices?.forEach(latest => {
         if (deviceMap.has(latest.id)) {
           deviceMap.set(latest.id, {
             ...deviceMap.get(latest.id),
@@ -90,7 +90,7 @@ const GpsTrackings = ({navigation}) => {
         }
       });
 
-      positions.forEach(position => {
+      positions?.forEach(position => {
         if (deviceMap.has(position.deviceId)) {
           const device = deviceMap.get(position.deviceId);
           device.position = device.position
@@ -100,7 +100,7 @@ const GpsTrackings = ({navigation}) => {
         }
       });
 
-      events.forEach(event => {
+      events?.forEach(event => {
         if (deviceMap.has(event.deviceId)) {
           const device = deviceMap.get(event.deviceId);
           device.events = device.events ? [...device.events, event] : [event];

@@ -13,13 +13,20 @@ import {
 
 const DeliveryDetails = ({navigation, route}) => {
   const {gpsCount, pricePerDevice, plan_id} = route.params;
-  console.log(4444, route);
+  // console.log(4444, route);
 
   // State variables to store input values
   const [fullName, setFullName] = useState('');
   const [alternativePhoneNumber, setAlternativePhoneNumber] = useState('');
   const [rcNumbers, setRcNumbers] = useState(Array(gpsCount).fill(''));
-  const [deliveryAddress, setDeliveryAddress] = useState('');
+  // const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [address, setAddress] = useState({
+    deliveryAddress: '',
+    landmark: '',
+    city: '',
+    state: '',
+    pinCode: '',
+  });
   const dispatch = useDispatch();
 
   const {gpsOrderStatus, gpsPlansData, gpsOrderData} = useSelector(
@@ -35,13 +42,33 @@ const DeliveryDetails = ({navigation, route}) => {
     setRcNumbers(newRcNumbers);
   };
 
-  // Handler for Continue button press
+  const handleAddressChange = (key, value) => {
+    setAddress(prevState => ({
+      ...prevState,
+      [key]: value,
+    }));
+  };
+
   const handleContinue = () => {
     // navigation.navigate('paymentGPS', {plan_id, gpsCount});
+    console.log(
+      fullName,
+      alternativePhoneNumber,
+      plan_id,
+      gpsCount,
+      rcNumbers,
+      // deliveryAddress,
+      address.city,
+      address.deliveryAddress,
+      address.landmark,
+      address.pinCode,
+      address.state,
+    );
     if (
       !fullName ||
       !alternativePhoneNumber ||
-      !deliveryAddress ||
+      // !deliveryAddress ||
+      Object.values(address).some(field => !field) ||
       rcNumbers.includes('')
     ) {
       Toast.show('Please fill all the fields before continuing.', Toast.LONG);
@@ -54,7 +81,12 @@ const DeliveryDetails = ({navigation, route}) => {
         plan_id,
         gpsCount,
         rcNumbers,
-        deliveryAddress,
+        // deliveryAddress,
+        address.deliveryAddress,
+        address.city,
+        address.state,
+        address.landmark,
+        address.pinCode,
       ),
     );
   };
@@ -72,10 +104,17 @@ const DeliveryDetails = ({navigation, route}) => {
       }
     }
     return () => {
-      setFullName('');
-      setAlternativePhoneNumber('');
-      setRcNumbers(Array(gpsCount).fill(''));
-      setDeliveryAddress('');
+      // setFullName('');
+      // setAlternativePhoneNumber('');
+      // setRcNumbers(Array(gpsCount).fill(''));
+      // setDeliveryAddress('');
+      // setAddress({
+      //   deliveryAddress: '',
+      //   landmark: '',
+      //   city: '',
+      //   state: '',
+      //   pinCode: '',
+      // });
     };
   }, [gpsOrderStatus]);
 
@@ -101,7 +140,7 @@ const DeliveryDetails = ({navigation, route}) => {
           />
         </View>
         <View>
-          <Text style={styles.label}>Alternative Phone Number*</Text>
+          <Text style={styles.label}>Phone Number*</Text>
           <TextInputField
             value={alternativePhoneNumber}
             hint={'Enter Alternative Phone Number'}
@@ -122,10 +161,44 @@ const DeliveryDetails = ({navigation, route}) => {
         <View>
           <Text style={styles.label}>Delivery address*</Text>
           <TextInputField
-            value={deliveryAddress}
-            isMultiLine={true}
+            // value={deliveryAddress}
+            value={address.deliveryAddress}
             hint={'Enter Delivery Address'}
-            onChangeText={setDeliveryAddress}
+            // onChangeText={setDeliveryAddress}
+            onChangeText={text => handleAddressChange('deliveryAddress', text)}
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Landmark*</Text>
+          <TextInputField
+            value={address.landmark}
+            hint={'Enter Landmark'}
+            onChangeText={text => handleAddressChange('landmark', text)}
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>City*</Text>
+          <TextInputField
+            value={address.city}
+            hint={'Enter City'}
+            onChangeText={text => handleAddressChange('city', text)}
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>State*</Text>
+          <TextInputField
+            value={address.state}
+            hint={'Enter State'}
+            onChangeText={text => handleAddressChange('state', text)}
+          />
+        </View>
+        <View>
+          <Text style={styles.label}>Pin Code*</Text>
+          <TextInputField
+            value={address.pinCode}
+            hint={'Enter Pin Code'}
+            isPhone={true}
+            onChangeText={text => handleAddressChange('pinCode', text)}
           />
         </View>
         <Button

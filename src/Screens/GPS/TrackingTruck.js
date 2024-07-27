@@ -140,28 +140,18 @@ const TrackingTruck = ({navigation, route}) => {
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
             <ToggleIconText
-              IconComponent={KeyIcon}
-              text={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'ON'
-                  : 'OFF'
-              }
-              iconSize={25}
-              color={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'green'
-                  : 'red'
-              }
-              index={4}
+              IconComponent={FuelIcon}
+              text="Fuel"
+              iconSize={30}
+              color={'#727272'}
+              index={0}
               activeIndex={activeIndex}
-              onPress={() => handlePress(4)}
+              onPress={() => handlePress(0)}
             />
             <ToggleIconText
               IconComponent={BatteryIcon}
               text={positions[0]?.attributes?.batteryLevel || 'Battery'}
-              iconSize={30}
+              iconSize={25}
               color={
                 positions[0]?.attributes?.batteryLevel
                   ? positions[0]?.attributes?.batteryLevel > 60
@@ -176,7 +166,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={NetworkIcon}
               text="Network"
-              iconSize={25}
+              iconSize={23}
               color={'#727272'}
               index={2}
               activeIndex={activeIndex}
@@ -185,29 +175,40 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={GeoFencingIcon}
               text="GeoFencing"
-              iconSize={25}
+              iconSize={28}
               color={'#727272'}
               index={3}
               activeIndex={activeIndex}
               onPress={() => handlePress(3)}
             />
             <ToggleIconText
+              IconComponent={KeyIcon}
+              text={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'ON'
+                  : 'OFF'
+              }
+              iconSize={23}
+              color={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'green'
+                  : 'red'
+              }
+              index={4}
+              activeIndex={activeIndex}
+              onPress={() => handlePress(4)}
+            />
+
+            <ToggleIconText
               IconComponent={AlertIcon}
               text="Damage"
-              iconSize={25}
+              iconSize={27}
               color={'#727272'}
               index={5}
               activeIndex={activeIndex}
               onPress={() => handlePress(5)}
-            />
-            <ToggleIconText
-              IconComponent={FuelIcon}
-              text="Fuel"
-              iconSize={30}
-              color={'#727272'}
-              index={0}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(0)}
             />
           </View>
         </View>
@@ -224,19 +225,13 @@ const TrackingTruck = ({navigation, route}) => {
             {gpsAddressLoading ? (
               <ActivityIndicator size="small" color={backgroundColorNew} />
             ) : (
-              // <Text
-              //   style={[
-              //     styles.addressText,
-              //     addressFetched && styles.fetchedAddressText,
-              //   ]}>
-              //   {address}
-              // </Text>
               <AnimatedText
                 text={address}
                 style={[
                   styles.addressText,
                   addressFetched && styles.fetchedAddressText,
                 ]}
+                showAnimation={true}
               />
             )}
           </TouchableOpacity>
@@ -432,7 +427,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
   },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
@@ -492,5 +489,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     textDecorationLine: 'none',
     fontSize: 14,
+    minWidth: 60,
+    textAlign: 'center',
   },
 });

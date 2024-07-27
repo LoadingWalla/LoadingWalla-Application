@@ -10,6 +10,7 @@ import AlertBox from './AlertBox';
 import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
+import moment from 'moment';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   // console.log(66666, item);
@@ -30,6 +31,19 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
+  };
+  const renderStatus = () => {
+    if (item?.status === 'online') {
+      return <Text style={{color: 'green'}}>Active</Text>;
+    } else if (item?.status === 'offline') {
+      return <Text style={{color: backgroundColorNew}}>Inactive</Text>;
+    } else {
+      return (
+        <Text style={styles.lastUpdateText}>
+          {moment(item?.lastUpdate).fromNow()}
+        </Text>
+      );
+    }
   };
 
   return (
@@ -66,16 +80,9 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           }}
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{item?.name}</Text>
-          <View style={styles.ignBox}>
-            <Text
-              style={{
-                color: item?.status === 'online' ? 'green' : backgroundColorNew,
-              }}>
-              {item?.status}
-            </Text>
-          </View>
+          <View style={styles.ignBox}>{renderStatus()}</View>
           <View style={styles.iconBox}>
-            <ToggleIconText
+            {/* <ToggleIconText
               IconComponent={KeyIcon}
               text={ignition ? 'On' : 'Off'}
               iconSize={20}
@@ -84,16 +91,22 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               activeIndex={activeIndex}
               activeText={true}
               onPress={() => handlePress(1)}
-            />
+            /> */}
             <BatteryIcon
               size={20}
-              color={batteryLevel > 50 ? 'green' : backgroundColorNew}
+              color={
+                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
+              }
               charge={attributes.charge}
               batteryLevel={batteryLevel}
             />
             {attributes.network !== null && (
               <NetworkIcon color={'green'} size={20} />
             )}
+            <KeyIcon
+              size={19}
+              color={ignition ? 'green' : backgroundColorNew}
+            />
             {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
             {attributes.geofence && <GeoFencingIcon size={20} />}
             {attributes.alarm && (
@@ -194,6 +207,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
     textAlign: 'left',
+    textTransform: 'uppercase',
   },
   distanceBox: {
     paddingHorizontal: 15,

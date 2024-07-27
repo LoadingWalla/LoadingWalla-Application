@@ -59,6 +59,7 @@
     "react-native-svg": "^15.1.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-text-ticker": "^1.14.0",
     "react-native-vision-camera": "^4.0.1",
     "react-native-websocket": "^1.0.2",
     "react-native-webview": "^13.8.4",

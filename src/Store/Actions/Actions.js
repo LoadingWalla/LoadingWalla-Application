@@ -1244,15 +1244,38 @@ export const placeGpsOrderRequest = (
   qty,
   rc_numbers,
   address,
-) => ({
-  type: actionTypes.PLACE_GPS_ORDER_REQUEST,
-  name,
-  mobile,
-  plan_id,
-  qty,
-  rc_numbers,
-  address,
-});
+  city,
+  state,
+  landmark,
+  pinCode,
+) => {
+  // console.log(
+  //   222222,
+  //   name,
+  //   mobile,
+  //   plan_id,
+  //   qty,
+  //   rc_numbers,
+  //   address,
+  //   city,
+  //   landmark,
+  //   pinCode,
+  //   state,
+  // );
+  return {
+    type: actionTypes.PLACE_GPS_ORDER_REQUEST,
+    name,
+    mobile,
+    plan_id,
+    qty,
+    rc_numbers,
+    address,
+    city,
+    state,
+    landmark,
+    pinCode,
+  };
+};
 
 export const placeGpsOrderSuccess = payload => ({
   type: actionTypes.PLACE_GPS_ORDER_SUCCESS,
