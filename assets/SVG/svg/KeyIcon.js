@@ -7,6 +7,7 @@ function KeyIcon({size, color}) {
       xmlns="http://www.w3.org/2000/svg"
       height={size}
       width={size}
+      style={{marginLeft: 3}}
       viewBox="0 0 17.083 17.083">
       <Path
         data-name="Icon fa-solid-key"

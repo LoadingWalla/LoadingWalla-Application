@@ -82,33 +82,33 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           <Text style={styles.highlightText}>{item?.name}</Text>
           <View style={styles.ignBox}>{renderStatus()}</View>
           <View style={styles.iconBox}>
-            {/* <ToggleIconText
-              IconComponent={KeyIcon}
-              text={ignition ? 'On' : 'Off'}
-              iconSize={20}
-              color={ignition ? 'green' : backgroundColorNew}
-              index={1}
-              activeIndex={activeIndex}
-              activeText={true}
-              onPress={() => handlePress(1)}
-            /> */}
-            <BatteryIcon
-              size={20}
-              color={
-                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
-              }
-              charge={attributes.charge}
-              batteryLevel={batteryLevel}
-            />
-            {attributes.network !== null && (
-              <NetworkIcon color={'green'} size={20} />
-            )}
-            <KeyIcon
-              size={19}
-              color={ignition ? 'green' : backgroundColorNew}
-            />
-            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
-            {attributes.geofence && <GeoFencingIcon size={20} />}
+            <View
+              style={{
+                // borderWidth: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                minWidth: 80,
+              }}>
+              <BatteryIcon
+                size={20}
+                color={
+                  batteryLevel
+                    ? batteryLevel > 60
+                      ? 'green'
+                      : 'red'
+                    : '#727272'
+                }
+                charge={attributes.charge}
+                batteryLevel={batteryLevel}
+              />
+              {attributes.network !== null && (
+                <NetworkIcon color={'green'} size={18} />
+              )}
+              <KeyIcon
+                size={19}
+                color={ignition ? 'green' : backgroundColorNew}
+              />
+            </View>
             {attributes.alarm && (
               <ToggleIconText
                 IconComponent={AlertIcon}
@@ -121,6 +121,8 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 onPress={() => handlePress(2)}
               />
             )}
+            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
+            {attributes.geofence && <GeoFencingIcon size={20} />}
           </View>
         </TouchableOpacity>
         <View>
@@ -226,6 +228,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
+    // borderWidth: 1,
+    minWidth: 180,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
