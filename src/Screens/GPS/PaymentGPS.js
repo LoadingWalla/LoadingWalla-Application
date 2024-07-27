@@ -20,17 +20,7 @@ import {
 import AnimatedText from '../../Components/AnimatedText';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
-import TextTicker from 'react-native-text-ticker';
 
-// const createFullAddressArray = data => {
-//   return [
-//     {key: 'address', value: data.address},
-//     {key: 'landmark', value: data.landmark},
-//     {key: 'city', value: data.city},
-//     {key: 'state', value: data.state},
-//     {key: 'pincode', value: data.pincode},
-//   ];
-// };
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
   return fullAddress;
