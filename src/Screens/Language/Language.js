@@ -15,6 +15,7 @@ import {initLanguage} from '../../Store/Actions/Actions';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import {useTranslation} from 'react-i18next';
+import NetInfo from '@react-native-community/netinfo';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
@@ -102,6 +103,17 @@ const Language = ({navigation, route}) => {
       navigation.replace('Signup');
     }
   };
+
+  console.log(33333, NetInfo);
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log(4444, state);
+      // setIsConnected(state.isConnected);
+    });
+
+    // Clean up the subscription
+    return () => unsubscribe();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>

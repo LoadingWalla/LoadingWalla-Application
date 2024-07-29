@@ -21,7 +21,7 @@ const instanceFunction = instanceObj => {
   // Add a response interceptor
   instanceObj.interceptors.response.use(
     function (response) {
-      // console.log('fetch client', response.status);
+      console.log('fetch client', response);
       // Any status code that lie within the range of 2xx will come here
       let respObj = {
         data: response.data ? response.data : [],
@@ -32,7 +32,7 @@ const instanceFunction = instanceObj => {
     async function (error) {
       // console.log('fetch Client', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-        // console.log('Network Request', error.code);
+        console.log('Network Request', error);
         Snackbar.show({
           text: 'Slow Internet Connection.',
           duration: Snackbar.LENGTH_LONG,
@@ -70,9 +70,29 @@ const instanceFunction = instanceObj => {
 const fetchClient = () => {
   const defaultOptions = {
     baseURL: URL.URL,
+    timeout: 5000,
+    retry: 3, // Add retry count
+    retryDelay: 5000, // Add retry delay in ms
   };
   // Create instance
   let instance = axios.create(defaultOptions);
+  // instance.interceptors.response.use(undefined, async err => {
+  //   const config = err.config;
+  //   if (!config || !config.retry) {
+  //     return Promise.reject(err);
+  //   }
+
+  //   config.__retryCount = config.__retryCount || 0;
+
+  //   if (config.__retryCount >= config.retry) {
+  //     return Promise.reject(err);
+  //   }
+
+  //   config.__retryCount += 1;
+
+  //   await new Promise(res => setTimeout(res, config.retryDelay));
+  //   return instance(config);
+  // });
   return instanceFunction(instance);
 };
 
