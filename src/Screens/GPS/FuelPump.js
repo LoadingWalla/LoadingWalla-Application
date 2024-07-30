@@ -1,38 +1,142 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {
+  Linking,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import axios from 'axios';
 import GoToIcon from '../../../assets/SVG/svg/GoToIcon';
 import {PrivacyPolicy} from '../../Color/color';
 
-const FuelPumpItem = () => {
+const API_KEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
+const BASE_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+const DISTANCE_MATRIX_URL =
+  'https://maps.googleapis.com/maps/api/distancematrix/json';
+
+const fetchData = async (latitude, longitude, type) => {
+  try {
+    const response = await axios.get(BASE_URL, {
+      params: {
+        location: `${latitude},${longitude}`,
+        radius: 5000, // 5km radius
+        type: type,
+        key: API_KEY,
+      },
+    });
+    return response.data.results;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+const fetchDistances = async (origins, destinations) => {
+  try {
+    const response = await axios.get(DISTANCE_MATRIX_URL, {
+      params: {
+        origins: origins,
+        destinations: destinations,
+        key: API_KEY,
+      },
+    });
+    return response.data.rows[0].elements;
+  } catch (error) {
+    console.error('Error fetching distances:', error);
+    throw error;
+  }
+};
+
+const FuelPumpItem = ({item, distance}) => {
+  const handleNavigate = () => {
+    const url = `google.navigation:q=${item?.geometry?.location?.lat},${item?.geometry?.location?.lng}`;
+    Linking.openURL(url).catch(err =>
+      console.error('Error opening Google Maps', err),
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.headerText}>Hindustan petroleum fuel pump</Text>
-        <Text style={styles.headerTextValue}>2 KM away</Text>
+        <Text style={styles.headerText}>{item.name}</Text>
+        <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
-      <View style={styles.iconContainer}>
+      <TouchableOpacity style={styles.iconContainer} onPress={handleNavigate}>
         <View style={{transform: [{rotate: '-45deg'}]}}>
           <GoToIcon size={25} />
         </View>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
-const FuelPump = () => {
+const FuelPump = ({navigation, route}) => {
+  const {theft} = route.params;
+  const [locations, setLocations] = useState([]);
+  const [distances, setDistances] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchLocationsAndDistances = async () => {
+      try {
+        const latitude = 25.829027; // Replace with actual latitude
+        const longitude = 84.980179; // Replace with actual longitude
+        const type = theft ? 'police' : 'gas_station';
+        const data = await fetchData(latitude, longitude, type);
+
+        setLocations(data);
+
+        const origins = `${latitude},${longitude}`;
+        const destinations = data
+          .map(
+            place =>
+              `${place.geometry.location.lat},${place.geometry.location.lng}`,
+          )
+          .join('|');
+
+        const distanceData = await fetchDistances(origins, destinations);
+
+        setDistances(distanceData);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLocationsAndDistances();
+  }, [theft]);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text>Error fetching data</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
-      <FuelPumpItem />
+      {locations.map((location, index) => (
+        <FuelPumpItem
+          key={index}
+          item={location}
+          distance={
+            distances[index]?.distance?.text || 'Distance not available'
+          }
+        />
+      ))}
     </ScrollView>
   );
 };
@@ -53,7 +157,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   iconContainer: {
-    // borderWidth: 1,
     padding: 3,
     elevation: 2,
     backgroundColor: '#ffffff',
@@ -64,12 +167,21 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    // paddingVertical: 5,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   headerTextValue: {
     fontSize: 14,
     fontFamily: 'PlusJakartaSans-SemiBold',
     color: PrivacyPolicy,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

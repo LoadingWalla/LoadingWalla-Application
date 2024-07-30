@@ -45,9 +45,11 @@ const PercentageBar = ({
       <Text style={styles.barText}>{`${percentage}%  ${t(
         Constants.COMPLETE,
       )}`}</Text>
-      <View style={styles.arrowView}>
-        <RightArrow size={20} color={GradientColor1} />
-      </View>
+      {verify !== 1 && (
+        <View style={styles.arrowView}>
+          <RightArrow size={20} color={GradientColor1} />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

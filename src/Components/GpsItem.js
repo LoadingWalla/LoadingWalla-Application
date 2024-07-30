@@ -1,32 +1,49 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
-import DamageIcon from '../../assets/SVG/svg/DamageIcon';
 import AlertBox from './AlertBox';
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+import AlertIcon from '../../assets/SVG/AlertIcon';
+import ToggleIconText from './ToggleIconText';
+import moment from 'moment';
 
-const GpsItem = ({navigation, item, icon}) => {
-  console.log(66666, item);
+const GpsItem = ({navigation, item, icon, isDisable}) => {
+  // console.log(66666, item);
+  const [activeIndex, setActiveIndex] = useState(null);
 
-  const ignition = item?.position[0]?.BatteryIcon?.attributes?.ignition;
-  // const todayDistance = item?.position[0]?.attributes?.distance;
-  const totalDistance = item?.position[0]?.attributes?.totalDistance;
-  const batteryLevel = item?.position[0]?.attributes?.batteryLevel;
-  const isNavigationDisabled = item.disabled || item.positionId === 0;
+  const attributes =
+    item?.position?.length > 0 ? item.position[0].attributes : {};
+  const ignition = attributes?.ignition || attributes?.motion;
+  const totalDistance = attributes?.totalDistance
+    ? (attributes.totalDistance / 1000).toFixed(2)
+    : '0.00';
+  const batteryLevel = attributes?.batteryLevel;
+  const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
-  const showAlert = () => {
-    AlertBox('Service unavailable', 'Navigation is disabled for this item.');
+  const showAlert = message => {
+    AlertBox(message);
+  };
+
+  const handlePress = index => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
+  const renderStatus = () => {
+    if (item?.status === 'online') {
+      return <Text style={{color: 'green'}}>Active</Text>;
+    } else if (item?.status === 'offline') {
+      return <Text style={{color: backgroundColorNew}}>Inactive</Text>;
+    } else {
+      return (
+        <Text style={styles.lastUpdateText}>
+          {moment(item?.lastUpdate).fromNow()}
+        </Text>
+      );
+    }
   };
 
   return (
@@ -41,72 +58,102 @@ const GpsItem = ({navigation, item, icon}) => {
               style={styles.image}
             />
           </View>
-          <View />
         </View>
         <TouchableOpacity
+          disabled={isDisable}
           onPress={() => {
-            if (isNavigationDisabled) {
-              showAlert();
+            if (Array.isArray(item?.position) && item?.position.length === 0) {
+              if (item?.disabled) {
+                showAlert('Service unavailable! Your Plan has been Expired.');
+              } else {
+                showAlert('Wait! GPS Network Error.');
+              }
+            } else if (isNavigationDisabled) {
+              showAlert('Service unavailable! Your Plan has been Expired.');
             } else {
-              navigation.navigate('trackingtruck', {deviceId: item.id});
+              navigation.navigate('trackingtruck', {
+                deviceId: item?.id,
+                lat: item?.position[0]?.latitude,
+                long: item?.position[0]?.longitude,
+              });
             }
           }}
           style={styles.textContainer}>
-          <Text style={styles.highlightText}>{item.name}</Text>
-          <View style={styles.ignBox}>
-            <Text style={{color: item.status === 'online' ? 'green' : 'red'}}>
-              {item.status}
-            </Text>
-            <View style={styles.verticalLine} />
-            <View style={{flexDirection: 'row', borderWidth: 0}}>
-              <Text>Ignition</Text>
-              <Text style={{color: ignition ? 'green' : 'red', marginLeft: 5}}>
-                {ignition ? (ignition ? 'on' : 'off') : 'off'}
-              </Text>
-            </View>
-          </View>
+          <Text style={styles.highlightText}>{item?.name}</Text>
+          <View style={styles.ignBox}>{renderStatus()}</View>
           <View style={styles.iconBox}>
-            <FuelIcon size={20} color={'#727272'} />
-            <BatteryIcon
-              size={20}
-              color={
-                batteryLevel ? (batteryLevel > 60 ? 'green' : 'red') : '#727272'
-              }
-            />
-            <NetworkIcon size={20} />
-            <GeoFencingIcon size={20} />
-            <DamageIcon size={20} />
+            <View
+              style={{
+                // borderWidth: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                minWidth: 80,
+              }}>
+              <BatteryIcon
+                size={20}
+                color={
+                  batteryLevel
+                    ? batteryLevel > 60
+                      ? 'green'
+                      : 'red'
+                    : '#727272'
+                }
+                charge={attributes.charge}
+                batteryLevel={batteryLevel}
+              />
+              {attributes.network !== null && (
+                <NetworkIcon color={'green'} size={18} />
+              )}
+              <KeyIcon
+                size={19}
+                color={ignition ? 'green' : backgroundColorNew}
+              />
+            </View>
+            {attributes.alarm && (
+              <ToggleIconText
+                IconComponent={AlertIcon}
+                text={attributes.alarm}
+                iconSize={20}
+                color={backgroundColorNew}
+                index={2}
+                activeIndex={activeIndex}
+                activeText={false}
+                onPress={() => handlePress(2)}
+              />
+            )}
+            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
+            {attributes.geofence && <GeoFencingIcon size={20} />}
           </View>
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>
-              {totalDistance ? `${Math.ceil(totalDistance / 1000)} KM` : '0 KM'}
-            </Text>
+            <Text style={styles.highlightText}>{`${totalDistance} KM`}</Text>
             <Text style={styles.distanceText}>Total Distance</Text>
           </View>
         </View>
       </View>
       <View style={styles.expiryDate}>
-        <Text
-          style={
-            item.status === 'Expired' ? styles.expiredText : styles.activeText
-          }>
+        <Text style={item?.disabled ? styles.expiredText : styles.activeText}>
           Expire on Feb 20, 2025
         </Text>
         <TouchableOpacity
+          disabled={isDisable}
           onPress={() => {
-            if (isNavigationDisabled) {
-              showAlert();
+            if (Array.isArray(item?.position) && item?.position.length === 0) {
+              if (item?.disabled) {
+                showAlert('Service unavailable! Your Plan has been Expired.');
+              } else {
+                showAlert('Wait! GPS Network Error.');
+              }
+            } else if (isNavigationDisabled) {
+              showAlert('Service unavailable! Your Plan has been Expired.');
             } else {
-              navigation.navigate('GpsSetting');
+              navigation.navigate('GpsSetting', {deviceId: item?.id});
             }
           }}>
           <SettingIcon
             size={20}
-            color={
-              item.status === 'Expired' ? backgroundColorNew : PrivacyPolicy
-            }
+            color={item?.disabled ? backgroundColorNew : PrivacyPolicy}
           />
         </TouchableOpacity>
       </View>
@@ -150,7 +197,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   expiryDate: {
-    // borderWidth: 1,
     backgroundColor: '#F7F7F7',
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -163,13 +209,12 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
     textAlign: 'left',
+    textTransform: 'uppercase',
   },
   distanceBox: {
-    // borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 6,
-    // elevation: 2,
     backgroundColor: '#f7f7f7',
   },
   distanceText: {
@@ -182,9 +227,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // borderWidth: 1,
     marginVertical: 10,
-    // paddingVertical: 5,
+    // borderWidth: 1,
+    minWidth: 180,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
@@ -194,7 +239,6 @@ const styles = StyleSheet.create({
   },
   ignBox: {flexDirection: 'row', alignItems: 'center'},
   imgContainer: {
-    // borderWidth: 1,
     padding: 5,
     justifyContent: 'center',
     flexDirection: 'row',
@@ -208,4 +252,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  ignitionStatus: {flexDirection: 'row', borderWidth: 0},
+  ignitionText: {fontFamily: 'PlusJakartaSans-SemiBold'},
 });

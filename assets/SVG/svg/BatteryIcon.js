@@ -1,17 +1,49 @@
 import * as React from 'react';
-import Svg, {Path} from 'react-native-svg';
+import Svg, {G, Path} from 'react-native-svg';
 
-function BatteryIcon({size, color}) {
+function BatteryIcon({size, color, charge, batteryLevel}) {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
       height={size}
-      width={size}>
-      <Path
-        d="M16 20H8V6h8m.67-2H15V2H9v2H7.33C6.6 4 6 4.6 6 5.33v15.34C6 21.4 6.6 22 7.33 22h9.34c.74 0 1.33-.59 1.33-1.33V5.33C18 4.6 17.4 4 16.67 4M15 16H9v3h6v-3m0-9H9v3h6V7m0 4.5H9v3h6v-3z"
-        fill={color}
-      />
+      width={size}
+      viewBox="0 0 9.741 17.982">
+      <G data-name="Icon ion-battery-full">
+        <Path
+          data-name="Path 54206"
+          d="M1.681 0h11.354a1.681 1.681 0 011.681 1.681V6.56a1.681 1.681 0 01-1.681 1.681H1.681A1.681 1.681 0 010 6.56V1.681A1.681 1.681 0 011.681 0z"
+          fill="none"
+          stroke="#000"
+          strokeLinecap="square"
+          strokeWidth={1.5}
+          transform="rotate(-90 8.991 8.241)"
+        />
+        <Path
+          data-name="Path 54207"
+          d="M.165 0h11.726a.181.181 0 01.165.193v5.118a.181.181 0 01-.165.193H.165A.181.181 0 010 5.311V.193A.181.181 0 01.165 0z"
+          transform="rotate(-90 8.991 8.241) translate(1.347 1.369)"
+          fill="#3ba700"
+        />
+        <Path
+          data-name="Path 54208"
+          d="M16.482 2.747v2.747"
+          fill="none"
+          stroke="#000"
+          strokeLinecap="round"
+          strokeWidth={1.5}
+          transform="rotate(-90 8.991 8.241)"
+        />
+        {charge && (
+          <G data-name="Icon ion-ios-thunderstorm-outline">
+            <Path
+              data-name="Path 60244"
+              d="M17.792 17.332h-1.318L17 15.75h-2.373l-.495 2.637h1.724l-.966 3.165z"
+              fill="#ffe13c"
+              transform="translate(-111.207 -509.667) translate(100.123 501.097)"
+            />
+          </G>
+        )}
+      </G>
     </Svg>
   );
 }

@@ -20,6 +20,7 @@ const GpsSettingItem = ({detailInput}) => {
           offColor={seperator}
           size="medium"
           onToggle={toggleSwitch}
+          // disabled={true}
         />
       </View>
       {detailInput ? (

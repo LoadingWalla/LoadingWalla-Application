@@ -1,3 +1,4 @@
+import React, {useEffect, useMemo} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -5,260 +6,308 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import Button from '../../Components/Button';
+import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
+import {useDispatch, useSelector} from 'react-redux';
 import EditIcon from '../../../assets/SVG/svg/EditIcon';
 import {
-  GradientColor2,
-  GradientColor4,
-  PrivacyPolicy,
-  backgroundColorNew,
-  textColor,
-  titleColor,
-} from '../../Color/color';
-import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
-import CheckBox from '@react-native-community/checkbox';
-import Button from '../../Components/Button';
+  createOrderFailure,
+  fetchGpsOrderDetailRequest,
+  initCreateOrder,
+  initVerifyPaymentRequest,
+} from '../../Store/Actions/Actions';
+import AnimatedText from '../../Components/AnimatedText';
+import RazorpayCheckout from 'react-native-razorpay';
+import Toast from 'react-native-simple-toast';
 
-const ReusableItem = ({title, value}) => {
-  return (
-    <View
-      style={{
-        // borderWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        paddingBottom: 15,
-      }}>
-      <Text>{title}</Text>
-      <Text>{value}</Text>
-    </View>
-  );
+const createFullAddressArray = data => {
+  const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
+  return fullAddress;
 };
 
-const PaymentGPS = () => {
-  const [isChecked, setIsChecked] = useState(true);
-  const handleCheckBoxChange = () => {
-    setIsChecked(!isChecked);
+const ReusableSummaryItem = React.memo(({title, value}) => (
+  <View style={styles.reusableItemContainer}>
+    <AnimatedText
+      text={title}
+      style={styles.reusableItemContainerText}
+      showAnimation={false}
+    />
+    <AnimatedText
+      text={value}
+      style={styles.reusableItemContainerText}
+      showAnimation={true}
+    />
+  </View>
+));
+
+const ReusableItem = React.memo(({title, value, isTax, isTaxValue}) => (
+  <View style={styles.reusableItemContainer}>
+    <View style={styles.row}>
+      <Text style={styles.reusableItemContainerText}>{title}</Text>
+      {isTax && <Text style={styles.taxText}>{isTaxValue}</Text>}
+    </View>
+    <Text style={styles.reusableItemContainerText}>{value}</Text>
+  </View>
+));
+
+const PaymentGPS = ({navigation, route}) => {
+  const {plan_id, gpsCount, gpsOrderId, totalAmount} = route.params;
+
+  const {
+    gpsPlansData,
+    gpsOrderDetailsData,
+    Userdata,
+    orderData,
+    orderLoading,
+    verifyPaymentData,
+    gpsOrderData,
+    verifyPaymentStatus,
+  } = useSelector(state => state.data);
+
+  const dispatch = useDispatch();
+
+  const fullAddressArray = useMemo(
+    () => createFullAddressArray(gpsOrderData),
+    [gpsOrderData],
+  );
+  // console.log(44444, fullAddressArray);
+
+  const filteredPlanData = useMemo(
+    () => gpsPlansData?.find(plan => plan.id === plan_id),
+    [gpsPlansData, plan_id],
+  );
+
+  const markedPrice = useMemo(() => {
+    const gpsPriceWithGst = Math.ceil(filteredPlanData.gps_price * 1.18);
+    const rechargePriceWithGst = Math.ceil(
+      filteredPlanData.recharge_price * 1.18,
+    );
+    return gpsPriceWithGst + rechargePriceWithGst;
+  }, [filteredPlanData]);
+
+  const sellingPrice = useMemo(
+    () => markedPrice - filteredPlanData.discount,
+    [markedPrice, filteredPlanData.discount],
+  );
+
+  const gpsGst = useMemo(
+    () => 0.18 * filteredPlanData.gps_price,
+    [filteredPlanData.gps_price],
+  );
+  const totalGps = useMemo(
+    () => filteredPlanData.gps_price + gpsGst,
+    [filteredPlanData.gps_price, gpsGst],
+  );
+  const rechargeGst = useMemo(
+    () => 0.18 * filteredPlanData.recharge_price,
+    [filteredPlanData.recharge_price],
+  );
+  const totalRecharge = useMemo(
+    () => filteredPlanData.recharge_price + rechargeGst,
+    [filteredPlanData.recharge_price, rechargeGst],
+  );
+
+  useEffect(() => {
+    dispatch(fetchGpsOrderDetailRequest(gpsOrderId));
+  }, [dispatch, gpsOrderId]);
+
+  useEffect(() => {
+    if (Userdata === null) {
+      navigation.navigate('Menu');
+    }
+  }, [Userdata, navigation]);
+
+  useEffect(() => {
+    if (verifyPaymentData && verifyPaymentStatus) {
+      Toast.show(verifyPaymentData.message);
+      navigation.navigate('purchasingStatus', {
+        statusCode: verifyPaymentStatus,
+      });
+    }
+  }, [verifyPaymentData, verifyPaymentStatus, navigation]);
+
+  const payNow = () => {
+    dispatch(
+      initCreateOrder(
+        parseInt(totalAmount, 10),
+        Userdata.id,
+        gpsOrderDetailsData.id,
+      ),
+    );
   };
+
+  const proceedWithPayment = async () => {
+    const options = {
+      description: 'Loading Walla GPS',
+      image: Userdata.profile_img,
+      currency: 'INR',
+      key: 'rzp_live_SuyP4BXtpLkIzS',
+      amount: orderData.amount,
+      name: Userdata.name,
+      order_id: orderData.id,
+      prefill: {
+        email: Userdata.email,
+        contact: Userdata.mobile,
+        name: 'Loading Walla',
+      },
+      theme: {color: backgroundColorNew},
+    };
+
+    RazorpayCheckout.open(options)
+      .then(data => {
+        if (data?.razorpay_payment_id) {
+          dispatch(
+            initVerifyPaymentRequest(
+              data.razorpay_payment_id,
+              data.razorpay_order_id,
+            ),
+          );
+        } else {
+          // AlertBox('Transaction not successful');
+          navigation.navigate('purchasingStatus', {statusCode: 400});
+        }
+      })
+      .catch(() => {
+        dispatch(createOrderFailure());
+        // AlertBox('Transaction not successful');
+        navigation.navigate('purchasingStatus', {statusCode: 400});
+      });
+  };
+
+  useEffect(() => {
+    if (orderData?.id) {
+      proceedWithPayment();
+    }
+  }, [orderData]);
 
   return (
     <View style={styles.container}>
-      <View style={{padding: 10}}>
-        <View
-          style={{
-            //   borderWidth: 1,
-            backgroundColor: '#FFFFFF',
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-            borderRadius: 8,
-            zIndex: 10,
-            elevation: 2,
-          }}>
-          <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                borderBottomWidth: 1,
-                borderBottomColor: '#00000029',
-                paddingBottom: 30,
-                padding: 10,
-              }}>
-              <Text
-                style={{
-                  color: titleColor,
-                  fontFamily: 'PlusJakartaSans-Bold',
-                  fontSize: 16,
-                }}>
-                1 Year GPS plan
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  borderRadius: 20,
-                  // borderWidth: 1,
-                  paddingHorizontal: 15,
-                  paddingVertical: 5,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#F7F7F7',
-                }}>
-                <EditIcon size={13} color={backgroundColorNew} />
-                <Text
-                  style={{
-                    marginLeft: 10,
-                    color: backgroundColorNew,
-                    fontFamily: 'PlusJakartaSans-SemiBold',
-                    fontSize: 14,
-                  }}>
-                  Edit
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View style={{paddingHorizontal: 10, paddingVertical: 15}}>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontFamily: 'PlusJakartaSans-SemiBold',
-                fontSize: 14,
-              }}>
-              The plan will be valid till JUNE 20, 2025
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            //   borderWidth: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 8,
-            paddingTop: 20,
-            paddingBottom: 10,
-            marginTop: -10,
-            backgroundColor: '#EFFFE6',
-          }}>
-          <PercentageIcon size={20} color={'#3BA700'} />
-          <Text style={{marginLeft: 5, color: '#3BA700'}}>
-            YAY! You saved ₹ 200 on this purchase
-          </Text>
-        </View>
-      </View>
+      <PurchaseGpsHeader
+        icon={true}
+        edit={false}
+        planName={filteredPlanData?.plan_name}
+        planValidity={filteredPlanData?.validity}
+        footertitle={`YAY! You saved ₹ ${
+          filteredPlanData?.discount * gpsCount
+        } on this purchase`}
+      />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <View style={styles.scrollContainer}>
-          <View
-            style={{
-              //   borderWidth: 1,
-              backgroundColor: '#FFFFFF',
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              borderRadius: 8,
-              zIndex: 10,
-              elevation: 2,
-            }}>
-            <View>
-              <View
-                style={{
-                  //   flexDirection: 'row',
-                  //   justifyContent: 'space-between',
-                  borderBottomWidth: 1,
-                  borderBottomColor: '#00000029',
-                  paddingBottom: 10,
-                  padding: 10,
-                }}>
-                <Text
-                  style={{
-                    color: titleColor,
-                    fontFamily: 'PlusJakartaSans-Bold',
-                    fontSize: 14,
-                  }}>
-                  Discount & coupons
-                </Text>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      color: '#EF4D23',
-                      fontFamily: 'PlusJakartaSans-SemiBold',
-                      fontSize: 12,
-                      textAlign: 'right',
-                    }}>
-                    Have coupon?
-                  </Text>
-                </TouchableOpacity>
-              </View>
+          <View style={styles.paymentContainer}>
+            <View style={styles.paymentDetailView}>
+              <Text style={styles.paymentDetailText}>Purchase summary</Text>
+              {/* <TouchableOpacity
+                style={styles.editButton}
+                // onPress={() => navigation.navigate('purchasingStatus')}
+                // onPress={navigation.navigate('DeliveryDetails', {
+                //   editDetails: true,
+                //   gpsCount,
+                //   pricePerDevice,
+                //   plan_id,
+                // })}
+              >
+                <EditIcon size={13} color={backgroundColorNew} />
+                <Text style={styles.editButtonText}>Edit</Text>
+              </TouchableOpacity> */}
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: 5,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontFamily: 'PlusJakartaSans-SemiBold',
-                  fontSize: 14,
-                  color: PrivacyPolicy,
-                }}>
-                Use Loading Walla coins?
-              </Text>
-              <CheckBox
-                value={isChecked}
-                onValueChange={handleCheckBoxChange}
-                tintColors={{true: GradientColor2, false: GradientColor4}}
-                style={styles.checkBoxStyle}
-              />
-            </View>
-            <Text
-              style={{
-                // borderWidth: 1,
-                paddingHorizontal: 5,
-                fontFamily: 'PlusJakartaSans-Bold',
-                fontSize: 16,
-                paddingBottom: 10,
-              }}>
-              ₹ 2,000 Available
-            </Text>
-          </View>
-        </View>
-        <View style={styles.scrollContainer}>
-          <View
-            style={{borderRadius: 8, backgroundColor: '#FFFFFF', elevation: 2}}>
-            <Text style={styles.paymentDetailText}>Payment Details</Text>
-            <View
-              style={{
-                // borderWidth: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: 10,
-                paddingBottom: 15,
-                borderBottomWidth: 1,
-                borderColor: '#00000029',
-              }}>
-              <View style={{flexDirection: 'row'}}>
-                <Text>Total Amount</Text>
-                <Text>(Inc. of taxes)</Text>
-              </View>
-              <Text>₹ 99</Text>
-            </View>
-            <ReusableItem title={'Plan Amount'} value={'₹ 99'} />
-            <ReusableItem title={'Coupon discount'} value={'₹ 0'} />
-            <ReusableItem title={'Loading Walla Coins used'} value={'₹ 99'} />
-            <ReusableItem
-              title={'Available Loading Walla coins'}
-              value={'₹ 1,899'}
+            <ReusableSummaryItem
+              title={'Full name'}
+              value={gpsOrderDetailsData?.name}
+            />
+            <ReusableSummaryItem
+              title={'Alternate Phone'}
+              value={gpsOrderDetailsData?.mobile}
+            />
+            <ReusableSummaryItem
+              title={'Full address'}
+              value={fullAddressArray}
+            />
+            <ReusableSummaryItem
+              title={'RC number #1'}
+              value={gpsOrderDetailsData?.rc_numbers}
             />
           </View>
         </View>
+        <View style={styles.scrollContainer}>
+          <View style={styles.paymentContainer}>
+            <View style={styles.paymentDetailView}>
+              <Text style={styles.paymentDetailText}>Payment Details</Text>
+            </View>
+            <View style={styles.totalAmountContainer}>
+              <View style={styles.totalAmountTextContainer}>
+                <Text style={styles.boldText}>Total Amount </Text>
+                <Text style={styles.taxText}>(Inc. of taxes)</Text>
+              </View>
+              <Text style={styles.boldText}>₹ {markedPrice}</Text>
+            </View>
+            <View style={styles.sectionBackground}>
+              <ReusableItem
+                title={'GPS'}
+                value={`₹ ${totalGps.toFixed(2)}`}
+                isTax={true}
+                isTaxValue={'  (Inc. of taxes)'}
+              />
+              <View style={styles.sectionPadding}>
+                <ReusableItem
+                  title={'GPS Charges'}
+                  value={`₹ ${filteredPlanData.gps_price.toFixed(2)}`}
+                />
+              </View>
+              <View style={styles.sectionPadding}>
+                <ReusableItem
+                  title={'GPS GST Charges'}
+                  value={`₹ ${gpsGst.toFixed(2)}`}
+                  isTax={true}
+                  isTaxValue={'  (18%)'}
+                />
+              </View>
+            </View>
+            <View style={styles.sectionBackground}>
+              <ReusableItem
+                title={'Recharge + Services'}
+                value={`₹ ${totalRecharge.toFixed(2)}`}
+                isTax={true}
+                isTaxValue={'  (Inc. of taxes)'}
+              />
+              <View style={styles.sectionPadding}>
+                <ReusableItem
+                  title={'Recharge + Services Charges'}
+                  value={`₹ ${filteredPlanData.recharge_price.toFixed(2)}`}
+                />
+              </View>
+              <View style={styles.sectionPadding}>
+                <ReusableItem
+                  title={'Recharge + Services GST'}
+                  value={`₹ ${rechargeGst.toFixed(2)}`}
+                  isTax={true}
+                  isTaxValue={'  (18%)'}
+                />
+              </View>
+            </View>
+            <View style={styles.discountView}>
+              <Text style={styles.discountText}>Loading Walla discount</Text>
+              <Text style={styles.discountText}>
+                ₹ {filteredPlanData?.discount * gpsCount}
+              </Text>
+            </View>
+          </View>
+        </View>
       </ScrollView>
-      <View
-        style={{
-          //   borderWidth: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-          margin: 10,
-          backgroundColor: '#FFFFFF',
-          borderRadius: 8,
-          elevation: 2,
-        }}>
-        <View style={{paddingLeft: 10}}>
-          <Text style={{fontFamily: 'PlusJakartaSans-SemiBold', fontSize: 12}}>
-            Amount to be paid
-          </Text>
-          <Text style={{fontFamily: 'PlusJakartaSans-Bold', fontSize: 18}}>
-            ₹ 99
-          </Text>
+      <View style={styles.footerContainer}>
+        <View style={styles.footerTextContainer}>
+          <Text style={styles.amountText}>Amount to be paid</Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.markedPriceText}>₹ {markedPrice}</Text>
+            <Text style={styles.sellingPriceText}>₹ {sellingPrice}</Text>
+          </View>
         </View>
         <Button
           title={'Pay Now'}
-          //   onPress={() => navigation.navigate('trackingtruck', {item: truck})}
-          // loading={statusChangeLoading}
           textStyle={styles.btnText}
           style={styles.btnStyle}
+          loading={orderLoading}
+          onPress={payNow}
         />
       </View>
     </View>
@@ -269,11 +318,35 @@ export default PaymentGPS;
 
 const styles = StyleSheet.create({
   container: {
-    // padding: 10,
     flex: 1,
-    // borderWidth: 1,
   },
-  scrollContainer: {paddingHorizontal: 10, marginBottom: 10},
+  scrollContainer: {
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  paymentContainer: {
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    elevation: 2,
+  },
+  reusableItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+  },
+  totalAmountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingBottom: 15,
+    borderColor: '#00000029',
+  },
+  totalAmountTextContainer: {
+    flexDirection: 'row',
+  },
   btnStyle: {
     flexDirection: 'row',
     borderRadius: 6,
@@ -288,14 +361,108 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
+  paymentDetailView: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF3F0',
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  discountView: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF3F0',
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
   paymentDetailText: {
     fontSize: 14,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    // borderWidth: 1,
+  },
+  discountText: {
+    fontSize: 14,
+    color: '#3BA700',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FFF3F0',
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    margin: 10,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    elevation: 2,
+  },
+  footerTextContainer: {
+    paddingLeft: 10,
+  },
+  amountText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+  },
+  markedPriceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    color: '#EF4D23',
+    textDecorationLine: 'line-through',
+    marginRight: 10,
+  },
+  sellingPriceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 20,
+    color: '#3BA700',
+  },
+  editButton: {
+    flexDirection: 'row',
+    borderRadius: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  editButtonText: {
+    marginLeft: 10,
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 14,
+  },
+  reusableItemContainerText: {
+    color: '#4B4B4B',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 14,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  taxText: {
+    fontFamily: 'PlusJakartaSans-Regular',
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  boldText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 16,
+  },
+  sectionBackground: {
+    backgroundColor: '#FAFAFA',
+  },
+  sectionPadding: {
+    paddingHorizontal: 10,
+    marginTop: -10,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
   },
 });

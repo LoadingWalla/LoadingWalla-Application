@@ -12,6 +12,7 @@ export function* authenticate({mobile}) {
   };
   try {
     const data = yield API.post('login', body);
+    // console.log(88888, data);
     if (data?.data?.status === 200) {
       yield AsyncStorage.setItem('user_id', `${data?.data?.user_id}`);
       yield put(actions.loginSuccess(data));
@@ -167,6 +168,7 @@ export function* location({location, id}) {
 export function* dashboard() {
   try {
     const data = yield API.get('dashboard');
+    // console.log(4444445555, data);
     if (data?.data?.status === 200) {
       yield put(actions.dashboardSuccess(data));
       yield AsyncStorage.setItem(
@@ -933,10 +935,10 @@ export function* fetchMapDataSaga({from_id, to_id}) {
 }
 
 // Create Order
-export function* createOrder({amount, userId}) {
+export function* createOrder({amount, userId, order_type}) {
   try {
-    const body = {amount, userId};
-    // console.log(8888888, body);
+    const body = {amount, userId, order_type};
+    // console.log('createordersaga', body);
     const data = yield API.post('payment/order', body);
     // console.log('API response------createOrder', data);
     if (data?.status === 200) {
@@ -959,7 +961,7 @@ export function* verifyPayment({paymentId, orderId}) {
     const body = {razorpay_payment_id: paymentId, razorpay_order_id: orderId};
     // console.log(8888888, body);
     const data = yield API.post('payment/verify', body);
-    // console.log('API response------PaymentVerify', data);
+    console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.verifyPaymentSuccess(data));
     } else {
@@ -1042,12 +1044,15 @@ export function* fetchTokenSaga() {
   }
 }
 
-// gps token generate
+// gps devices
 export function* fetchGpsDevices({username, password}) {
   try {
     // console.log(33333, username, password);
-    const data = yield gpsApi.get('devices', username, password);
-    // console.log('Gps Devices', data);
+    const data = yield API.get(
+      `gps/devices?username=${username}&password=${password}`,
+    );
+    // const data = yield gpsApi.get('devices', username, password);
+    // console.log('--------Gps Devices', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsDevicesSuccess(data?.data));
@@ -1058,6 +1063,21 @@ export function* fetchGpsDevices({username, password}) {
   } catch (error) {
     yield put(actions.fetchGpsDevicesFailure(error.message));
     // console.log('error4444', error);
+  }
+}
+
+// single gps device
+export function* fetchSingleGpsDevice({username, password, deviceId}) {
+  try {
+    const data = yield gpsApi.get(`devices?id=${deviceId}`, username, password);
+    // console.log(77777, data);
+    if (data?.status === 200) {
+      yield put(actions.fetchSingleGpsDeviceSuccess(data.data));
+    } else {
+      yield put(actions.fetchSingleGpsDeviceFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchSingleGpsDeviceFailure(error.message));
   }
 }
 
@@ -1094,13 +1114,13 @@ export function* fetchGpsSummary({
   daily,
 }) {
   try {
-    console.log(33333, username, password, deviceId, from, to, daily);
+    // console.log(33333, username, password, deviceId, from, to, daily);
     const data = yield gpsApi.get(
       `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
       username,
       password,
     );
-    console.log('Gps Summary', data);
+    // console.log('Gps Summary', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchSummaryReportSuccess(data?.data));
@@ -1117,9 +1137,9 @@ export function* fetchGpsSummary({
 // gps summary
 export function* fetchGpsNotifications({username, password}) {
   try {
-    console.log(33333, username, password);
+    // console.log(33333, username, password);
     const data = yield gpsApi.get('notifications', username, password);
-    console.log('Gps Notification', data);
+    // console.log('Gps Notification', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsNotificationsSuccess(data?.data));
@@ -1165,7 +1185,7 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
       username,
       password,
     );
-    console.log('Gps Replay', data);
+    // console.log('Gps Replay', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsStopsSuccess(data?.data));
@@ -1181,13 +1201,13 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
 // gps trips
 export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   try {
-    console.log(99888999, username, password, deviceId, from, to);
+    // console.log(99888999, username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/trips?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
-    console.log('Gps Trips', data);
+    // console.log('Gps Trips', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsTripsSuccess(data?.data));
@@ -1198,6 +1218,96 @@ export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   } catch (error) {
     yield put(actions.fetchGpsTripsFailure(error.message));
     // console.log('error4444', error);
+  }
+}
+
+// gps plans
+export function* fetchGpsPlans() {
+  try {
+    const data = yield API.get('gps-plans');
+    // console.log('Gps Plan', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsPlansSuccess(data?.data?.gps_plans));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsPlansFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsPlansFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+// gps delivery details
+export function* placeGpsOrderSaga({
+  name,
+  mobile,
+  plan_id,
+  qty,
+  rc_numbers,
+  address,
+  city,
+  landmark,
+  pinCode,
+  state,
+}) {
+  console.log(
+    name,
+    mobile,
+    plan_id,
+    qty,
+    rc_numbers,
+    address,
+    city,
+    state,
+    landmark,
+    pinCode,
+  );
+  try {
+    const body = new FormData();
+    body.append('name', name);
+    body.append('mobile', mobile);
+    body.append('plan_id', plan_id);
+    body.append('qty', qty.toString());
+    rc_numbers.forEach(rc_number => {
+      body.append('rc_numbers[]', rc_number);
+    });
+    body.append('address', address);
+    body.append('city', city);
+    body.append('state', state);
+    body.append('landmark', landmark);
+    body.append('pincode', pinCode);
+    // console.log(9999999, body);
+    const data = yield multiPartApi.post('gps-order', body);
+    // console.log('API response------PaymentVerify', data);
+    if (data?.status === 200) {
+      yield put(actions.placeGpsOrderSuccess(data));
+    } else {
+      yield put(actions.placeGpsOrderFailure(data.status));
+      // console.log('else', data);
+    }
+  } catch (error) {
+    yield put(actions.placeGpsOrderFailure());
+    // console.log('error', error);
+  }
+}
+
+// gps gps order details
+export function* fetchGpsOrderDetail({id}) {
+  try {
+    const data = yield API.get(`gps-order-get/${id}`);
+    // console.log('Gps Plan', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchGpsOrderDetailSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchGpsOrderDetailFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchGpsOrderDetailFailure(error.message));
+    // console.log('error', error);
   }
 }
 

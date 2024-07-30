@@ -8,13 +8,9 @@ import {
 const useAddress = positions => {
   const [address, setAddress] = useState('Show Address');
   const dispatch = useDispatch();
-  // console.log(99999, positions);
 
   const {gpsTokenData, gpsAddressData, gpsAddressLoading} = useSelector(
-    state => {
-      console.log('Tracking truck', state.data);
-      return state.data;
-    },
+    state => state.data,
   );
 
   useEffect(() => {
@@ -31,12 +27,13 @@ const useAddress = positions => {
 
   const fetchAddress = useCallback(() => {
     if (positions && positions.length > 0) {
+      const {latitude, longitude} = positions[positions.length - 1];
       dispatch(
         fetchGpsAddressRequest(
           gpsTokenData.email,
           gpsTokenData.password,
-          positions[positions.length - 1].latitude,
-          positions[positions.length - 1].longitude,
+          latitude,
+          longitude,
         ),
       );
     } else {
@@ -44,7 +41,7 @@ const useAddress = positions => {
     }
   }, [dispatch, gpsTokenData, positions]);
 
-  return {address, fetchAddress};
+  return {address, fetchAddress, gpsAddressLoading};
 };
 
 export default useAddress;

@@ -128,7 +128,7 @@ const Booking = ({navigation}) => {
             }}>
             <NotFound
               imageName="noBookings"
-              height={200}
+              height={150}
               width={300}
               title={'No Bookings Found'}
             />

@@ -3,12 +3,24 @@ import React from 'react';
 import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 import {backgroundColorNew} from '../Color/color';
 import ShareIcon from '../../assets/SVG/svg/ShareIcon';
+import Share from 'react-native-share';
 
-const HeaderHelpButton = ({shareIcon, navigation}) => {
+const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
+  const handleShare = () => {
+    const shareOptions = {
+      title: 'Share Location',
+      message: `Check out this location: https://maps.google.com/?q=${latitude},${longitude}`,
+    };
+
+    Share.open(shareOptions)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  };
+
   return (
     <View style={styles.container}>
       {shareIcon ? (
-        <TouchableOpacity style={styles.shareBtn}>
+        <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
           <ShareIcon size={18} color={'#000000'} />
         </TouchableOpacity>
       ) : null}

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   FlatList,
   Image,
@@ -6,12 +7,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import {PrivacyPolicy, textColor, titleColor} from '../../Color/color';
+import {
+  backgroundColorNew,
+  PrivacyPolicy,
+  textColor,
+  titleColor,
+} from '../../Color/color';
 import Button from '../../Components/Button';
 import CopyIcon from '../../../assets/SVG/svg/CopyIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import {
+  websocketConnect,
+  websocketDisconnect,
+} from '../../Store/Actions/Actions';
 
 const truck = {
   id: '1',
@@ -24,54 +35,107 @@ const truck = {
 };
 
 const paymentData = [
-  {
-    id: '1',
-    transactionNumber: '#002861626121',
-    totalAmount: '₹99',
-    orderDate: 'June 16, 2024',
-  },
-  {
-    id: '2',
-    transactionNumber: '#002861626121',
-    totalAmount: '₹99',
-    orderDate: 'June 16, 2023',
-  },
-  {
-    id: '3',
-    transactionNumber: '#002861626121',
-    totalAmount: '₹99',
-    orderDate: 'June 16, 2023',
-  },
-  {
-    id: '4',
-    transactionNumber: '#002861626121',
-    totalAmount: '₹99',
-    orderDate: 'June 16, 2023',
-  },
+  // {
+  //   id: '1',
+  //   transactionNumber: '#002861626121',
+  //   totalAmount: '₹99',
+  //   orderDate: 'June 16, 2024',
+  // },
+  // {
+  //   id: '2',
+  //   transactionNumber: '#002861626121',
+  //   totalAmount: '₹99',
+  //   orderDate: 'June 16, 2023',
+  // },
+  // {
+  //   id: '3',
+  //   transactionNumber: '#002861626121',
+  //   totalAmount: '₹99',
+  //   orderDate: 'June 16, 2023',
+  // },
+  // {
+  //   id: '4',
+  //   transactionNumber: '#002861626121',
+  //   totalAmount: '₹99',
+  //   orderDate: 'June 16, 2023',
+  // },
 ];
 
-const OwnedGPS = ({navigation}) => {
+const OwnedGPS = ({navigation, route}) => {
+  const {deviceId} = route.params;
+  // console.log(4444, route.params);
+  const dispatch = useDispatch();
+
+  const {gpsTokenData, gpsDeviceData} = useSelector(state => state.data);
+
+  const deviceData = gpsDeviceData?.find(device => device.id === deviceId);
+  console.log(4444, deviceData);
+
+  const handleNavigationPress = () => {
+    dispatch(websocketConnect(gpsTokenData?.cookie));
+    navigation.navigate('trackingtruck', {deviceId});
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(websocketDisconnect());
+      return () => {};
+    }, [dispatch, gpsTokenData]),
+  );
+
   const copyToClipboard = text => {
     Clipboard.setString(text);
-    // Alert.alert(
-    //   'Copied to Clipboard',
-    //   `${text} has been copied to your clipboard.`,
-    // );
   };
+
+  const renderItem = ({item}) => (
+    <View style={styles.paymentDetailBox}>
+      <View style={styles.paymentHeader}>
+        <Text style={styles.paymentDetailText}>Payment Details</Text>
+        <View style={styles.transactionContainer}>
+          <Text style={styles.transactionText}>
+            Trn no: {item.transactionNumber}
+          </Text>
+          <TouchableOpacity
+            onPress={() => copyToClipboard(item.transactionNumber)}>
+            <CopyIcon size={14} />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.paymentRow}>
+        <View style={styles.amountContainer}>
+          <Text style={styles.amountValue}>Total Amount</Text>
+          <Text style={styles.taxText}>(Inc. of taxes)</Text>
+        </View>
+        <Text style={styles.amountValue}>{item.totalAmount}</Text>
+      </View>
+      <View style={styles.orderContainer}>
+        <View style={styles.orderDateContainer}>
+          <Text style={styles.orderDateText}>Ordered On : </Text>
+          <Text style={styles.orderDateText}>{item.orderDate}</Text>
+        </View>
+        {/* <TouchableOpacity style={styles.downloadButton}>
+          <DownloadIcon size={18} />
+        </TouchableOpacity> */}
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <View style={styles.itemBox}>
           <View style={styles.imageBox}>
-            <Image source={{uri: truck.image}} style={styles.image} />
+            <Image
+              source={{
+                uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+              }}
+              style={styles.image}
+            />
           </View>
           <View style={styles.textBox}>
             <View style={styles.textContainer}>
-              <Text style={styles.modelText}>{truck.model}</Text>
-              <View>
-                <Text style={styles.planText}>1 Year plan</Text>
-              </View>
+              <Text style={styles.modelText}>{deviceData?.name}</Text>
+              <Text style={styles.planText}>{truck.planType}</Text>
             </View>
             <View style={styles.dateBox}>
               <View style={styles.dateChild}>
@@ -79,27 +143,27 @@ const OwnedGPS = ({navigation}) => {
                 <Text style={styles.dateValue}>{truck.purchaseDate}</Text>
               </View>
               <View style={styles.dateChild}>
-                <Text style={styles.dateHeaderText}>SIM Number : </Text>
-                <Text style={styles.dateValue}>+91 8210 652122</Text>
+                <Text style={styles.dateHeaderText}>Phone Number : </Text>
+                <Text style={styles.dateValue}>{deviceData?.phone}</Text>
               </View>
             </View>
           </View>
         </View>
         <View style={styles.bottomBox}>
           <Text style={styles.bottomText}>
-            GPS plan will get expire on June 20, 2025
+            GPS plan will get expire on {truck.expiryDate}
           </Text>
         </View>
       </View>
       <View style={styles.getNowBox}>
         <View>
           <Text style={styles.modelText}>Extend the GPS Plan?</Text>
-          <Text style={styles.discountText}>Extend and save up to 20%</Text>
+          <Text style={styles.discountText}>Extend and save up to 40%</Text>
         </View>
         <TouchableOpacity
-          style={styles.getNowbutton}
-          onPress={() => navigation.navigate('paymentGPS')}>
-          <Text style={styles.getNowbuttonText}>Get Now</Text>
+          style={styles.getNowButton}
+          onPress={() => navigation.navigate('BuyGPS')}>
+          <Text style={styles.getNowButtonText}>Get Now</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.historyBox}>
@@ -109,92 +173,17 @@ const OwnedGPS = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           keyExtractor={item => item.id}
           style={styles.flatlistStyle}
-          renderItem={({item}) => (
-            <View style={styles.paymentDetailBox}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  backgroundColor: '#FFF3F0',
-                  padding: 10,
-                  //   borderWidth: 1,
-                  borderTopStartRadius: 8,
-                  borderTopEndRadius: 8,
-                }}>
-                <Text style={styles.paymentDetailText}>Payment Details</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.transactionText}>
-                    Trn no: {item.transactionNumber}
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => copyToClipboard(item.transactionNumber)}>
-                    <CopyIcon size={14} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: 10,
-                  borderBottomWidth: 1,
-                  borderColor: '#ccc',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                  }}>
-                  <Text style={styles.amountValue}>Total Amount</Text>
-                  <Text style={styles.taxText}>(Inc. of taxes)</Text>
-                </View>
-                <Text style={styles.amountValue}>{item.totalAmount}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  //   padding: 10,
-                  borderColor: '#ccc',
-                }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    padding: 10,
-                  }}>
-                  <Text style={styles.orderDateText}>Ordered On : </Text>
-                  <Text style={styles.orderDateText}>{item.orderDate}</Text>
-                </View>
-                <TouchableOpacity
-                  style={{
-                    padding: 10,
-                    // borderWidth: 1,
-                    borderRadius: 8,
-                    // elevation: 1,
-                    backgroundColor: '#ffffff',
-                  }}>
-                  <DownloadIcon size={18} />
-                </TouchableOpacity>
-              </View>
+          renderItem={renderItem}
+          ListEmptyComponent={
+            <View style={styles.noGpsContainer}>
+              <Text style={styles.noGpsText}>No GPS found</Text>
             </View>
-          )}
+          }
         />
       </View>
       <Button
         title={'Track this truck'}
-        onPress={() => navigation.navigate('trackingtruck', {item: truck})}
-        // loading={statusChangeLoading}
+        onPress={handleNavigationPress}
         textStyle={styles.btnText}
         style={styles.btnStyle}
       />
@@ -211,11 +200,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     elevation: 2,
-    // padding: 10,
   },
   imageBox: {
-    // padding: 10,
-    // borderWidth: 1,
     paddingBottom: 30,
     width: '25%',
   },
@@ -228,15 +214,10 @@ const styles = StyleSheet.create({
   },
   itemBox: {
     flexDirection: 'row',
-    // borderWidth: 1,
-    borderColor: 'red',
-    // justifyContent: 'space-between',
     padding: 10,
   },
   textContainer: {
-    // flex: 1,
     justifyContent: 'space-between',
-    // borderWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
@@ -245,6 +226,7 @@ const styles = StyleSheet.create({
   modelText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
+    textTransform: 'capitalize',
   },
   bottomText: {
     color: '#000000',
@@ -262,7 +244,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 20,
-    // elevation: 2,
     backgroundColor: '#EFFFE6',
     color: '#108B00',
     fontFamily: 'PlusJakartaSans-Bold',
@@ -276,7 +257,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   bottomBox: {
-    // borderWidth: 1,
     backgroundColor: '#F7F7F7',
     paddingHorizontal: 10,
     paddingVertical: 5,
@@ -287,13 +267,11 @@ const styles = StyleSheet.create({
   },
   textBox: {
     flexDirection: 'column',
-    //   borderWidth: 1,
     justifyContent: 'space-between',
     width: '75%',
     alignItems: 'flex-start',
   },
   dateBox: {
-    // borderWidth: 1,
     width: '100%',
     flex: 1,
     justifyContent: 'center',
@@ -306,7 +284,6 @@ const styles = StyleSheet.create({
   },
   getNowBox: {
     flexDirection: 'row',
-    // borderWidth: 1,
     justifyContent: 'space-between',
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -314,13 +291,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
   },
-  getNowbutton: {
+  getNowButton: {
     backgroundColor: '#3BA700',
     paddingHorizontal: 25,
     paddingVertical: 10,
     borderRadius: 8,
   },
-  getNowbuttonText: {
+  getNowButtonText: {
     color: '#FFFFFF',
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
@@ -328,6 +305,8 @@ const styles = StyleSheet.create({
   historyBox: {
     marginVertical: 10,
     flex: 1,
+    justifyContent: 'center',
+    // borderWidth: 1,
   },
   paymentDetailBox: {
     backgroundColor: '#ffffff',
@@ -335,26 +314,74 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     elevation: 3,
   },
+  paymentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFF3F0',
+    padding: 10,
+    borderTopStartRadius: 8,
+    borderTopEndRadius: 8,
+  },
   paymentDetailText: {
     fontSize: 14,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
+  },
+  transactionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   transactionText: {
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Medium',
     marginRight: 5,
   },
+  paymentRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+  },
+  amountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
   amountValue: {
     fontSize: 14,
     fontFamily: 'PlusJakartaSans-Bold',
+  },
+  taxText: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Medium',
+    marginLeft: 5,
+  },
+  orderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: '#ccc',
+  },
+  orderDateContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: 10,
   },
   orderDateText: {
     fontSize: 14,
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-SemiBold',
   },
-
+  downloadButton: {
+    padding: 10,
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
   btnStyle: {
     flexDirection: 'row',
     borderRadius: 8,
@@ -369,5 +396,16 @@ const styles = StyleSheet.create({
   },
   flatlistStyle: {
     marginTop: 10,
+  },
+  noGpsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 1,
+  },
+  noGpsText: {
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: backgroundColorNew,
   },
 });

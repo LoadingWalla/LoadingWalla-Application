@@ -184,6 +184,24 @@ const initialState = {
   gpsTripsLoading: false,
   gpsTripsError: null,
   gpsTripsData: null,
+  // gps plans
+  gpsPlansData: [],
+  rechargePlansData: [],
+  gpsPlansLoading: false,
+  gpsPlansError: null,
+  // gps order
+  gpsOrderLoading: false,
+  gpsOrderData: null,
+  gpsOrderStatus: null,
+  // gps order Details
+  gpsOrderDetailsLoading: false,
+  gpsOrderDetailsData: null,
+  gpsOrderDetailsStatus: null,
+  gpsPriceDetailsData: null,
+  // single gps devices
+  singleGpsDevice: null,
+  singleGpsDeviceLoading: false,
+  singleGpsDeviceError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1217,8 +1235,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
       return updateState(state, {
         gpsDeviceLoading: false,
-        gpsDeviceData: payload,
-        wsDevices: payload,
+        gpsDeviceData: payload?.data?.devices,
+        // gpsDeviceData: payload,
+        // wsDevices: payload,
+        wsDevices: payload?.data?.devices,
         gpsDeviceStatus: payload?.status,
       });
     case actionTypes.FETCH_GPS_DEVICES_FAILURE:
@@ -1226,6 +1246,25 @@ const reducer = (state = initialState, action) => {
         gpsDeviceLoading: false,
         gpsDeviceData: null,
         gpsDeviceStatus: null,
+      });
+
+    // Single GPS device cases
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST:
+      return updateState(state, {
+        singleGpsDeviceLoading: true,
+        singleGpsDeviceError: null,
+        singleGpsDevice: null,
+      });
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_SUCCESS:
+      return updateState(state, {
+        singleGpsDevice: payload,
+        singleGpsDeviceLoading: false,
+      });
+    case actionTypes.FETCH_SINGLE_GPS_DEVICE_FAILURE:
+      return updateState(state, {
+        singleGpsDeviceError: payload,
+        singleGpsDeviceLoading: false,
+        singleGpsDevice: null,
       });
 
     // Gps Websocket Connect
@@ -1366,6 +1405,74 @@ const reducer = (state = initialState, action) => {
         gpsTripsLoading: false,
         gpsTripsError: payload,
         gpsTripsData: null,
+      });
+
+    // GPS Plans
+    case actionTypes.FETCH_GPS_PLANS_REQUEST:
+      return {
+        ...state,
+        gpsPlansLoading: true,
+        gpsPlansError: null,
+        gpsPlansData: null,
+      };
+    case actionTypes.FETCH_GPS_PLANS_SUCCESS:
+      const gpsPlans = action.payload.filter(plan => plan.plan_type === 1);
+      const rechargePlans = action.payload.filter(plan => plan.plan_type !== 1);
+      return updateState(state, {
+        gpsPlansLoading: false,
+        gpsPlansError: null,
+        gpsPlansData: gpsPlans,
+        rechargePlansData: rechargePlans,
+      });
+    case actionTypes.FETCH_GPS_PLANS_FAILURE:
+      return updateState(state, {
+        gpsPlansLoading: false,
+        gpsPlansError: payload,
+        gpsPlansData: null,
+      });
+
+    case actionTypes.PLACE_GPS_ORDER_REQUEST:
+      return {
+        ...state,
+        gpsOrderLoading: true,
+        gpsOrderData: null,
+        gpsOrderStatus: null,
+      };
+    case actionTypes.PLACE_GPS_ORDER_SUCCESS:
+      return updateState(state, {
+        gpsOrderLoading: false,
+        gpsOrderData: payload?.data?.data,
+        gpsOrderStatus: payload?.status,
+      });
+    case actionTypes.PLACE_GPS_ORDER_FAILURE:
+      return updateState(state, {
+        gpsOrderLoading: false,
+        gpsOrderStatus: null,
+        // gpsOrderData: null,
+      });
+
+    // gps order details
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_REQUEST:
+      return {
+        ...state,
+        gpsOrderDetailsLoading: true,
+        gpsOrderDetailsData: null,
+        gpsPriceDetailsData: null,
+        gpsOrderDetailsStatus: null,
+      };
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_SUCCESS:
+      return updateState(state, {
+        gpsOrderDetailsLoading: false,
+        gpsOrderDetailsData: payload?.data?.order,
+        gpsPriceDetailsData: payload?.data?.pricing,
+        gpsOrderDetailsStatus: payload?.status,
+      });
+    case actionTypes.FETCH_GPS_ORDER_DETAIL_FAILURE:
+      return updateState(state, {
+        gpsOrderDetailsLoading: false,
+        gpsOrderDetailsStatus: null,
+        gpsOrderDetailsData: null,
+        gpsPriceDetailsData: null,
       });
 
     // default state

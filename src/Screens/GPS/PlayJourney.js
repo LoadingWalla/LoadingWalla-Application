@@ -5,13 +5,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState, useMemo} from 'react';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import React, {useEffect, useState, useMemo, useRef} from 'react';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import GpsIcon from '../../../assets/SVG/svg/GpsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
@@ -22,11 +21,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
@@ -37,6 +35,8 @@ export default function PlayJourney({navigation, route}) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [currentStop, setCurrentStop] = useState(null);
+
+  const mapRef = useRef(null);
 
   const dispatch = useDispatch();
   const {
@@ -54,6 +54,8 @@ export default function PlayJourney({navigation, route}) {
       gpsReplayData?.map(point => ({
         latitude: point.latitude,
         longitude: point.longitude,
+        course: point.course,
+        speed: point.speed,
       })),
     [gpsReplayData],
   );
@@ -70,6 +72,15 @@ export default function PlayJourney({navigation, route}) {
         : null,
     [coordinates],
   );
+
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: coordinates?.[0]?.latitude || 0,
+      longitude: coordinates?.[0]?.longitude || 0,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }),
+  ).current;
 
   const togglePlayback = () => {
     setIsPlaying(!isPlaying);
@@ -120,8 +131,25 @@ export default function PlayJourney({navigation, route}) {
       interval = setInterval(() => {
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
-          setCurrentPosition(coordinates[newIndex]);
+          const newPosition = coordinates[newIndex];
+          setCurrentPosition(newPosition);
+          animatedMarkerPosition
+            .timing({
+              latitude: newPosition?.latitude,
+              longitude: newPosition?.longitude,
+              duration: 1000 / playbackSpeed,
+              useNativeDriver: false,
+            })
+            .start();
           setSliderValue(newIndex / (coordinates?.length - 1));
+          if (mapRef.current && newPosition) {
+            mapRef.current.animateToRegion({
+              latitude: newPosition?.latitude,
+              longitude: newPosition?.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+          }
           return newIndex;
         });
       }, 1000 / playbackSpeed);
@@ -142,11 +170,21 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex + 1;
       setCurrentStopIndex(newIndex);
       const nextStop = gpsStopsData[newIndex];
-      setCurrentPosition({
+      animatedMarkerPosition
+        .timing({
+          latitude: nextStop.latitude,
+          longitude: nextStop.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
+      setCurrentStop(nextStop);
+      mapRef.current?.animateToRegion({
         latitude: nextStop.latitude,
         longitude: nextStop.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       });
-      setCurrentStop(nextStop); // Update current stop
     }
   };
 
@@ -155,11 +193,21 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex - 1;
       setCurrentStopIndex(newIndex);
       const prevStop = gpsStopsData[newIndex];
-      setCurrentPosition({
+      animatedMarkerPosition
+        .timing({
+          latitude: prevStop.latitude,
+          longitude: prevStop.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
+      setCurrentStop(prevStop);
+      mapRef.current?.animateToRegion({
         latitude: prevStop.latitude,
         longitude: prevStop.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       });
-      setCurrentStop(prevStop); // Update current stop
     }
   };
 
@@ -187,6 +235,8 @@ export default function PlayJourney({navigation, route}) {
 
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   };
+
+  // console.log(4444, currentPosition);
 
   return (
     <View style={styles.container}>
@@ -223,6 +273,7 @@ export default function PlayJourney({navigation, route}) {
           <View style={styles.mapView}>
             {initialRegion && (
               <MapView
+                ref={mapRef}
                 style={StyleSheet.absoluteFillObject}
                 initialRegion={initialRegion}>
                 <Polyline
@@ -231,15 +282,25 @@ export default function PlayJourney({navigation, route}) {
                   strokeWidth={6}
                 />
                 {currentPosition && (
-                  <Marker
-                    coordinate={{
-                      latitude: currentPosition.latitude,
-                      longitude: currentPosition.longitude,
-                    }}
-                    title={`Current Position`}
-                    description={`Lat: ${currentPosition.latitude}, Lon: ${currentPosition.longitude}`}>
-                    <BatteryIcon size={30} color={'green'} />
-                  </Marker>
+                  <Marker.Animated
+                    coordinate={animatedMarkerPosition}
+                    title="Speed"
+                    description={`${(currentPosition.speed * 1.852).toFixed(
+                      2,
+                    )} km/h`}
+                    rotation={currentPosition.course || 0}>
+                    <TruckNavigationIcon
+                      width={60}
+                      height={50}
+                      style={{
+                        transform: [
+                          {
+                            rotate: `${currentPosition.course}deg`,
+                          },
+                        ],
+                      }}
+                    />
+                  </Marker.Animated>
                 )}
                 {gpsStopsData?.map((stop, index) => (
                   <Marker
@@ -248,9 +309,9 @@ export default function PlayJourney({navigation, route}) {
                       latitude: stop.latitude,
                       longitude: stop.longitude,
                     }}
-                    pinColor={index === currentStopIndex ? 'blue' : 'red'} // Highlight current stop
+                    pinColor={index === currentStopIndex ? 'blue' : 'red'}
                     title={`Stop ${index + 1}`}
-                    description={`Lat: ${stop.latitude}, Lon: ${stop.longitude}`}
+                    description={stop.address}
                   />
                 ))}
               </MapView>
@@ -296,7 +357,24 @@ export default function PlayJourney({navigation, route}) {
                 setSliderValue(value);
                 const newIndex = Math.round(value * (coordinates?.length - 1));
                 setCurrentIndex(newIndex);
-                setCurrentPosition(coordinates[newIndex]);
+                const newPosition = coordinates[newIndex];
+                setCurrentPosition(newPosition);
+                animatedMarkerPosition
+                  .timing({
+                    latitude: newPosition.latitude,
+                    longitude: newPosition.longitude,
+                    duration: 500,
+                    useNativeDriver: false,
+                  })
+                  .start();
+                if (mapRef.current && newPosition) {
+                  mapRef.current.animateToRegion({
+                    latitude: newPosition.latitude,
+                    longitude: newPosition.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                  });
+                }
               }}
             />
           </View>
@@ -503,7 +581,6 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   calendarIconBox: {
-    // borderWidth: 1,
     padding: 8,
     width: 40,
     height: 40,

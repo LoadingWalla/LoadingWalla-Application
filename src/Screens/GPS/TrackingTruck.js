@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Linking,
   ScrollView,
   StyleSheet,
@@ -6,95 +7,105 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
-import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
+import React, {useEffect, useRef, useState} from 'react';
+import {backgroundColorNew, titleColor} from '../../Color/color';
+import ToggleIconText from '../../Components/ToggleIconText';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import {useDispatch, useSelector} from 'react-redux';
+import useAddress from '../../hooks/useAddress';
+import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import DamageIcon from '../../../assets/SVG/svg/DamageIcon';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
-import MapView, {Marker, Polyline} from 'react-native-maps';
+import AlertIcon from '../../../assets/SVG/AlertIcon';
+import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
+import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import ToggleIconText from '../../Components/ToggleIconText';
+import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
-import {useDispatch, useSelector} from 'react-redux';
-import useAddress from '../../hooks/useAddress';
+import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
+import IconWithName from '../../Components/IconWithName';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import AnimatedText from '../../Components/AnimatedText';
 
-const IconWithName = ({title, IconComponent, iconSize, onPress}) => {
-  return (
-    <TouchableOpacity style={styles.iconView} onPress={onPress}>
-      <IconComponent size={iconSize} />
-      <Text style={styles.iconText}>{title}</Text>
-    </TouchableOpacity>
-  );
-};
-
-const getLivePositions = wsMessages => {
+const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
     .flatMap(message => message.positions || [])
+    .filter(position => position.deviceId === deviceId)
     .map(position => ({
+      deviceId: position.deviceId,
       latitude: position.latitude,
       longitude: position.longitude,
+      course: position.course,
     }));
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  const {deviceId} = route.params;
-  // console.log(444, deviceId);
+  const {deviceId, lat, long} = route.params;
   const dispatch = useDispatch();
+  const mapRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [addressFetched, setAddressFetched] = useState(false);
 
-  const device = useSelector(state =>
-    state.data.wsDevices.find(d => d.id === deviceId),
-  );
-  const positions = useSelector(state =>
-    state.data.wsPositions.filter(p => p.deviceId === deviceId),
-  );
-  const events = useSelector(state =>
-    state.data.wsEvents.filter(e => e.deviceId === deviceId),
-  );
+  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
+    useSelector(state => state.data);
 
-  // console.log('positons444444', positions);
+  const device = wsDevices.find(d => d.id === deviceId);
+  const positions = wsPositions.filter(p => p.deviceId === deviceId);
+  const events = wsEvents.filter(e => e.deviceId === deviceId);
 
-  const {wsPositions, wsMessages, wsError, wsDevices, wsConnected} =
-    useSelector(state => {
-      console.log('Tracking truck', state.data);
-      return state.data;
-    });
-
-  // useEffect(() => {
-  //   const position = getLivePositions(wsMessages);
-  //   // console.log(343434343, position);
-  //   setLivePositions(position);
-  // }, [wsMessages]);
   useEffect(() => {
     if (!wsConnected) {
-      setError('Service unavailable. Please try again later.');
       setLoading(false);
     } else {
-      const position = getLivePositions(wsMessages);
+      const position = getLivePositions(wsMessages, deviceId);
       setLivePositions(position);
       if (position.length > 0) {
+        setLoading(false);
+        animateToPosition(position[position.length - 1]);
+      } else {
         setLoading(false);
       }
     }
   }, [wsMessages, wsConnected]);
 
+  const animateToPosition = position => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+
+      animatedMarkerPosition
+        .timing({
+          latitude: position.latitude,
+          longitude: position.longitude,
+          duration: 500,
+          useNativeDriver: false,
+        })
+        .start();
+    }
+  };
+
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: lat || 0,
+      longitude: long || 0,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.01,
+    }),
+  ).current;
+
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const {address, fetchAddress} = useAddress(livePositions);
-
-  // console.log('livepositons22222', livePositions);
+  const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
 
   const handleNavigate = () => {
     const destination =
@@ -108,17 +119,21 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
+  const handleFetchAddress = () => {
+    setAddressFetched(false);
+    fetchAddress();
+    setAddressFetched(true);
+  };
+
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Total distance:</Text>
+            <Text style={styles.distanceText}>Distance:</Text>
             <Text style={styles.highlightText}>
-              {positions[0]?.attributes?.todayDistance
-                ? `${(positions[0]?.attributes?.todayDistance / 1000).toFixed(
-                    2,
-                  )} KM`
+              {positions[0]?.attributes?.distance
+                ? `${positions[0]?.attributes?.distance} KM`
                 : '0 KM'}
             </Text>
           </View>
@@ -135,8 +150,8 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={BatteryIcon}
-              text="Battery"
-              iconSize={30}
+              text={positions[0]?.attributes?.batteryLevel || 'Battery'}
+              iconSize={25}
               color={
                 positions[0]?.attributes?.batteryLevel
                   ? positions[0]?.attributes?.batteryLevel > 60
@@ -151,7 +166,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={NetworkIcon}
               text="Network"
-              iconSize={25}
+              iconSize={23}
               color={'#727272'}
               index={2}
               activeIndex={activeIndex}
@@ -160,7 +175,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={GeoFencingIcon}
               text="GeoFencing"
-              iconSize={25}
+              iconSize={28}
               color={'#727272'}
               index={3}
               activeIndex={activeIndex}
@@ -168,17 +183,28 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={KeyIcon}
-              text="Key"
-              iconSize={25}
-              color={'#727272'}
+              text={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'ON'
+                  : 'OFF'
+              }
+              iconSize={23}
+              color={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'green'
+                  : 'red'
+              }
               index={4}
               activeIndex={activeIndex}
               onPress={() => handlePress(4)}
             />
+
             <ToggleIconText
-              IconComponent={DamageIcon}
+              IconComponent={AlertIcon}
               text="Damage"
-              iconSize={25}
+              iconSize={27}
               color={'#727272'}
               index={5}
               activeIndex={activeIndex}
@@ -186,57 +212,85 @@ const TrackingTruck = ({navigation, route}) => {
             />
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('GpsSetting')}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
           <SettingIcon size={30} color={backgroundColorNew} />
         </TouchableOpacity>
       </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapHeader}>
-          <Text>{device?.name}</Text>
+          <Text style={styles.fetchedAddressText}>{device?.name}</Text>
           <View style={styles.verticalLine} />
-          <TouchableOpacity onPress={fetchAddress}>
-            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-              {address}
-            </Text>
+          <TouchableOpacity onPress={handleFetchAddress}>
+            {gpsAddressLoading ? (
+              <ActivityIndicator size="small" color={backgroundColorNew} />
+            ) : (
+              <AnimatedText
+                text={address}
+                style={[
+                  styles.addressText,
+                  addressFetched && styles.fetchedAddressText,
+                ]}
+                showAnimation={true}
+              />
+            )}
           </TouchableOpacity>
         </View>
         <View style={styles.mapView}>
-          <MapView
-            style={StyleSheet.absoluteFillObject}
-            initialRegion={{
-              latitude:
-                // livePositions[livePositions.length - 1]?.latitude ||
-                positions[positions.length - 1]?.latitude,
-              longitude:
-                // livePositions[livePositions.length - 1]?.longitude ||
-                positions[positions.length - 1]?.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
-            }}>
-            {positions[0]?.attributes?.motion && (
-              <Polyline
-                coordinates={livePositions}
-                strokeColor="#000"
-                strokeWidth={6}
-              />
-            )}
-            {livePositions.length > 0 && (
-              <Marker
-                coordinate={livePositions[livePositions.length - 1]}
-                title="Current Location">
-                <BatteryIcon color={'red'} size={30} />
-              </Marker>
-            )}
-          </MapView>
+          {loading ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color={backgroundColorNew} />
+            </View>
+          ) : (
+            <MapView
+              ref={mapRef}
+              style={StyleSheet.absoluteFillObject}
+              initialRegion={{
+                latitude: lat || livePositions[0]?.latitude || 0,
+                longitude: long || livePositions[0]?.longitude || 0,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}>
+              {positions[0]?.attributes?.motion && (
+                <Polyline
+                  coordinates={livePositions}
+                  strokeColor="#000"
+                  strokeWidth={6}
+                />
+              )}
+              {livePositions.length > 0 && (
+                <Marker.Animated
+                  coordinate={animatedMarkerPosition}
+                  title={'Speed'}
+                  description={`${(positions[0]?.speed * 1.852).toFixed(
+                    2,
+                  )} km/h`}
+                  rotation={
+                    livePositions[livePositions.length - 1].course || 0
+                  }>
+                  <TruckNavigationIcon
+                    width={60}
+                    height={50}
+                    style={{
+                      transform: [
+                        {
+                          rotate: `${
+                            livePositions[livePositions.length - 1].course || 0
+                          }deg`,
+                        },
+                      ],
+                    }}
+                  />
+                </Marker.Animated>
+              )}
+            </MapView>
+          )}
           <TouchableOpacity
             style={styles.alertButton}
             onPress={() => navigation.navigate('GpsAlert')}>
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
-          {/* <TouchableOpacity style={styles.gpsButton}>
-            <GpsIcon size={30} />
-          </TouchableOpacity> */}
         </View>
       </View>
       <View style={styles.bottomContainer}>
@@ -266,7 +320,10 @@ const TrackingTruck = ({navigation, route}) => {
             iconSize={30}
             title={'Fuel Pump'}
             onPress={() =>
-              navigation.navigate('FuelPump', {headerTitle: 'Fuel Pump'})
+              navigation.navigate('FuelPump', {
+                headerTitle: 'Fuel Pump',
+                theft: false,
+              })
             }
           />
           <IconWithName
@@ -276,6 +333,7 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('FuelPump', {
                 headerTitle: 'Nearby Police Station',
+                theft: true,
               })
             }
           />
@@ -300,7 +358,7 @@ const TrackingTruck = ({navigation, route}) => {
 export default TrackingTruck;
 
 const styles = StyleSheet.create({
-  conatiner: {flex: 1},
+  container: {flex: 1},
   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 5},
   btnContainer: {
     flexDirection: 'row',
@@ -335,7 +393,6 @@ const styles = StyleSheet.create({
     elevation: 3,
     position: 'absolute',
     bottom: 100,
-    // left: 10,
     right: 10,
     paddingVertical: 10,
   },
@@ -357,7 +414,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   topContainer: {
-    //   borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -366,13 +422,14 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   leftTopContainer: {minWidth: '70%', paddingHorizontal: 5},
-
   mapContainer: {flex: 1},
   mapHeader: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginHorizontal: 10,
   },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
@@ -415,16 +472,24 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginRight: 5,
   },
-  iconView: {
-    flexDirection: 'column',
+  loaderContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 5,
-    padding: 5,
-    marginHorizontal: 10,
   },
-  iconText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Regular',
+  addressText: {
+    fontSize: 14,
+    fontFamily: 'PlusJakartaSans-Italic',
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
+  fetchedAddressText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    textTransform: 'uppercase',
+    textDecorationLine: 'none',
+    fontSize: 14,
+    minWidth: 60,
+    textAlign: 'center',
   },
 });

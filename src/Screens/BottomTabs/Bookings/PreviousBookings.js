@@ -96,7 +96,7 @@ const PreviousBookings = ({navigation, route}) => {
           }>
           <NotFound
             imageName="noPreviousBookings"
-            height={300}
+            height={200}
             width={300}
             title={'No Previous Bookings'}
           />

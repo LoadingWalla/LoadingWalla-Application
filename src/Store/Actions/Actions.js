@@ -893,12 +893,13 @@ export const fetchMapDataFailure = error => ({
 });
 
 // create order
-export const initCreateOrder = (amount, userId) => {
-  // console.log(333333333, amount, userId);
+export const initCreateOrder = (amount, userId, order_type) => {
+  // console.log('createorder', amount, userId, order_type);
   return {
     type: actionTypes.CREATE_ORDER_REQUEST,
     amount,
     userId,
+    order_type,
   };
 };
 
@@ -1002,6 +1003,27 @@ export const fetchGpsDevicesSuccess = payload => ({
 
 export const fetchGpsDevicesFailure = payload => ({
   type: actionTypes.FETCH_GPS_DEVICES_FAILURE,
+  payload,
+});
+
+// single gps devices
+export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
+  console.log(999999, username, password, deviceId);
+  return {
+    type: actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST,
+    username,
+    password,
+    deviceId,
+  };
+};
+
+export const fetchSingleGpsDeviceSuccess = payload => ({
+  type: actionTypes.FETCH_SINGLE_GPS_DEVICE_SUCCESS,
+  payload,
+});
+
+export const fetchSingleGpsDeviceFailure = payload => ({
+  type: actionTypes.FETCH_SINGLE_GPS_DEVICE_FAILURE,
   payload,
 });
 
@@ -1173,7 +1195,7 @@ export const fetchGpsStopsFailure = error => ({
   payload: error,
 });
 
-// GPS Tripa
+// GPS Trips
 export const fetchGpsTripsRequest = (
   username,
   password,
@@ -1196,5 +1218,87 @@ export const fetchGpsTripsSuccess = data => ({
 
 export const fetchGpsTripsFailure = error => ({
   type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
+  payload: error,
+});
+
+// GPS Tripa
+export const fetchGpsPlansRequest = () => ({
+  type: actionTypes.FETCH_GPS_PLANS_REQUEST,
+});
+
+export const fetchGpsPlansSuccess = data => ({
+  type: actionTypes.FETCH_GPS_PLANS_SUCCESS,
+  payload: data,
+});
+
+export const fetchGpsPlansFailure = error => ({
+  type: actionTypes.FETCH_GPS_PLANS_FAILURE,
+  payload: error,
+});
+
+// GPS delivery details
+export const placeGpsOrderRequest = (
+  name,
+  mobile,
+  plan_id,
+  qty,
+  rc_numbers,
+  address,
+  city,
+  state,
+  landmark,
+  pinCode,
+) => {
+  // console.log(
+  //   222222,
+  //   name,
+  //   mobile,
+  //   plan_id,
+  //   qty,
+  //   rc_numbers,
+  //   address,
+  //   city,
+  //   landmark,
+  //   pinCode,
+  //   state,
+  // );
+  return {
+    type: actionTypes.PLACE_GPS_ORDER_REQUEST,
+    name,
+    mobile,
+    plan_id,
+    qty,
+    rc_numbers,
+    address,
+    city,
+    state,
+    landmark,
+    pinCode,
+  };
+};
+
+export const placeGpsOrderSuccess = payload => ({
+  type: actionTypes.PLACE_GPS_ORDER_SUCCESS,
+  payload,
+});
+
+export const placeGpsOrderFailure = error => ({
+  type: actionTypes.PLACE_GPS_ORDER_FAILURE,
+  payload: error,
+});
+
+// gps order details
+export const fetchGpsOrderDetailRequest = id => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_REQUEST,
+  id,
+});
+
+export const fetchGpsOrderDetailSuccess = payload => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_SUCCESS,
+  payload,
+});
+
+export const fetchGpsOrderDetailFailure = error => ({
+  type: actionTypes.FETCH_GPS_ORDER_DETAIL_FAILURE,
   payload: error,
 });

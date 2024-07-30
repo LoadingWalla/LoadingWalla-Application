@@ -60,11 +60,21 @@ function* rootSaga() {
   );
   yield takeLatest(actions.FETCH_GPS_TOKEN_REQUEST, saga.fetchTokenSaga);
   yield takeLatest(actions.FETCH_GPS_DEVICES_REQUEST, saga.fetchGpsDevices);
+  yield takeLatest(
+    actions.FETCH_SINGLE_GPS_DEVICE_REQUEST,
+    saga.fetchSingleGpsDevice,
+  );
   yield takeLatest(actions.FETCH_GPS_ADDRESS_REQUEST, saga.fetchGpsAddress);
   yield takeLatest(actions.FETCH_SUMMARY_REPORT_REQUEST, saga.fetchGpsSummary);
   yield takeLatest(actions.FETCH_POSITIONS_REQUEST, saga.fetchGpsReplay);
   yield takeLatest(actions.FETCH_GPS_STOPS_REQUEST, saga.fetchGpsStops);
   yield takeLatest(actions.FETCH_GPS_TRIPS_REQUEST, saga.fetchGpsTrips);
+  yield takeLatest(actions.FETCH_GPS_PLANS_REQUEST, saga.fetchGpsPlans);
+  yield takeLatest(actions.PLACE_GPS_ORDER_REQUEST, saga.placeGpsOrderSaga);
+  yield takeLatest(
+    actions.FETCH_GPS_ORDER_DETAIL_REQUEST,
+    saga.fetchGpsOrderDetail,
+  );
   yield takeLatest(
     actions.FETCH_GPS_NOTIFICATIONS_REQUEST,
     saga.fetchGpsNotifications,
