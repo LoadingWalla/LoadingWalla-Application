@@ -39,6 +39,7 @@ export const CHOOSE_ONE = 'Choose one';
 export const SAVE_PROCEED = 'Save & proceed';
 export const LORRY_OWNER = 'Truck Owner';
 export const LOAD_OWNER = 'Loads Owner';
+export const GPS_OWNER = 'GPS Owner';
 export const TRANSPORTER = 'Transpoter';
 export const ADD_LORRY = 'Add Truck';
 export const PROFILE = 'My Profile';

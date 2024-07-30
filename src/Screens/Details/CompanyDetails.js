@@ -60,6 +60,12 @@ const CompanyDetails = ({navigation, route}) => {
       owner: Constants.LOAD_OWNER,
       image: require('../../../assets/loadowner.png'),
     },
+    {
+      id: 2,
+      typeId: 3,
+      owner: Constants.GPS_OWNER,
+      image: require('../../../assets/gpsowner.png'),
+    },
   ];
 
   const {profileSetupStatus, profileSetupLoading} = useSelector(state => {
@@ -103,28 +109,49 @@ const CompanyDetails = ({navigation, route}) => {
     </>
   );
 
-  const GridView = ({data, index}) => {
-    if (selected === data.id) {
-      AsyncStorage.setItem('UserType', JSON.stringify(data.typeId));
-      setType(data.typeId);
-    }
-    return (
-      <TouchableOpacity onPress={() => setSelected(index)}>
-        {selected === data.id ? (
-          <Background style={styleSheet.selectItem}>
-            {selectOwnerLorry(data)}
-          </Background>
-        ) : (
-          <View style={styleSheet.unSelectItem}>{selectOwnerLorry(data)}</View>
-        )}
-      </TouchableOpacity>
-    );
+  // const GridView = ({data, index}) => {
+  //   if (selected === data.id) {
+  //     AsyncStorage.setItem('UserType', JSON.stringify(data.typeId));
+  //     setType(data.typeId);
+  //   }
+  //   return (
+  //     <TouchableOpacity onPress={() => setSelected(index)}>
+  //       {selected === data.id ? (
+  //         <Background style={styleSheet.selectItem}>
+  //           {selectOwnerLorry(data)}
+  //         </Background>
+  //       ) : (
+  //         <View style={styleSheet.unSelectItem}>{selectOwnerLorry(data)}</View>
+  //       )}
+  //     </TouchableOpacity>
+  //   );
+  // };
+
+  const handleSelection = index => {
+    const selectedItem = vehicleTypes[index];
+    setSelected(selectedItem.id);
+    AsyncStorage.setItem('UserType', JSON.stringify(selectedItem.typeId));
+    setType(selectedItem.typeId);
   };
+
+  const GridView = ({data, index, handleSelection}) => (
+    <TouchableOpacity onPress={() => handleSelection(index)}>
+      {selected === data.id ? (
+        <Background style={styleSheet.selectItem}>
+          {selectOwnerLorry(data)}
+        </Background>
+      ) : (
+        <View style={styleSheet.unSelectItem}>{selectOwnerLorry(data)}</View>
+      )}
+    </TouchableOpacity>
+  );
 
   const localdata = async () => {
     const userType = await AsyncStorage.getItem('UserType');
     if (userType === '1') {
       navigation.replace('LoadHome');
+    } else if (userType === '3') {
+      navigation.replace('GPSHome');
     } else {
       navigation.replace('Home');
     }
@@ -242,30 +269,8 @@ const CompanyDetails = ({navigation, route}) => {
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View
-          style={{
-            backgroundColor: 'rgba(0,0,0, 0.5)',
-            flex: 1,
-          }}>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              padding: 10,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              width: '100%',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              position: 'absolute',
-              bottom: 0,
-              marginTop: 200,
-            }}>
+        <View style={styleSheet.chooseOptionBox}>
+          <View style={styleSheet.chooseOptionBoxView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle
                 color="#252B41"
@@ -355,8 +360,15 @@ const CompanyDetails = ({navigation, route}) => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               data={vehicleTypes}
+              // renderItem={({item, index}) => (
+              //   <GridView data={item} index={index} />
+              // )}
               renderItem={({item, index}) => (
-                <GridView data={item} index={index} />
+                <GridView
+                  data={item}
+                  index={index}
+                  handleSelection={handleSelection}
+                />
               )}
             />
           </View>
@@ -494,5 +506,27 @@ const styleSheet = StyleSheet.create({
   imagePickerView: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  chooseOptionBox: {
+    backgroundColor: 'rgba(0,0,0, 0.5)',
+    flex: 1,
+  },
+  chooseOptionBoxView: {
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: 'absolute',
+    bottom: 0,
+    marginTop: 200,
   },
 });
