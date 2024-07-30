@@ -168,7 +168,7 @@ export function* location({location, id}) {
 export function* dashboard() {
   try {
     const data = yield API.get('dashboard');
-    console.log(4444445555, data);
+    // console.log(4444445555, data);
     if (data?.data?.status === 200) {
       yield put(actions.dashboardSuccess(data));
       yield AsyncStorage.setItem(
