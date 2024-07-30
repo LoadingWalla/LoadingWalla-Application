@@ -15,7 +15,8 @@ import {initLanguage} from '../../Store/Actions/Actions';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import {useTranslation} from 'react-i18next';
-import NetInfo from '@react-native-community/netinfo';
+// import NetInfo from '@react-native-community/netinfo';
+// import axios from 'axios';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
@@ -104,16 +105,78 @@ const Language = ({navigation, route}) => {
     }
   };
 
-  console.log(33333, NetInfo);
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      console.log(4444, state);
-      // setIsConnected(state.isConnected);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     console.log(4444, state);
+  //     // setIsConnected(state.isConnected);
+  //   });
 
-    // Clean up the subscription
-    return () => unsubscribe();
-  }, []);
+  //   // Clean up the subscription
+  //   return () => unsubscribe();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       // const response = await fetch('https://loadingwalla.com/api/gps-plans');
+  //       const response = await fetch('https://fakestoreapi.com/products');
+  //       const json = await response.json();
+  //       console.log(9999999, json);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('https://loadingwalla.com/api/gps-plans', {
+  //         method: 'GET',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! status: ${response.status}`);
+  //       }
+
+  //       const json = await response.json();
+  //       console.log('Data:', json);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       console.log('Error details:', {
+  //         message: error.message,
+  //         stack: error.stack,
+  //         name: error.name,
+  //       });
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('https://loadingwalla.com/api/login', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({mobile: '+918800899875'}),
+  //       });
+  //       const json = await response.json();
+  //       console.log(555555, json);
+  //     } catch (error) {
+  //       console.error('Error fetching data2222:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>

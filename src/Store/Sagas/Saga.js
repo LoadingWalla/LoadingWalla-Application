@@ -12,6 +12,7 @@ export function* authenticate({mobile}) {
   };
   try {
     const data = yield API.post('login', body);
+    // console.log(88888, data);
     if (data?.data?.status === 200) {
       yield AsyncStorage.setItem('user_id', `${data?.data?.user_id}`);
       yield put(actions.loginSuccess(data));
@@ -167,6 +168,7 @@ export function* location({location, id}) {
 export function* dashboard() {
   try {
     const data = yield API.get('dashboard');
+    console.log(4444445555, data);
     if (data?.data?.status === 200) {
       yield put(actions.dashboardSuccess(data));
       yield AsyncStorage.setItem(
