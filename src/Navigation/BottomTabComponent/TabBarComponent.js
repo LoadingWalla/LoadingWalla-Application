@@ -10,14 +10,13 @@ export const routes = {
   home: {name: 'Home', icon: 'home'},
   feed: {name: 'Feed', icon: 'bars'},
   profile: {name: 'Profile', icon: 'user'},
-  settings: {name: 'Settings', icon: 'setting'},
 };
 
 const {width} = Dimensions.get('window');
 
 // 20 on each side for absolute positioning of the tab bar
 // 20 on each side for the internal padding
-const TAB_WIDTH = width / 3;
+const TAB_WIDTH = (width - 40) / 3;
 
 const TabBarComponent = ({state, navigation, descriptors}) => {
   const translateX = useSharedValue(0);

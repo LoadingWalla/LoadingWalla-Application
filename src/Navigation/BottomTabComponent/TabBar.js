@@ -25,8 +25,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    // paddingHorizontal: 20,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
     bottom: 0, // here you can use the bottom inset for more flexbility
     // left: 20,
     // right: 20,
@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
     //   width: 10,
     //   height: 10,
     // },
-    borderWidth: 1,
+    // borderWidth: 1,
   },
 });

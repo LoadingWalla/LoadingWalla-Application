@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler';
+import 'react-native-reanimated';
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigation from './src/Navigation/router';
@@ -7,7 +9,6 @@ import {PermissionsAndroid, Platform, StatusBar} from 'react-native';
 import {foregroundNotification} from './src/Utils/Notification_helper';
 import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
 import {navigationRef} from './src/Navigation/NavigationService';
-import 'react-native-reanimated';
 
 const App = () => {
   useEffect(() => {

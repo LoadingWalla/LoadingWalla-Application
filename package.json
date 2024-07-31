@@ -37,6 +37,7 @@
     "react-native": "0.73.6",
     "react-native-background-timer": "^2.4.1",
     "react-native-device-info": "^10.13.1",
+    "react-native-gesture-handler": "^2.17.1",
     "react-native-image-crop-picker": "^0.40.3",
     "react-native-in-app-review": "^4.3.3",
     "react-native-linear-gradient": "^2.8.3",
