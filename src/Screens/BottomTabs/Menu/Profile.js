@@ -67,7 +67,7 @@ const Profile = ({navigation, route}) => {
 
   const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
     useSelector(state => {
-      console.log('profile Data', state.data);
+      // console.log('profile Data', state.data);
       return state.data;
     });
 
@@ -152,7 +152,7 @@ const Profile = ({navigation, route}) => {
   };
 
   return (
-    <KeyboardAvoidingView>
+    <View style={{flex: 1}}>
       {profileLoading ? (
         <View>
           <ProfileShimmer />
@@ -188,6 +188,7 @@ const Profile = ({navigation, route}) => {
                   height: 85,
                   width: 85,
                   borderRadius: 50,
+                  marginRight: Userdata?.user_type === 3 ? 10 : 0,
                 }}
                 source={
                   Userdata?.profile_img
@@ -200,35 +201,41 @@ const Profile = ({navigation, route}) => {
             <View style={style.verticalLine} />
             <View style={{flex: 1, marginLeft: 17, justifyContent: 'center'}}>
               <Text style={style.profileTitle}>{Userdata?.name}</Text>
-              <Text style={style.subTitle}>
-                {Userdata?.user_type === 1 ? 'Load Owner' : 'Truck Owner'}
-              </Text>
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
-              <View style={{flexDirection: 'row', marginTop: 7}}>
-                <View style={{flexDirection: 'row'}}>
-                  <TouchableOpacity>
-                    <Shield size={20} verified={Userdata?.verify} />
-                  </TouchableOpacity>
-                  <Text
-                    style={style.dashboardHeaderVerifiedTitle(
-                      Userdata?.verify,
-                    )}>
-                    {Userdata?.verify === 1
-                      ? `${t(Constants.VERIFIED)}`
-                      : t(Constants.NOT_VERIFIED)}
-                  </Text>
+              <Text style={style.subTitle}>
+                {Userdata?.user_type === 1
+                  ? 'Load Owner'
+                  : Userdata?.user_type === 3
+                  ? 'GPS Owner'
+                  : 'Truck Owner'}
+              </Text>
+              {!Userdata?.user_type === 3 && (
+                <View style={{flexDirection: 'row', marginTop: 7}}>
+                  <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity>
+                      <Shield size={20} verified={Userdata?.verify} />
+                    </TouchableOpacity>
+                    <Text
+                      style={style.dashboardHeaderVerifiedTitle(
+                        Userdata?.verify,
+                      )}>
+                      {Userdata?.verify === 1
+                        ? `${t(Constants.VERIFIED)}`
+                        : t(Constants.NOT_VERIFIED)}
+                    </Text>
+                  </View>
+                  <View style={style.verticalLine} />
+                  <View>
+                    <Rating
+                      readonly={true}
+                      type="star"
+                      ratingCount={5}
+                      imageSize={15}
+                      startingValue={Userdata?.rating || 0}
+                    />
+                  </View>
                 </View>
-                <View style={style.verticalLine} />
-                <View>
-                  <Rating
-                    readonly={true}
-                    type="star"
-                    ratingCount={5}
-                    imageSize={15}
-                    startingValue={Userdata?.rating || 0}
-                  />
-                </View>
-              </View>
+              )}
             </View>
             <View>
               <TouchableOpacity
@@ -240,25 +247,28 @@ const Profile = ({navigation, route}) => {
             </View>
           </View>
           <ScrollView
+            style={{flex: 1, marginBottom: Userdata?.user_type === 3 ? 60 : 0}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <View style={style.percentageBarView}>
-              <PercentageBar
-                navigation={navigation}
-                percentage={UserVerifyPercentage || 0}
-                verify={Userdata?.verify}
-                style={style}
-              />
-              <TouchableOpacity
-                style={style.buttonContainer}
-                onPress={() => navigation.navigate('Wallet')}>
-                <WalletIcon size={25} color={'#F0C200'} />
-                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                <View style={style.rightArrowView}>
-                  <RightArrow size={20} color={GradientColor1} />
-                </View>
-              </TouchableOpacity>
-            </View>
+            {!Userdata?.user_type === 3 && (
+              <View style={style.percentageBarView}>
+                <PercentageBar
+                  navigation={navigation}
+                  percentage={UserVerifyPercentage || 0}
+                  verify={Userdata?.verify}
+                  style={style}
+                />
+                <TouchableOpacity
+                  style={style.buttonContainer}
+                  onPress={() => navigation.navigate('Wallet')}>
+                  <WalletIcon size={25} color={'#F0C200'} />
+                  <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
+                  <View style={style.rightArrowView}>
+                    <RightArrow size={20} color={GradientColor1} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
 
             <View style={style.section}>
               <View style={style.sectionHeader}>
@@ -268,38 +278,57 @@ const Profile = ({navigation, route}) => {
                 </Text>
               </View>
               <View style={style.userDetails}>
-                <MenuItem
-                  title={t(Constants.USER_SUMMARY)}
-                  onPress={() =>
-                    navigation.navigate('Inconvenience', {
-                      headerTitle: t(Constants.USER_SUMMARY),
-                    })
-                  }
-                  Icon={<UserSummaryIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.PREVIOUS_BOOKINGS)}
-                  onPress={() =>
-                    navigation.navigate('Previous Bookings', {
-                      Owner: Userdata,
-                    })
-                  }
-                  Icon={
-                    <PreviousBookingIcon size={30} color={GradientColor1} />
-                  }
-                />
-                <View style={style.horizontalLine} />
+                {Userdata?.user_type === 3 ? (
+                  <>
+                    <MenuItem
+                      title={t(Constants.ORDERS_PAYMENT)}
+                      onPress={() => navigation.navigate('Orders & Payment')}
+                      Icon={
+                        <GpsTrackingIcon size={30} color={GradientColor1} />
+                      }
+                    />
+                    <View style={style.horizontalLine} />
+                  </>
+                ) : (
+                  <>
+                    <MenuItem
+                      title={t(Constants.USER_SUMMARY)}
+                      onPress={() =>
+                        navigation.navigate('Inconvenience', {
+                          headerTitle: t(Constants.USER_SUMMARY),
+                        })
+                      }
+                      Icon={
+                        <UserSummaryIcon size={30} color={GradientColor1} />
+                      }
+                    />
+                    <View style={style.horizontalLine} />
+                    <MenuItem
+                      title={t(Constants.PREVIOUS_BOOKINGS)}
+                      onPress={() =>
+                        navigation.navigate('Previous Bookings', {
+                          Owner: Userdata,
+                        })
+                      }
+                      Icon={
+                        <PreviousBookingIcon size={30} color={GradientColor1} />
+                      }
+                    />
+                    <View style={style.horizontalLine} />
+                    <MenuItem
+                      title={'GPS Tracking'}
+                      onPress={() => navigation.navigate('GPS')}
+                      Icon={
+                        <GpsTrackingIcon size={30} color={GradientColor1} />
+                      }
+                    />
+                    <View style={style.horizontalLine} />
+                  </>
+                )}
                 <MenuItem
                   title={t(Constants.SAVED_ADDRESS)}
                   onPress={() => navigation.navigate('Address')}
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={'GPS Tracking'}
-                  onPress={() => navigation.navigate('GPS')}
-                  Icon={<GpsTrackingIcon size={30} color={GradientColor1} />}
                 />
               </View>
             </View>
@@ -394,7 +423,7 @@ const Profile = ({navigation, route}) => {
           </ScrollView>
         </View>
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

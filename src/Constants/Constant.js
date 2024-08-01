@@ -177,6 +177,7 @@ export const USER_DETAILS = 'User Details';
 export const USER_SUMMARY = 'User Summary';
 export const PREVIOUS_BOOKINGS = 'Previous Bookings';
 export const SAVED_ADDRESS = 'Saved address';
+export const ORDERS_PAYMENT = 'Orders & payments';
 export const APP_VERSION = 'App Version:';
 export const SEE_MORE = 'See More';
 export const SKIP = 'Skip';

@@ -77,8 +77,8 @@ export default function PlayJourney({navigation, route}) {
     new AnimatedRegion({
       latitude: coordinates?.[0]?.latitude || 0,
       longitude: coordinates?.[0]?.longitude || 0,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
     }),
   ).current;
 
@@ -141,13 +141,26 @@ export default function PlayJourney({navigation, route}) {
               useNativeDriver: false,
             })
             .start();
+
           setSliderValue(newIndex / (coordinates?.length - 1));
+          // Only change the position, not the zoom level
+          // if (mapRef.current && newPosition) {
+          //   mapRef.current.animateToRegion({
+          //     latitude: newPosition?.latitude,
+          //     longitude: newPosition?.longitude,
+          //     latitudeDelta: 0.0922,
+          //     longitudeDelta: 0.0421,
+          //   });
+          // }
           if (mapRef.current && newPosition) {
-            mapRef.current.animateToRegion({
-              latitude: newPosition?.latitude,
-              longitude: newPosition?.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01,
+            mapRef.current.animateCamera({
+              center: {
+                latitude: newPosition.latitude,
+                longitude: newPosition.longitude,
+              },
+              // Do not change zoom level
+              zoom: 14, // Set a default zoom level, adjust as needed
+              duration: 1000 / playbackSpeed,
             });
           }
           return newIndex;
@@ -197,7 +210,7 @@ export default function PlayJourney({navigation, route}) {
         .timing({
           latitude: prevStop.latitude,
           longitude: prevStop.longitude,
-          duration: 500,
+          duration: 1000,
           useNativeDriver: false,
         })
         .start();
@@ -290,13 +303,13 @@ export default function PlayJourney({navigation, route}) {
                     )} km/h`}
                     rotation={currentPosition.course || 0}>
                     <TruckNavigationIcon
-                      width={60}
+                      width={50}
                       height={50}
                       style={{
                         transform: [
-                          {
-                            rotate: `${currentPosition.course}deg`,
-                          },
+                          // {
+                          //   rotate: `${currentPosition.course}deg`,
+                          // },
                         ],
                       }}
                     />
@@ -371,8 +384,8 @@ export default function PlayJourney({navigation, route}) {
                   mapRef.current.animateToRegion({
                     latitude: newPosition.latitude,
                     longitude: newPosition.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
                   });
                 }
               }}

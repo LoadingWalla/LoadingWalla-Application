@@ -11,25 +11,25 @@ export default StyleSheet.create({
     height: 3,
     backgroundColor: GradientColor2,
     position: 'absolute',
-    bottom: 55,
+    bottom: 60,
     borderRadius: 20,
     transform: [{translateX: offsetValue}],
   }),
 
-  animatedContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 60,
-    zIndex: -1, // Ensure it stays behind the tab bar items
-  },
-  animatedBackground: {
-    height: 60,
-    width: 0,
-    backgroundColor: 'pink', // Initial color
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-  },
+  // animatedContainer: {
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  //   height: 60,
+  //   zIndex: -1, // Ensure it stays behind the tab bar items
+  // },
+  // animatedBackground: {
+  //   height: 60,
+  //   width: 0,
+  //   backgroundColor: 'pink', // Initial color
+  //   position: 'absolute',
+  //   bottom: 0,
+  //   left: 0,
+  // },
 });

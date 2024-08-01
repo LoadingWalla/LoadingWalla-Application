@@ -133,7 +133,7 @@ const TrackingTruck = ({navigation, route}) => {
             <Text style={styles.distanceText}>Distance:</Text>
             <Text style={styles.highlightText}>
               {positions[0]?.attributes?.distance
-                ? `${positions[0]?.attributes?.distance} KM`
+                ? `${(positions[0]?.attributes?.distance).toFixed(3)} KM`
                 : '0 KM'}
             </Text>
           </View>

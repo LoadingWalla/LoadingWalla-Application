@@ -83,6 +83,8 @@ import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
 import TabBar from './BottomTabComponent/TabBar';
 import GPSHomePage from '../Screens/GPS/GPSHomePage';
+import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
+import OrdersPayment from '../Screens/GPS/OrdersPayment';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -310,7 +312,7 @@ function BottomTabs() {
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
             // height: 65,
-            height: 55,
+            height: 60,
             // borderWidth: 1,
             // borderColor: 'red',
           },
@@ -501,7 +503,7 @@ function MyLoadsBottomTabs() {
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
             // height: 65,
-            height: 55,
+            height: 60,
           },
           tabBarLabelStyle: {
             fontSize: 12,
@@ -660,15 +662,15 @@ function MyLoadsBottomTabs() {
 //     <View style={{flex: 1}}>
 //       <Tab.Navigator tabBar={TabBar}>
 //         <Tab.Screen
-//           name={'Dashboard'}
-//           component={DashboardLoad}
+//           name={'GPSMarket'}
+//           component={GPSHomePage}
 //           options={{
 //             headerShown: false,
 //           }}
 //         />
 //         <Tab.Screen
-//           name={'Bookings'}
-//           component={Booking}
+//           name={'MyGPS'}
+//           component={MyGpsScreen}
 //           options={{
 //             headerShown: false,
 //           }}
@@ -684,6 +686,7 @@ function MyLoadsBottomTabs() {
 //     </View>
 //   );
 // }
+
 function MyGpsBottomTabs() {
   function getWidth() {
     const totalWidth = Dimensions.get('window').width;
@@ -718,7 +721,7 @@ function MyGpsBottomTabs() {
         screenOptions={({route}) => ({
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
-          tabBarActiveBackgroundColor: 'pink',
+          // tabBarActiveBackgroundColor: 'pink',
           // tabBarInactiveBackgroundColor: '#ccc',
           // tabBarItemStyle: {borderWidth: 1},
           // sceneContainerStyle: {},
@@ -741,8 +744,7 @@ function MyGpsBottomTabs() {
         })}>
         <Tab.Screen
           name={'GPSMarket'}
-          // component={GPSHomePage}
-          component={Dashboard}
+          component={GPSHomePage}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
@@ -769,7 +771,7 @@ function MyGpsBottomTabs() {
         />
         <Tab.Screen
           name={'MyGPS'}
-          component={Booking}
+          component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
@@ -843,7 +845,7 @@ function MyGpsBottomTabs() {
           })}
         />
       </Tab.Navigator>
-      <View style={style.animatedContainer}>
+      {/* <View style={style.animatedContainer}>
         <Animated.View
           style={[
             style.animatedBackground,
@@ -853,7 +855,10 @@ function MyGpsBottomTabs() {
             },
           ]}
         />
-      </View>
+      </View> */}
+      <Animated.View
+        style={style.animatedViewStyle(getWidth, tabOffsetValue)}
+      />
     </View>
   );
 }
@@ -1702,7 +1707,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'GPS Tracking',
+          title: 'GPS Purchased',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
           },
@@ -2071,6 +2076,29 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           presentation: 'transparentModal',
         })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="Orders & Payment"
+        component={OrdersPayment}
+        options={{
+          headerShown: true,
+          headerTitleAlign: 'center',
+          title: t(Constants.ORDERS_PAYMENT),
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+        }}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>

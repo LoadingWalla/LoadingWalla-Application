@@ -11,7 +11,8 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 5,
     backgroundColor: '#FFFDFD',
-    height: '100%',
+    flex: 1,
+    // borderWidth: 1,
   },
   menuIconView: {
     backgroundColor: pageBackground,

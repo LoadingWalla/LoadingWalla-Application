@@ -42,7 +42,7 @@ const GpsTrackings = ({navigation}) => {
   useEffect(() => {
     if (gpsTokenData) {
       const {cookie, email, password} = gpsTokenData;
-      console.log(77777, gpsTokenData);
+      // console.log(77777, gpsTokenData);
       dispatch(websocketConnect(cookie));
       dispatch(
         fetchGpsDevicesRequest(
@@ -150,9 +150,9 @@ const GpsTrackings = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerContainer}>
+      {/* <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>GPS Purchases</Text>
-      </View>
+      </View> */}
       {gpsDeviceLoading ? (
         <View style={styles.loadingStyle}>
           <ActivityIndicator size="large" color={backgroundColorNew} />
@@ -189,7 +189,7 @@ export default GpsTrackings;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
+    padding: 10,
     flex: 1,
   },
   headerContainer: {
