@@ -120,7 +120,7 @@ const fetchClient = axios.create();
 
 const initializeFetchClient = async () => {
   const baseURL = await getCurrentBaseUrl();
-  // console.log('Fetch Client Base URL:', baseURL);
+  console.log('Fetch Client Base URL:', baseURL);
 
   const defaultOptions = {
     baseURL: baseURL,

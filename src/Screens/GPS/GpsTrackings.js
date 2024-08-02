@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import GpsItem from '../../Components/GpsItem';
 import Button from '../../Components/Button';
-import {backgroundColorNew, textColor} from '../../Color/color';
+import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Snackbar from 'react-native-snackbar';
 
 const GpsTrackings = ({navigation}) => {
@@ -158,8 +158,8 @@ const GpsTrackings = ({navigation}) => {
           <ActivityIndicator size="large" color={backgroundColorNew} />
         </View>
       ) : gpsDeviceData === null ? (
-        <View style={styles.noGpsContainer}>
-          <Text style={styles.noGpsText}>No GPS found</Text>
+        <View style={styles.noAddressContainer}>
+          <Text style={styles.noAddressText}>No GPS found.</Text>
         </View>
       ) : (
         <FlatList
@@ -169,8 +169,8 @@ const GpsTrackings = ({navigation}) => {
           renderItem={renderGpsItem}
           keyExtractor={item => item.id.toString()}
           ListEmptyComponent={
-            <View style={styles.noGpsContainer}>
-              <Text style={styles.noGpsText}>No GPS found</Text>
+            <View style={styles.noAddressContainer}>
+              <Text style={styles.noAddressText}>No GPS found.</Text>
             </View>
           }
         />
@@ -218,14 +218,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noGpsContainer: {
+  noAddressContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noGpsText: {
+  noAddressText: {
     fontSize: 16,
+    color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    color: backgroundColorNew,
   },
 });

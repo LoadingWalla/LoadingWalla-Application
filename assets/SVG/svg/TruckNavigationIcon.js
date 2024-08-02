@@ -29,14 +29,7 @@ function TruckNavigationIcon(props) {
             <Stop offset={0.94} stopColor="#fdf8d6" stopOpacity={0.14} />
             <Stop offset={1} stopColor="#fdf8d6" stopOpacity={0} />
           </LinearGradient>
-          <LinearGradient
-            x1={168.34}
-            y1={22.6}
-            x2={239.94}
-            y2={22.6}
-            // p4:href="#a"
-            // xmlns:p4="http://www.w3.org/1999/xlink"
-          />
+          <LinearGradient x1={168.34} y1={22.6} x2={239.94} y2={22.6} />
         </Defs>
         <Path
           d="M104.21 65.89v-52.5h54.06c4.76 0 8.63 3.86 8.63 8.63v35.24c0 4.77-3.86 8.63-8.63 8.63h-54.06z"

@@ -209,7 +209,7 @@ const Profile = ({navigation, route}) => {
                   ? 'GPS Owner'
                   : 'Truck Owner'}
               </Text>
-              {!Userdata?.user_type === 3 && (
+              {Userdata?.user_type !== 3 && (
                 <View style={{flexDirection: 'row', marginTop: 7}}>
                   <View style={{flexDirection: 'row'}}>
                     <TouchableOpacity>

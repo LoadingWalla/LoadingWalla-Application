@@ -63,6 +63,8 @@ const TrackingTruck = ({navigation, route}) => {
     } else {
       const position = getLivePositions(wsMessages, deviceId);
       setLivePositions(position);
+      // console.log(444444, position);
+
       if (position.length > 0) {
         setLoading(false);
         animateToPosition(position[position.length - 1]);
@@ -77,15 +79,15 @@ const TrackingTruck = ({navigation, route}) => {
       mapRef.current.animateToRegion({
         latitude: position.latitude,
         longitude: position.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       });
 
       animatedMarkerPosition
         .timing({
           latitude: position.latitude,
           longitude: position.longitude,
-          duration: 500,
+          duration: 1000,
           useNativeDriver: false,
         })
         .start();
@@ -96,8 +98,8 @@ const TrackingTruck = ({navigation, route}) => {
     new AnimatedRegion({
       latitude: lat || 0,
       longitude: long || 0,
-      latitudeDelta: 0.01,
-      longitudeDelta: 0.01,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
     }),
   ).current;
 
@@ -248,8 +250,8 @@ const TrackingTruck = ({navigation, route}) => {
               initialRegion={{
                 latitude: lat || livePositions[0]?.latitude || 0,
                 longitude: long || livePositions[0]?.longitude || 0,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
               }}>
               {positions[0]?.attributes?.motion && (
                 <Polyline
@@ -261,25 +263,27 @@ const TrackingTruck = ({navigation, route}) => {
               {livePositions.length > 0 && (
                 <Marker.Animated
                   coordinate={animatedMarkerPosition}
-                  title={'Speed'}
-                  description={`${(positions[0]?.speed * 1.852).toFixed(
-                    2,
-                  )} km/h`}
+                  // title={'Speed'}
+                  // description={
+                  //   positions[0]?.speed
+                  //     ? `${(positions[0]?.speed * 1.852).toFixed(2)} km/h`
+                  //     : '0 km/h'
+                  // }
                   rotation={
                     livePositions[livePositions.length - 1].course || 0
                   }>
                   <TruckNavigationIcon
-                    width={60}
+                    width={50}
                     height={50}
-                    style={{
-                      transform: [
-                        {
-                          rotate: `${
-                            livePositions[livePositions.length - 1].course || 0
-                          }deg`,
-                        },
-                      ],
-                    }}
+                    // style={{
+                    //   transform: [
+                    //     {
+                    //       rotate: `${
+                    //         livePositions[livePositions.length - 1].course || 0
+                    //       }deg`,
+                    //     },
+                    //   ],
+                    // }}
                   />
                 </Marker.Animated>
               )}
@@ -291,6 +295,12 @@ const TrackingTruck = ({navigation, route}) => {
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
+          <View
+            style={styles.alertButton}
+            onPress={() => navigation.navigate('GpsAlert')}>
+            <AlertsIcon size={20} />
+            <Text style={styles.alertButtonText}>Alerts</Text>
+          </View>
         </View>
       </View>
       <View style={styles.bottomContainer}>

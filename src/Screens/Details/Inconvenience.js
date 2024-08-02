@@ -1,7 +1,7 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {backgroundColorNew} from '../../Color/color';
-import NotFound from '../../Components/NotFound';
+import {backgroundColorNew, textColor} from '../../Color/color';
+import InnerButton from '../../Components/InnerButton';
 
 const Inconvenience = ({navigation}) => {
   return (
@@ -10,14 +10,16 @@ const Inconvenience = ({navigation}) => {
         <Image
           source={require('../../../assets/GIFs/Nothing.gif')}
           resizeMode="contain"
+          style={{flex: 1}}
         />
         {/* <NotFound imageName="nothing" /> */}
+        <InnerButton
+          navigation={() => navigation.goBack()}
+          title={'Go Back'}
+          enabledStyle={styles.btnStyle}
+          textStyle={styles.btnText}
+        />
       </View>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.button}>
-        <Text style={styles.txt}>Go Back</Text>
-      </TouchableOpacity>
     </View>
   );
 };
@@ -30,11 +32,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFDFD',
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
+    // marginTop: 60,
   },
   containerChild1: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
+    width: '100%',
+    // borderWidth: 1,
+    paddingBottom: 30,
   },
   button: {
     paddingHorizontal: 20,
@@ -43,11 +50,30 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     bottom: 20,
     width: '90%',
+    // borderWidth: 1,
   },
   txt: {
     color: '#FFFFFF',
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 16,
+    textAlign: 'center',
+    // borderWidth: 1,
+  },
+  btnStyle: {
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: backgroundColorNew,
+    borderColor: backgroundColorNew,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '80%',
+    alignSelf: 'center',
+  },
+  btnText: {
+    fontSize: 16,
+    color: textColor,
+    fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
 });
