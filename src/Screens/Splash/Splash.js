@@ -22,6 +22,8 @@ const Splash = ({navigation: {replace}}) => {
           }
           if (userType === '2') {
             replace('Home');
+          } else if (userType === '3') {
+            replace('GPSHome');
           } else {
             replace('LoadHome');
           }

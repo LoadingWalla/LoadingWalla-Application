@@ -129,7 +129,7 @@ const Dashboard = ({navigation}) => {
   };
 
   return (
-    <>
+    <View style={{flex: 1}}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -223,7 +223,7 @@ const Dashboard = ({navigation}) => {
           )}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 

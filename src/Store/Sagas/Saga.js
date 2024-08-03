@@ -101,22 +101,22 @@ export function* profileSetup({
   profile_img,
   remove_profile,
 }) {
-  // console.log(
-  //   'Remove Image ID',
-  //   userid,
-  //   name,
-  //   city,
-  //   userType,
-  //   profile_img,
-  //   remove_profile,
-  // );
+  console.log(
+    'Remove Image ID',
+    userid,
+    name,
+    city,
+    userType,
+    profile_img,
+    remove_profile,
+  );
   try {
     let param = new FormData();
     if (remove_profile) {
       param.append('remove_profile', userid);
     } else {
       param.append('name', name);
-      param.append('city', city);
+      // param.append('city', city);
       param.append('user_type', userType);
       if (profile_img?.uri) {
         param.append('profile_img', {
@@ -129,7 +129,7 @@ export function* profileSetup({
 
     try {
       let data = yield multiPartApi.post('profile-setup', param);
-      // console.log('API response', data);
+      console.log('API response', data);
       if (data?.data?.status === 200) {
         yield put(actions.ProfileSetupSuccess(data));
       } else {

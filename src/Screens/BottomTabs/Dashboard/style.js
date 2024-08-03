@@ -115,6 +115,8 @@ export default StyleSheet.create({
     marginTop: 60,
     padding: 10,
     backgroundColor: '#FFFDFD',
+    // borderWidth: 1,
+    // marginBottom: 60,
   },
   touchStyle: {
     marginVertical: 20,

@@ -29,7 +29,7 @@ const setCurrentBaseUrl = async url => {
 const instanceFunction = instanceObj => {
   instanceObj.interceptors.request.use(
     async config => {
-      // console.log('Request Interceptor:', config);
+      console.log('Request Interceptor:', config);
       try {
         const token = await AsyncStorage.getItem('auth-token');
         // console.log('Auth Token:', token);
@@ -50,7 +50,7 @@ const instanceFunction = instanceObj => {
 
   instanceObj.interceptors.response.use(
     function (response) {
-      // console.log('Response Interceptor:', response);
+      console.log('Response Interceptor:', response);
       let respObj = {
         data: response.data ? response.data : [],
         status: response.status,
@@ -58,7 +58,7 @@ const instanceFunction = instanceObj => {
       return respObj;
     },
     async function (error) {
-      // console.error('Response Interceptor Error:', error);
+      console.error('Response Interceptor Error:', error);
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         // console.log('Network Request Error:', error);
         Snackbar.show({
@@ -120,7 +120,7 @@ const fetchClient = axios.create();
 
 const initializeFetchClient = async () => {
   const baseURL = await getCurrentBaseUrl();
-  // console.log('Fetch Client Base URL:', baseURL);
+  console.log('Fetch Client Base URL:', baseURL);
 
   const defaultOptions = {
     baseURL: baseURL,

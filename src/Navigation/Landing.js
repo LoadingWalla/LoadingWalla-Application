@@ -20,6 +20,8 @@ const Landing = ({navigation}) => {
     const userType = await AsyncStorage.getItem('UserType');
     if (userType === '1') {
       navigation.replace('LoadHome');
+    } else if (userType === '3') {
+      navigation.replace('GPSHome');
     } else {
       navigation.replace('Home');
     }

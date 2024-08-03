@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState} from 'react';
+import React, {useEffect, useCallback, useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {initGuide} from '../../../Store/Actions/Actions';
-import {GradientColor2, PrivacyPolicy, titleColor} from '../../../Color/color';
+import {PrivacyPolicy} from '../../../Color/color';
 import * as Constants from '../../../Constants/Constant';
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
 import UpArrow from '../../../../assets/SVG/svg/UpArrow';
@@ -38,11 +38,18 @@ const Guide = ({navigation}) => {
   const [searchMode, setSearchMode] = useState(false);
   const [searchText, setSearchText] = useState('');
 
-  const {guideData, guideStatus, guideLoading} = useSelector(state => ({
-    guideData: state.data.guideData,
-    guideStatus: state.data.guideStatus,
-    guideLoading: state.data.guideLoading,
-  }));
+  // Memoize the selector to prevent unnecessary re-renders
+  const {guideData, guideStatus, guideLoading} = useSelector(
+    state => ({
+      guideData: state.data.guideData,
+      guideStatus: state.data.guideStatus,
+      guideLoading: state.data.guideLoading,
+    }),
+    (prev, next) =>
+      prev.guideData === next.guideData &&
+      prev.guideStatus === next.guideStatus &&
+      prev.guideLoading === next.guideLoading,
+  );
 
   useEffect(() => {
     dispatch(initGuide());
@@ -84,7 +91,7 @@ const Guide = ({navigation}) => {
         ) : (
           <TouchableOpacity
             onPress={() => setSearchMode(true)}
-            style={{top: 2}}>
+            style={styles.searchButton}>
             <SearchIcon size={25} color={'#000000'} />
           </TouchableOpacity>
         ),
@@ -94,7 +101,17 @@ const Guide = ({navigation}) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, searchMode, searchText]);
+  }, [navigation, searchMode, searchText, t]);
+
+  const filteredData = useMemo(
+    () =>
+      guideStatus === 200
+        ? guideData.filter(item =>
+            item.title.toLowerCase().includes(searchText.toLowerCase()),
+          )
+        : [],
+    [guideStatus, guideData, searchText],
+  );
 
   const renderItem = useCallback(
     ({item}) => (
@@ -121,7 +138,7 @@ const Guide = ({navigation}) => {
 
   return (
     <View style={styles.backgroundView}>
-      {searchMode ? null : (
+      {!searchMode && (
         <View style={styles.callBox}>
           <Text style={styles.header}>Facing trouble?</Text>
           <TouchableOpacity
@@ -136,13 +153,7 @@ const Guide = ({navigation}) => {
         <GuideShimmer />
       ) : (
         <FlatList
-          data={
-            guideStatus === 200
-              ? guideData.filter(item =>
-                  item.title.toLowerCase().includes(searchText.toLowerCase()),
-                )
-              : []
-          }
+          data={filteredData}
           keyExtractor={item => item?.id.toString()}
           renderItem={renderItem}
           extraData={selectedId}
@@ -156,7 +167,6 @@ const styles = StyleSheet.create({
   backgroundView: {
     padding: 10,
     backgroundColor: '#FFFDFD',
-    height: '100%',
     flex: 1,
   },
   header: {
@@ -232,6 +242,9 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     height: 40,
+  },
+  searchButton: {
+    top: 2,
   },
 });
 
