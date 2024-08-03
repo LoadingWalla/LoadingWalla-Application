@@ -1,15 +1,13 @@
 import LottieView from 'lottie-react-native';
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import style from './style';
-// import { backgroundColorNew } from '../Color/color';
 
 const images = {
   successImage: require('../../assets/GIFs/Done.json'),
   loadDone: require('../../assets/GIFs/Load done.json'),
   noBookings: require('../../assets/GIFs/No bookings.json'),
   noInternet: require('../../assets/GIFs/No internet.json'),
-  noLoadFound: require('../../assets/GIFs/No Load found.json'),
+  noLoadFound: require('../../assets/GIFs/No Load Found.json'),
   noNotification: require('../../assets/GIFs/No Notification.json'),
   noPreviousBookings: require('../../assets/GIFs/No previous booking.json'),
   noRequest: require('../../assets/GIFs/No Request found.json'),
@@ -20,7 +18,7 @@ const images = {
   trackingLoading: require('../../assets/GIFs/Tracking loading.json'),
   errorImage: require('../../assets/GIFs/Wrong.json'),
   // serverError: require('../../assets/GIFs/No_Load_Found.json'),
-  nothing: require('../../assets/GIFs/No Load found.json'),
+  nothing: require('../../assets/GIFs/No Load Found.json'),
 };
 
 const NotFound = ({imageName, height, width, title}) => {
