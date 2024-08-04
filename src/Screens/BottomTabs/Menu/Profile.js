@@ -247,7 +247,7 @@ const Profile = ({navigation, route}) => {
             </View>
           </View>
           <ScrollView
-            style={{flex: 1, marginBottom: Userdata?.user_type === 3 ? 60 : 0}}
+            style={{flex: 1, marginBottom: 60}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             {!Userdata?.user_type === 3 && (
@@ -317,7 +317,7 @@ const Profile = ({navigation, route}) => {
                     <View style={style.horizontalLine} />
                     <MenuItem
                       title={'GPS Tracking'}
-                      onPress={() => navigation.navigate('GPS')}
+                      onPress={() => navigation.navigate('GpsPurchase')}
                       Icon={
                         <GpsTrackingIcon size={30} color={GradientColor1} />
                       }

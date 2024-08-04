@@ -110,6 +110,7 @@ const Booking = ({navigation}) => {
         ) : BookingData?.length > 0 ? (
           <FlatList
             keyExtractor={item => item?.id.toString()}
+            showsVerticalScrollIndicator={false}
             data={BookingData}
             renderItem={renderItem}
             refreshControl={
@@ -118,6 +119,8 @@ const Booking = ({navigation}) => {
           />
         ) : (
           <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
