@@ -27,6 +27,7 @@ import {
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  backgroundColorNew,
   GradientColor2,
   inputColor,
   pageBackground,
@@ -108,24 +109,6 @@ const CompanyDetails = ({navigation, route}) => {
       </View>
     </>
   );
-
-  // const GridView = ({data, index}) => {
-  //   if (selected === data.id) {
-  //     AsyncStorage.setItem('UserType', JSON.stringify(data.typeId));
-  //     setType(data.typeId);
-  //   }
-  //   return (
-  //     <TouchableOpacity onPress={() => setSelected(index)}>
-  //       {selected === data.id ? (
-  //         <Background style={styleSheet.selectItem}>
-  //           {selectOwnerLorry(data)}
-  //         </Background>
-  //       ) : (
-  //         <View style={styleSheet.unSelectItem}>{selectOwnerLorry(data)}</View>
-  //       )}
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   const handleSelection = index => {
     const selectedItem = vehicleTypes[index];
@@ -341,12 +324,12 @@ const CompanyDetails = ({navigation, route}) => {
               isCloseIcon={false}
               onChangeText={handleNameChange}
             />
-            {/* <Text style={styleSheet.label}>{(Constants.ENTER_CITY_NAME)}</Text> */}
-            {/* <TextInputField
+            {/* <Text style={styleSheet.label}>{(Constants.ENTER_CITY_NAME)}</Text>
+            <TextInputField
               isCloseIcon={false}
               onChangeText={(e) => setCity(e)}
-            /> */}
-            {/* <TextInputField
+            />
+            <TextInputField
               isText={true}
               defaultValue={city}
               isCloseIcon={true}
@@ -360,9 +343,6 @@ const CompanyDetails = ({navigation, route}) => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
               data={vehicleTypes}
-              // renderItem={({item, index}) => (
-              //   <GridView data={item} index={index} />
-              // )}
               renderItem={({item, index}) => (
                 <GridView
                   data={item}
@@ -392,18 +372,19 @@ const styleSheet = StyleSheet.create({
   MainContainer: {
     backgroundColor: white,
     flex: 1,
+    // borderWidth: 1,
   },
   button: {
     flexDirection: 'row',
-    borderRadius: 28,
+    borderRadius: 8,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   touchStyle: {
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 30,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
   },
   protypeimageStyle: {
     width: 60,
@@ -447,11 +428,12 @@ const styleSheet = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Medium',
   },
   signupBackground: {
-    padding: 20,
+    padding: 10,
     backgroundColor: pageBackground,
     justifyContent: 'center',
-    marginTop: 25,
+    marginTop: 10,
     alignItems: 'center',
+    // borderWidth: 1,
   },
   WelcomeTruckTitle: {
     fontWeight: '700',
@@ -485,7 +467,8 @@ const styleSheet = StyleSheet.create({
   profileImgEdit: {
     height: 25,
     width: 25,
-    backgroundColor: GradientColor2,
+    // backgroundColor: GradientColor2,
+    backgroundColor: backgroundColorNew,
     borderRadius: 40,
     position: 'absolute',
     bottom: -5,
@@ -501,7 +484,8 @@ const styleSheet = StyleSheet.create({
     borderRadius: 40,
   },
   paddingStyle: {
-    padding: 20,
+    padding: 10,
+    // borderWidth: 1,
   },
   imagePickerView: {
     flexDirection: 'row',

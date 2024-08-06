@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {GradientColor2} from '../Color/color';
+import {backgroundColorNew, GradientColor2} from '../Color/color';
 import style from './style';
 import CloseCircle from '../../assets/SVG/svg/CloseCircle';
 import LocationIcon from '../../assets/SVG/svg/LocationIcon';
@@ -33,11 +33,16 @@ const SearchFilter = ({
         {defaultValue ? (
           <CloseCircle
             size={20}
-            color={GradientColor2}
+            // color={GradientColor2}
+            color={backgroundColorNew}
             style={style.locationIcon}
           />
         ) : (
-          <LocationIcon size={20} color={GradientColor2} />
+          <LocationIcon
+            size={20}
+            // color={GradientColor2}
+            color={backgroundColorNew}
+          />
         )}
       </TouchableOpacity>
     </View>

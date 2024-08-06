@@ -9,9 +9,37 @@ import {
   titleColor,
   back_color,
   loadingwalla,
+  backgroundColorNew,
 } from '../../Color/color';
 
 export default StyleSheet.create({
+  flexs: {flex: 1},
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // borderWidth: 1,
+  },
+  hiddenButton: {
+    minWidth: 140,
+    overflow: 'hidden',
+  },
+  helpText: {
+    // color: GradientColor2,
+    color: backgroundColorNew,
+    textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+  },
+  imageContainer: screenHeight => ({
+    justifyContent: 'center',
+    height: 0.45 * screenHeight,
+  }),
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
+  },
+  phoneInputContainer: {zIndex: 5},
   phoneContainer: {
     width: '100%',
     height: 50,
@@ -21,13 +49,13 @@ export default StyleSheet.create({
     borderWidth: 2,
   },
   signupBackground: {
-    marginTop: 10,
     backgroundColor: pageBackground,
     flex: 1,
     // borderWidth: 1,
   },
   LoadingWalla: {
-    color: loadingwalla,
+    // color: loadingwalla,
+    color: backgroundColorNew,
     fontSize: 28,
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-Bold',
@@ -119,7 +147,8 @@ export default StyleSheet.create({
     textDecorationLine: 'underline',
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
-    color: activate ? GradientColor3 : PrivacyPolicy,
+    // color: activate ? GradientColor3 : PrivacyPolicy,
+    color: activate ? backgroundColorNew : PrivacyPolicy,
     textAlign: 'center',
   }),
   otpResendView: {
@@ -144,8 +173,9 @@ export default StyleSheet.create({
   },
   Container: {
     backgroundColor: '#FFFDFD',
-    padding: 20,
+    padding: 10,
     flex: 1,
+    // borderWidth: 1,
   },
   SignupImage: {
     width: '100%',
@@ -158,6 +188,8 @@ export default StyleSheet.create({
   centerItem: {
     alignItems: 'center',
     justifyContent: 'center',
+    // borderWidth: 1,
+    // flex: 1,
   },
   buttonBox: {marginTop: 20, marginHorizontal: 55},
   timer: {

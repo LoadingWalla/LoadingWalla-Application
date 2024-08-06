@@ -546,22 +546,6 @@ function MyLoadsBottomTabs() {
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // function handleBackButton() {
-  //   if (navigation.canGoBack()) {
-  //     navigation.goBack();
-  //     return true;
-  //   } else {
-  //     Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
-  //       {
-  //         text: 'NO',
-  //         onPress: () => null,
-  //         style: 'cancel',
-  //       },
-  //       {text: 'YES', onPress: () => BackHandler.exitApp()},
-  //     ]);
-  //     return true;
-  //   }
-  // };
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -801,22 +785,6 @@ function MyGpsBottomTabs() {
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // function handleBackButton() {
-  //   if (navigation.canGoBack()) {
-  //     navigation.goBack();
-  //     return true;
-  //   } else {
-  //     Alert.alert('Hold on!', 'Are you sure you want to close the app?', [
-  //       {
-  //         text: 'NO',
-  //         onPress: () => null,
-  //         style: 'cancel',
-  //       },
-  //       {text: 'YES', onPress: () => BackHandler.exitApp()},
-  //     ]);
-  //     return true;
-  //   }
-  // }
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -1358,7 +1326,8 @@ const Navigation = ({language}) => {
           },
           headerBackground: () => (
             <LinearGradient
-              colors={[GradientColor1, GradientColor2, GradientColor3]}
+              // colors={[GradientColor1, GradientColor2, GradientColor3]}
+              colors={[backgroundColorNew, backgroundColorNew]}
               start={{x: 0, y: 0}}
               end={{x: 1, y: 0}}
               style={{flex: 1}}
