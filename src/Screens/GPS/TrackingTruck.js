@@ -221,8 +221,12 @@ const TrackingTruck = ({navigation, route}) => {
       </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapHeader}>
-          <Text style={styles.fetchedAddressText}>{device?.name}</Text>
-          <View style={styles.verticalLine} />
+          {device?.name && (
+            <>
+              <Text style={styles.fetchedAddressText}>{device?.name}</Text>
+              <View style={styles.verticalLine} />
+            </>
+          )}
           <TouchableOpacity onPress={handleFetchAddress}>
             {gpsAddressLoading ? (
               <ActivityIndicator size="small" color={backgroundColorNew} />

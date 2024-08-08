@@ -17,6 +17,7 @@ import {
   acceptRejectFailure,
   initAcceptReject,
   initBooking,
+  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 import BookingItem from '../../../Components/Bookingitem';
 import DashboardHeader from '../../../Components/DashboardHeader';
@@ -52,6 +53,7 @@ const Booking = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
+      dispatch(websocketDisconnect());
       dispatch(initBooking(2));
     }, [dispatch]),
   );

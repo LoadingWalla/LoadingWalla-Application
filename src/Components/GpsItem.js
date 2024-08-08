@@ -20,7 +20,10 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     item?.position?.length > 0 ? item.position[0].attributes : {};
   const ignition = attributes?.ignition || attributes?.motion;
   const totalDistance = attributes?.totalDistance
-    ? (attributes.totalDistance / 1000).toFixed(2)
+    ? (attributes.totalDistance / 1000).toFixed(3)
+    : '0.00';
+  const distance = attributes?.distance
+    ? (attributes.distance / 1000).toFixed(3)
     : '0.00';
   const batteryLevel = attributes?.batteryLevel;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
@@ -80,7 +83,10 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           }}
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{item?.name}</Text>
-          <View style={styles.ignBox}>{renderStatus()}</View>
+          <View>
+            <View style={styles.ignBox}>{renderStatus()}</View>
+            {/* <View style={styles.ignBox}>{renderStatus()}</View> */}
+          </View>
           <View style={styles.iconBox}>
             <View
               style={{
@@ -109,26 +115,34 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 color={ignition ? 'green' : backgroundColorNew}
               />
             </View>
-            {attributes.alarm && (
-              <ToggleIconText
-                IconComponent={AlertIcon}
-                text={attributes.alarm}
-                iconSize={20}
-                color={backgroundColorNew}
-                index={2}
-                activeIndex={activeIndex}
-                activeText={false}
-                onPress={() => handlePress(2)}
-              />
-            )}
-            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
-            {attributes.geofence && <GeoFencingIcon size={20} />}
+            <View
+              style={{
+                // borderWidth: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                minWidth: 80,
+              }}>
+              {attributes.alarm && (
+                <ToggleIconText
+                  IconComponent={AlertIcon}
+                  text={attributes.alarm}
+                  iconSize={20}
+                  color={backgroundColorNew}
+                  index={2}
+                  activeIndex={activeIndex}
+                  activeText={false}
+                  onPress={() => handlePress(2)}
+                />
+              )}
+              {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
+              {attributes.geofence && <GeoFencingIcon size={20} />}
+            </View>
           </View>
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${totalDistance} KM`}</Text>
-            <Text style={styles.distanceText}>Total Distance</Text>
+            <Text style={styles.highlightText}>{`${distance} KM`}</Text>
+            <Text style={styles.distanceText}>Today Distance</Text>
           </View>
         </View>
       </View>

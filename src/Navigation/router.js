@@ -78,7 +78,7 @@ import StopsScreen from '../Screens/GPS/StopsScreen';
 import QuickFilters from '../Screens/GPS/QuickFilters';
 import OwnedGPS from '../Screens/GPS/OwnedGPS';
 import PaymentGPS from '../Screens/GPS/PaymentGPS';
-import GpsTrackings from '../Screens/GPS/GpsTrackings';
+// import GpsTrackings from '../Screens/GPS/GpsTrackings';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
@@ -830,9 +830,9 @@ function MyGpsBottomTabs() {
           options={{
             tabBarIcon: ({focused, color, size}) =>
               focused ? (
-                <BookingActiveIcon size={23} />
+                <GpsRoadIcon size={22} color={backgroundColorNew} />
               ) : (
-                <BookingIcon size={20} />
+                <GpsRoadIcon size={22} color={'#000000'} />
               ),
             headerShown: false,
           }}
@@ -1786,7 +1786,7 @@ const Navigation = ({language}) => {
       />
 
       {/* GPS */}
-      <Stack.Screen
+      {/* <Stack.Screen
         name="GpsPurchase"
         component={GpsTrackings}
         options={{
@@ -1811,7 +1811,7 @@ const Navigation = ({language}) => {
               handleBackButton,
             ),
         })}
-      />
+      /> */}
 
       <Stack.Screen
         name="trackingtruck"

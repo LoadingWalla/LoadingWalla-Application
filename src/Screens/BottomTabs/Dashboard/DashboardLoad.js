@@ -12,9 +12,12 @@ import Swiper from 'react-native-swiper';
 import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
 import {GradientColor2} from '../../../Color/color';
 import DashboardHeader from '../../../Components/DashboardHeader';
-
 import {useDispatch, useSelector} from 'react-redux';
-import {initDashboard, myPostLoadFailure} from '../../../Store/Actions/Actions';
+import {
+  initDashboard,
+  myPostLoadFailure,
+  websocketDisconnect,
+} from '../../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
@@ -62,6 +65,7 @@ const DashboardLoad = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      dispatch(websocketDisconnect());
       dispatch(initDashboard());
     }, [dispatch]),
   );
