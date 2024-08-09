@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Switch from 'toggle-switch-react-native';
 import {GradientColor2, PrivacyPolicy, seperator} from '../Color/color';
 
-const GpsSettingItem = ({detailInput}) => {
+const GpsSettingItem = ({detailInput, title}) => {
   const [switchOn, setSwitchOn] = useState(true);
 
   const toggleSwitch = () => {
@@ -13,7 +13,7 @@ const GpsSettingItem = ({detailInput}) => {
   return (
     <View style={styles.detailBox}>
       <View style={styles.switchBox}>
-        <Text style={styles.textHeader}>Vehicle stop alerts</Text>
+        <Text style={styles.textHeader}>{title}</Text>
         <Switch
           isOn={switchOn}
           onColor={GradientColor2}

@@ -53,6 +53,7 @@ const ReusableItem = React.memo(({title, value, isTax, isTaxValue}) => (
 
 const PaymentGPS = ({navigation, route}) => {
   const {plan_id, gpsCount, gpsOrderId, totalAmount} = route.params;
+  // console.log(77777, 'paymentGPS', route);
 
   const {
     gpsPlansData,
@@ -112,11 +113,11 @@ const PaymentGPS = ({navigation, route}) => {
     dispatch(fetchGpsOrderDetailRequest(gpsOrderId));
   }, [dispatch, gpsOrderId]);
 
-  useEffect(() => {
-    if (Userdata === null) {
-      navigation.navigate('Menu');
-    }
-  }, [Userdata, navigation]);
+  // useEffect(() => {
+  //   if (Userdata === null) {
+  //     navigation.navigate('Menu');
+  //   }
+  // }, [Userdata, navigation]);
 
   useEffect(() => {
     if (verifyPaymentData && verifyPaymentStatus) {

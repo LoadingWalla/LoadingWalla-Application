@@ -28,6 +28,7 @@ import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import AnimatedText from '../../Components/AnimatedText';
+import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -177,7 +178,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={GeoFencingIcon}
               text="GeoFencing"
-              iconSize={28}
+              iconSize={23}
               color={'#727272'}
               index={3}
               activeIndex={activeIndex}
@@ -251,6 +252,7 @@ const TrackingTruck = ({navigation, route}) => {
             <MapView
               ref={mapRef}
               style={StyleSheet.absoluteFillObject}
+              mapType="standard" // Change to "satellite", "hybrid", "standard" or "terrain" as needed
               initialRegion={{
                 latitude: lat || livePositions[0]?.latitude || 0,
                 longitude: long || livePositions[0]?.longitude || 0,
@@ -331,7 +333,7 @@ const TrackingTruck = ({navigation, route}) => {
           />
           <IconWithName
             IconComponent={FuelPumpIcon}
-            iconSize={30}
+            iconSize={28}
             title={'Fuel Pump'}
             onPress={() =>
               navigation.navigate('FuelPump', {
@@ -341,8 +343,8 @@ const TrackingTruck = ({navigation, route}) => {
             }
           />
           <IconWithName
-            IconComponent={FuelPumpIcon}
-            iconSize={30}
+            IconComponent={TheftIcon}
+            iconSize={25}
             title={'Theft'}
             onPress={() =>
               navigation.navigate('FuelPump', {

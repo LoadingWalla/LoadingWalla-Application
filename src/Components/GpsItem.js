@@ -11,9 +11,10 @@ import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
+import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
-  // console.log(66666, item);
+  console.log(66666, item);
   const [activeIndex, setActiveIndex] = useState(null);
 
   const attributes =
@@ -26,6 +27,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     ? (attributes.distance / 1000).toFixed(3)
     : '0.00';
   const batteryLevel = attributes?.batteryLevel;
+  const motion = attributes?.motion;
   const isNavigationDisabled = item?.disabled || item?.positionId === 0;
 
   const showAlert = message => {
@@ -83,9 +85,21 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           }}
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{item?.name}</Text>
-          <View>
-            <View style={styles.ignBox}>{renderStatus()}</View>
-            {/* <View style={styles.ignBox}>{renderStatus()}</View> */}
+          <View style={styles.ignBox}>
+            <Text style={styles.ignitionText(item?.status)}>
+              {renderStatus()}
+            </Text>
+            <View style={styles.verticalLine} />
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.distanceText}>Ignition</Text>
+              <Text
+                style={[
+                  styles.ignitionText(ignition),
+                  {marginLeft: 5, textTransform: 'uppercase'},
+                ]}>
+                {ignition ? (ignition ? 'on' : 'off') : 'off'}
+              </Text>
+            </View>
           </View>
           <View style={styles.iconBox}>
             <View
@@ -93,7 +107,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 // borderWidth: 1,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                minWidth: 80,
+                minWidth: 50,
               }}>
               <BatteryIcon
                 size={20}
@@ -110,10 +124,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               {attributes.network !== null && (
                 <NetworkIcon color={'green'} size={18} />
               )}
-              <KeyIcon
-                size={19}
-                color={ignition ? 'green' : backgroundColorNew}
-              />
             </View>
             <View
               style={{
@@ -143,14 +153,31 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           <View style={styles.distanceBox}>
             <Text style={styles.highlightText}>{`${distance} KM`}</Text>
             <Text style={styles.distanceText}>Today Distance</Text>
+            <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
+              {motion ? 'Running' : 'Stopped'}
+            </Text>
           </View>
         </View>
       </View>
       <View style={styles.expiryDate}>
-        <Text style={item?.disabled ? styles.expiredText : styles.activeText}>
-          Expire on Feb 20, 2025
-        </Text>
+        <View
+          style={{
+            maxWidth: '90%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}>
+          <View style={{marginRight: 5, marginTop: 5}}>
+            <LocationShadowIcon size={15} color={'#3BA700'} />
+          </View>
+
+          <Text style={styles.activeText}>
+            Plot no. 172 JP house, 3rd floor Saidulajab 02, Westend Marg, New
+            Delhi, Delhi 110030
+          </Text>
+        </View>
         <TouchableOpacity
+          style={{justifyContent: 'center', alignItems: 'center'}}
           disabled={isDisable}
           onPress={() => {
             if (Array.isArray(item?.position) && item?.position.length === 0) {
@@ -167,7 +194,8 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
           }}>
           <SettingIcon
             size={20}
-            color={item?.disabled ? backgroundColorNew : PrivacyPolicy}
+            // color={item?.disabled ? backgroundColorNew : PrivacyPolicy}
+            color={backgroundColorNew}
           />
         </TouchableOpacity>
       </View>
@@ -207,7 +235,7 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Italic',
+    fontFamily: 'PlusJakartaSans-BoldItalic',
     fontSize: 12,
   },
   expiryDate: {
@@ -248,7 +276,7 @@ const styles = StyleSheet.create({
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 2,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
     height: '80%',
   },
   ignBox: {flexDirection: 'row', alignItems: 'center'},
@@ -267,5 +295,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   ignitionStatus: {flexDirection: 'row', borderWidth: 0},
-  ignitionText: {fontFamily: 'PlusJakartaSans-SemiBold'},
+  ignitionText: status => ({
+    color: status ? 'green' : 'red',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+  }),
 });
