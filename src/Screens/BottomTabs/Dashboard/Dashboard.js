@@ -3,7 +3,10 @@ import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import Swiper from 'react-native-swiper';
 import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
-import {initDashboard} from '../../../Store/Actions/Actions';
+import {
+  initDashboard,
+  websocketDisconnect,
+} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import style from './style';
@@ -42,6 +45,7 @@ const Dashboard = ({navigation}) => {
     locationData,
     dashboardLoading,
     loadTruckLoading,
+    wsConnected,
   } = useSelector(state => {
     // console.log('Dashboard Truck', state.data);
     return state.data;
@@ -62,6 +66,9 @@ const Dashboard = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initDashboard());
     }, [dispatch]),
   );

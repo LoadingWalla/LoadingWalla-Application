@@ -13,7 +13,6 @@ import DashboardHeader from '../../Components/DashboardHeader';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {
-  fetchAddressRequest,
   fetchGpsDevicesRequest,
   fetchTokenFailure,
   fetchTokenRequest,

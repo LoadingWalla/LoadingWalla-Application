@@ -43,6 +43,7 @@ const DashboardLoad = ({navigation}) => {
     findLoadData,
     findLoadLoading,
     findLoadStatus,
+    wsConnected,
   } = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
     return state.data;
@@ -65,7 +66,9 @@ const DashboardLoad = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(websocketDisconnect());
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initDashboard());
     }, [dispatch]),
   );

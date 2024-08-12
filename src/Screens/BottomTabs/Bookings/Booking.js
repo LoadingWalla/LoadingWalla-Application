@@ -40,6 +40,7 @@ const Booking = ({navigation}) => {
     accept_rejectStatus,
     DashboardUser,
     dashboardLoading,
+    wsConnected,
   } = useSelector(state => {
     // console.log('My Bookings', state.data);
     return state.data;
@@ -53,7 +54,9 @@ const Booking = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      dispatch(websocketDisconnect());
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initBooking(2));
     }, [dispatch]),
   );
