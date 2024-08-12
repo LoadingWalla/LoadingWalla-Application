@@ -1,3 +1,4 @@
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Linking,
@@ -7,7 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
@@ -59,43 +59,6 @@ const TrackingTruck = ({navigation, route}) => {
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
   const events = wsEvents.filter(e => e.deviceId === deviceId);
 
-  useEffect(() => {
-    if (!wsConnected) {
-      setLoading(false);
-    } else {
-      const position = getLivePositions(wsMessages, deviceId);
-      setLivePositions(position);
-      // console.log(444444, position);
-
-      if (position.length > 0) {
-        setLoading(false);
-        animateToPosition(position[position.length - 1]);
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [wsMessages, wsConnected]);
-
-  const animateToPosition = position => {
-    if (mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: position.latitude,
-        longitude: position.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-
-      animatedMarkerPosition
-        .timing({
-          latitude: position.latitude,
-          longitude: position.longitude,
-          duration: 1000,
-          useNativeDriver: false,
-        })
-        .start();
-    }
-  };
-
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
       latitude: lat || 0,
@@ -104,6 +67,31 @@ const TrackingTruck = ({navigation, route}) => {
       longitudeDelta: 0.0421,
     }),
   ).current;
+
+  useEffect(() => {
+    if (wsConnected) {
+      const position = getLivePositions(wsMessages, deviceId);
+      setLivePositions(position);
+
+      if (position.length > 0) {
+        setLoading(false);
+        updateMarkerPosition(position[position.length - 1]);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, [wsMessages, wsConnected]);
+
+  const updateMarkerPosition = position => {
+    animatedMarkerPosition
+      .timing({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        duration: 1000,
+        useNativeDriver: false,
+      })
+      .start();
+  };
 
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -127,6 +115,18 @@ const TrackingTruck = ({navigation, route}) => {
     setAddressFetched(false);
     fetchAddress();
     setAddressFetched(true);
+  };
+
+  const animateToDevicePosition = () => {
+    if (livePositions.length > 0 && mapRef.current) {
+      const latestPosition = livePositions[livePositions.length - 1];
+      mapRef.current.animateToRegion({
+        latitude: latestPosition.latitude,
+        longitude: latestPosition.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
   };
 
   return (
@@ -260,28 +260,10 @@ const TrackingTruck = ({navigation, route}) => {
               {livePositions.length > 0 && (
                 <Marker.Animated
                   coordinate={animatedMarkerPosition}
-                  // title={'Speed'}
-                  // description={
-                  //   positions[0]?.speed
-                  //     ? `${(positions[0]?.speed * 1.852).toFixed(2)} km/h`
-                  //     : '0 km/h'
-                  // }
                   rotation={
                     livePositions[livePositions.length - 1].course || 0
                   }>
-                  <TruckNavigationIcon
-                    width={50}
-                    height={50}
-                    // style={{
-                    //   transform: [
-                    //     {
-                    //       rotate: `${
-                    //         livePositions[livePositions.length - 1].course || 0
-                    //       }deg`,
-                    //     },
-                    //   ],
-                    // }}
-                  />
+                  <TruckNavigationIcon width={50} height={50} />
                 </Marker.Animated>
               )}
             </MapView>
@@ -294,7 +276,7 @@ const TrackingTruck = ({navigation, route}) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gpsButton}
-            onPress={() => navigation.navigate('GpsAlert')}>
+            onPress={animateToDevicePosition}>
             <GpsIcon2 size={20} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -440,7 +422,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    // borderWidth: 1,
   },
   iconBox: {
     flexDirection: 'row',
