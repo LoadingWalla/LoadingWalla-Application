@@ -59,12 +59,12 @@ const GpsSetting = ({navigation, route}) => {
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <GpsSettingItem detailInput={false} title={'Ignition Alert'} />
-        <GpsSettingItem detailInput={false} title={'Damage Alert'} />
-        <GpsSettingItem detailInput={false} title={'Geofencing Alert'} />
-        <GpsSettingItem detailInput={false} title={'Vehicle Moving Alert'} />
-        <GpsSettingItem detailInput={false} title={'Over Speed Alert'} />
-        <GpsSettingItem detailInput={false} title={'Signal Lost Alert'} />
+        <GpsSettingItem detailInput={false} title={'Ignition on'} />
+        <GpsSettingItem detailInput={false} title={'Ignition off'} />
+        <GpsSettingItem detailInput={false} title={'Speed limit exceeded'} />
+        <GpsSettingItem detailInput={false} title={'Device moving'} />
+        <GpsSettingItem detailInput={false} title={'Geofence entered'} />
+        <GpsSettingItem detailInput={false} title={'Geofence exited'} />
       </ScrollView>
       <View>
         <Button

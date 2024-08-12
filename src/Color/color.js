@@ -19,4 +19,5 @@ export const seperator = '#c8c8c8';
 export const divider = '#CDCDCD';
 
 //  New Color
-export const backgroundColorNew = '#ED1C24';
+// export const backgroundColorNew = '#ED1C24';
+export const backgroundColorNew = '#EF4D23';

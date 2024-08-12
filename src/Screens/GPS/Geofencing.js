@@ -1,35 +1,24 @@
 import {
   ActivityIndicator,
-  Linking,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
-import ToggleIconText from '../../Components/ToggleIconText';
+import {
+  backgroundColorNew,
+  PrivacyPolicy,
+  textColor,
+  titleColor,
+} from '../../Color/color';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import useAddress from '../../hooks/useAddress';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
-import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import AlertIcon from '../../../assets/SVG/AlertIcon';
-import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
-import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
-import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
-import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
-import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import AnimatedText from '../../Components/AnimatedText';
-import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
 import Button from '../../Components/Button';
+import Slider from '@react-native-community/slider';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -47,10 +36,10 @@ const Geofencing = ({navigation, route}) => {
   const {deviceId, lat, long} = route.params;
   const dispatch = useDispatch();
   const mapRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addressFetched, setAddressFetched] = useState(false);
+  const [sliderValue, setSliderValue] = useState(0.5); // Initial slider value
 
   const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
     useSelector(state => state.data);
@@ -105,28 +94,20 @@ const Geofencing = ({navigation, route}) => {
     }),
   ).current;
 
-  const handlePress = index => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
-
   const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
-
-  const handleNavigate = () => {
-    const destination =
-      livePositions[livePositions.length - 1] ||
-      positions[positions.length - 1];
-    if (destination) {
-      const url = `google.navigation:q=${destination.latitude},${destination.longitude}`;
-      Linking.openURL(url).catch(err =>
-        console.error('Error opening Google Maps', err),
-      );
-    }
-  };
 
   const handleFetchAddress = () => {
     setAddressFetched(false);
     fetchAddress();
     setAddressFetched(true);
+  };
+
+  const handleSliderChange = value => {
+    setSliderValue(value);
+  };
+
+  const handleSave = () => {
+    console.log(`Geofence radius saved: ${sliderValue * 5000} meters`);
   };
 
   return (
@@ -180,28 +161,10 @@ const Geofencing = ({navigation, route}) => {
               {livePositions.length > 0 && (
                 <Marker.Animated
                   coordinate={animatedMarkerPosition}
-                  // title={'Speed'}
-                  // description={
-                  //   positions[0]?.speed
-                  //     ? `${(positions[0]?.speed * 1.852).toFixed(2)} km/h`
-                  //     : '0 km/h'
-                  // }
                   rotation={
                     livePositions[livePositions.length - 1].course || 0
                   }>
-                  <TruckNavigationIcon
-                    width={50}
-                    height={50}
-                    // style={{
-                    //   transform: [
-                    //     {
-                    //       rotate: `${
-                    //         livePositions[livePositions.length - 1].course || 0
-                    //       }deg`,
-                    //     },
-                    //   ],
-                    // }}
-                  />
+                  <TruckNavigationIcon width={50} height={50} />
                 </Marker.Animated>
               )}
             </MapView>
@@ -209,10 +172,38 @@ const Geofencing = ({navigation, route}) => {
         </View>
       </View>
       <View style={styles.bottomContainer}>
-        <View></View>
+        <View
+          style={{backgroundColor: '#EBEBEB', borderRadius: 8, padding: 10}}>
+          <Text>Geofence radius</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Slider
+              style={{width: '80%'}}
+              minimumValue={0}
+              maximumValue={1}
+              value={sliderValue}
+              onValueChange={handleSliderChange}
+              minimumTrackTintColor={backgroundColorNew}
+              maximumTrackTintColor={PrivacyPolicy}
+              thumbTintColor={backgroundColorNew}
+            />
+            <Text
+              style={{
+                width: '20%',
+                textAlign: 'center',
+                backgroundColor: '#ffffff',
+                borderRadius: 3,
+              }}>
+              {(sliderValue * 5000).toFixed(0)} m
+            </Text>
+          </View>
+        </View>
         <Button
           title="Save"
-          onPress={() => {}}
+          onPress={handleSave}
           textStyle={styles.btnText}
           style={styles.btnStyle}
         />
@@ -225,82 +216,12 @@ export default Geofencing;
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderRadius: 20,
-    elevation: 1,
-    backgroundColor: '#F7F7F7',
-  },
-  iconStyle: {marginRight: 5},
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 2,
     marginHorizontal: 10,
     height: '100%',
   },
-  alertButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    position: 'absolute',
-    bottom: 100,
-    left: 10,
-    paddingVertical: 10,
-  },
-  gpsButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 35,
-    height: 35,
-    borderRadius: 25,
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    position: 'absolute',
-    bottom: 150,
-    right: 10,
-  },
-  geofencingButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: 120,
-    borderRadius: 20,
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    position: 'absolute',
-    bottom: 100,
-    right: 10,
-    paddingVertical: 10,
-  },
-  geofencingButtonText: {
-    marginRight: 8,
-    textAlign: 'center',
-    fontSize: 12,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    // borderWidth: 1,
-  },
-  iconBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  topContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    marginTop: 10,
-  },
-  leftTopContainer: {minWidth: '70%', paddingHorizontal: 5},
   mapContainer: {flex: 1},
   mapHeader: {
     flexDirection: 'row',
@@ -325,33 +246,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     width: '100%',
   },
-  scrollBox: {marginRight: 10, borderRadius: 10},
-  highlightText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'left',
-  },
-  alertButtonText: {
-    marginLeft: 10,
-    textAlign: 'center',
-    fontSize: 14,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  distanceBox: {
-    minWidth: '70%',
-    paddingHorizontal: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  distanceText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    textAlign: 'right',
-    marginRight: 5,
-  },
   loaderContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -359,8 +253,8 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Italic',
-    color: 'blue',
+    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    color: backgroundColorNew,
     textDecorationLine: 'underline',
   },
   fetchedAddressText: {

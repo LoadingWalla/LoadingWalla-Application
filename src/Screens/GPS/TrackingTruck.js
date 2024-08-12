@@ -29,6 +29,7 @@ import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import AnimatedText from '../../Components/AnimatedText';
 import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
+import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -186,19 +187,9 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={KeyIcon}
-              text={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'ON'
-                  : 'OFF'
-              }
+              text={positions?.[0]?.attributes?.ignition ? 'ON' : 'OFF'}
               iconSize={23}
-              color={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'green'
-                  : 'red'
-              }
+              color={positions?.[0]?.attributes?.ignition ? 'green' : 'red'}
               index={4}
               activeIndex={activeIndex}
               onPress={() => handlePress(4)}
@@ -304,7 +295,7 @@ const TrackingTruck = ({navigation, route}) => {
           <TouchableOpacity
             style={styles.gpsButton}
             onPress={() => navigation.navigate('GpsAlert')}>
-            <GeoFencingIcon size={20} />
+            <GpsIcon2 size={20} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.geofencingButton}
@@ -522,8 +513,8 @@ const styles = StyleSheet.create({
   },
   addressText: {
     fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Italic',
-    color: 'blue',
+    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    color: backgroundColorNew,
     textDecorationLine: 'underline',
   },
   fetchedAddressText: {

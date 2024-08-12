@@ -30,7 +30,9 @@ const Plan = ({text}) => {
 const Rates = ({item, navigation}) => {
   const features = item.description.split('\n\n');
   const markedPrice =
-    Math.ceil(item.gps_price * 1.18) + Math.ceil(item.recharge_price * 1.18);
+    Math.ceil(item.gps_price * 1.18) +
+    Math.ceil(item.recharge_price * 1.18) +
+    Math.ceil(item.relay * 1.18);
   const sellingPrice = markedPrice - item.discount;
   const percentageDiscount = Math.ceil(
     ((markedPrice - sellingPrice) / markedPrice) * 100,
@@ -70,7 +72,7 @@ const BuyGps = ({navigation}) => {
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData, gpsPlansError, gpsPlansLoading} =
     useSelector(state => {
-      console.log('Buy Gps', state.data);
+      console.log('Buy Gps', state.data.gpsPlansData);
       return state.data;
     });
 
