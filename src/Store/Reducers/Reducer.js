@@ -202,6 +202,10 @@ const initialState = {
   singleGpsDevice: null,
   singleGpsDeviceLoading: false,
   singleGpsDeviceError: null,
+  // full address
+  fullAddressLoading: false,
+  fullAddressData: [],
+  fullAddressStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1473,6 +1477,27 @@ const reducer = (state = initialState, action) => {
         gpsOrderDetailsStatus: null,
         gpsOrderDetailsData: null,
         gpsPriceDetailsData: null,
+      });
+
+    // full gps address
+    case actionTypes.FETCH_FULLADDRESS_REQUEST:
+      return {
+        ...state,
+        fullAddressLoading: true,
+        fullAddressData: null,
+        fullAddressStatus: null,
+      };
+    case actionTypes.FETCH_FULLADDRESS_SUCCESS:
+      return updateState(state, {
+        fullAddressLoading: false,
+        fullAddressStatus: payload?.status,
+        fullAddressData: payload?.data,
+      });
+    case actionTypes.FETCH_FULLADDRESS_FAILURE:
+      return updateState(state, {
+        fullAddressLoading: false,
+        fullAddressStatus: payload?.status,
+        fullAddressData: payload?.data,
       });
 
     // default state

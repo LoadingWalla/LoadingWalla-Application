@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
@@ -29,6 +29,7 @@ import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import AnimatedText from '../../Components/AnimatedText';
 import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
+import Button from '../../Components/Button';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -42,7 +43,7 @@ const getLivePositions = (wsMessages, deviceId) => {
     }));
 };
 
-const TrackingTruck = ({navigation, route}) => {
+const Geofencing = ({navigation, route}) => {
   const {deviceId, lat, long} = route.params;
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -130,96 +131,6 @@ const TrackingTruck = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={styles.leftTopContainer}>
-          <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Today Distance:</Text>
-            <Text style={styles.highlightText}>
-              {positions[0]?.attributes?.distance
-                ? `${(positions[0]?.attributes?.distance).toFixed(3)} KM`
-                : '0 KM'}
-            </Text>
-          </View>
-          <View style={styles.horizontalLine} />
-          <View style={styles.iconBox}>
-            <ToggleIconText
-              IconComponent={FuelIcon}
-              text="Fuel"
-              iconSize={30}
-              color={'#727272'}
-              index={0}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(0)}
-            />
-            <ToggleIconText
-              IconComponent={BatteryIcon}
-              text={positions[0]?.attributes?.batteryLevel || 'Battery'}
-              iconSize={25}
-              color={
-                positions[0]?.attributes?.batteryLevel
-                  ? positions[0]?.attributes?.batteryLevel > 60
-                    ? 'green'
-                    : 'red'
-                  : '#727272'
-              }
-              index={1}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(1)}
-            />
-            <ToggleIconText
-              IconComponent={NetworkIcon}
-              text="Network"
-              iconSize={23}
-              color={'#727272'}
-              index={2}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(2)}
-            />
-            <ToggleIconText
-              IconComponent={GeoFencingIcon}
-              text="GeoFencing"
-              iconSize={23}
-              color={'#727272'}
-              index={3}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(3)}
-            />
-            <ToggleIconText
-              IconComponent={KeyIcon}
-              text={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'ON'
-                  : 'OFF'
-              }
-              iconSize={23}
-              color={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'green'
-                  : 'red'
-              }
-              index={4}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(4)}
-            />
-
-            <ToggleIconText
-              IconComponent={AlertIcon}
-              text="Damage"
-              iconSize={27}
-              color={'#727272'}
-              index={5}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(5)}
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
-          <SettingIcon size={30} color={backgroundColorNew} />
-        </TouchableOpacity>
-      </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapHeader}>
           {device?.name && (
@@ -295,94 +206,25 @@ const TrackingTruck = ({navigation, route}) => {
               )}
             </MapView>
           )}
-          <TouchableOpacity
-            style={styles.alertButton}
-            onPress={() => navigation.navigate('GpsAlert')}>
-            <AlertsIcon size={20} />
-            <Text style={styles.alertButtonText}>Alerts</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.gpsButton}
-            onPress={() => navigation.navigate('GpsAlert')}>
-            <GeoFencingIcon size={20} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.geofencingButton}
-            onPress={() =>
-              navigation.navigate('geofencing', {deviceId, lat, long})
-            }>
-            <Text style={styles.geofencingButtonText}>Geofencing</Text>
-            <GeoFencingIcon size={20} color={'#3BA700'} />
-          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomContainer}>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          style={styles.scrollBox}>
-          <IconWithName
-            IconComponent={NavigationIcon}
-            iconSize={30}
-            title={'Navigate'}
-            onPress={handleNavigate}
-          />
-          <IconWithName
-            IconComponent={LocationHistory}
-            iconSize={30}
-            title={'History'}
-            onPress={() =>
-              navigation.navigate('LocationHistory', {
-                deviceId: deviceId,
-                name: device?.name,
-              })
-            }
-          />
-          <IconWithName
-            IconComponent={FuelPumpIcon}
-            iconSize={28}
-            title={'Fuel Pump'}
-            onPress={() =>
-              navigation.navigate('FuelPump', {
-                headerTitle: 'Fuel Pump',
-                theft: false,
-              })
-            }
-          />
-          <IconWithName
-            IconComponent={TheftIcon}
-            iconSize={25}
-            title={'Theft'}
-            onPress={() =>
-              navigation.navigate('FuelPump', {
-                headerTitle: 'Nearby Police Station',
-                theft: true,
-              })
-            }
-          />
-        </ScrollView>
-        <View style={{justifyContent: 'center'}}>
-          <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() => navigation.navigate('PlayJourney', {deviceId})}>
-            <PlayIcon
-              size={25}
-              style={styles.iconStyle}
-              color={backgroundColorNew}
-            />
-            <Text style={styles.btnText}>Play Journey</Text>
-          </TouchableOpacity>
-        </View>
+        <View></View>
+        <Button
+          title="Save"
+          onPress={() => {}}
+          textStyle={styles.btnText}
+          style={styles.btnStyle}
+        />
       </View>
     </View>
   );
 };
 
-export default TrackingTruck;
+export default Geofencing;
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 5},
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -394,12 +236,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7F7F7',
   },
   iconStyle: {marginRight: 5},
-  btnText: {
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    textAlign: 'center',
-  },
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 2,
@@ -476,7 +312,7 @@ const styles = StyleSheet.create({
   },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     backgroundColor: '#FFFFFF',
     position: 'absolute',
@@ -487,6 +323,7 @@ const styles = StyleSheet.create({
     borderColor: '#F7F7F7',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    width: '100%',
   },
   scrollBox: {marginRight: 10, borderRadius: 10},
   highlightText: {
@@ -534,5 +371,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     minWidth: 60,
     textAlign: 'center',
+  },
+  btnStyle: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 5,
+    width: '100%',
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });

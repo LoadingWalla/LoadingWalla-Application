@@ -4,6 +4,7 @@ import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import gpsApi from '../../Utils/gpsApi';
+import googleApi from '../../Utils/FetchGoogleApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -1090,7 +1091,7 @@ export function* fetchGpsAddress({username, password, latitude, longitude}) {
       username,
       password,
     );
-    // console.log('Gps Devices', data);
+    console.log('Gps Devices Address', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsAddressSuccess(data?.data));
@@ -1308,6 +1309,26 @@ export function* fetchGpsOrderDetail({id}) {
     }
   } catch (error) {
     yield put(actions.fetchGpsOrderDetailFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+// full address
+export function* fetchFullAddress() {
+  try {
+    const data = yield googleApi().get(
+      `geocode/json?latlng=28.521126,77.200543`,
+    );
+    console.log('Gps Address', data);
+    if (data?.data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchAddressSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchAddressFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchAddressFailure(error.message));
     // console.log('error', error);
   }
 }

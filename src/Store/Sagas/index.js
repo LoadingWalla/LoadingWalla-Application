@@ -79,6 +79,7 @@ function* rootSaga() {
     actions.FETCH_GPS_NOTIFICATIONS_REQUEST,
     saga.fetchGpsNotifications,
   );
+  yield takeLatest(actions.FETCH_FULLADDRESS_REQUEST, saga.fetchFullAddress);
 }
 
 export default rootSaga;

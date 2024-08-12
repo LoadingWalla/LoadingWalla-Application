@@ -87,6 +87,7 @@ import GPSHomePage from '../Screens/GPS/GPSHomePage';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
+import Geofencing from '../Screens/GPS/Geofencing';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -332,207 +333,6 @@ function BottomTabs() {
     </Animated.View>
   );
 }
-// function BottomTabs() {
-//   const totalWidth = Dimensions.get('window').width;
-//   const numberOfTabs = 5;
-
-//   function getWidth() {
-//     return totalWidth / numberOfTabs;
-//   }
-
-//   const tabOffsetValue = useRef(new Animated.Value(getWidth() * 2)).current;
-//   const navigation = useNavigation();
-//   const route = useRoute();
-//   const {t} = useTranslation();
-
-//   useEffect(() => {
-//     const handleBackButton = () => {
-//       let currentRoute = route.name;
-//       console.log(666666, route);
-
-//       // Check if the current route is the Home tab
-//       if (currentRoute === t(Constants.NAV_HOME)) {
-//         console.log(555555);
-//         BackHandler.exitApp();
-//         return true;
-//       }
-
-//       // Navigate to the Home tab if not already there
-//       console.log(44444);
-//       navigation.navigate(t(Constants.NAV_HOME));
-//       return true;
-//     };
-
-//     const backHandler = BackHandler.addEventListener(
-//       'hardwareBackPress',
-//       handleBackButton,
-//     );
-
-//     return () => backHandler.remove();
-//   }, [navigation, route, t]);
-
-//   return (
-//     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-//       <Tab.Navigator
-//         initialRouteName={t(Constants.NAV_HOME)}
-//         screenOptions={({route}) => ({
-//           tabBarActiveTintColor: GradientColor2,
-//           tabBarInactiveTintColor: tabIndicatorColor,
-//           tabBarStyle: {
-//             height: 60,
-//             position: 'absolute',
-//             bottom: 0,
-//             left: 0,
-//             right: 0,
-//             elevation: 5,
-//           },
-//           tabBarLabelStyle: {
-//             fontSize: 12,
-//             marginBottom: 10,
-//             fontFamily: 'PlusJakartaSans-SemiBold',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//           },
-//         })}>
-//         <Tab.Screen
-//           name={t(Constants.NAV_MY_LORRY)}
-//           component={MyLorry}
-//           options={{
-//             tabBarIcon: ({focused}) =>
-//               focused ? <TruckActiveIcon size={25} /> : <TruckIcon size={25} />,
-//             headerShown: false,
-//           }}
-//           listeners={({navigation, route}) => ({
-//             focus: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 0,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//             tabPress: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 0,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//           })}
-//         />
-//         <Tab.Screen
-//           name={'GPS'}
-//           component={MyGpsScreen}
-//           options={{
-//             tabBarIcon: ({focused}) =>
-//               focused ? (
-//                 <GpsRoadIcon size={22} color={backgroundColorNew} />
-//               ) : (
-//                 <GpsRoadIcon size={22} color={'#000000'} />
-//               ),
-//             headerShown: false,
-//           }}
-//           listeners={({navigation, route}) => ({
-//             focus: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 1,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//             tabPress: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 1,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//           })}
-//         />
-//         <Tab.Screen
-//           name={t(Constants.NAV_HOME)}
-//           component={Dashboard}
-//           options={{
-//             tabBarIcon: ({focused}) =>
-//               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
-//             headerShown: false,
-//           }}
-//           listeners={({navigation, route}) => ({
-//             focus: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 2,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//             tabPress: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 2,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//           })}
-//         />
-
-//         <Tab.Screen
-//           name={t(Constants.BOOKINGS)}
-//           component={Booking}
-//           options={{
-//             tabBarIcon: ({focused}) =>
-//               focused ? (
-//                 <BookingActiveIcon size={23} />
-//               ) : (
-//                 <BookingIcon size={20} />
-//               ),
-//             headerShown: false,
-//           }}
-//           listeners={({navigation, route}) => ({
-//             focus: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 3,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//             tabPress: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 3,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//           })}
-//         />
-//         <Tab.Screen
-//           name={t(Constants.MENU)}
-//           component={Profile}
-//           options={{
-//             tabBarIcon: ({focused}) =>
-//               focused ? (
-//                 <DashboardActiveIcon size={20} />
-//               ) : (
-//                 <DashboardIcon size={20} />
-//               ),
-//             headerShown: true,
-//             headerTitleAlign: 'center',
-//             headerStyle: {
-//               backgroundColor: '#FFFDFD',
-//             },
-//           }}
-//           listeners={({navigation, route}) => ({
-//             focus: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 4,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//             tabPress: () => {
-//               Animated.spring(tabOffsetValue, {
-//                 toValue: getWidth() * 4,
-//                 useNativeDriver: true,
-//               }).start();
-//             },
-//           })}
-//         />
-//       </Tab.Navigator>
-//       <Animated.View
-//         style={style.animatedViewStyle(getWidth, tabOffsetValue)}
-//       />
-//     </Animated.View>
-//   );
-// }
 
 function MyLoadsBottomTabs() {
   const totalWidth = Dimensions.get('window').width;
@@ -2184,6 +1984,37 @@ const Navigation = ({language}) => {
             fontFamily: 'PlusJakartaSans-Bold',
           },
         }}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="geofencing"
+        component={Geofencing}
+        options={({navigation, route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: 'Geofencing',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+          },
+          headerRight: () => (
+            <HeaderHelpButton
+              shareIcon={false}
+              navigation={navigation}
+              // latitude={route.params.lat}
+              // longitude={route.params.long}
+            />
+          ),
+        })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>

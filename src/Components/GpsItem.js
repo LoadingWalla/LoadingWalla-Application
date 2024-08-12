@@ -7,14 +7,13 @@ import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import AlertBox from './AlertBox';
-import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
-  console.log(66666, item);
+  // console.log(66666, item);
   const [activeIndex, setActiveIndex] = useState(null);
 
   const attributes =

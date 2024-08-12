@@ -13,9 +13,11 @@ import DashboardHeader from '../../Components/DashboardHeader';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {
+  fetchAddressRequest,
   fetchGpsDevicesRequest,
   fetchTokenFailure,
   fetchTokenRequest,
+  initProfile,
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
@@ -76,6 +78,17 @@ const MyGpsScreen = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      if (!DashboardUser) {
+        dispatch(initProfile());
+      }
+      // console.log(777777, mergeDeviceData[0]);
+      // mergedDeviceData.forEach(device => {
+      //   if (device.position && device.position.length > 0) {
+      //     const {latitude, longitude} = device.position[0]; // Get the latest position
+      //     dispatch(fetchAddressRequest(latitude, longitude));
+      //   }
+      // });
+
       return () => {
         // console.log('WebSocket disconnecting on screen leave');
         dispatch(websocketDisconnect());
@@ -124,6 +137,7 @@ const MyGpsScreen = ({navigation}) => {
         // Ensure device.position and device.events are always arrays
         device.position = device.position || [];
         device.events = device.events || [];
+        // console.log(5555555, device.position);
         return device;
       });
     },

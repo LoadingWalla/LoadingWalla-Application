@@ -7,23 +7,17 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import axios from 'axios';
 import GoToIcon from '../../../assets/SVG/svg/GoToIcon';
 import {PrivacyPolicy} from '../../Color/color';
-
-const API_KEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
-const BASE_URL = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-const DISTANCE_MATRIX_URL =
-  'https://maps.googleapis.com/maps/api/distancematrix/json';
+import FetchGoogleApi from '../../Utils/FetchGoogleApi';
 
 const fetchData = async (latitude, longitude, type) => {
   try {
-    const response = await axios.get(BASE_URL, {
+    const response = await FetchGoogleApi().get('/place/nearbysearch/json', {
       params: {
         location: `${latitude},${longitude}`,
-        radius: 5000, // 5km radius
+        radius: 10000, // 5km radius
         type: type,
-        key: API_KEY,
       },
     });
     return response.data.results;
@@ -35,11 +29,10 @@ const fetchData = async (latitude, longitude, type) => {
 
 const fetchDistances = async (origins, destinations) => {
   try {
-    const response = await axios.get(DISTANCE_MATRIX_URL, {
+    const response = await FetchGoogleApi().get('/distancematrix/json', {
       params: {
         origins: origins,
         destinations: destinations,
-        key: API_KEY,
       },
     });
     return response.data.rows[0].elements;
@@ -59,7 +52,7 @@ const FuelPumpItem = ({item, distance}) => {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.detailBox}>
         <Text style={styles.headerText}>{item.name}</Text>
         <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
@@ -184,4 +177,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  detailBox: {maxWidth: '73%'},
 });
