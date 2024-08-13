@@ -18,6 +18,7 @@ import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
+import {formatDate} from '../Utils/dateUtils';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -78,135 +79,161 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.itemContainer}>
-        <View style={styles.imgContainer}>
-          <View style={styles.imgBox}>
-            <Image
-              source={{
-                uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
-              }}
-              style={styles.image}
-            />
-          </View>
-        </View>
-        <TouchableOpacity
-          disabled={isDisable}
-          onPress={() => {
-            if (isNavigationDisabled) {
-              showAlert(
-                disabled
-                  ? 'Service unavailable! Your Plan has been Expired.'
-                  : 'Wait! GPS Network Error.',
-              );
-            } else {
-              navigation.navigate('trackingtruck', {
-                deviceId: id,
-                lat: position[0]?.latitude,
-                long: position[0]?.longitude,
-              });
-            }
-          }}
-          style={styles.textContainer}>
-          <Text style={styles.highlightText}>{name}</Text>
-          <View style={styles.ignBox}>
-            {renderStatus()}
-            <View style={styles.verticalLine} />
-            <View style={styles.row}>
-              <Text style={styles.distanceText}>Ignition</Text>
-              <Text
-                style={[
-                  styles.ignitionText(ignition),
-                  {marginLeft: 5, textTransform: 'uppercase'},
-                ]}>
-                {ignition ? 'on' : 'off'}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.iconBox}>
-            <View style={styles.iconRow}>
-              <BatteryIcon
-                size={20}
-                color={
-                  batteryLevel
-                    ? batteryLevel > 60
-                      ? 'green'
-                      : 'red'
-                    : '#727272'
-                }
-                charge={charge}
-                batteryLevel={batteryLevel}
+    <View>
+      {/* <View
+        style={{
+          backgroundColor: '#ffffff',
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+          borderRadius: 8,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          // borderWidth: 1,
+          maxWidth: '67%',
+          elevation: 2,
+        }}>
+        <Text
+          style={{
+            color: PrivacyPolicy,
+            fontFamily: 'PlusJakartaSans-SemiBold',
+            fontSize: 12,
+            textAlign: 'right',
+          }}>
+          {formatDate(item?.lastUpdate)}
+        </Text>
+      </View> */}
+      <View style={styles.container}>
+        <View style={styles.itemContainer}>
+          <View style={styles.imgContainer}>
+            <View style={styles.imgBox}>
+              <Image
+                source={{
+                  uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+                }}
+                style={styles.image}
               />
-              {network !== null && <NetworkIcon color={'green'} size={18} />}
-            </View>
-            <View style={styles.iconRow}>
-              {alarm && (
-                <ToggleIconText
-                  IconComponent={AlertIcon}
-                  text={alarm}
-                  iconSize={20}
-                  color={backgroundColorNew}
-                  index={2}
-                  activeIndex={activeIndex}
-                  activeText={false}
-                  onPress={() => handlePress(2)}
-                />
-              )}
-              {fuel && <FuelIcon size={20} color={'#727272'} />}
-              {geofence && <GeoFencingIcon size={20} />}
             </View>
           </View>
-        </TouchableOpacity>
-        <View>
-          <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
-              3,
-            )} KM`}</Text>
-            <Text style={styles.distanceText}>Today Distance</Text>
-            <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
-              {motion ? 'Running' : 'Stopped'}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.expiryDate}>
-        <View style={styles.addressContainer}>
-          <LocationShadowIcon size={15} color={'#3BA700'} />
           <TouchableOpacity
-            onPress={handleAddressPress}
-            disabled={fullAddress !== 'Show Full Address'}>
-            {isFetchingAddress ? (
-              <ActivityIndicator
-                size="small"
-                color={backgroundColorNew}
-                style={{marginLeft: 20}}
-              />
-            ) : (
-              <Text
-                style={styles.addressText(
-                  fullAddress === 'Show Full Address' ? true : false,
-                )}>
-                {fullAddress}
+            disabled={isDisable}
+            onPress={() => {
+              if (isNavigationDisabled) {
+                showAlert(
+                  disabled
+                    ? 'Service unavailable! Your Plan has been Expired.'
+                    : 'Wait! GPS Network Error.',
+                );
+              } else {
+                navigation.navigate('trackingtruck', {
+                  deviceId: id,
+                  lat: position[0]?.latitude,
+                  long: position[0]?.longitude,
+                });
+              }
+            }}
+            style={styles.textContainer}>
+            <Text style={styles.highlightText}>{name}</Text>
+            <View style={styles.ignBox}>
+              {renderStatus()}
+              <View style={styles.verticalLine} />
+              <View style={styles.row}>
+                <Text style={styles.distanceText}>Ignition</Text>
+                <Text
+                  style={[
+                    styles.ignitionText(ignition),
+                    {marginLeft: 5, textTransform: 'uppercase'},
+                  ]}>
+                  {ignition ? 'on' : 'off'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.iconBox}>
+              <View style={styles.iconRow}>
+                <BatteryIcon
+                  size={20}
+                  color={
+                    batteryLevel
+                      ? batteryLevel > 60
+                        ? 'green'
+                        : 'red'
+                      : '#727272'
+                  }
+                  charge={charge}
+                  batteryLevel={batteryLevel}
+                />
+                {network !== null && <NetworkIcon color={'green'} size={18} />}
+              </View>
+              <View style={styles.iconRow}>
+                {alarm && (
+                  <ToggleIconText
+                    IconComponent={AlertIcon}
+                    text={alarm}
+                    iconSize={20}
+                    color={backgroundColorNew}
+                    index={2}
+                    activeIndex={activeIndex}
+                    activeText={false}
+                    onPress={() => handlePress(2)}
+                  />
+                )}
+                {fuel && <FuelIcon size={20} color={'#727272'} />}
+                {geofence && <GeoFencingIcon size={20} />}
+              </View>
+            </View>
+          </TouchableOpacity>
+          <View>
+            <View style={styles.distanceBox}>
+              <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
+                3,
+              )} KM`}</Text>
+              <Text style={styles.distanceText}>Today Distance</Text>
+              <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
+                {motion ? 'Running' : 'Stopped'}
               </Text>
-            )}
+            </View>
+          </View>
+        </View>
+        <View style={styles.expiryDate}>
+          <View style={styles.addressContainer}>
+            <LocationShadowIcon size={15} color={'#3BA700'} />
+            <TouchableOpacity
+              onPress={handleAddressPress}
+              disabled={fullAddress !== 'Show Full Address'}>
+              {isFetchingAddress ? (
+                <ActivityIndicator
+                  size="small"
+                  color={backgroundColorNew}
+                  style={{marginLeft: 20}}
+                />
+              ) : (
+                <Text
+                  style={styles.addressText(
+                    fullAddress === 'Show Full Address' ? true : false,
+                  )}>
+                  {fullAddress}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.center}
+            disabled={isDisable}
+            onPress={() => {
+              if (isNavigationDisabled) {
+                showAlert(
+                  disabled
+                    ? 'Service unavailable! Your Plan has been Expired.'
+                    : 'Wait! GPS Network Error.',
+                );
+              } else {
+                navigation.navigate('GpsSetting', {deviceId: id});
+              }
+            }}>
+            <SettingIcon size={20} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.center}
-          disabled={isDisable}
-          onPress={() => {
-            if (isNavigationDisabled) {
-              showAlert(
-                disabled
-                  ? 'Service unavailable! Your Plan has been Expired.'
-                  : 'Wait! GPS Network Error.',
-              );
-            } else {
-              navigation.navigate('GpsSetting', {deviceId: id});
-            }
-          }}>
-          <SettingIcon size={20} color={backgroundColorNew} />
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -218,6 +245,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
+    borderTopLeftRadius: 0,
     marginBottom: 20,
     elevation: 2,
   },

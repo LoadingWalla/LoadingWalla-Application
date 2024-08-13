@@ -143,14 +143,23 @@ export default function PlayJourney({navigation, route}) {
             .start();
 
           setSliderValue(newIndex / (coordinates?.length - 1));
+          // Only change the position, not the zoom level
+          // if (mapRef.current && newPosition) {
+          //   mapRef.current.animateToRegion({
+          //     latitude: newPosition?.latitude,
+          //     longitude: newPosition?.longitude,
+          //     latitudeDelta: 0.0922,
+          //     longitudeDelta: 0.0421,
+          //   });
+          // }
           if (mapRef.current && newPosition) {
             mapRef.current.animateCamera({
               center: {
                 latitude: newPosition.latitude,
                 longitude: newPosition.longitude,
               },
-              // Set maximum zoom-out values during playback
-              zoom: 50, // Zoom out level (smaller number = zoomed out)
+              // Do not change zoom level
+              zoom: 50, // Set a default zoom level, adjust as needed
               duration: 1000 / playbackSpeed,
             });
           }
@@ -239,6 +248,8 @@ export default function PlayJourney({navigation, route}) {
 
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   };
+
+  // console.log(4444, currentPosition);
 
   return (
     <View style={styles.container}>
@@ -371,8 +382,8 @@ export default function PlayJourney({navigation, route}) {
                   .start();
                 if (mapRef.current && newPosition) {
                   mapRef.current.animateToRegion({
-                    latitude: newPosition.latitude,
-                    longitude: newPosition.longitude,
+                    latitude: newPosition?.latitude,
+                    longitude: newPosition?.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   });

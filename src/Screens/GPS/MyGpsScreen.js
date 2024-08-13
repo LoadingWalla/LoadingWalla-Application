@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   FlatList,
   ActivityIndicator,
+  Image,
 } from 'react-native';
-import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
+import Snackbar from 'react-native-snackbar';
+import {useFocusEffect} from '@react-navigation/native';
+import * as Constants from '../../Constants/Constant';
 import DashboardHeader from '../../Components/DashboardHeader';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
+import GpsItem from '../../Components/GpsItem';
 import {
   fetchGpsDevicesRequest,
   fetchTokenFailure,
@@ -20,9 +23,7 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
-import Snackbar from 'react-native-snackbar';
-import {useFocusEffect} from '@react-navigation/native';
-import GpsItem from '../../Components/GpsItem';
+import {backgroundColorNew, textColor} from '../../Color/color';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -40,7 +41,7 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('GpsTrackings', state.data);
+    console.log(66666, state.data);
     return state.data;
   });
 
@@ -49,7 +50,6 @@ const MyGpsScreen = ({navigation}) => {
   useEffect(() => {
     if (gpsTokenData) {
       const {cookie, email, password} = gpsTokenData;
-      // console.log(77777, gpsTokenData);
       dispatch(websocketConnect(cookie));
       dispatch(
         fetchGpsDevicesRequest(
@@ -70,42 +70,32 @@ const MyGpsScreen = ({navigation}) => {
         fontFamily: 'PlusJakartaSans-SemiBold',
         textColor: '#000000',
         backgroundColor: '#FFD7CC',
-        // marginBottom: 70,
       });
     }
   }, [wsError]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (!DashboardUser) {
         dispatch(initProfile());
       }
-      // console.log(777777, mergeDeviceData[0]);
-      // mergedDeviceData.forEach(device => {
-      //   if (device.position && device.position.length > 0) {
-      //     const {latitude, longitude} = device.position[0]; // Get the latest position
-      //     dispatch(fetchAddressRequest(latitude, longitude));
-      //   }
-      // });
-
       return () => {
-        // console.log('WebSocket disconnecting on screen leave');
         dispatch(websocketDisconnect());
         dispatch(fetchTokenFailure());
         Snackbar.dismiss();
       };
-    }, [dispatch]),
+    }, [dispatch, DashboardUser]),
   );
 
-  const mergeDeviceData = React.useCallback(
+  const mergeDeviceData = useCallback(
     (devices = [], latestDevices = [], positions = [], events = []) => {
       const deviceMap = new Map();
 
-      devices?.forEach(device => {
+      devices.forEach(device => {
         deviceMap.set(device.id, {...device});
       });
 
-      latestDevices?.forEach(latest => {
+      latestDevices.forEach(latest => {
         if (deviceMap.has(latest.id)) {
           deviceMap.set(latest.id, {
             ...deviceMap.get(latest.id),
@@ -114,7 +104,7 @@ const MyGpsScreen = ({navigation}) => {
         }
       });
 
-      positions?.forEach(position => {
+      positions.forEach(position => {
         if (deviceMap.has(position.deviceId)) {
           const device = deviceMap.get(position.deviceId);
           device.position = device.position
@@ -124,7 +114,7 @@ const MyGpsScreen = ({navigation}) => {
         }
       });
 
-      events?.forEach(event => {
+      events.forEach(event => {
         if (deviceMap.has(event.deviceId)) {
           const device = deviceMap.get(event.deviceId);
           device.events = device.events ? [...device.events, event] : [event];
@@ -133,10 +123,8 @@ const MyGpsScreen = ({navigation}) => {
       });
 
       return Array.from(deviceMap.values()).map(device => {
-        // Ensure device.position and device.events are always arrays
         device.position = device.position || [];
         device.events = device.events || [];
-        // console.log(5555555, device.position);
         return device;
       });
     },
@@ -155,7 +143,7 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
-  const renderGpsItem = React.useCallback(
+  const renderGpsItem = useCallback(
     ({item}) => (
       <GpsItem
         item={item}
@@ -168,8 +156,8 @@ const MyGpsScreen = ({navigation}) => {
   );
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.DashboardHeaderView}>
+    <View style={styles.container}>
+      <View style={styles.dashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
           navigatiopnWallet={() => navigation.navigate('Wallet')}
@@ -184,37 +172,45 @@ const MyGpsScreen = ({navigation}) => {
           t={t}
         />
       </View>
-      <View style={{flex: 1, marginVertical: 60}}>
-        <View style={styles.container}>
-          {gpsDeviceLoading ? (
-            <View style={styles.loadingStyle}>
-              <ActivityIndicator size="large" color={backgroundColorNew} />
-            </View>
-          ) : gpsDeviceData === null ? (
-            <View style={styles.noAddressContainer}>
-              <Text style={styles.noAddressText}>No GPS found.</Text>
-            </View>
-          ) : (
-            <FlatList
-              data={mergedDeviceData}
-              initialNumToRender={6}
-              showsVerticalScrollIndicator={false}
-              renderItem={renderGpsItem}
-              keyExtractor={item => item.id.toString()}
-              ListEmptyComponent={
-                <View style={styles.noAddressContainer}>
-                  <Text style={styles.noAddressText}>No GPS found.</Text>
-                </View>
-              }
+      <View style={styles.contentContainer}>
+        {gpsDeviceLoading ? (
+          <View style={styles.loadingStyle}>
+            <ActivityIndicator size="large" color={backgroundColorNew} />
+          </View>
+        ) : gpsDeviceData === null ? (
+          <View style={styles.notFoundView}>
+            <Image
+              source={require('../../../assets/noGps.png')}
+              resizeMode="contain"
+              style={styles.splashImage}
             />
-          )}
-          <Button
-            title="Buy GPS"
-            onPress={() => navigation.navigate('BuyGPS')}
-            textStyle={styles.btnText}
-            style={styles.btnStyle}
+            <Text style={styles.notFoundText}>No GPS available!</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={mergedDeviceData}
+            initialNumToRender={6}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderGpsItem}
+            keyExtractor={item => item.id.toString()}
+            ListEmptyComponent={
+              <View style={styles.notFoundView}>
+                <Image
+                  source={require('../../../assets/noGps.png')}
+                  resizeMode="contain"
+                  style={styles.splashImage}
+                />
+                <Text style={styles.notFoundText}>No GPS available!</Text>
+              </View>
+            }
           />
-        </View>
+        )}
+        <Button
+          title="Buy GPS"
+          onPress={() => navigation.navigate('BuyGPS')}
+          textStyle={styles.btnText}
+          style={styles.btnStyle}
+        />
       </View>
     </View>
   );
@@ -223,7 +219,10 @@ const MyGpsScreen = ({navigation}) => {
 export default MyGpsScreen;
 
 const styles = StyleSheet.create({
-  DashboardHeaderView: {
+  container: {
+    flex: 1,
+  },
+  dashboardHeaderView: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -234,17 +233,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     zIndex: 9999,
   },
-  container: {
-    padding: 10,
+  contentContainer: {
     flex: 1,
-  },
-  headerContainer: {
-    marginVertical: 10,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontFamily: 'PlusJakartaSans-Bold',
-    paddingLeft: 10,
+    marginVertical: 60,
+    padding: 10,
   },
   btnStyle: {
     flexDirection: 'row',
@@ -264,14 +256,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noAddressContainer: {
+  notFoundView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noAddressText: {
-    fontSize: 16,
-    color: titleColor,
+  notFoundText: {
+    color: '#707070',
     fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 28,
+  },
+  splashImage: {
+    height: 250,
+    width: 250,
   },
 });

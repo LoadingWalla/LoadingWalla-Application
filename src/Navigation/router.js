@@ -1586,32 +1586,6 @@ const Navigation = ({language}) => {
       />
 
       {/* GPS */}
-      {/* <Stack.Screen
-        name="GpsPurchase"
-        component={GpsTrackings}
-        options={{
-          headerShown: true,
-          headerTitleAlign: 'left',
-          title: 'GPS Purchased',
-          headerTitleStyle: {
-            fontFamily: 'PlusJakartaSans-Bold',
-          },
-          headerShadowVisible: false,
-          headerRight: () => (
-            <HeaderHelpButton shareIcon={false} navigation={navigation} />
-          ),
-        }}
-        listeners={({navigation, route}) => ({
-          // Onpress Update....
-          focus: () =>
-            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
-          blur: () =>
-            BackHandler.removeEventListener(
-              'hardwareBackPress',
-              handleBackButton,
-            ),
-        })}
-      /> */}
 
       <Stack.Screen
         name="trackingtruck"

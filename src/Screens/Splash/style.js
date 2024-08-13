@@ -1,10 +1,11 @@
 import {Dimensions, StyleSheet} from 'react-native';
+import {backgroundColorNew} from '../../Color/color';
 export default StyleSheet.create({
   splashContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#ED1C24',
+    backgroundColor: backgroundColorNew,
   },
   splashImage: {
     height: Dimensions.get('window').height,
