@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
@@ -22,7 +22,7 @@ import {formatDate} from '../Utils/dateUtils';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [fullAddress, setFullAddress] = useState('Show Full Address');
+  const [fullAddress, setFullAddress] = useState(null);
   const [isFetchingAddress, setIsFetchingAddress] = useState(false);
   // console.log(66666, item);
 
@@ -63,20 +63,49 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
-  const handleAddressPress = async () => {
-    setIsFetchingAddress(true);
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
-      );
-      const data = await response.json();
-      setFullAddress(data.display_name);
-    } catch (error) {
-      showAlert('Failed to fetch address.');
-    } finally {
-      setIsFetchingAddress(false);
+  // const handleAddressPress = async () => {
+  //   setIsFetchingAddress(true);
+  //   try {
+  //     const response = await fetch(
+  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
+  //     );
+  //     const data = await response.json();
+  //     setFullAddress(data.display_name);
+  //   } catch (error) {
+  //     showAlert('Failed to fetch address.');
+  //   } finally {
+  //     setIsFetchingAddress(false);
+  //   }
+  // };
+
+  const apiKey = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
+
+  useEffect(() => {
+    // Fetch the address as soon as the component mounts
+    const fetchAddress = async () => {
+      setIsFetchingAddress(true);
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
+        );
+        // const response = await fetch(
+        //   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position[0]?.latitude},${position[0]?.longitude}&key=${apiKey}`,
+        // );
+        const data = await response.json();
+        console.log(777777, data);
+
+        setFullAddress(data.display_name);
+      } catch (error) {
+        showAlert('Failed to fetch address.');
+      } finally {
+        setIsFetchingAddress(false);
+      }
+    };
+
+    if (position[0]?.latitude && position[0]?.longitude) {
+      fetchAddress();
     }
-  };
+  }, []);
 
   return (
     <View>
@@ -152,7 +181,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             <View style={styles.iconBox}>
               <View style={styles.iconRow}>
                 <BatteryIcon
-                  size={20}
+                  size={15}
                   color={
                     batteryLevel
                       ? batteryLevel > 60
@@ -163,14 +192,14 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                   charge={charge}
                   batteryLevel={batteryLevel}
                 />
-                {network !== null && <NetworkIcon color={'green'} size={18} />}
+                {network !== null && <NetworkIcon color={'green'} size={14} />}
               </View>
               <View style={styles.iconRow}>
                 {alarm && (
                   <ToggleIconText
                     IconComponent={AlertIcon}
                     text={alarm}
-                    iconSize={20}
+                    iconSize={15}
                     color={backgroundColorNew}
                     index={2}
                     activeIndex={activeIndex}
@@ -178,15 +207,15 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                     onPress={() => handlePress(2)}
                   />
                 )}
-                {fuel && <FuelIcon size={20} color={'#727272'} />}
-                {geofence && <GeoFencingIcon size={20} />}
+                {fuel && <FuelIcon size={15} color={'#727272'} />}
+                {geofence && <GeoFencingIcon size={15} />}
               </View>
             </View>
           </TouchableOpacity>
           <View>
             <View style={styles.distanceBox}>
               <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
-                3,
+                2,
               )} KM`}</Text>
               <Text style={styles.distanceText}>Today Distance</Text>
               <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
@@ -195,44 +224,55 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             </View>
           </View>
         </View>
-        <View style={styles.expiryDate}>
-          <View style={styles.addressContainer}>
-            <LocationShadowIcon size={15} color={'#3BA700'} />
+        <View
+          style={{
+            backgroundColor: '#F7F7F7',
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            borderRadius: 8,
+            flexDirection: 'column',
+          }}>
+          <View style={styles.expiryDate}>
+            <View style={styles.addressContainer}>
+              <LocationShadowIcon size={15} color={'#3BA700'} />
+              <View>
+                {isFetchingAddress ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={backgroundColorNew}
+                    style={{marginLeft: 20}}
+                  />
+                ) : (
+                  <Text style={styles.addressText()}>{fullAddress}</Text>
+                )}
+              </View>
+            </View>
             <TouchableOpacity
-              onPress={handleAddressPress}
-              disabled={fullAddress !== 'Show Full Address'}>
-              {isFetchingAddress ? (
-                <ActivityIndicator
-                  size="small"
-                  color={backgroundColorNew}
-                  style={{marginLeft: 20}}
-                />
-              ) : (
-                <Text
-                  style={styles.addressText(
-                    fullAddress === 'Show Full Address' ? true : false,
-                  )}>
-                  {fullAddress}
-                </Text>
-              )}
+              style={styles.center}
+              disabled={isDisable}
+              onPress={() => {
+                if (isNavigationDisabled) {
+                  showAlert(
+                    disabled
+                      ? 'Service unavailable! Your Plan has been Expired.'
+                      : 'Wait! GPS Network Error.',
+                  );
+                } else {
+                  navigation.navigate('GpsSetting', {deviceId: id});
+                }
+              }}>
+              <SettingIcon size={15} color={backgroundColorNew} />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            style={styles.center}
-            disabled={isDisable}
-            onPress={() => {
-              if (isNavigationDisabled) {
-                showAlert(
-                  disabled
-                    ? 'Service unavailable! Your Plan has been Expired.'
-                    : 'Wait! GPS Network Error.',
-                );
-              } else {
-                navigation.navigate('GpsSetting', {deviceId: id});
-              }
+          <Text
+            style={{
+              color: PrivacyPolicy,
+              fontFamily: 'PlusJakartaSans-SemiBold',
+              fontSize: 8,
+              paddingLeft: 25,
             }}>
-            <SettingIcon size={20} color={backgroundColorNew} />
-          </TouchableOpacity>
+            {item?.lastUpdate}
+          </Text>
         </View>
       </View>
     </View>
@@ -245,9 +285,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
-    borderTopLeftRadius: 0,
+    // borderTopLeftRadius: 0,
     marginBottom: 20,
     elevation: 2,
+    // shadowColor: 'blue',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -259,14 +300,17 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     justifyContent: 'center',
-    padding: 10,
+    // padding: 10,
+    // borderWidth: 1,
+    paddingTop: 8,
   },
   highlightText: {
     color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    fontSize: 14,
     textAlign: 'left',
     textTransform: 'uppercase',
+    marginBottom: 2,
   },
   distanceBox: {
     paddingHorizontal: 15,
@@ -277,20 +321,22 @@ const styles = StyleSheet.create({
   distanceText: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
+    fontSize: 10,
     textAlign: 'right',
   },
   iconBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginVertical: 10,
     minWidth: 180,
+    // borderWidth: 1,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 2,
     marginHorizontal: 5,
+    marginTop: 2,
     height: '80%',
   },
   ignBox: {
@@ -305,21 +351,22 @@ const styles = StyleSheet.create({
   imgBox: {
     backgroundColor: '#f7f7f7',
     borderRadius: 6,
-    width: 60,
+    width: 65,
     height: 60,
-    marginTop: 10,
+    marginTop: 5,
+    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   ignitionText: status => ({
     color: status ? 'green' : 'red',
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
+    fontSize: 10,
   }),
   addressText: color => ({
     color: color ? backgroundColorNew : PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-BoldItalic',
-    fontSize: 12,
+    fontSize: 10,
     marginLeft: 10,
   }),
   inactiveText: {
@@ -333,10 +380,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   expiryDate: {
-    backgroundColor: '#F7F7F7',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -346,7 +389,8 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    minWidth: 50,
+    minWidth: 45,
+    marginRight: 8,
   },
   addressContainer: {
     maxWidth: '90%',

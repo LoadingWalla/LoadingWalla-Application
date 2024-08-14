@@ -4,7 +4,7 @@ import Switch from 'toggle-switch-react-native';
 import {GradientColor2, PrivacyPolicy, seperator} from '../Color/color';
 
 const GpsSettingItem = ({detailInput, title}) => {
-  const [switchOn, setSwitchOn] = useState(true);
+  const [switchOn, setSwitchOn] = useState(false);
 
   const toggleSwitch = () => {
     const newSwitchState = !switchOn;

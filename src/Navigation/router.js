@@ -88,6 +88,7 @@ import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 import Geofencing from '../Screens/GPS/Geofencing';
+import HeaderMenuButton from '../Components/HeaderMenuButton';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1597,16 +1598,10 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            // fontSize: 20,
           },
           headerShadowVisible: false,
-          headerRight: () => (
-            <HeaderHelpButton
-              shareIcon={true}
-              navigation={navigation}
-              latitude={route.params.lat}
-              longitude={route.params.long}
-            />
-          ),
+          headerRight: () => <HeaderMenuButton />,
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

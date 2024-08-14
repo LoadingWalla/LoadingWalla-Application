@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     overflow: 'hidden',
     flex: 1,
-    maxWidth: 200,
+    // maxWidth: 200,
     // borderWidth: 1,
   },
 });
