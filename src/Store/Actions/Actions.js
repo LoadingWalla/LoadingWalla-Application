@@ -1304,12 +1304,12 @@ export const fetchGpsOrderDetailFailure = error => ({
 });
 
 // Get full address
-export const fetchAddressRequest = payload => {
-  console.log(8888888888888);
-
+export const fetchAddressRequest = (lat, lan) => {
+  // console.log(8888888888888, lat, lan);
   return {
     type: actionTypes.FETCH_FULLADDRESS_REQUEST,
-    payload,
+    lat,
+    lan,
   };
 };
 

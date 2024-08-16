@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
@@ -18,20 +18,26 @@ import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
-import {formatDate} from '../Utils/dateUtils';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchAddressRequest} from '../Store/Actions/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [fullAddress, setFullAddress] = useState(null);
-  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+  const dispatch = useDispatch();
   // console.log(66666, item);
+  const {fullAddressLoading, fullAddressData, fullAddressStatus} = useSelector(
+    state => {
+      // console.log(7777777777, state.data);
+      return state.data;
+    },
+  );
 
   const {position = [], status, name, disabled, id, lastUpdate} = item;
   const attributes = position[0]?.attributes || {};
   const {
     ignition,
     motion,
-    totalDistance,
     distance,
     batteryLevel,
     alarm,
@@ -63,89 +69,139 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
-  // const handleAddressPress = async () => {
-  //   setIsFetchingAddress(true);
-  //   try {
-  //     const response = await fetch(
-  //       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
-  //     );
-  //     const data = await response.json();
-  //     setFullAddress(data.display_name);
-  //   } catch (error) {
-  //     showAlert('Failed to fetch address.');
-  //   } finally {
-  //     setIsFetchingAddress(false);
-  //   }
-  // };
-
-  const apiKey = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
-
-  useEffect(() => {
-    // Fetch the address as soon as the component mounts
-    const fetchAddress = async () => {
-      setIsFetchingAddress(true);
-      try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
-        );
-        // const response = await fetch(
-        //   `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position[0]?.latitude},${position[0]?.longitude}&key=${apiKey}`,
-        // );
-        const data = await response.json();
-        console.log(777777, data);
-
-        setFullAddress(data.display_name);
-      } catch (error) {
-        showAlert('Failed to fetch address.');
-      } finally {
-        setIsFetchingAddress(false);
-      }
-    };
-
-    if (position[0]?.latitude && position[0]?.longitude) {
-      fetchAddress();
-    }
-  }, []);
+  // useEffect(() => {
+  //   dispatch(
+  //     fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
+  //   );
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(
+        fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
+      );
+      return () => {};
+    }, [dispatch, position]),
+  );
 
   return (
-    <View>
-      {/* <View
+    <View style={styles.container}>
+      <View style={styles.itemContainer}>
+        <View style={styles.imgContainer}>
+          <View style={styles.imgBox}>
+            <Image
+              source={{
+                uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
+              }}
+              style={styles.image}
+            />
+          </View>
+        </View>
+        <TouchableOpacity
+          disabled={isDisable}
+          onPress={() => {
+            if (isNavigationDisabled) {
+              showAlert(
+                disabled
+                  ? 'Service unavailable! Your Plan has been Expired.'
+                  : 'Wait! GPS Network Error.',
+              );
+            } else {
+              navigation.navigate('trackingtruck', {
+                deviceId: id,
+                lat: position[0]?.latitude,
+                long: position[0]?.longitude,
+              });
+            }
+          }}
+          style={styles.textContainer}>
+          <Text style={styles.highlightText}>{name}</Text>
+          <View style={styles.ignBox}>
+            {renderStatus()}
+            <View style={styles.verticalLine} />
+            <View style={styles.row}>
+              <Text style={styles.distanceText}>Ignition</Text>
+              <Text
+                style={[
+                  styles.ignitionText(ignition),
+                  {marginLeft: 5, textTransform: 'uppercase'},
+                ]}>
+                {ignition ? 'on' : 'off'}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.iconBox}>
+            <View style={styles.iconRow}>
+              <BatteryIcon
+                size={15}
+                color={
+                  batteryLevel
+                    ? batteryLevel > 60
+                      ? 'green'
+                      : 'red'
+                    : '#727272'
+                }
+                charge={charge}
+                batteryLevel={batteryLevel}
+              />
+              {network !== null && <NetworkIcon color={'green'} size={14} />}
+            </View>
+            <View style={styles.iconRow}>
+              {alarm && (
+                <ToggleIconText
+                  IconComponent={AlertIcon}
+                  text={alarm}
+                  iconSize={15}
+                  color={backgroundColorNew}
+                  index={2}
+                  activeIndex={activeIndex}
+                  activeText={false}
+                  onPress={() => handlePress(2)}
+                />
+              )}
+              {fuel && <FuelIcon size={15} color={'#727272'} />}
+              {geofence && <GeoFencingIcon size={15} />}
+            </View>
+          </View>
+        </TouchableOpacity>
+        <View>
+          <View style={styles.distanceBox}>
+            <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
+              2,
+            )} KM`}</Text>
+            <Text style={styles.distanceText}>Today Distance</Text>
+            <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
+              {motion ? 'Running' : 'Stopped'}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
         style={{
-          backgroundColor: '#ffffff',
+          backgroundColor: '#F7F7F7',
           paddingHorizontal: 10,
           paddingVertical: 5,
           borderRadius: 8,
-          borderBottomLeftRadius: 0,
-          borderBottomRightRadius: 0,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          // borderWidth: 1,
-          maxWidth: '67%',
-          elevation: 2,
+          flexDirection: 'column',
         }}>
-        <Text
-          style={{
-            color: PrivacyPolicy,
-            fontFamily: 'PlusJakartaSans-SemiBold',
-            fontSize: 12,
-            textAlign: 'right',
-          }}>
-          {formatDate(item?.lastUpdate)}
-        </Text>
-      </View> */}
-      <View style={styles.container}>
-        <View style={styles.itemContainer}>
-          <View style={styles.imgContainer}>
-            <View style={styles.imgBox}>
-              <Image
-                source={{
-                  uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
-                }}
-                style={styles.image}
-              />
+        <View style={styles.expiryDate}>
+          <View style={styles.addressContainer}>
+            <LocationShadowIcon size={15} color={'#3BA700'} />
+            <View>
+              {fullAddressLoading ? (
+                <ActivityIndicator
+                  size="small"
+                  color={backgroundColorNew}
+                  style={{marginLeft: 20}}
+                />
+              ) : (
+                <Text style={styles.addressText()}>
+                  {fullAddressData?.display_name}
+                </Text>
+              )}
             </View>
           </View>
           <TouchableOpacity
+            style={styles.center}
             disabled={isDisable}
             onPress={() => {
               if (isNavigationDisabled) {
@@ -155,125 +211,21 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                     : 'Wait! GPS Network Error.',
                 );
               } else {
-                navigation.navigate('trackingtruck', {
-                  deviceId: id,
-                  lat: position[0]?.latitude,
-                  long: position[0]?.longitude,
-                });
+                navigation.navigate('GpsSetting', {deviceId: id});
               }
-            }}
-            style={styles.textContainer}>
-            <Text style={styles.highlightText}>{name}</Text>
-            <View style={styles.ignBox}>
-              {renderStatus()}
-              <View style={styles.verticalLine} />
-              <View style={styles.row}>
-                <Text style={styles.distanceText}>Ignition</Text>
-                <Text
-                  style={[
-                    styles.ignitionText(ignition),
-                    {marginLeft: 5, textTransform: 'uppercase'},
-                  ]}>
-                  {ignition ? 'on' : 'off'}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.iconBox}>
-              <View style={styles.iconRow}>
-                <BatteryIcon
-                  size={15}
-                  color={
-                    batteryLevel
-                      ? batteryLevel > 60
-                        ? 'green'
-                        : 'red'
-                      : '#727272'
-                  }
-                  charge={charge}
-                  batteryLevel={batteryLevel}
-                />
-                {network !== null && <NetworkIcon color={'green'} size={14} />}
-              </View>
-              <View style={styles.iconRow}>
-                {alarm && (
-                  <ToggleIconText
-                    IconComponent={AlertIcon}
-                    text={alarm}
-                    iconSize={15}
-                    color={backgroundColorNew}
-                    index={2}
-                    activeIndex={activeIndex}
-                    activeText={false}
-                    onPress={() => handlePress(2)}
-                  />
-                )}
-                {fuel && <FuelIcon size={15} color={'#727272'} />}
-                {geofence && <GeoFencingIcon size={15} />}
-              </View>
-            </View>
-          </TouchableOpacity>
-          <View>
-            <View style={styles.distanceBox}>
-              <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
-                2,
-              )} KM`}</Text>
-              <Text style={styles.distanceText}>Today Distance</Text>
-              <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
-                {motion ? 'Running' : 'Stopped'}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: '#F7F7F7',
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-            borderRadius: 8,
-            flexDirection: 'column',
-          }}>
-          <View style={styles.expiryDate}>
-            <View style={styles.addressContainer}>
-              <LocationShadowIcon size={15} color={'#3BA700'} />
-              <View>
-                {isFetchingAddress ? (
-                  <ActivityIndicator
-                    size="small"
-                    color={backgroundColorNew}
-                    style={{marginLeft: 20}}
-                  />
-                ) : (
-                  <Text style={styles.addressText()}>{fullAddress}</Text>
-                )}
-              </View>
-            </View>
-            <TouchableOpacity
-              style={styles.center}
-              disabled={isDisable}
-              onPress={() => {
-                if (isNavigationDisabled) {
-                  showAlert(
-                    disabled
-                      ? 'Service unavailable! Your Plan has been Expired.'
-                      : 'Wait! GPS Network Error.',
-                  );
-                } else {
-                  navigation.navigate('GpsSetting', {deviceId: id});
-                }
-              }}>
-              <SettingIcon size={15} color={backgroundColorNew} />
-            </TouchableOpacity>
-          </View>
-          <Text
-            style={{
-              color: PrivacyPolicy,
-              fontFamily: 'PlusJakartaSans-SemiBold',
-              fontSize: 8,
-              paddingLeft: 25,
             }}>
-            {item?.lastUpdate}
-          </Text>
+            <SettingIcon size={15} color={backgroundColorNew} />
+          </TouchableOpacity>
         </View>
+        <Text
+          style={{
+            color: PrivacyPolicy,
+            fontFamily: 'PlusJakartaSans-SemiBold',
+            fontSize: 8,
+            paddingLeft: 25,
+          }}>
+          {moment(item?.lastUpdate).format('hh:mm A DD MMM YYYY')}
+        </Text>
       </View>
     </View>
   );
@@ -389,8 +341,9 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    minWidth: 45,
+    minWidth: 40,
     marginRight: 8,
+    // borderWidth: 1,
   },
   addressContainer: {
     maxWidth: '90%',

@@ -6,6 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
   Image,
+  RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -40,12 +41,29 @@ const MyGpsScreen = ({navigation}) => {
     wsConnected,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => {
-    console.log(66666, state.data);
-    return state.data;
-  });
+  } = useSelector(state => state.data);
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    if (gpsTokenData) {
+      const {cookie, email, password} = gpsTokenData;
+      dispatch(websocketConnect(cookie));
+      dispatch(
+        fetchGpsDevicesRequest(
+          encodeURIComponent(email),
+          encodeURIComponent(password),
+        ),
+      );
+    } else {
+      dispatch(fetchTokenRequest());
+    }
+
+    setRefreshing(false);
+  }, [dispatch, gpsTokenData]);
 
   useEffect(() => {
     if (gpsTokenData) {
@@ -202,6 +220,9 @@ const MyGpsScreen = ({navigation}) => {
                 />
                 <Text style={styles.notFoundText}>No GPS available!</Text>
               </View>
+            }
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
           />
         )}

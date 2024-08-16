@@ -8,17 +8,26 @@ import {
   Pressable,
 } from 'react-native';
 import MenuThreeDot from '../../assets/SVG/svg/MenuThreeDot';
+import Share from 'react-native-share';
 
-const HeaderMenuButton = () => {
+const HeaderMenuButton = ({navigation, latitude, longitude, deviceId}) => {
+  // console.log(333333, latitude, longitude, deviceId);
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  const handleOptionPress = option => {
-    console.log(option);
-    setModalVisible(false);
+  const handleShare = () => {
+    const shareOptions = {
+      title: 'Share Location',
+      message: `Check out this location: https://maps.google.com/?q=${latitude},${longitude}`,
+    };
+
+    Share.open(shareOptions)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   };
 
   return (
@@ -34,20 +43,23 @@ const HeaderMenuButton = () => {
         onRequestClose={toggleModal}>
         <Pressable style={styles.modalOverlay} onPress={toggleModal}>
           <View style={styles.menu}>
-            <TouchableOpacity
-              style={styles.menuItem}
-              onPress={() => handleOptionPress('Option 1')}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleShare}>
               <Text style={styles.menuText}>Share</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuItem}
-              // onPress={() => navigation.navigate('GpsSetting', {deviceId})}
-            >
+              onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
               <Text style={styles.menuText}>Setting</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => handleOptionPress('Option 3')}>
+              onPress={() =>
+                navigation.navigate('geofencing', {
+                  deviceId,
+                  lat: latitude,
+                  long: longitude,
+                })
+              }>
               <Text style={styles.menuText}>Geofencing</Text>
             </TouchableOpacity>
           </View>

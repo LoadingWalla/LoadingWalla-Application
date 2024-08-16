@@ -5,6 +5,7 @@ import multiPartApi from '../../Utils/multiPartApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import gpsApi from '../../Utils/gpsApi';
 import googleApi from '../../Utils/FetchGoogleApi';
+import FetchNominatimApi from '../../Utils/FetchNominatiApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -1314,21 +1315,21 @@ export function* fetchGpsOrderDetail({id}) {
 }
 
 // full address
-export function* fetchFullAddress() {
+export function* fetchFullAddress({lat, lan}) {
   try {
-    const data = yield googleApi().get(
-      `geocode/json?latlng=28.521126,77.200543`,
+    const data = yield FetchNominatimApi().get(
+      `reverse?format=json&lat=${lat}&lon=${lan}`,
     );
-    console.log('Gps Address', data);
-    if (data?.data?.status === 200) {
+    // console.log('Gps Address--------------', data);
+    if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchAddressSuccess(data?.data));
     } else {
       // console.log('else', data);
-      yield put(actions.fetchAddressFailure(data.status));
+      yield put(actions.fetchAddressFailure(data?.status));
     }
   } catch (error) {
-    yield put(actions.fetchAddressFailure(error.message));
+    yield put(actions.fetchAddressFailure(error?.message));
     // console.log('error', error);
   }
 }

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Image,
   Linking,
   ScrollView,
   StyleSheet,
@@ -8,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {backgroundColorNew, PrivacyPolicy, titleColor} from '../../Color/color';
+import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
@@ -27,9 +28,11 @@ import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-import AnimatedText from '../../Components/AnimatedText';
 import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
+import AnimatedText from '../../Components/AnimatedText';
+import useFullAddress from '../../hooks/useFullAddress';
+import {fetchAddressRequest} from '../../Store/Actions/Actions';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -45,18 +48,46 @@ const getLivePositions = (wsMessages, deviceId) => {
 
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long} = route.params;
-  console.log(444444, route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addressFetched, setAddressFetched] = useState(false);
   const [mapType, setMapType] = useState('standard');
+  // const [markerAddress, setMarkerAddress] = useState('Fetching address...');
 
-  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
-    useSelector(state => state.data);
+  const {address, fetchAddress, gpsAddressLoading} =
+    useFullAddress(livePositions);
+  const handleTruckIconPress = () => {
+    console.log('Truck icon pressed. Fetching address...');
+    // setMarkerAddress('Fetching address...');
+
+    if (livePositions.length > 0) {
+      console.log('Live positions:', livePositions);
+      dispatch(
+        fetchAddressRequest(
+          livePositions[livePositions.length - 1].latitude,
+          livePositions[livePositions.length - 1].longitude,
+        ),
+      );
+      if (markerRef.current) {
+        markerRef.current.showCallout();
+      }
+    } else {
+      console.log('No live positions available to fetch the address.');
+    }
+  };
+
+  const {
+    wsMessages,
+    wsConnected,
+    wsDevices,
+    wsPositions,
+    wsEvents,
+    fullAddressData,
+  } = useSelector(state => state.data);
 
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
@@ -114,8 +145,6 @@ const TrackingTruck = ({navigation, route}) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
-
   const handleNavigate = () => {
     const destination =
       livePositions[livePositions.length - 1] ||
@@ -126,12 +155,6 @@ const TrackingTruck = ({navigation, route}) => {
         console.error('Error opening Google Maps', err),
       );
     }
-  };
-
-  const handleFetchAddress = () => {
-    setAddressFetched(false);
-    fetchAddress();
-    setAddressFetched(true);
   };
 
   const animateToDevicePosition = () => {
@@ -145,6 +168,12 @@ const TrackingTruck = ({navigation, route}) => {
       });
     }
   };
+
+  useEffect(() => {
+    if (markerRef.current) {
+      markerRef.current.showCallout();
+    }
+  }, [address]);
 
   return (
     <View style={styles.container}>
@@ -224,41 +253,12 @@ const TrackingTruck = ({navigation, route}) => {
           </View>
         </View>
         <TouchableOpacity
-          style={{
-            backgroundColor: '#f8f8f8',
-            padding: 8,
-            borderRadius: 50,
-            elevation: 5,
-            shadowOffset: {x: 10, y: 20},
-            shadowColor: backgroundColorNew,
-          }}
+          style={styles.settingsButton}
           onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
           <SettingIcon size={25} color={backgroundColorNew} />
         </TouchableOpacity>
       </View>
       <View style={styles.mapContainer}>
-        {/* <View style={styles.mapHeader}>
-          {device?.name && (
-            <>
-              <Text style={styles.fetchedAddressText}>{device?.name}</Text>
-              <View style={styles.verticalLine} />
-            </>
-          )}
-          <TouchableOpacity onPress={handleFetchAddress}>
-            {gpsAddressLoading ? (
-              <ActivityIndicator size="small" color={backgroundColorNew} />
-            ) : (
-              <AnimatedText
-                text={address}
-                style={[
-                  styles.addressText,
-                  addressFetched && styles.fetchedAddressText,
-                ]}
-                showAnimation={true}
-              />
-            )}
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.mapView}>
           {loading ? (
             <View style={styles.loaderContainer}>
@@ -268,7 +268,7 @@ const TrackingTruck = ({navigation, route}) => {
             <MapView
               ref={mapRef}
               style={StyleSheet.absoluteFillObject}
-              mapType={mapType} // Change to "satellite", "hybrid", "standard" or "terrain" as needed
+              mapType={mapType}
               initialRegion={{
                 latitude: lat || livePositions[0]?.latitude || 0,
                 longitude: long || livePositions[0]?.longitude || 0,
@@ -284,12 +284,12 @@ const TrackingTruck = ({navigation, route}) => {
               )}
               {livePositions.length > 0 && (
                 <Marker.Animated
+                  ref={markerRef}
                   title={'Address'}
-                  description={address}
+                  description={fullAddressData.display_name}
                   coordinate={animatedMarkerPosition}
-                  rotation={
-                    livePositions[livePositions.length - 1].course || 0
-                  }>
+                  rotation={livePositions[livePositions.length - 1].course || 0}
+                  onPress={handleTruckIconPress}>
                   <TruckNavigationIcon width={50} height={50} />
                 </Marker.Animated>
               )}
@@ -299,14 +299,19 @@ const TrackingTruck = ({navigation, route}) => {
             <Text style={styles.speedText}>
               {Math.ceil(positions[0]?.speed)}
             </Text>
-            <Text style={styles.speedUnit}>km/hr</Text>
+            <Text style={styles.speedUnit}>kmph</Text>
           </View>
           <TouchableOpacity
             style={styles.mapToggleButton}
             onPress={toggleMapType}>
-            <Text style={styles.mapToggleButtonText}>
-              Switch to {mapType === 'standard' ? 'Satellite' : 'Standard'}
-            </Text>
+            <Image
+              source={
+                mapType === 'standard'
+                  ? require('../../../assets/satellite-view.png')
+                  : require('../../../assets/satellites.png')
+              }
+              style={{width: 25, height: 25}}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -320,14 +325,6 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={animateToDevicePosition}>
             <GpsIcon2 size={20} />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            style={styles.geofencingButton}
-            onPress={() =>
-              navigation.navigate('geofencing', {deviceId, lat, long})
-            }>
-            <Text style={styles.geofencingButtonText}>Geofencing</Text>
-            <GeoFencingIcon size={20} color={'#3BA700'} />
-          </TouchableOpacity> */}
         </View>
       </View>
       <View style={styles.bottomContainer}>
@@ -509,9 +506,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
-    // marginHorizontal: 10,
     minHeight: 35,
-    // borderWidth: 1,
   },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
@@ -572,20 +567,22 @@ const styles = StyleSheet.create({
     textDecorationLine: 'none',
     fontSize: 12,
     textAlign: 'center',
-    // borderWidth: 1,
   },
   mapToggleButton: {
     position: 'absolute',
     top: 10,
     right: 10,
-    padding: 10,
+    padding: 3,
     backgroundColor: '#ffffff',
-    borderRadius: 5,
+    borderRadius: 50,
     elevation: 3,
   },
-  mapToggleButtonText: {
-    color: '#000',
-    fontSize: 14,
-    fontWeight: 'bold',
+  settingsButton: {
+    backgroundColor: '#f8f8f8',
+    padding: 8,
+    borderRadius: 50,
+    elevation: 5,
+    shadowOffset: {x: 10, y: 20},
+    shadowColor: backgroundColorNew,
   },
 });

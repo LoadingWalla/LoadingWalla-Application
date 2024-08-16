@@ -1587,7 +1587,6 @@ const Navigation = ({language}) => {
       />
 
       {/* GPS */}
-
       <Stack.Screen
         name="trackingtruck"
         component={TrackingTruck}
@@ -1601,7 +1600,20 @@ const Navigation = ({language}) => {
             // fontSize: 20,
           },
           headerShadowVisible: false,
-          headerRight: () => <HeaderMenuButton />,
+          headerRight: () => (
+            <HeaderMenuButton
+              navigation={navigation}
+              latitude={route.params.lat}
+              longitude={route.params.long}
+              deviceId={route.params.deviceId}
+            />
+          ),
+          // <HeaderHelpButton
+          //      shareIcon={false}
+          //      navigation={navigation}
+          //      // latitude={route.params.lat}
+          //      // longitude={route.params.long}
+          //    />
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....

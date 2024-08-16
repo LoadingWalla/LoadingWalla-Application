@@ -1484,20 +1484,20 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         fullAddressLoading: true,
-        fullAddressData: null,
+        fullAddressData: [],
         fullAddressStatus: null,
       };
     case actionTypes.FETCH_FULLADDRESS_SUCCESS:
       return updateState(state, {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
-        fullAddressData: payload?.data,
+        fullAddressData: payload,
       });
     case actionTypes.FETCH_FULLADDRESS_FAILURE:
       return updateState(state, {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
-        fullAddressData: payload?.data,
+        fullAddressData: [],
       });
 
     // default state

@@ -40,6 +40,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 
 const Geofencing = ({navigation, route}) => {
   const {deviceId, lat, long} = route.params;
+
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const animatedMarkerPosition = useRef(
