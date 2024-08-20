@@ -15,7 +15,7 @@ export const SELECT_PRICE_TYPE = 'Select price type';
 
 export const POSTED_SUCCESS = 'Post Successfull';
 
-export const SELECT_TRUCK = 'Select truck you need';
+export const SELECT_TRUCK = 'Select truck type';
 export const ENTER_CITY_NAME = 'City name';
 export const iam = 'I am';
 export const MATERIAL_NAME = 'Material name';

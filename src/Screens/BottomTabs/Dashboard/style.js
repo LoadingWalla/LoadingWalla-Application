@@ -64,6 +64,8 @@ export default StyleSheet.create({
     padding: 10,
     backgroundColor: white,
     zIndex: 9999,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   locationTitle: {
     fontSize: 16,
@@ -226,7 +228,7 @@ export default StyleSheet.create({
 
   ///////
 
-  Container: {flex: 1, backgroundColor: '#FFFDFD'},
+  Container: {flex: 1, backgroundColor: '#FFFDFD', marginBottom: 60},
 
   button: {
     borderRadius: 20,

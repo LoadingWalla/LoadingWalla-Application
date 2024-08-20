@@ -1,5 +1,12 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import {
+  ActivityIndicator,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useCallback, useState} from 'react';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
@@ -7,24 +14,41 @@ import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import AlertBox from './AlertBox';
-import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
+import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchAddressRequest} from '../Store/Actions/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
-  // console.log(66666, item);
   const [activeIndex, setActiveIndex] = useState(null);
+  const dispatch = useDispatch();
+  // console.log(66666, item);
+  const {fullAddressLoading, fullAddressData, fullAddressStatus} = useSelector(
+    state => {
+      // console.log(7777777777, state.data);
+      return state.data;
+    },
+  );
 
-  const attributes =
-    item?.position?.length > 0 ? item.position[0].attributes : {};
-  const ignition = attributes?.ignition || attributes?.motion;
-  const totalDistance = attributes?.totalDistance
-    ? (attributes.totalDistance / 1000).toFixed(2)
-    : '0.00';
-  const batteryLevel = attributes?.batteryLevel;
-  const isNavigationDisabled = item?.disabled || item?.positionId === 0;
+  const {position = [], status, name, disabled, id, lastUpdate} = item;
+  const attributes = position[0]?.attributes || {};
+  const {
+    ignition,
+    motion,
+    distance,
+    batteryLevel,
+    alarm,
+    fuel,
+    geofence,
+    network,
+    charge,
+  } = attributes;
 
+  const isNavigationDisabled =
+    disabled || position.length === 0 || position[0].latitude === undefined;
   const showAlert = message => {
     AlertBox(message);
   };
@@ -32,19 +56,32 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
   };
+
   const renderStatus = () => {
-    if (item?.status === 'online') {
-      return <Text style={{color: 'green'}}>Active</Text>;
-    } else if (item?.status === 'offline') {
-      return <Text style={{color: backgroundColorNew}}>Inactive</Text>;
-    } else {
-      return (
-        <Text style={styles.lastUpdateText}>
-          {moment(item?.lastUpdate).fromNow()}
-        </Text>
-      );
+    if (status === 'online') {
+      return <Text style={styles.ignitionText(true)}>Active</Text>;
     }
+    if (status === 'offline') {
+      return <Text style={styles.ignitionText(false)}>Inactive</Text>;
+    }
+    return (
+      <Text style={styles.lastUpdateText}>{moment(lastUpdate).fromNow()}</Text>
+    );
   };
+
+  // useEffect(() => {
+  //   dispatch(
+  //     fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
+  //   );
+  // }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(
+        fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
+      );
+      return () => {};
+    }, [dispatch, position]),
+  );
 
   return (
     <View style={styles.container}>
@@ -62,35 +99,40 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <TouchableOpacity
           disabled={isDisable}
           onPress={() => {
-            if (Array.isArray(item?.position) && item?.position.length === 0) {
-              if (item?.disabled) {
-                showAlert('Service unavailable! Your Plan has been Expired.');
-              } else {
-                showAlert('Wait! GPS Network Error.');
-              }
-            } else if (isNavigationDisabled) {
-              showAlert('Service unavailable! Your Plan has been Expired.');
+            if (isNavigationDisabled) {
+              showAlert(
+                disabled
+                  ? 'Service unavailable! Your Plan has been Expired.'
+                  : 'Wait! GPS Network Error.',
+              );
             } else {
               navigation.navigate('trackingtruck', {
-                deviceId: item?.id,
-                lat: item?.position[0]?.latitude,
-                long: item?.position[0]?.longitude,
+                deviceId: id,
+                lat: position[0]?.latitude,
+                long: position[0]?.longitude,
               });
             }
           }}
           style={styles.textContainer}>
-          <Text style={styles.highlightText}>{item?.name}</Text>
-          <View style={styles.ignBox}>{renderStatus()}</View>
+          <Text style={styles.highlightText}>{name}</Text>
+          <View style={styles.ignBox}>
+            {renderStatus()}
+            <View style={styles.verticalLine} />
+            <View style={styles.row}>
+              <Text style={styles.distanceText}>Ignition</Text>
+              <Text
+                style={[
+                  styles.ignitionText(ignition),
+                  {marginLeft: 5, textTransform: 'uppercase'},
+                ]}>
+                {ignition ? 'on' : 'off'}
+              </Text>
+            </View>
+          </View>
           <View style={styles.iconBox}>
-            <View
-              style={{
-                // borderWidth: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                minWidth: 80,
-              }}>
+            <View style={styles.iconRow}>
               <BatteryIcon
-                size={20}
+                size={15}
                 color={
                   batteryLevel
                     ? batteryLevel > 60
@@ -98,64 +140,92 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                       : 'red'
                     : '#727272'
                 }
-                charge={attributes.charge}
+                charge={charge}
                 batteryLevel={batteryLevel}
               />
-              {attributes.network !== null && (
-                <NetworkIcon color={'green'} size={18} />
-              )}
-              <KeyIcon
-                size={19}
-                color={ignition ? 'green' : backgroundColorNew}
-              />
+              {network !== null && <NetworkIcon color={'green'} size={14} />}
             </View>
-            {attributes.alarm && (
-              <ToggleIconText
-                IconComponent={AlertIcon}
-                text={attributes.alarm}
-                iconSize={20}
-                color={backgroundColorNew}
-                index={2}
-                activeIndex={activeIndex}
-                activeText={false}
-                onPress={() => handlePress(2)}
-              />
-            )}
-            {attributes.fuel && <FuelIcon size={20} color={'#727272'} />}
-            {attributes.geofence && <GeoFencingIcon size={20} />}
+            <View style={styles.iconRow}>
+              {alarm && (
+                <ToggleIconText
+                  IconComponent={AlertIcon}
+                  text={alarm}
+                  iconSize={15}
+                  color={backgroundColorNew}
+                  index={2}
+                  activeIndex={activeIndex}
+                  activeText={false}
+                  onPress={() => handlePress(2)}
+                />
+              )}
+              {fuel && <FuelIcon size={15} color={'#727272'} />}
+              {geofence && <GeoFencingIcon size={15} />}
+            </View>
           </View>
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${totalDistance} KM`}</Text>
-            <Text style={styles.distanceText}>Total Distance</Text>
+            <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
+              2,
+            )} KM`}</Text>
+            <Text style={styles.distanceText}>Today Distance</Text>
+            <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
+              {motion ? 'Running' : 'Stopped'}
+            </Text>
           </View>
         </View>
       </View>
-      <View style={styles.expiryDate}>
-        <Text style={item?.disabled ? styles.expiredText : styles.activeText}>
-          Expire on Feb 20, 2025
-        </Text>
-        <TouchableOpacity
-          disabled={isDisable}
-          onPress={() => {
-            if (Array.isArray(item?.position) && item?.position.length === 0) {
-              if (item?.disabled) {
-                showAlert('Service unavailable! Your Plan has been Expired.');
+      <View
+        style={{
+          backgroundColor: '#F7F7F7',
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+          borderRadius: 8,
+          flexDirection: 'column',
+        }}>
+        <View style={styles.expiryDate}>
+          <View style={styles.addressContainer}>
+            <LocationShadowIcon size={15} color={'#3BA700'} />
+            <View>
+              {fullAddressLoading ? (
+                <ActivityIndicator
+                  size="small"
+                  color={backgroundColorNew}
+                  style={{marginLeft: 20}}
+                />
+              ) : (
+                <Text style={styles.addressText()}>
+                  {fullAddressData?.display_name}
+                </Text>
+              )}
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.center}
+            disabled={isDisable}
+            onPress={() => {
+              if (isNavigationDisabled) {
+                showAlert(
+                  disabled
+                    ? 'Service unavailable! Your Plan has been Expired.'
+                    : 'Wait! GPS Network Error.',
+                );
               } else {
-                showAlert('Wait! GPS Network Error.');
+                navigation.navigate('GpsSetting', {deviceId: id});
               }
-            } else if (isNavigationDisabled) {
-              showAlert('Service unavailable! Your Plan has been Expired.');
-            } else {
-              navigation.navigate('GpsSetting', {deviceId: item?.id});
-            }
+            }}>
+            <SettingIcon size={15} color={backgroundColorNew} />
+          </TouchableOpacity>
+        </View>
+        <Text
+          style={{
+            color: PrivacyPolicy,
+            fontFamily: 'PlusJakartaSans-SemiBold',
+            fontSize: 8,
+            paddingLeft: 25,
           }}>
-          <SettingIcon
-            size={20}
-            color={item?.disabled ? backgroundColorNew : PrivacyPolicy}
-          />
-        </TouchableOpacity>
+          {moment(item?.lastUpdate).format('hh:mm A DD MMM YYYY')}
+        </Text>
       </View>
     </View>
   );
@@ -167,8 +237,10 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
+    // borderTopLeftRadius: 0,
     marginBottom: 20,
     elevation: 2,
+    // shadowColor: 'blue',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -180,36 +252,17 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     justifyContent: 'center',
-    padding: 10,
-  },
-  modelText: {
-    fontWeight: 'bold',
-    paddingBottom: 5,
-  },
-  expiredText: {
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-Italic',
-    fontSize: 12,
-  },
-  activeText: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Italic',
-    fontSize: 12,
-  },
-  expiryDate: {
-    backgroundColor: '#F7F7F7',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    // padding: 10,
+    // borderWidth: 1,
+    paddingTop: 8,
   },
   highlightText: {
     color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    fontSize: 14,
     textAlign: 'left',
     textTransform: 'uppercase',
+    marginBottom: 2,
   },
   distanceBox: {
     paddingHorizontal: 15,
@@ -220,24 +273,28 @@ const styles = StyleSheet.create({
   distanceText: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
+    fontSize: 10,
     textAlign: 'right',
   },
   iconBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginVertical: 10,
-    // borderWidth: 1,
     minWidth: 180,
+    // borderWidth: 1,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 2,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
+    marginTop: 2,
     height: '80%',
   },
-  ignBox: {flexDirection: 'row', alignItems: 'center'},
+  ignBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   imgContainer: {
     padding: 5,
     justifyContent: 'center',
@@ -246,12 +303,55 @@ const styles = StyleSheet.create({
   imgBox: {
     backgroundColor: '#f7f7f7',
     borderRadius: 6,
-    width: 60,
+    width: 65,
     height: 60,
-    marginTop: 10,
+    marginTop: 5,
+    marginLeft: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ignitionStatus: {flexDirection: 'row', borderWidth: 0},
-  ignitionText: {fontFamily: 'PlusJakartaSans-SemiBold'},
+  ignitionText: status => ({
+    color: status ? 'green' : 'red',
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 10,
+  }),
+  addressText: color => ({
+    color: color ? backgroundColorNew : PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-BoldItalic',
+    fontSize: 10,
+    marginLeft: 10,
+  }),
+  inactiveText: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-Italic',
+    fontSize: 12,
+  },
+  lastUpdateText: {
+    color: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-Regular',
+    fontSize: 12,
+  },
+  expiryDate: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  iconRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minWidth: 40,
+    marginRight: 8,
+    // borderWidth: 1,
+  },
+  addressContainer: {
+    maxWidth: '90%',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

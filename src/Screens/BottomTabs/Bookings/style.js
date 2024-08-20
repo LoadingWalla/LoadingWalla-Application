@@ -10,7 +10,7 @@ import {
 } from '../../../Color/color';
 
 export default StyleSheet.create({
-  Container: {flex: 1, backgroundColor: '#FFFDFD'},
+  Container: {flex: 1, backgroundColor: '#FFFDFD', marginBottom: 60},
   bookingContainer: {
     borderRadius: 8,
     elevation: 2,
@@ -151,8 +151,10 @@ export default StyleSheet.create({
     elevation: 5,
     maxHeight: 60,
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: white,
     zIndex: 9999,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   previousBooking: {
     borderWidth: 2,

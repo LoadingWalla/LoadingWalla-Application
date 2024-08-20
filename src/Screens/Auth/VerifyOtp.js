@@ -16,7 +16,6 @@ import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
 import {useTranslation} from 'react-i18next';
-// import RNOtpVerify from 'react-native-otp-verify';
 
 const VerifyOtp = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -33,26 +32,6 @@ const VerifyOtp = ({navigation, route}) => {
     // console.log('Verify Otp', state.data);
     return state.data;
   });
-
-  // useEffect(() => {
-  //   RNOtpVerify.getOtp()
-  //     .then(p =>
-  //       RNOtpVerify.addListener(message => {
-  //         try {
-  //           const otp = /(\d{4})/g.exec(message)[1]; // Regex to extract the OTP
-  //           setOtpvalue(otp);
-  //           setCodeFill(true);
-  //         } catch (error) {
-  //           console.log('Error in OTP extraction', error);
-  //         }
-  //       }),
-  //     )
-  //     .catch(p => console.log(p));
-
-  //   return () => {
-  //     RNOtpVerify.removeListener();
-  //   };
-  // }, []);
 
   useEffect(() => {
     setDelay('599');
@@ -113,9 +92,6 @@ const VerifyOtp = ({navigation, route}) => {
       Toast.show('Fill 4 digit OTP', Toast.LONG);
       return;
     }
-
-    // let langId = await AsyncStorage.getItem('languageID');
-    // dispatch(initVerifyOtp(userId, otpValue, langId, devicetoken));
     verifyOtp(otpValue);
   };
 
@@ -140,7 +116,7 @@ const VerifyOtp = ({navigation, route}) => {
 
   return (
     <KeyboardAvoidingView style={styles.Container}>
-      <View style={[styles.signupBackground, {marginTop: 0}]}>
+      <View style={styles.signupBackground}>
         <View style={styles.otpResendView}>
           <Text style={styles.signupTopTitle}>
             {`${t(Constants.ENTER_OTP_TITLE)} ${mobileNumber} `}

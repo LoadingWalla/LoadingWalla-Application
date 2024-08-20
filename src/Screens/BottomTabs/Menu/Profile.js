@@ -19,7 +19,11 @@ import {Rating} from 'react-native-ratings';
 import {useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
-import {initLogout, initProfile} from '../../../Store/Actions/Actions';
+import {
+  initLogout,
+  initProfile,
+  websocketDisconnect,
+} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   playStoreLink,
@@ -65,14 +69,22 @@ const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
-    useSelector(state => {
-      // console.log('profile Data', state.data);
-      return state.data;
-    });
+  const {
+    UserVerifyPercentage,
+    profileLoading,
+    profileSetupData,
+    Userdata,
+    wsConnected,
+  } = useSelector(state => {
+    // console.log('profile Data', state.data);
+    return state.data;
+  });
 
   useFocusEffect(
     React.useCallback(() => {
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initProfile());
     }, [dispatch, profileSetupData]),
   );
@@ -247,10 +259,10 @@ const Profile = ({navigation, route}) => {
             </View>
           </View>
           <ScrollView
-            style={{flex: 1, marginBottom: Userdata?.user_type === 3 ? 60 : 0}}
+            style={{flex: 1, marginBottom: 60}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            {!Userdata?.user_type === 3 && (
+            {Userdata?.user_type !== 3 && (
               <View style={style.percentageBarView}>
                 <PercentageBar
                   navigation={navigation}
@@ -315,14 +327,14 @@ const Profile = ({navigation, route}) => {
                       }
                     />
                     <View style={style.horizontalLine} />
-                    <MenuItem
+                    {/* <MenuItem
                       title={'GPS Tracking'}
-                      onPress={() => navigation.navigate('GPS')}
+                      onPress={() => navigation.navigate('GpsPurchase')}
                       Icon={
                         <GpsTrackingIcon size={30} color={GradientColor1} />
                       }
                     />
-                    <View style={style.horizontalLine} />
+                    <View style={style.horizontalLine} /> */}
                   </>
                 )}
                 <MenuItem

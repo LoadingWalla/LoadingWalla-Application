@@ -17,6 +17,7 @@ import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
 import {
+  backgroundColorNew,
   GradientColor1,
   GradientColor2,
   GradientColor3,
@@ -205,7 +206,8 @@ const GradientStatusBar = () => {
   return (
     <View style={stylesStatusbar.statusBar}>
       <LinearGradient
-        colors={[GradientColor1, GradientColor2, GradientColor3]}
+        // colors={[GradientColor1, GradientColor2, GradientColor3]}
+        colors={[backgroundColorNew, backgroundColorNew]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         style={stylesStatusbar.gradient}

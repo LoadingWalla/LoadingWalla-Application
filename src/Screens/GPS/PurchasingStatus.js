@@ -5,8 +5,9 @@ import LottieView from 'lottie-react-native';
 import Button from '../../Components/Button';
 
 const PurchasingStatus = ({navigation, route}) => {
-  // const {statusCode} = route.params;
-  const statusCode = 300;
+  const {statusCode} = route.params;
+  // const statusCode = 300;
+  console.log('puchasingstatus', route);
 
   return (
     <View style={styles.fullScreenContainer}>
@@ -32,7 +33,7 @@ const PurchasingStatus = ({navigation, route}) => {
         </View>
         <Button
           title={'Done'}
-          onPress={() => navigation.navigate('Menu')}
+          onPress={() => navigation.navigate('GPS')}
           textStyle={styles.btnText}
           style={styles.btnStyle}
         />

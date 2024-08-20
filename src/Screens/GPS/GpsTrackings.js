@@ -150,9 +150,6 @@ const GpsTrackings = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>GPS Purchases</Text>
-      </View> */}
       {gpsDeviceLoading ? (
         <View style={styles.loadingStyle}>
           <ActivityIndicator size="large" color={backgroundColorNew} />

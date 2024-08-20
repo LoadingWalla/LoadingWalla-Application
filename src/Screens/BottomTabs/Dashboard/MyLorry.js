@@ -5,7 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Constants from '../../../Constants/Constant';
-import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
+import {
+  initMyLoad,
+  initMyLorry,
+  websocketDisconnect,
+} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 import MyLorryItem from '../../../Components/MyLorryItem';
 import DashboardHeader from '../../../Components/DashboardHeader';
@@ -53,6 +57,7 @@ const MyLorry = ({navigation}) => {
     myLorryLoding,
     DashboardUser,
     dashboardLoading,
+    wsConnected,
   } = useSelector(state => {
     console.log('My Lorry/Load', state.data);
     return state.data;
@@ -62,6 +67,9 @@ const MyLorry = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       const fetchUserType = async () => {
         const userType = await AsyncStorage.getItem('UserType');
         setUserType(userType);

@@ -1,5 +1,7 @@
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
+  Image,
   Linking,
   ScrollView,
   StyleSheet,
@@ -7,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
@@ -27,7 +28,11 @@ import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
+import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import AnimatedText from '../../Components/AnimatedText';
+import useFullAddress from '../../hooks/useFullAddress';
+import {fetchAddressRequest} from '../../Store/Actions/Actions';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -43,55 +48,63 @@ const getLivePositions = (wsMessages, deviceId) => {
 
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long} = route.params;
+
   const dispatch = useDispatch();
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addressFetched, setAddressFetched] = useState(false);
+  const [mapType, setMapType] = useState('standard');
+  // const [markerAddress, setMarkerAddress] = useState('Fetching address...');
 
-  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
-    useSelector(state => state.data);
+  const {address, fetchAddress, gpsAddressLoading} =
+    useFullAddress(livePositions);
+  const handleTruckIconPress = () => {
+    console.log('Truck icon pressed. Fetching address...');
+    // setMarkerAddress('Fetching address...');
+
+    if (livePositions.length > 0) {
+      console.log('Live positions:', livePositions);
+      dispatch(
+        fetchAddressRequest(
+          livePositions[livePositions.length - 1].latitude,
+          livePositions[livePositions.length - 1].longitude,
+        ),
+      );
+      if (markerRef.current) {
+        markerRef.current.showCallout();
+      }
+    } else {
+      console.log('No live positions available to fetch the address.');
+    }
+  };
+
+  const {
+    wsMessages,
+    wsConnected,
+    wsDevices,
+    wsPositions,
+    wsEvents,
+    fullAddressData,
+  } = useSelector(state => state.data);
 
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
   const events = wsEvents.filter(e => e.deviceId === deviceId);
 
   useEffect(() => {
-    if (!wsConnected) {
-      setLoading(false);
-    } else {
-      const position = getLivePositions(wsMessages, deviceId);
-      setLivePositions(position);
-      // console.log(444444, position);
-
-      if (position.length > 0) {
-        setLoading(false);
-        animateToPosition(position[position.length - 1]);
-      } else {
-        setLoading(false);
-      }
-    }
-  }, [wsMessages, wsConnected]);
-
-  const animateToPosition = position => {
-    if (mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: position.latitude,
-        longitude: position.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+    if (device?.name) {
+      navigation.setOptions({
+        title: device.name,
       });
-
-      animatedMarkerPosition
-        .timing({
-          latitude: position.latitude,
-          longitude: position.longitude,
-          duration: 1000,
-          useNativeDriver: false,
-        })
-        .start();
     }
+  }, [device, navigation]);
+
+  const toggleMapType = () => {
+    setMapType(prevType =>
+      prevType === 'standard' ? 'satellite' : 'standard',
+    );
   };
 
   const animatedMarkerPosition = useRef(
@@ -103,11 +116,34 @@ const TrackingTruck = ({navigation, route}) => {
     }),
   ).current;
 
+  useEffect(() => {
+    if (wsConnected) {
+      const position = getLivePositions(wsMessages, deviceId);
+      setLivePositions(position);
+
+      if (position.length > 0) {
+        setLoading(false);
+        updateMarkerPosition(position[position.length - 1]);
+      }
+    } else {
+      setLoading(false);
+    }
+  }, [wsMessages, wsConnected]);
+
+  const updateMarkerPosition = position => {
+    animatedMarkerPosition
+      .timing({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        duration: 1000,
+        useNativeDriver: false,
+      })
+      .start();
+  };
+
   const handlePress = index => {
     setActiveIndex(activeIndex === index ? null : index);
   };
-
-  const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
 
   const handleNavigate = () => {
     const destination =
@@ -121,18 +157,30 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  const handleFetchAddress = () => {
-    setAddressFetched(false);
-    fetchAddress();
-    setAddressFetched(true);
+  const animateToDevicePosition = () => {
+    if (livePositions.length > 0 && mapRef.current) {
+      const latestPosition = livePositions[livePositions.length - 1];
+      mapRef.current.animateToRegion({
+        latitude: latestPosition.latitude,
+        longitude: latestPosition.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (markerRef.current) {
+      markerRef.current.showCallout();
+    }
+  }, [address]);
 
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Distance:</Text>
+            <Text style={styles.distanceText}>Today Distance:</Text>
             <Text style={styles.highlightText}>
               {positions[0]?.attributes?.distance
                 ? `${(positions[0]?.attributes?.distance).toFixed(3)} KM`
@@ -144,7 +192,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={FuelIcon}
               text="Fuel"
-              iconSize={30}
+              iconSize={25}
               color={'#727272'}
               index={0}
               activeIndex={activeIndex}
@@ -153,7 +201,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={BatteryIcon}
               text={positions[0]?.attributes?.batteryLevel || 'Battery'}
-              iconSize={25}
+              iconSize={20}
               color={
                 positions[0]?.attributes?.batteryLevel
                   ? positions[0]?.attributes?.batteryLevel > 60
@@ -168,7 +216,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={NetworkIcon}
               text="Network"
-              iconSize={23}
+              iconSize={18}
               color={'#727272'}
               index={2}
               activeIndex={activeIndex}
@@ -177,7 +225,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={GeoFencingIcon}
               text="GeoFencing"
-              iconSize={28}
+              iconSize={18}
               color={'#727272'}
               index={3}
               activeIndex={activeIndex}
@@ -185,19 +233,9 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={KeyIcon}
-              text={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'ON'
-                  : 'OFF'
-              }
-              iconSize={23}
-              color={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'green'
-                  : 'red'
-              }
+              text={positions?.[0]?.attributes?.ignition ? 'ON' : 'OFF'}
+              iconSize={18}
+              color={positions?.[0]?.attributes?.ignition ? 'green' : 'red'}
               index={4}
               activeIndex={activeIndex}
               onPress={() => handlePress(4)}
@@ -206,7 +244,7 @@ const TrackingTruck = ({navigation, route}) => {
             <ToggleIconText
               IconComponent={AlertIcon}
               text="Damage"
-              iconSize={27}
+              iconSize={23}
               color={'#727272'}
               index={5}
               activeIndex={activeIndex}
@@ -215,29 +253,12 @@ const TrackingTruck = ({navigation, route}) => {
           </View>
         </View>
         <TouchableOpacity
+          style={styles.settingsButton}
           onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
-          <SettingIcon size={30} color={backgroundColorNew} />
+          <SettingIcon size={25} color={backgroundColorNew} />
         </TouchableOpacity>
       </View>
       <View style={styles.mapContainer}>
-        <View style={styles.mapHeader}>
-          <Text style={styles.fetchedAddressText}>{device?.name}</Text>
-          <View style={styles.verticalLine} />
-          <TouchableOpacity onPress={handleFetchAddress}>
-            {gpsAddressLoading ? (
-              <ActivityIndicator size="small" color={backgroundColorNew} />
-            ) : (
-              <AnimatedText
-                text={address}
-                style={[
-                  styles.addressText,
-                  addressFetched && styles.fetchedAddressText,
-                ]}
-                showAnimation={true}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
         <View style={styles.mapView}>
           {loading ? (
             <View style={styles.loaderContainer}>
@@ -247,6 +268,7 @@ const TrackingTruck = ({navigation, route}) => {
             <MapView
               ref={mapRef}
               style={StyleSheet.absoluteFillObject}
+              mapType={mapType}
               initialRegion={{
                 latitude: lat || livePositions[0]?.latitude || 0,
                 longitude: long || livePositions[0]?.longitude || 0,
@@ -262,45 +284,47 @@ const TrackingTruck = ({navigation, route}) => {
               )}
               {livePositions.length > 0 && (
                 <Marker.Animated
+                  ref={markerRef}
+                  title={'Address'}
+                  description={fullAddressData.display_name}
                   coordinate={animatedMarkerPosition}
-                  // title={'Speed'}
-                  // description={
-                  //   positions[0]?.speed
-                  //     ? `${(positions[0]?.speed * 1.852).toFixed(2)} km/h`
-                  //     : '0 km/h'
-                  // }
-                  rotation={
-                    livePositions[livePositions.length - 1].course || 0
-                  }>
-                  <TruckNavigationIcon
-                    width={50}
-                    height={50}
-                    // style={{
-                    //   transform: [
-                    //     {
-                    //       rotate: `${
-                    //         livePositions[livePositions.length - 1].course || 0
-                    //       }deg`,
-                    //     },
-                    //   ],
-                    // }}
-                  />
+                  rotation={livePositions[livePositions.length - 1].course || 0}
+                  onPress={handleTruckIconPress}>
+                  <TruckNavigationIcon width={50} height={50} />
                 </Marker.Animated>
               )}
             </MapView>
           )}
+          <View style={styles.speedButton}>
+            <Text style={styles.speedText}>
+              {Math.ceil(positions[0]?.speed)}
+            </Text>
+            <Text style={styles.speedUnit}>kmph</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.mapToggleButton}
+            onPress={toggleMapType}>
+            <Image
+              source={
+                mapType === 'standard'
+                  ? require('../../../assets/satellite-view.png')
+                  : require('../../../assets/satellites.png')
+              }
+              style={{width: 25, height: 25}}
+            />
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.alertButton}
             onPress={() => navigation.navigate('GpsAlert')}>
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
-          <View
-            style={styles.alertButton}
-            onPress={() => navigation.navigate('GpsAlert')}>
-            <AlertsIcon size={20} />
-            <Text style={styles.alertButtonText}>Alerts</Text>
-          </View>
+          <TouchableOpacity
+            style={styles.gpsButton}
+            onPress={animateToDevicePosition}>
+            <GpsIcon2 size={20} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomContainer}>
@@ -327,7 +351,7 @@ const TrackingTruck = ({navigation, route}) => {
           />
           <IconWithName
             IconComponent={FuelPumpIcon}
-            iconSize={30}
+            iconSize={25}
             title={'Fuel Pump'}
             onPress={() =>
               navigation.navigate('FuelPump', {
@@ -337,8 +361,8 @@ const TrackingTruck = ({navigation, route}) => {
             }
           />
           <IconWithName
-            IconComponent={FuelPumpIcon}
-            iconSize={30}
+            IconComponent={TheftIcon}
+            iconSize={25}
             title={'Theft'}
             onPress={() =>
               navigation.navigate('FuelPump', {
@@ -403,8 +427,33 @@ const styles = StyleSheet.create({
     elevation: 3,
     position: 'absolute',
     bottom: 100,
-    right: 10,
+    left: 10,
     paddingVertical: 10,
+  },
+  speedButton: {
+    position: 'absolute',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    borderRadius: 50,
+    backgroundColor: '#FFFFFF',
+    elevation: 3,
+    left: 10,
+    top: 10,
+    paddingVertical: 5,
+  },
+  speedText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  speedUnit: {
+    textAlign: 'center',
+    fontSize: 10,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   gpsButton: {
     justifyContent: 'center',
@@ -418,6 +467,25 @@ const styles = StyleSheet.create({
     bottom: 100,
     right: 10,
   },
+  geofencingButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    width: 120,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    elevation: 3,
+    position: 'absolute',
+    bottom: 100,
+    right: 10,
+    paddingVertical: 10,
+  },
+  geofencingButtonText: {
+    marginRight: 8,
+    textAlign: 'center',
+    fontSize: 12,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -429,7 +497,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 10,
-    marginTop: 10,
+    marginTop: -10,
   },
   leftTopContainer: {minWidth: '70%', paddingHorizontal: 5},
   mapContainer: {flex: 1},
@@ -437,9 +505,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
+    padding: 8,
+    minHeight: 35,
   },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
@@ -488,9 +555,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addressText: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Italic',
-    color: 'blue',
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    color: backgroundColorNew,
     textDecorationLine: 'underline',
   },
   fetchedAddressText: {
@@ -498,8 +565,24 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBold',
     textTransform: 'uppercase',
     textDecorationLine: 'none',
-    fontSize: 14,
-    minWidth: 60,
+    fontSize: 12,
     textAlign: 'center',
+  },
+  mapToggleButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 3,
+    backgroundColor: '#ffffff',
+    borderRadius: 50,
+    elevation: 3,
+  },
+  settingsButton: {
+    backgroundColor: '#f8f8f8',
+    padding: 8,
+    borderRadius: 50,
+    elevation: 5,
+    shadowOffset: {x: 10, y: 20},
+    shadowColor: backgroundColorNew,
   },
 });

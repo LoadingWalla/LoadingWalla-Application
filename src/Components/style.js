@@ -101,6 +101,7 @@ export default StyleSheet.create({
     marginBottom: marginBottom ? 0 : 20,
     justifyContent: 'space-between',
     alignItems: 'center',
+    // borderWidth: 1,
   }),
   dashboardHeaderImage: {
     height: 40,

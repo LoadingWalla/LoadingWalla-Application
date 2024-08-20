@@ -51,23 +51,22 @@ const DeliveryDetails = ({navigation, route}) => {
 
   const handleContinue = () => {
     // navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    console.log(
-      fullName,
-      alternativePhoneNumber,
-      plan_id,
-      gpsCount,
-      rcNumbers,
-      // deliveryAddress,
-      address.city,
-      address.deliveryAddress,
-      address.landmark,
-      address.pinCode,
-      address.state,
-    );
+    // console.log(
+    //   fullName,
+    //   alternativePhoneNumber,
+    //   plan_id,
+    //   gpsCount,
+    //   rcNumbers,
+    //   // deliveryAddress,
+    //   address.city,
+    //   address.deliveryAddress,
+    //   address.landmark,
+    //   address.pinCode,
+    //   address.state,
+    // );
     if (
       !fullName ||
       !alternativePhoneNumber ||
-      // !deliveryAddress ||
       Object.values(address).some(field => !field) ||
       rcNumbers.includes('')
     ) {

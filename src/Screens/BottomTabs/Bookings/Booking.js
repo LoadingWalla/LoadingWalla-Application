@@ -17,6 +17,7 @@ import {
   acceptRejectFailure,
   initAcceptReject,
   initBooking,
+  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 import BookingItem from '../../../Components/Bookingitem';
 import DashboardHeader from '../../../Components/DashboardHeader';
@@ -39,6 +40,7 @@ const Booking = ({navigation}) => {
     accept_rejectStatus,
     DashboardUser,
     dashboardLoading,
+    wsConnected,
   } = useSelector(state => {
     // console.log('My Bookings', state.data);
     return state.data;
@@ -52,6 +54,9 @@ const Booking = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initBooking(2));
     }, [dispatch]),
   );
@@ -110,6 +115,7 @@ const Booking = ({navigation}) => {
         ) : BookingData?.length > 0 ? (
           <FlatList
             keyExtractor={item => item?.id.toString()}
+            showsVerticalScrollIndicator={false}
             data={BookingData}
             renderItem={renderItem}
             refreshControl={
@@ -118,6 +124,8 @@ const Booking = ({navigation}) => {
           />
         ) : (
           <ScrollView
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }

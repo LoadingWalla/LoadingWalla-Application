@@ -1,9 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
 const IconWithName = ({title, IconComponent, iconSize, onPress}) => (
   <TouchableOpacity style={styles.iconView} onPress={onPress}>
-    <IconComponent size={iconSize} />
+    <View style={{borderWidth: 0, minWidth: 20}}>
+      <IconComponent size={iconSize} />
+    </View>
     <Text style={styles.iconText}>{title}</Text>
   </TouchableOpacity>
 );
@@ -21,6 +23,6 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 10,
-    fontFamily: 'PlusJakartaSans-Regular',
+    fontFamily: 'PlusJakartaSans-SemiBold',
   },
 });

@@ -59,14 +59,12 @@ const GpsSetting = ({navigation, route}) => {
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <GpsSettingItem detailInput={true} />
-        <GpsSettingItem detailInput={true} />
-        <GpsSettingItem detailInput={false} />
-        <GpsSettingItem detailInput={false} />
-        <GpsSettingItem detailInput={true} />
-        <GpsSettingItem detailInput={true} />
-        <GpsSettingItem detailInput={false} />
-        <GpsSettingItem detailInput={false} />
+        <GpsSettingItem detailInput={false} title={'Ignition on'} />
+        <GpsSettingItem detailInput={false} title={'Ignition off'} />
+        <GpsSettingItem detailInput={false} title={'Speed limit exceeded'} />
+        <GpsSettingItem detailInput={false} title={'Device moving'} />
+        <GpsSettingItem detailInput={false} title={'Geofence entered'} />
+        <GpsSettingItem detailInput={false} title={'Geofence exited'} />
       </ScrollView>
       <View>
         <Button
@@ -109,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
-    textTransform: 'capitalize',
+    textTransform: 'uppercase',
   },
   btnStyle: {
     flexDirection: 'row',

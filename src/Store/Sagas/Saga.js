@@ -4,6 +4,8 @@ import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import gpsApi from '../../Utils/gpsApi';
+import googleApi from '../../Utils/FetchGoogleApi';
+import FetchNominatimApi from '../../Utils/FetchNominatiApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -1090,7 +1092,7 @@ export function* fetchGpsAddress({username, password, latitude, longitude}) {
       username,
       password,
     );
-    // console.log('Gps Devices', data);
+    console.log('Gps Devices Address', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsAddressSuccess(data?.data));
@@ -1253,6 +1255,7 @@ export function* placeGpsOrderSaga({
   state,
 }) {
   console.log(
+    2223333,
     name,
     mobile,
     plan_id,
@@ -1278,9 +1281,9 @@ export function* placeGpsOrderSaga({
     body.append('state', state);
     body.append('landmark', landmark);
     body.append('pincode', pinCode);
-    // console.log(9999999, body);
+    console.log(9999999, body);
     const data = yield multiPartApi.post('gps-order', body);
-    // console.log('API response------PaymentVerify', data);
+    console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
       yield put(actions.placeGpsOrderSuccess(data));
     } else {
@@ -1307,6 +1310,26 @@ export function* fetchGpsOrderDetail({id}) {
     }
   } catch (error) {
     yield put(actions.fetchGpsOrderDetailFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+// full address
+export function* fetchFullAddress({lat, lan}) {
+  try {
+    const data = yield FetchNominatimApi().get(
+      `reverse?format=json&lat=${lat}&lon=${lan}`,
+    );
+    // console.log('Gps Address--------------', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchAddressSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchAddressFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchAddressFailure(error?.message));
     // console.log('error', error);
   }
 }

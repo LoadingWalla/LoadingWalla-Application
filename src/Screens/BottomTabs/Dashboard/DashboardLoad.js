@@ -12,9 +12,12 @@ import Swiper from 'react-native-swiper';
 import DashboardShimmer from '../../../Components/Shimmer/DashboardShimmer';
 import {GradientColor2} from '../../../Color/color';
 import DashboardHeader from '../../../Components/DashboardHeader';
-
 import {useDispatch, useSelector} from 'react-redux';
-import {initDashboard, myPostLoadFailure} from '../../../Store/Actions/Actions';
+import {
+  initDashboard,
+  myPostLoadFailure,
+  websocketDisconnect,
+} from '../../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
@@ -40,6 +43,7 @@ const DashboardLoad = ({navigation}) => {
     findLoadData,
     findLoadLoading,
     findLoadStatus,
+    wsConnected,
   } = useSelector(state => {
     // console.log("My Lorry/Load", state.data);
     return state.data;
@@ -62,6 +66,9 @@ const DashboardLoad = ({navigation}) => {
 
   useFocusEffect(
     React.useCallback(() => {
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
       dispatch(initDashboard());
     }, [dispatch]),
   );
@@ -139,7 +146,7 @@ const DashboardLoad = ({navigation}) => {
   };
 
   return (
-    <>
+    <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 60}}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -221,7 +228,7 @@ const DashboardLoad = ({navigation}) => {
           )}
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 };
 

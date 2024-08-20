@@ -156,89 +156,103 @@ const PostLoads = ({navigation, route}) => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      style={{flex: 1, backgroundColor: '#FDFDFD'}}>
+      style={styleSheet.scrollViewBox}>
       <View style={styleSheet.backgroundViewContainer}>
-        <SearchFilter
-          defaultValue={searchFrom}
-          leftTitle={t(Constants.FROM)}
-          closeIconClick={() => closeIconClick('from')}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
-          onSearchPress={() => navigateToSeach('from')}
-        />
-        <SearchFilter
-          defaultValue={searchTo}
-          leftTitle={t(Constants.TO)}
-          closeIconClick={() => closeIconClick('to')}
-          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
-          onSearchPress={() => navigateToSeach()}
-        />
+        <View>
+          <SearchFilter
+            defaultValue={searchFrom}
+            leftTitle={t(Constants.FROM)}
+            closeIconClick={() => closeIconClick('from')}
+            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+            onSearchPress={() => navigateToSeach('from')}
+          />
+          <SearchFilter
+            defaultValue={searchTo}
+            leftTitle={t(Constants.TO)}
+            closeIconClick={() => closeIconClick('to')}
+            placeholder={t(Constants.SELECT_LOCATION_TITLE)}
+            onSearchPress={() => navigateToSeach()}
+          />
+        </View>
         <View style={styleSheet.ItemView}>
-          <Text style={styleSheet.label}>{`${t(
-            Constants.QUANTITY,
-          )} (Ton)`}</Text>
-          <TextInputField
-            isPhone
-            value={quantity}
-            // onChangeText={(e) => setQuantity(e)}
-            onChangeText={e => {
-              const sanitizedInput = e.replace(/\s+/g, '');
-              setQuantity(sanitizedInput);
-            }}
-          />
-          <Text style={styleSheet.label}>{t(Constants.MATERIAL_NAME)}</Text>
-          <TextInputField
-            value={materialName}
-            // onChangeText={(e) => setMaterialName(e)}
-            onChangeText={e => {
-              // const sanitizedInput = e.replace(/\s+/g, '');
-              const sanitizedInput = e.replace(/[^a-zA-Z0-9]/g, '');
-              setMaterialName(sanitizedInput);
-            }}
-          />
-          <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
-          <TruckItem
-            click={e => setTruckItem(e?.id)}
-            backgroundStyle={{
-              padding: 20,
-              marginRight: 10,
-              marginBottom: 10,
-              borderRadius: 8,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            imageRequire={true}
-            horizontal={true}
-            checkIcon={true}
-            unseleckBackground={{
-              padding: 20,
-              backgroundColor: inputColor,
-              borderRadius: 8,
-              marginRight: 10,
-              marginBottom: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            renderItem={DashboardData}
-          />
-          <Text style={styleSheet.label}>{t(Constants.PRICE)}</Text>
-          <TextInputField
-            isPhone={true}
-            value={price}
-            // onChangeText={(e) => setPrice(e)}
-            onChangeText={e => {
-              const sanitizedInput = e.replace(/\s+/g, '');
-              setPrice(sanitizedInput);
-            }}
-          />
-          <Text style={styleSheet.label}>{t(Constants.SELECT_PRICE_TYPE)}</Text>
-          <TruckItem
-            backgroundStyle={styleSheet.truckTypeItem}
-            unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
-            horizontal={true}
-            checkIcon={false}
-            renderItem={truckLoadCapacity}
-            click={e => setWeight(e)}
-          />
+          <View>
+            <Text style={styleSheet.label}>{`${t(
+              Constants.QUANTITY,
+            )} (Ton)`}</Text>
+            <TextInputField
+              isPhone
+              value={quantity}
+              // onChangeText={(e) => setQuantity(e)}
+              onChangeText={e => {
+                const sanitizedInput = e.replace(/\s+/g, '');
+                setQuantity(sanitizedInput);
+              }}
+            />
+          </View>
+          <View>
+            <Text style={styleSheet.label}>{t(Constants.MATERIAL_NAME)}</Text>
+            <TextInputField
+              value={materialName}
+              // onChangeText={(e) => setMaterialName(e)}
+              onChangeText={e => {
+                // const sanitizedInput = e.replace(/\s+/g, '');
+                const sanitizedInput = e.replace(/[^a-zA-Z0-9]/g, '');
+                setMaterialName(sanitizedInput);
+              }}
+            />
+          </View>
+          <View>
+            <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
+            <TruckItem
+              click={e => setTruckItem(e?.id)}
+              backgroundStyle={{
+                padding: 20,
+                marginRight: 10,
+                // marginBottom: 10,
+                borderRadius: 8,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              imageRequire={true}
+              horizontal={true}
+              checkIcon={true}
+              unseleckBackground={{
+                padding: 20,
+                backgroundColor: inputColor,
+                borderRadius: 8,
+                marginRight: 10,
+                // marginBottom: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              renderItem={DashboardData}
+            />
+          </View>
+          <View>
+            <Text style={styleSheet.label}>{t(Constants.PRICE)}</Text>
+            <TextInputField
+              isPhone={true}
+              value={price}
+              // onChangeText={(e) => setPrice(e)}
+              onChangeText={e => {
+                const sanitizedInput = e.replace(/\s+/g, '');
+                setPrice(sanitizedInput);
+              }}
+            />
+          </View>
+          <View style={styleSheet.selectTrucType}>
+            <Text style={styleSheet.label}>
+              {t(Constants.SELECT_PRICE_TYPE)}
+            </Text>
+            <TruckItem
+              backgroundStyle={styleSheet.truckTypeItem}
+              unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+              horizontal={true}
+              checkIcon={false}
+              renderItem={truckLoadCapacity}
+              click={e => setWeight(e)}
+            />
+          </View>
           <Button
             loading={myPostLoadLoading}
             onPress={() => postLoadSubmit()}
@@ -279,6 +293,7 @@ const styleSheet = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f19e72',
+    // borderWidth: 1,
   },
   TyuckTypeUnSelectItem: {
     height: 45,
@@ -297,12 +312,18 @@ const styleSheet = StyleSheet.create({
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  ItemView: {marginTop: 30},
+  ItemView: {marginTop: 20},
   backgroundViewContainer: {
     flex: 1,
     padding: 10,
-    backgroundColor: pageBackground,
-    height: '100%',
     justifyContent: 'center',
+    // backgroundColor: pageBackground,
+    // height: '100%',
+    // borderWidth: 1,
   },
+  scrollViewBox: {
+    flex: 1,
+    backgroundColor: '#FDFDFD',
+  },
+  selectTrucType: {minWidth: '45%', maxWidth: '50%'},
 });

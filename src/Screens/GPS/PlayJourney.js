@@ -159,7 +159,7 @@ export default function PlayJourney({navigation, route}) {
                 longitude: newPosition.longitude,
               },
               // Do not change zoom level
-              zoom: 14, // Set a default zoom level, adjust as needed
+              zoom: 50, // Set a default zoom level, adjust as needed
               duration: 1000 / playbackSpeed,
             });
           }
@@ -382,8 +382,8 @@ export default function PlayJourney({navigation, route}) {
                   .start();
                 if (mapRef.current && newPosition) {
                   mapRef.current.animateToRegion({
-                    latitude: newPosition.latitude,
-                    longitude: newPosition.longitude,
+                    latitude: newPosition?.latitude,
+                    longitude: newPosition?.longitude,
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                   });
