@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -41,70 +41,13 @@ const MyGpsScreen = ({navigation}) => {
     wsConnected,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log('MY Gps Screeen --------', state.data);
+    return state.data;
+  });
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
-  // const onRefresh = useCallback(() => {
-  //   setRefreshing(true);
-
-  //   if (gpsTokenData) {
-  //     const {cookie, email, password} = gpsTokenData;
-  //     dispatch(websocketConnect(cookie));
-  //     dispatch(
-  //       fetchGpsDevicesRequest(
-  //         encodeURIComponent(email),
-  //         encodeURIComponent(password),
-  //       ),
-  //     );
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-
-  //   setRefreshing(false);
-  // }, [dispatch, gpsTokenData]);
-
-  // useEffect(() => {
-  //   if (gpsTokenData) {
-  //     const {cookie, email, password} = gpsTokenData;
-  //     dispatch(websocketConnect(cookie));
-  //     dispatch(
-  //       fetchGpsDevicesRequest(
-  //         encodeURIComponent(email),
-  //         encodeURIComponent(password),
-  //       ),
-  //     );
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-  // }, [dispatch, gpsTokenData]);
-
-  // // Function to fetch GPS data
-  // const fetchGpsData = useCallback(() => {
-  //   if (gpsTokenData) {
-  //     const {cookie, email, password} = gpsTokenData;
-  //     dispatch(websocketConnect(cookie));
-  //     dispatch(
-  //       fetchGpsDevicesRequest(
-  //         encodeURIComponent(email),
-  //         encodeURIComponent(password),
-  //       ),
-  //     );
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-  // }, [dispatch, gpsTokenData]);
-
-  // const onRefresh = useCallback(async () => {
-  //   setRefreshing(true);
-  //   await fetchGpsData();
-  //   setRefreshing(false);
-  // }, [fetchGpsData]);
-
-  // useEffect(() => {
-  //   fetchGpsData();
-  // }, [fetchGpsData]);
 
   // Function to fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -127,24 +70,21 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [dispatch, gpsTokenData]);
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
-    await fetchGpsData();
+    fetchGpsData();
     setRefreshing(false);
   }, [fetchGpsData]);
 
   useFocusEffect(
     useCallback(() => {
-      // Check if the user is logged in and has valid gpsTokenData
       if (!gpsTokenData || !gpsTokenData.cookie) {
-        // If gpsTokenData is missing or invalid, navigate to login screen
-        // navigation.navigate('Login');
+        dispatch(fetchTokenRequest());
         return;
       }
 
       fetchGpsData();
 
-      // Initialize profile if needed
       if (!DashboardUser) {
         dispatch(initProfile());
       }
@@ -154,7 +94,7 @@ const MyGpsScreen = ({navigation}) => {
         dispatch(fetchTokenFailure());
         Snackbar.dismiss();
       };
-    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser, navigation]),
+    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser]),
   );
 
   useEffect(() => {
@@ -168,19 +108,6 @@ const MyGpsScreen = ({navigation}) => {
       });
     }
   }, [wsError]);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (!DashboardUser) {
-        dispatch(initProfile());
-      }
-      return () => {
-        dispatch(websocketDisconnect());
-        dispatch(fetchTokenFailure());
-        Snackbar.dismiss();
-      };
-    }, [dispatch, DashboardUser]),
-  );
 
   const mergeDeviceData = useCallback(
     (devices = [], latestDevices = [], positions = [], events = []) => {
@@ -234,19 +161,23 @@ const MyGpsScreen = ({navigation}) => {
         wsPositions,
         wsEvents,
       );
+      console.log(999999999, updatedData);
+
       setMergedDeviceData(updatedData);
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
-  const renderGpsItem = useCallback(
-    ({item}) => (
-      <GpsItem
-        item={item}
-        icon={true}
-        navigation={navigation}
-        isDisable={!wsConnected}
-      />
-    ),
+  const renderGpsItem = useMemo(
+    () =>
+      ({item}) =>
+        (
+          <GpsItem
+            item={item}
+            icon={true}
+            navigation={navigation}
+            isDisable={!wsConnected}
+          />
+        ),
     [navigation, wsConnected],
   );
 

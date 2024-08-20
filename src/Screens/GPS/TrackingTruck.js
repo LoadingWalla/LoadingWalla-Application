@@ -297,7 +297,7 @@ const TrackingTruck = ({navigation, route}) => {
           )}
           <View style={styles.speedButton}>
             <Text style={styles.speedText}>
-              {Math.ceil(positions[0]?.speed)}
+              {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
             </Text>
             <Text style={styles.speedUnit}>kmph</Text>
           </View>

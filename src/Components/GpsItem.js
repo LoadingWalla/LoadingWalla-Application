@@ -24,6 +24,9 @@ import {useFocusEffect} from '@react-navigation/native';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const [fullAddress, setFullAddress] = useState('Show Full Address');
+  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+
   const dispatch = useDispatch();
   // console.log(66666, item);
   const {fullAddressLoading, fullAddressData, fullAddressStatus} = useSelector(
@@ -69,19 +72,31 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
-  // useEffect(() => {
-  //   dispatch(
-  //     fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
-  //   );
-  // }, []);
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(
-        fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
+  const handleAddressPress = async () => {
+    setIsFetchingAddress(true);
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
       );
-      return () => {};
-    }, []),
-  );
+      const data = await response.json();
+      setFullAddress(data.display_name);
+    } catch (error) {
+      showAlert('Failed to fetch address.');
+    } finally {
+      setIsFetchingAddress(false);
+    }
+  };
+
+  // const handleAddressPress = () => {
+  //   dispatch(fetchAddressRequest(position[0].latitude, position[0].longitude));
+  // };
+
+  // const getAddressDisplay = () => {
+  //   if (fullAddressData && fullAddressData.length > 0) {
+  //     return fullAddressData[0].display_name;
+  //   }
+  //   return 'Show Full Address';
+  // };
 
   return (
     <View style={styles.container}>
@@ -186,7 +201,25 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <View style={styles.expiryDate}>
           <View style={styles.addressContainer}>
             <LocationShadowIcon size={15} color={'#3BA700'} />
-            <View>
+            <TouchableOpacity
+              onPress={handleAddressPress}
+              disabled={fullAddress !== 'Show Full Address'}>
+              {isFetchingAddress ? (
+                <ActivityIndicator
+                  size="small"
+                  color={backgroundColorNew}
+                  style={{marginLeft: 20}}
+                />
+              ) : (
+                <Text
+                  style={styles.addressText(
+                    fullAddress === 'Show Full Address' ? true : false,
+                  )}>
+                  {fullAddress}
+                </Text>
+              )}
+            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={handleAddressPress}>
               {fullAddressLoading ? (
                 <ActivityIndicator
                   size="small"
@@ -194,11 +227,12 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                   style={{marginLeft: 20}}
                 />
               ) : (
-                <Text style={styles.addressText()}>
-                  {fullAddressData?.display_name}
+                <Text
+                  style={styles.addressText(fullAddressData ? true : false)}>
+                  {getAddressDisplay()}
                 </Text>
               )}
-            </View>
+            </TouchableOpacity> */}
           </View>
           <TouchableOpacity
             style={styles.center}
