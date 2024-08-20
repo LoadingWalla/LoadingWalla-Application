@@ -1500,6 +1500,10 @@ const reducer = (state = initialState, action) => {
         fullAddressData: [],
       });
 
+    // Clear Store on logout
+    case actionTypes.CLEAR_STORE:
+      return initialState;
+
     // default state
     default:
       return state;

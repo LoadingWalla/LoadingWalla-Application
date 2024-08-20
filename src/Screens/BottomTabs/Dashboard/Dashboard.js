@@ -70,7 +70,7 @@ const Dashboard = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initDashboard());
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   const navigateToSeach = val => {

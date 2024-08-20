@@ -46,39 +46,116 @@ const MyGpsScreen = ({navigation}) => {
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = useCallback(() => {
+  // const onRefresh = useCallback(() => {
+  //   setRefreshing(true);
+
+  //   if (gpsTokenData) {
+  //     const {cookie, email, password} = gpsTokenData;
+  //     dispatch(websocketConnect(cookie));
+  //     dispatch(
+  //       fetchGpsDevicesRequest(
+  //         encodeURIComponent(email),
+  //         encodeURIComponent(password),
+  //       ),
+  //     );
+  //   } else {
+  //     dispatch(fetchTokenRequest());
+  //   }
+
+  //   setRefreshing(false);
+  // }, [dispatch, gpsTokenData]);
+
+  // useEffect(() => {
+  //   if (gpsTokenData) {
+  //     const {cookie, email, password} = gpsTokenData;
+  //     dispatch(websocketConnect(cookie));
+  //     dispatch(
+  //       fetchGpsDevicesRequest(
+  //         encodeURIComponent(email),
+  //         encodeURIComponent(password),
+  //       ),
+  //     );
+  //   } else {
+  //     dispatch(fetchTokenRequest());
+  //   }
+  // }, [dispatch, gpsTokenData]);
+
+  // // Function to fetch GPS data
+  // const fetchGpsData = useCallback(() => {
+  //   if (gpsTokenData) {
+  //     const {cookie, email, password} = gpsTokenData;
+  //     dispatch(websocketConnect(cookie));
+  //     dispatch(
+  //       fetchGpsDevicesRequest(
+  //         encodeURIComponent(email),
+  //         encodeURIComponent(password),
+  //       ),
+  //     );
+  //   } else {
+  //     dispatch(fetchTokenRequest());
+  //   }
+  // }, [dispatch, gpsTokenData]);
+
+  // const onRefresh = useCallback(async () => {
+  //   setRefreshing(true);
+  //   await fetchGpsData();
+  //   setRefreshing(false);
+  // }, [fetchGpsData]);
+
+  // useEffect(() => {
+  //   fetchGpsData();
+  // }, [fetchGpsData]);
+
+  // Function to fetch GPS data
+  const fetchGpsData = useCallback(() => {
+    if (
+      gpsTokenData &&
+      gpsTokenData.cookie &&
+      gpsTokenData.email &&
+      gpsTokenData.password
+    ) {
+      const {cookie, email, password} = gpsTokenData;
+      dispatch(websocketConnect(cookie));
+      dispatch(
+        fetchGpsDevicesRequest(
+          encodeURIComponent(email),
+          encodeURIComponent(password),
+        ),
+      );
+    } else {
+      dispatch(fetchTokenRequest());
+    }
+  }, [dispatch, gpsTokenData]);
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-
-    if (gpsTokenData) {
-      const {cookie, email, password} = gpsTokenData;
-      dispatch(websocketConnect(cookie));
-      dispatch(
-        fetchGpsDevicesRequest(
-          encodeURIComponent(email),
-          encodeURIComponent(password),
-        ),
-      );
-    } else {
-      dispatch(fetchTokenRequest());
-    }
-
+    await fetchGpsData();
     setRefreshing(false);
-  }, [dispatch, gpsTokenData]);
+  }, [fetchGpsData]);
 
-  useEffect(() => {
-    if (gpsTokenData) {
-      const {cookie, email, password} = gpsTokenData;
-      dispatch(websocketConnect(cookie));
-      dispatch(
-        fetchGpsDevicesRequest(
-          encodeURIComponent(email),
-          encodeURIComponent(password),
-        ),
-      );
-    } else {
-      dispatch(fetchTokenRequest());
-    }
-  }, [dispatch, gpsTokenData]);
+  useFocusEffect(
+    useCallback(() => {
+      // Check if the user is logged in and has valid gpsTokenData
+      if (!gpsTokenData || !gpsTokenData.cookie) {
+        // If gpsTokenData is missing or invalid, navigate to login screen
+        // navigation.navigate('Login');
+        return;
+      }
+
+      fetchGpsData();
+
+      // Initialize profile if needed
+      if (!DashboardUser) {
+        dispatch(initProfile());
+      }
+
+      return () => {
+        dispatch(websocketDisconnect());
+        dispatch(fetchTokenFailure());
+        Snackbar.dismiss();
+      };
+    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser, navigation]),
+  );
 
   useEffect(() => {
     if (wsError) {

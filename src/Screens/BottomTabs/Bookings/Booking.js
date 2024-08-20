@@ -58,7 +58,7 @@ const Booking = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initBooking(2));
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   const bookingStatus = (bookingId, status, isCancel) => {

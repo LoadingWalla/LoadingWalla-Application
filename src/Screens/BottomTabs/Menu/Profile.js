@@ -20,6 +20,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
 import {
+  clearStore,
   initLogout,
   initProfile,
   websocketDisconnect,
@@ -86,7 +87,7 @@ const Profile = ({navigation, route}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initProfile());
-    }, [dispatch, profileSetupData]),
+    }, [dispatch, profileSetupData, wsConnected]),
   );
 
   const bigImage = () => {
@@ -128,6 +129,7 @@ const Profile = ({navigation, route}) => {
           onPress: async () => {
             try {
               dispatch(initLogout());
+              dispatch(clearStore());
               await AsyncStorage.removeItem('UserType');
               await AsyncStorage.removeItem('auth-token');
 

@@ -70,7 +70,7 @@ const DashboardLoad = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initDashboard());
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   useEffect(() => {

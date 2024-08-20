@@ -80,7 +80,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
       );
       return () => {};
-    }, [dispatch, position]),
+    }, []),
   );
 
   return (
