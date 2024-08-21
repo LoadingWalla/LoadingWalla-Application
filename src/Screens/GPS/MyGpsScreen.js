@@ -18,13 +18,13 @@ import Button from '../../Components/Button';
 import GpsItem from '../../Components/GpsItem';
 import {
   fetchGpsDevicesRequest,
-  fetchTokenFailure,
+  fetchPositionsRequest,
   fetchTokenRequest,
   initProfile,
   websocketConnect,
-  websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor} from '../../Color/color';
+import moment from 'moment';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -51,12 +51,7 @@ const MyGpsScreen = ({navigation}) => {
 
   // Function to fetch GPS data
   const fetchGpsData = useCallback(() => {
-    if (
-      gpsTokenData &&
-      gpsTokenData.cookie &&
-      gpsTokenData.email &&
-      gpsTokenData.password
-    ) {
+    if (gpsTokenData !== null) {
       const {cookie, email, password} = gpsTokenData;
       dispatch(websocketConnect(cookie));
       dispatch(
@@ -78,20 +73,11 @@ const MyGpsScreen = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (!gpsTokenData || !gpsTokenData.cookie) {
-        dispatch(fetchTokenRequest());
-        return;
-      }
-
       fetchGpsData();
-
       if (!DashboardUser) {
         dispatch(initProfile());
       }
-
       return () => {
-        dispatch(websocketDisconnect());
-        dispatch(fetchTokenFailure());
         Snackbar.dismiss();
       };
     }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser]),
@@ -147,6 +133,7 @@ const MyGpsScreen = ({navigation}) => {
       return Array.from(deviceMap.values()).map(device => {
         device.position = device.position || [];
         device.events = device.events || [];
+        console.log(123456775576974, device);
         return device;
       });
     },
@@ -161,8 +148,6 @@ const MyGpsScreen = ({navigation}) => {
         wsPositions,
         wsEvents,
       );
-      console.log(999999999, updatedData);
-
       setMergedDeviceData(updatedData);
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
@@ -261,11 +246,14 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#FFFFFF',
     zIndex: 9999,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   contentContainer: {
     flex: 1,
     marginVertical: 60,
     padding: 10,
+    // borderWidth: 1,
   },
   btnStyle: {
     flexDirection: 'row',
@@ -289,6 +277,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   notFoundText: {
     color: '#707070',
