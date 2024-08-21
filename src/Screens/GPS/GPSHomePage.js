@@ -11,7 +11,11 @@ import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {initDashboard, websocketDisconnect} from '../../Store/Actions/Actions';
+import {
+  fetchTokenRequest,
+  initDashboard,
+  websocketDisconnect,
+} from '../../Store/Actions/Actions';
 import DashboardHeader from '../../Components/DashboardHeader';
 import {textColor, titleColor, white} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
@@ -20,17 +24,19 @@ const GPSHomePage = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {DashboardUser, dashboardLoading} = useSelector(state => {
+  const {DashboardUser, dashboardLoading, gpsTokenData} = useSelector(state => {
     // console.log('GPSHomePage Truck', state.data);
     return state.data;
   });
 
   useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
     const backAction = () => {
       BackHandler.exitApp();
       return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,

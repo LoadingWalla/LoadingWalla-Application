@@ -14,7 +14,6 @@ import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
-  websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -47,7 +46,10 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsLoading,
     gpsStopsError,
     gpsStopsData,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log('Play Journey -----------------------', state.data);
+    return state.data;
+  });
 
   const coordinates = useMemo(
     () =>
@@ -120,7 +122,7 @@ export default function PlayJourney({navigation, route}) {
         ),
       );
       return () => {
-        dispatch(websocketConnect(gpsTokenData.cookie));
+        // dispatch(websocketConnect(gpsTokenData.cookie));
       };
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
@@ -159,7 +161,7 @@ export default function PlayJourney({navigation, route}) {
                 longitude: newPosition.longitude,
               },
               // Do not change zoom level
-              zoom: 50, // Set a default zoom level, adjust as needed
+              zoom: 30, // Set a default zoom level, adjust as needed
               duration: 1000 / playbackSpeed,
             });
           }

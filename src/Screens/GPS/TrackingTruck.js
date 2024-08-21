@@ -56,12 +56,11 @@ const TrackingTruck = ({navigation, route}) => {
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mapType, setMapType] = useState('standard');
-  // const [markerAddress, setMarkerAddress] = useState('Fetching address...');
 
   const {address, fetchAddress, gpsAddressLoading} =
     useFullAddress(livePositions);
   const handleTruckIconPress = () => {
-    console.log('Truck icon pressed. Fetching address...');
+    // console.log('Truck icon pressed. Fetching address...');
     // setMarkerAddress('Fetching address...');
 
     if (livePositions.length > 0) {
@@ -252,11 +251,17 @@ const TrackingTruck = ({navigation, route}) => {
             />
           </View>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.settingsButton}
           onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
           <SettingIcon size={25} color={backgroundColorNew} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={styles.speedButton}>
+          <Text style={styles.speedText}>
+            {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
+          </Text>
+          <Text style={styles.speedUnit}>kmph</Text>
+        </View>
       </View>
       <View style={styles.mapContainer}>
         <View style={styles.mapView}>
@@ -285,22 +290,34 @@ const TrackingTruck = ({navigation, route}) => {
               {livePositions.length > 0 && (
                 <Marker.Animated
                   ref={markerRef}
-                  title={'Address'}
-                  description={fullAddressData.display_name}
                   coordinate={animatedMarkerPosition}
-                  rotation={livePositions[livePositions.length - 1].course || 0}
                   onPress={handleTruckIconPress}>
-                  <TruckNavigationIcon width={50} height={50} />
+                  <View style={styles.markerContainer}>
+                    <View style={styles.addressContainer}>
+                      {gpsAddressLoading ? (
+                        <ActivityIndicator size="small" color="#000" />
+                      ) : (
+                        <Text style={styles.addressText}>
+                          {fullAddressData.display_name || 'Show Full Address'}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={styles.arrowBottom} />
+
+                    <View style={styles.truckIconContainer}>
+                      <TruckNavigationIcon width={50} height={50} />
+                    </View>
+                  </View>
                 </Marker.Animated>
               )}
             </MapView>
           )}
-          <View style={styles.speedButton}>
+          {/* <View style={styles.speedButton}>
             <Text style={styles.speedText}>
               {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
             </Text>
             <Text style={styles.speedUnit}>kmph</Text>
-          </View>
+          </View> */}
           <TouchableOpacity
             style={styles.mapToggleButton}
             onPress={toggleMapType}>
@@ -431,17 +448,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   speedButton: {
-    position: 'absolute',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 40,
-    borderRadius: 50,
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    left: 10,
-    top: 10,
-    paddingVertical: 5,
+    right: 20,
+    // width: 40,
+    // borderRadius: 50,
+    // backgroundColor: '#FFFFFF',
+    // position: 'absolute',
+    // borderWidth: 1,
+    // elevation: 3,
+    // left: 10,
+    // top: 10,
+    // paddingVertical: 5,
   },
   speedText: {
     textAlign: 'center',
@@ -557,8 +576,8 @@ const styles = StyleSheet.create({
   addressText: {
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-SemiBoldItalic',
-    color: backgroundColorNew,
-    textDecorationLine: 'underline',
+    color: '#FFFFFF',
+    // textDecorationLine: 'underline',
   },
   fetchedAddressText: {
     color: titleColor,
@@ -584,5 +603,35 @@ const styles = StyleSheet.create({
     elevation: 5,
     shadowOffset: {x: 10, y: 20},
     shadowColor: backgroundColorNew,
+  },
+
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // borderWidth: 1,
+  },
+  addressContainer: {
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    elevation: 5,
+    backgroundColor: 'rgba(1, 1, 0, 0.7)',
+    maxWidth: 300,
+  },
+  truckIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  arrowBottom: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'rgba(1, 1, 0, 0.7)',
+    transform: [{rotate: '180deg'}],
+    alignSelf: 'center',
   },
 });

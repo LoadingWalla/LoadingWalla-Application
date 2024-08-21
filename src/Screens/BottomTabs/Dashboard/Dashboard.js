@@ -4,6 +4,7 @@ import Swiper from 'react-native-swiper';
 import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  fetchTokenRequest,
   initDashboard,
   websocketDisconnect,
 } from '../../../Store/Actions/Actions';
@@ -46,12 +47,16 @@ const Dashboard = ({navigation}) => {
     dashboardLoading,
     loadTruckLoading,
     wsConnected,
+    gpsTokenData,
   } = useSelector(state => {
-    // console.log('Dashboard Truck', state.data);
+    console.log('Dashboard Truck', state.data);
     return state.data;
   });
 
   useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
     const backAction = () => {
       BackHandler.exitApp();
       return true;

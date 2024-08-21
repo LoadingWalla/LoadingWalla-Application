@@ -264,25 +264,25 @@ const Profile = ({navigation, route}) => {
             style={{flex: 1, marginBottom: 60}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            {Userdata?.user_type !== 3 && (
-              <View style={style.percentageBarView}>
-                <PercentageBar
-                  navigation={navigation}
-                  percentage={UserVerifyPercentage || 0}
-                  verify={Userdata?.verify}
-                  style={style}
-                />
-                <TouchableOpacity
-                  style={style.buttonContainer}
-                  onPress={() => navigation.navigate('Wallet')}>
-                  <WalletIcon size={25} color={'#F0C200'} />
-                  <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                  <View style={style.rightArrowView}>
-                    <RightArrow size={20} color={GradientColor1} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+            {/* {Userdata?.user_type !== 3 && ( */}
+            <View style={style.percentageBarView}>
+              <PercentageBar
+                navigation={navigation}
+                percentage={UserVerifyPercentage || 0}
+                verify={Userdata?.verify}
+                style={style}
+              />
+              <TouchableOpacity
+                style={style.buttonContainer}
+                onPress={() => navigation.navigate('Wallet')}>
+                <WalletIcon size={25} color={'#F0C200'} />
+                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
+                <View style={style.rightArrowView}>
+                  <RightArrow size={20} color={GradientColor1} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* )} */}
 
             <View style={style.section}>
               <View style={style.sectionHeader}>

@@ -1032,7 +1032,7 @@ export function* fetchTranscations() {
 export function* fetchTokenSaga() {
   try {
     const data = yield API.get('gps/get-token');
-    // console.log('Gps Token', data);
+    // console.log('Gps Token------------------------', data);
     if (data?.data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchTokenSuccess(data?.data?.data));

@@ -14,6 +14,7 @@ import {GradientColor2} from '../../../Color/color';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  fetchTokenRequest,
   initDashboard,
   myPostLoadFailure,
   websocketDisconnect,
@@ -44,8 +45,9 @@ const DashboardLoad = ({navigation}) => {
     findLoadLoading,
     findLoadStatus,
     wsConnected,
+    gpsTokenData,
   } = useSelector(state => {
-    // console.log("My Lorry/Load", state.data);
+    console.log('My Lorry/Load', state.data);
     return state.data;
   });
 
@@ -61,6 +63,21 @@ const DashboardLoad = ({navigation}) => {
       backAction,
     );
 
+    return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
     return () => backHandler.remove();
   }, []);
 
