@@ -49,7 +49,7 @@ const Dashboard = ({navigation}) => {
     wsConnected,
     gpsTokenData,
   } = useSelector(state => {
-    console.log('Dashboard Truck', state.data);
+    // console.log('Dashboard Truck', state.data);
     return state.data;
   });
 

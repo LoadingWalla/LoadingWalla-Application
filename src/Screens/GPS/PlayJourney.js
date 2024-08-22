@@ -46,6 +46,7 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsLoading,
     gpsStopsError,
     gpsStopsData,
+    wsConnected,
   } = useSelector(state => {
     console.log('Play Journey -----------------------', state.data);
     return state.data;
@@ -100,27 +101,32 @@ export default function PlayJourney({navigation, route}) {
     React.useCallback(() => {
       const defaultFrom = from || moment().utc().startOf('day').toISOString();
       const defaultTo = to || moment().utc().endOf('day').toISOString();
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
 
-      // Disconnect WebSocket and call REST APIs
-      dispatch(websocketDisconnect());
-      dispatch(
-        fetchPositionsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
-      dispatch(
-        fetchGpsStopsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
+      if (!gpsReplayData) {
+        dispatch(
+          fetchPositionsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
+      }
+      if (gpsStopsData === null) {
+        dispatch(
+          fetchGpsStopsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
+      }
       return () => {
         // dispatch(websocketConnect(gpsTokenData.cookie));
       };
@@ -293,8 +299,8 @@ export default function PlayJourney({navigation, route}) {
                 initialRegion={initialRegion}>
                 <Polyline
                   coordinates={coordinates}
-                  strokeColor="#000"
-                  strokeWidth={6}
+                  strokeColor="#0158AF"
+                  strokeWidth={3}
                 />
                 {currentPosition && (
                   <Marker.Animated
@@ -304,17 +310,7 @@ export default function PlayJourney({navigation, route}) {
                       2,
                     )} km/h`}
                     rotation={currentPosition.course || 0}>
-                    <TruckNavigationIcon
-                      width={50}
-                      height={50}
-                      style={{
-                        transform: [
-                          // {
-                          //   rotate: `${currentPosition.course}deg`,
-                          // },
-                        ],
-                      }}
-                    />
+                    <TruckNavigationIcon width={50} height={50} />
                   </Marker.Animated>
                 )}
                 {gpsStopsData?.map((stop, index) => (
@@ -482,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 10,
-    marginTop: 5,
+    // marginTop: 5,
     elevation: 2,
   },
   mapContainer: {flex: 1},

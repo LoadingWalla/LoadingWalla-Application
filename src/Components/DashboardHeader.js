@@ -42,7 +42,7 @@ const DashboardHeader = ({
             <TouchableOpacity
               style={style.rowDirection}
               onPress={() => gotoProfile()}>
-              <Shield size={20} verified={verify} />
+              <Shield size={13} verified={verify} />
               <Text style={style.dashboardHeaderVerifiedTitle(verify)}>
                 {verify === 1
                   ? `${t(Constants.VERIFIED)}`

@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -9,18 +9,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {
+  backgroundColorNew,
+  GradientColor1,
+  titleColor,
+} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
-import useAddress from '../../hooks/useAddress';
 import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
 import AlertIcon from '../../../assets/SVG/AlertIcon';
 import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
-import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
@@ -30,9 +32,13 @@ import IconWithName from '../../Components/IconWithName';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
-import AnimatedText from '../../Components/AnimatedText';
-import useFullAddress from '../../hooks/useFullAddress';
-import {fetchAddressRequest} from '../../Store/Actions/Actions';
+import {
+  fetchAddressFailure,
+  fetchAddressRequest,
+  fetchPositionsRequest,
+} from '../../Store/Actions/Actions';
+import {useFocusEffect} from '@react-navigation/native';
+import moment from 'moment';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -43,6 +49,7 @@ const getLivePositions = (wsMessages, deviceId) => {
       latitude: position.latitude,
       longitude: position.longitude,
       course: position.course,
+      totalDistance: position.attributes.totalDistance,
     }));
 };
 
@@ -56,13 +63,24 @@ const TrackingTruck = ({navigation, route}) => {
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mapType, setMapType] = useState('standard');
+  const [totalDistance, setTotalDistance] = useState(0);
 
-  const {address, fetchAddress, gpsAddressLoading} =
-    useFullAddress(livePositions);
+  const {
+    wsMessages,
+    wsConnected,
+    wsDevices,
+    wsPositions,
+    wsEvents,
+    fullAddressData,
+    fullAddressLoading,
+    gpsReplayData,
+    gpsTokenData,
+  } = useSelector(state => {
+    console.log('Tracking Truck -------------->>>>>', state.data);
+    return state.data;
+  });
+
   const handleTruckIconPress = () => {
-    // console.log('Truck icon pressed. Fetching address...');
-    // setMarkerAddress('Fetching address...');
-
     if (livePositions.length > 0) {
       console.log('Live positions:', livePositions);
       dispatch(
@@ -79,18 +97,69 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  const {
-    wsMessages,
-    wsConnected,
-    wsDevices,
-    wsPositions,
-    wsEvents,
-    fullAddressData,
-  } = useSelector(state => state.data);
-
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
   const events = wsEvents.filter(e => e.deviceId === deviceId);
+  // console.log(999999999, positions);
+
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: lat || gpsReplayData?.[0]?.latitude || 0,
+      longitude: long || gpsReplayData?.[0]?.longitude || 0,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }),
+  ).current;
+
+  useEffect(() => {
+    if (gpsReplayData && gpsReplayData.length > 0) {
+      const replayPositions = gpsReplayData.map(position => ({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        totalDistance: position.attributes.totalDistance,
+      }));
+      setLivePositions(replayPositions);
+      setLoading(false);
+      if (replayPositions.length > 0) {
+        animatedMarkerPosition.setValue({
+          latitude: replayPositions[replayPositions.length - 1].latitude,
+          longitude: replayPositions[replayPositions.length - 1].longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      }
+    }
+  }, [gpsReplayData]);
+
+  const fetchPositions = useCallback(() => {
+    if (gpsTokenData && deviceId) {
+      const defaultFrom = moment().utc().startOf('day').toISOString();
+      const defaultTo = moment().utc().endOf('day').toISOString();
+      dispatch(
+        fetchPositionsRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+    }
+  }, [dispatch, gpsTokenData, deviceId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPositions();
+    }, [fetchPositions]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        dispatch(fetchAddressFailure());
+      };
+    }, []),
+  );
 
   useEffect(() => {
     if (device?.name) {
@@ -106,24 +175,21 @@ const TrackingTruck = ({navigation, route}) => {
     );
   };
 
-  const animatedMarkerPosition = useRef(
-    new AnimatedRegion({
-      latitude: lat || 0,
-      longitude: long || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
-  ).current;
-
   useEffect(() => {
     if (wsConnected) {
       const position = getLivePositions(wsMessages, deviceId);
-      setLivePositions(position);
-
       if (position.length > 0) {
-        setLoading(false);
+        setLivePositions(prevPositions => [
+          ...prevPositions,
+          ...position.map(p => ({
+            latitude: p.latitude,
+            longitude: p.longitude,
+            totalDistance: p.totalDistance,
+          })),
+        ]);
         updateMarkerPosition(position[position.length - 1]);
       }
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -169,10 +235,14 @@ const TrackingTruck = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    if (markerRef.current) {
-      markerRef.current.showCallout();
+    if (livePositions.length > 1) {
+      const startPosition = livePositions[0];
+      const endPosition = livePositions[livePositions.length - 1];
+      const distanceCovered =
+        (endPosition.totalDistance - startPosition.totalDistance) / 1000;
+      setTotalDistance(distanceCovered.toFixed(2));
     }
-  }, [address]);
+  }, [fetchPositions]);
 
   return (
     <View style={styles.container}>
@@ -180,11 +250,7 @@ const TrackingTruck = ({navigation, route}) => {
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
             <Text style={styles.distanceText}>Today Distance:</Text>
-            <Text style={styles.highlightText}>
-              {positions[0]?.attributes?.distance
-                ? `${(positions[0]?.attributes?.distance).toFixed(3)} KM`
-                : '0 KM'}
-            </Text>
+            <Text style={styles.highlightText}>{`${totalDistance} km`}</Text>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
@@ -251,11 +317,6 @@ const TrackingTruck = ({navigation, route}) => {
             />
           </View>
         </View>
-        {/* <TouchableOpacity
-          style={styles.settingsButton}
-          onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
-          <SettingIcon size={25} color={backgroundColorNew} />
-        </TouchableOpacity> */}
         <View style={styles.speedButton}>
           <Text style={styles.speedText}>
             {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
@@ -280,11 +341,11 @@ const TrackingTruck = ({navigation, route}) => {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}>
-              {positions[0]?.attributes?.motion && (
+              {livePositions.length > 0 && (
                 <Polyline
                   coordinates={livePositions}
-                  strokeColor="#000"
-                  strokeWidth={6}
+                  strokeColor="#0158AF"
+                  strokeWidth={2}
                 />
               )}
               {livePositions.length > 0 && (
@@ -294,8 +355,20 @@ const TrackingTruck = ({navigation, route}) => {
                   onPress={handleTruckIconPress}>
                   <View style={styles.markerContainer}>
                     <View style={styles.addressContainer}>
-                      {gpsAddressLoading ? (
-                        <ActivityIndicator size="small" color="#000" />
+                      {fullAddressLoading ? (
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                          }}>
+                          <Text style={styles.addressText}>
+                            Getting Address...
+                          </Text>
+                          <ActivityIndicator
+                            size="small"
+                            color={GradientColor1}
+                          />
+                        </View>
                       ) : (
                         <Text style={styles.addressText}>
                           {fullAddressData.display_name || 'Show Full Address'}
@@ -303,7 +376,6 @@ const TrackingTruck = ({navigation, route}) => {
                       )}
                     </View>
                     <View style={styles.arrowBottom} />
-
                     <View style={styles.truckIconContainer}>
                       <TruckNavigationIcon width={50} height={50} />
                     </View>
@@ -312,12 +384,6 @@ const TrackingTruck = ({navigation, route}) => {
               )}
             </MapView>
           )}
-          {/* <View style={styles.speedButton}>
-            <Text style={styles.speedText}>
-              {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
-            </Text>
-            <Text style={styles.speedUnit}>kmph</Text>
-          </View> */}
           <TouchableOpacity
             style={styles.mapToggleButton}
             onPress={toggleMapType}>
@@ -327,7 +393,7 @@ const TrackingTruck = ({navigation, route}) => {
                   ? require('../../../assets/satellite-view.png')
                   : require('../../../assets/satellites.png')
               }
-              style={{width: 25, height: 25}}
+              style={{width: 40, height: 40}}
             />
           </TouchableOpacity>
 
@@ -452,15 +518,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     right: 20,
-    // width: 40,
-    // borderRadius: 50,
-    // backgroundColor: '#FFFFFF',
-    // position: 'absolute',
-    // borderWidth: 1,
-    // elevation: 3,
-    // left: 10,
-    // top: 10,
-    // paddingVertical: 5,
   },
   speedText: {
     textAlign: 'center',
@@ -591,7 +648,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    padding: 3,
     backgroundColor: '#ffffff',
     borderRadius: 50,
     elevation: 3,

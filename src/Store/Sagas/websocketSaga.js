@@ -87,7 +87,7 @@ function* handleWebSocketConnection(cookie) {
             yield put(actions.updateEvents(events));
           }
         } else {
-          console.log('Received empty payload in WEBSOCKET_MESSAGE');
+          // console.log('Received empty payload in WEBSOCKET_MESSAGE');
         }
       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
         console.log('WebSocket connection closed');

@@ -195,7 +195,7 @@ const ViewDetail = ({navigation, route}) => {
                   destination={destination}
                   apikey={GOOGLE_MAPS_APIKEY}
                   strokeWidth={6}
-                  strokeColor="#7e7e7e"
+                  strokeColor="#0158AF"
                   optimizeWaypoints={true}
                 />
                 <MapViewDirections
@@ -203,7 +203,7 @@ const ViewDetail = ({navigation, route}) => {
                   destination={offsetCoordinates(destination, true)}
                   apikey={GOOGLE_MAPS_APIKEY}
                   strokeWidth={2}
-                  strokeColor="white"
+                  strokeColor={GradientColor1}
                   lineDashPattern={[2, 10]}
                   optimizeWaypoints={true}
                 />

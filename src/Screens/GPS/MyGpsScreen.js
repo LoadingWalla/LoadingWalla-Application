@@ -18,13 +18,11 @@ import Button from '../../Components/Button';
 import GpsItem from '../../Components/GpsItem';
 import {
   fetchGpsDevicesRequest,
-  fetchPositionsRequest,
   fetchTokenRequest,
   initProfile,
   websocketConnect,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor} from '../../Color/color';
-import moment from 'moment';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -133,7 +131,7 @@ const MyGpsScreen = ({navigation}) => {
       return Array.from(deviceMap.values()).map(device => {
         device.position = device.position || [];
         device.events = device.events || [];
-        console.log(123456775576974, device);
+        // console.log(123456775576974, device);
         return device;
       });
     },

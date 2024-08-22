@@ -128,9 +128,9 @@ export default StyleSheet.create({
     borderRadius: 5,
   },
   dashboardHeaderTitle: {
-    fontSize: 17,
+    fontSize: 14,
     color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontFamily: 'PlusJakartaSans-ExtraBold',
   },
   rowDirection: {
     flexDirection: 'row',
@@ -141,10 +141,12 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   dashboardHeaderVerifiedTitle: color => ({
-    fontSize: 12,
+    fontSize: 10,
     color: color ? 'green' : GradientColor2,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    marginLeft: 5,
+    // marginLeft: 5,
+    // borderWidth: 1,
+    textAlign: 'center',
   }),
   headerCallView: {
     flexDirection: 'row',
