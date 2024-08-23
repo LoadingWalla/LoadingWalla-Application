@@ -14,7 +14,6 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import * as Constants from '../../Constants/Constant';
 import DashboardHeader from '../../Components/DashboardHeader';
-import Button from '../../Components/Button';
 import GpsItem from '../../Components/GpsItem';
 import {
   fetchGpsDevicesRequest,
@@ -22,6 +21,8 @@ import {
   initProfile,
   // websocketConnect,
 } from '../../Store/Actions/Actions';
+import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import {backgroundColorNew, textColor} from '../../Color/color';
 
@@ -93,6 +94,19 @@ const MyGpsScreen = ({navigation}) => {
       });
     }
   }, [wsError]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!DashboardUser) {
+        dispatch(initProfile());
+      }
+      return () => {
+        // dispatch(websocketDisconnect());
+        // dispatch(fetchTokenFailure());
+        Snackbar.dismiss();
+      };
+    }, [dispatch, DashboardUser]),
+  );
 
   const mergeDeviceData = useCallback(
     (devices = [], latestDevices = [], positions = [], events = []) => {
@@ -204,13 +218,27 @@ const MyGpsScreen = ({navigation}) => {
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              <View style={styles.notFoundView}>
-                <Image
-                  source={require('../../../assets/noGps.png')}
-                  resizeMode="contain"
-                  style={styles.splashImage}
-                />
-                <Text style={styles.notFoundText}>No GPS available!</Text>
+              <View style={styles.homeView}>
+                <View style={styles.notFoundView}>
+                  <Image
+                    source={require('../../../assets/noGps.png')}
+                    resizeMode="contain"
+                    style={styles.splashImage(250, 250)}
+                  />
+                  <Text style={styles.notFoundText}>No GPS available!</Text>
+                  <Text style={styles.subText}>
+                    Get a GPS Plan for your vehicle
+                  </Text>
+                </View>
+                <View style={styles.getNowView}>
+                  <Text style={styles.offerText}>Buy and save up to 50%</Text>
+                  <InnerButton
+                    navigation={() => navigation.navigate('BuyGPS')}
+                    title={'Get Now'}
+                    enabledStyle={styles.btnStyle}
+                    textStyle={styles.btnText}
+                  />
+                </View>
               </View>
             }
             refreshControl={
@@ -218,12 +246,6 @@ const MyGpsScreen = ({navigation}) => {
             }
           />
         )}
-        <Button
-          title="Buy GPS"
-          onPress={() => navigation.navigate('BuyGPS')}
-          textStyle={styles.btnText}
-          style={styles.btnStyle}
-        />
       </View>
     </View>
   );
@@ -254,37 +276,68 @@ const styles = StyleSheet.create({
     padding: 10,
     // borderWidth: 1,
   },
-  btnStyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 5,
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
   loadingStyle: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  notFoundView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderWidth: 1,
   },
   notFoundText: {
     color: '#707070',
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 28,
   },
-  splashImage: {
-    height: 250,
-    width: 250,
+
+  btnStyle: {
+    borderWidth: 2,
+    borderRadius: 8,
+    backgroundColor: '#3CA604',
+    borderColor: '#3CA604',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '50%',
+    alignSelf: 'center',
+  },
+  btnText: {
+    fontSize: 16,
+    color: textColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'center',
+  },
+  homeView: {
+    // borderWidth: 1,
+    flex: 1,
+    marginVertical: 60,
+    justifyContent: 'center',
+  },
+  notFoundView: {
+    // borderWidth: 1,
+    flex: 0.75,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // borderWidth: 1,
+  },
+  getNowView: {
+    // borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 0.25,
+  },
+  offerText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 14,
+    color: '#3BA700',
+    textAlign: 'center',
+    paddingVertical: 10,
+  },
+  splashImage: (height, width) => ({
+    height: height,
+    width: width,
+  }),
+  subText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    marginTop: 15,
   },
 });

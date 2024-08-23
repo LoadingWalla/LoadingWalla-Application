@@ -39,8 +39,6 @@ import {
 } from '../../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
-import MapViewDirections from 'react-native-maps-directions';
-
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -56,8 +54,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  const {deviceId, lat, long, item} = route.params;
-  console.log(8888888888888, item);
+  const {deviceId, lat, long} = route.params;
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -355,35 +352,12 @@ const TrackingTruck = ({navigation, route}) => {
                 longitudeDelta: 0.0421,
               }}>
               {livePositions.length > 0 && (
-                <MapViewDirections
-                  origin={{
-                    latitude: livePositions[0].latitude,
-                    longitude: livePositions[0].longitude,
-                  }}
-                  destination={{
-                    latitude: livePositions[livePositions.length - 1].latitude,
-                    longitude:
-                      livePositions[livePositions.length - 1].longitude,
-                  }}
-                  apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
-                  strokeWidth={3}
-                  strokeColor="hotpink"
-                  optimizeWaypoints={true}
-                  onReady={result => {
-                    console.log(`Distance: ${result.distance} km`);
-                    console.log(`Duration: ${result.duration} min.`);
-                    setTotalDistance(result.distance.toFixed(2)); // Update the distance state
-                  }}
-                  onError={errorMessage => {
-                    console.error('Error in MapViewDirections:', errorMessage);
-                  }}
                 <Polyline
                   coordinates={livePositions}
                   strokeColor="#0158AF"
                   strokeWidth={2}
                 />
               )}
-
               {livePositions.length > 0 && (
                 <Marker.Animated
                   ref={markerRef}
@@ -407,6 +381,7 @@ const TrackingTruck = ({navigation, route}) => {
                         </View>
                       ) : (
                         <Text style={styles.addressText}>
+                          {/* {fullAddressData.display_name || 'Show Full Address'} */}
                           {fullAddressData || 'Show Full Address'}
                         </Text>
                       )}

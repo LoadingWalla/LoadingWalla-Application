@@ -598,7 +598,7 @@ function MyGpsBottomTabs() {
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
-        initialRouteName={'GPS'}
+        initialRouteName={'MyGPS'}
         screenOptions={({route}) => ({
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
@@ -625,15 +625,11 @@ function MyGpsBottomTabs() {
           },
         })}>
         <Tab.Screen
-          name={'MyGPS'}
-          component={MyGpsScreen}
+          name={'GPS'}
+          component={GPSHomePage}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <GpsRoadIcon size={22} color={backgroundColorNew} />
-              ) : (
-                <GpsRoadIcon size={22} color={'#000000'} />
-              ),
+              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({
@@ -662,11 +658,15 @@ function MyGpsBottomTabs() {
           })}
         />
         <Tab.Screen
-          name={'GPS'}
-          component={GPSHomePage}
+          name={'MyGPS'}
+          component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
+              focused ? (
+                <GpsRoadIcon size={22} color={backgroundColorNew} />
+              ) : (
+                <GpsRoadIcon size={22} color={'#000000'} />
+              ),
             headerShown: false,
           }}
           listeners={({navigation, route}) => ({
@@ -694,6 +694,7 @@ function MyGpsBottomTabs() {
             },
           })}
         />
+
         <Tab.Screen
           name={t(Constants.MENU)}
           component={Profile}

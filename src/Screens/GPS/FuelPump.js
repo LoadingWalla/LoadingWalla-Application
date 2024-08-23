@@ -16,7 +16,7 @@ const fetchData = async (latitude, longitude, type) => {
     const response = await FetchGoogleApi().get('/place/nearbysearch/json', {
       params: {
         location: `${latitude},${longitude}`,
-        radius: 10000, // 5km radius
+        radius: 10000, // 10km radius
         type: type,
       },
     });

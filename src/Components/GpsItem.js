@@ -66,21 +66,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
-  const handleAddressPress = async () => {
-    setIsFetchingAddress(true);
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position[0]?.latitude}&lon=${position[0]?.longitude}`,
-      );
-      const data = await response.json();
-      setFullAddress(data.display_name);
-    } catch (error) {
-      showAlert('Failed to fetch address.');
-    } finally {
-      setIsFetchingAddress(false);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -109,6 +94,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 deviceId: id,
                 lat: position[0]?.latitude,
                 long: position[0]?.longitude,
+                item,
               });
             }
           }}
@@ -185,24 +171,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <View style={styles.expiryDate}>
           <View style={styles.addressContainer}>
             <LocationShadowIcon size={15} color={'#3BA700'} />
-            <TouchableOpacity
-              onPress={handleAddressPress}
-              disabled={fullAddress !== 'Show Full Address'}>
-              {isFetchingAddress ? (
-                <ActivityIndicator
-                  size="small"
-                  color={backgroundColorNew}
-                  style={{marginLeft: 20}}
-                />
-              ) : (
-                <Text
-                  style={styles.addressText(
-                    fullAddress === 'Show Full Address' ? true : false,
-                  )}>
-                  {fullAddress}
-                </Text>
-              )}
-            </TouchableOpacity>
+            <Text style={styles.addressText(false)}>{item.address}</Text>
           </View>
           <TouchableOpacity
             style={styles.center}

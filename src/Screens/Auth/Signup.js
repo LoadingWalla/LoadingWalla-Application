@@ -35,7 +35,7 @@ const Signup = ({navigation, route}) => {
   const dispatch = useDispatch();
 
   const {data, loading, dashboardStatus} = useSelector(state => {
-    // console.log('signup screen', state.data);
+    console.log('signup screen', state.data);
     return state.data;
   });
   const handleCheckBoxChange = () => {
