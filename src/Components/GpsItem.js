@@ -24,14 +24,10 @@ import {useFocusEffect} from '@react-navigation/native';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const dispatch = useDispatch();
-  // console.log(66666, item);
-  const {fullAddressLoading, fullAddressData, fullAddressStatus} = useSelector(
-    state => {
-      // console.log(7777777777, state.data);
-      return state.data;
-    },
-  );
+  const [fullAddress, setFullAddress] = useState('Show Full Address');
+  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+
+  console.log(66666, item);
 
   const {position = [], status, name, disabled, id, lastUpdate} = item;
   const attributes = position[0]?.attributes || {};
@@ -69,20 +65,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
-  // useEffect(() => {
-  //   dispatch(
-  //     fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
-  //   );
-  // }, []);
-  useFocusEffect(
-    useCallback(() => {
-      dispatch(
-        fetchAddressRequest(position[0]?.latitude, position[0]?.longitude),
-      );
-      return () => {};
-    }, [dispatch, position]),
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -94,6 +76,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               }}
               style={styles.image}
             />
+            {/* <VehicleIcon category={item.category} size={50} color="#000" /> */}
           </View>
         </View>
         <TouchableOpacity
@@ -110,6 +93,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 deviceId: id,
                 lat: position[0]?.latitude,
                 long: position[0]?.longitude,
+                item,
               });
             }
           }}
@@ -122,10 +106,10 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               <Text style={styles.distanceText}>Ignition</Text>
               <Text
                 style={[
-                  styles.ignitionText(ignition),
+                  styles.ignitionText(ignition || motion),
                   {marginLeft: 5, textTransform: 'uppercase'},
                 ]}>
-                {ignition ? 'on' : 'off'}
+                {ignition || motion ? 'on' : 'off'}
               </Text>
             </View>
           </View>
@@ -165,9 +149,9 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
-              2,
-            )} KM`}</Text>
+            <Text style={styles.highlightText}>{`${(
+              item.distance / 1000
+            ).toFixed(2)} KM`}</Text>
             <Text style={styles.distanceText}>Today Distance</Text>
             <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
               {motion ? 'Running' : 'Stopped'}
@@ -186,19 +170,25 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <View style={styles.expiryDate}>
           <View style={styles.addressContainer}>
             <LocationShadowIcon size={15} color={'#3BA700'} />
-            <View>
-              {fullAddressLoading ? (
+            {/* <TouchableOpacity
+              onPress={handleAddressPress}
+              disabled={fullAddress !== 'Show Full Address'}>
+              {isFetchingAddress ? (
                 <ActivityIndicator
                   size="small"
                   color={backgroundColorNew}
                   style={{marginLeft: 20}}
                 />
               ) : (
-                <Text style={styles.addressText()}>
-                  {fullAddressData?.display_name}
+                <Text
+                  style={styles.addressText(
+                    fullAddress === 'Show Full Address' ? true : false,
+                  )}>
+                  {fullAddress}
                 </Text>
               )}
-            </View>
+            </TouchableOpacity> */}
+            <Text style={styles.addressText(false)}>{item.address}</Text>
           </View>
           <TouchableOpacity
             style={styles.center}

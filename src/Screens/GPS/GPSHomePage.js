@@ -20,7 +20,7 @@ const GPSHomePage = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {DashboardUser, dashboardLoading} = useSelector(state => {
+  const {DashboardUser, dashboardLoading, wsConnected} = useSelector(state => {
     // console.log('GPSHomePage Truck', state.data);
     return state.data;
   });
@@ -38,10 +38,15 @@ const GPSHomePage = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected]);
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(initDashboard());
-      dispatch(websocketDisconnect());
     }, [dispatch]),
   );
 

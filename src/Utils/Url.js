@@ -1,4 +1,4 @@
-export const URL = 'https://loadingwalla.com/api';
+export const URL = 'https://loadingwalla.com/api/';
 // export const URL = 'https://new.loadingwalla.com/api/';
 export const NEWURL = 'https://loadingwalla.in/api/';
 
@@ -12,6 +12,6 @@ export const playStoreLink =
 export const traccarApi = 'https://gpsapi.loadingwalla.com/api/';
 // export const traccarApi2 = 'https://gpsapi.loadingwalla.in/api/';
 export const WS_URL = 'wss://gpsapi.loadingwalla.com/api/socket';
-export const GOOGLE_API_BASE_URL = 'https://maps.googleapis.com/maps/api';
+export const GOOGLE_API_BASE_URL = 'https://maps.googleapis.com/maps/api/';
 export const NOMINATIM_API_BASE_URL = 'https://nominatim.openstreetmap.org/';
 // https://nominatim.openstreetmap.org/reverse?lat=28.521126&lon=77.200543

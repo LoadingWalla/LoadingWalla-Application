@@ -1315,12 +1315,11 @@ export function* fetchGpsOrderDetail({id}) {
 }
 
 // full address
+// "https://maps.googleapis.com/maps/api/geocode/json?latlng=LATITUDE,LONGITUDE&key=YOUR_API_KEY"
 export function* fetchFullAddress({lat, lan}) {
   try {
-    const data = yield FetchNominatimApi().get(
-      `reverse?format=json&lat=${lat}&lon=${lan}`,
-    );
-    // console.log('Gps Address--------------', data);
+    const data = yield googleApi().get(`geocode/json?latlng=${lat},${lan}`);
+    console.log('Gps Address--------------', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchAddressSuccess(data?.data));
@@ -1333,6 +1332,24 @@ export function* fetchFullAddress({lat, lan}) {
     // console.log('error', error);
   }
 }
+// export function* fetchFullAddress({lat, lan}) {
+//   try {
+//     const data = yield FetchNominatimApi().get(
+//       `reverse?format=json&lat=${lat}&lon=${lan}`,
+//     );
+//     // console.log('Gps Address--------------', data);
+//     if (data?.status === 200) {
+//       // console.log('success', data);
+//       yield put(actions.fetchAddressSuccess(data?.data));
+//     } else {
+//       // console.log('else', data);
+//       yield put(actions.fetchAddressFailure(data?.status));
+//     }
+//   } catch (error) {
+//     yield put(actions.fetchAddressFailure(error?.message));
+//     // console.log('error', error);
+//   }
+// }
 
 // Back Button Handler
 // export function* watchBackButton() {

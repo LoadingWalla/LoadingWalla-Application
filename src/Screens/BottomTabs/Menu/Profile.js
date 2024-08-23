@@ -20,6 +20,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
 import {
+  clearStore,
   initLogout,
   initProfile,
   websocketDisconnect,
@@ -86,7 +87,7 @@ const Profile = ({navigation, route}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initProfile());
-    }, [dispatch, profileSetupData]),
+    }, [dispatch, profileSetupData, wsConnected]),
   );
 
   const bigImage = () => {
@@ -128,6 +129,7 @@ const Profile = ({navigation, route}) => {
           onPress: async () => {
             try {
               dispatch(initLogout());
+              dispatch(clearStore());
               await AsyncStorage.removeItem('UserType');
               await AsyncStorage.removeItem('auth-token');
 
@@ -262,25 +264,25 @@ const Profile = ({navigation, route}) => {
             style={{flex: 1, marginBottom: 60}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            {Userdata?.user_type !== 3 && (
-              <View style={style.percentageBarView}>
-                <PercentageBar
-                  navigation={navigation}
-                  percentage={UserVerifyPercentage || 0}
-                  verify={Userdata?.verify}
-                  style={style}
-                />
-                <TouchableOpacity
-                  style={style.buttonContainer}
-                  onPress={() => navigation.navigate('Wallet')}>
-                  <WalletIcon size={25} color={'#F0C200'} />
-                  <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                  <View style={style.rightArrowView}>
-                    <RightArrow size={20} color={GradientColor1} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+            {/* {Userdata?.user_type !== 3 && ( */}
+            <View style={style.percentageBarView}>
+              <PercentageBar
+                navigation={navigation}
+                percentage={UserVerifyPercentage || 0}
+                verify={Userdata?.verify}
+                style={style}
+              />
+              <TouchableOpacity
+                style={style.buttonContainer}
+                onPress={() => navigation.navigate('Wallet')}>
+                <WalletIcon size={25} color={'#F0C200'} />
+                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
+                <View style={style.rightArrowView}>
+                  <RightArrow size={20} color={GradientColor1} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* )} */}
 
             <View style={style.section}>
               <View style={style.sectionHeader}>

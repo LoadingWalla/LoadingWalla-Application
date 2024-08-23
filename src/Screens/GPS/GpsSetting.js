@@ -6,8 +6,6 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import {textColor} from '../../Color/color';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import Button from '../../Components/Button';
@@ -24,7 +22,10 @@ const GpsSetting = ({navigation, route}) => {
   const {deviceId} = route.params;
   const dispatch = useDispatch();
 
-  const {gpsTokenData, gpsDeviceData} = useSelector(state => state.data);
+  const {gpsTokenData, gpsDeviceData} = useSelector(state => {
+    console.log('Gps Setting -------------------', state.data);
+    return state.data;
+  });
 
   const deviceData = gpsDeviceData?.find(device => device.id === deviceId);
 
@@ -55,7 +56,6 @@ const GpsSetting = ({navigation, route}) => {
         <Text style={styles.textStyle}>{deviceData.name}</Text>
         <View style={styles.iconBox}>
           <GpsIcon2 size={30} color={'green'} />
-          {/* <NetworkIcon size={30} color={'green'} /> */}
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>

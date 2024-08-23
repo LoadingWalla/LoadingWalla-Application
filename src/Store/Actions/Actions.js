@@ -1322,3 +1322,8 @@ export const fetchAddressFailure = payload => ({
   type: actionTypes.FETCH_FULLADDRESS_FAILURE,
   payload,
 });
+
+// Clear store on logout
+export const clearStore = () => ({
+  type: actionTypes.CLEAR_STORE,
+});
