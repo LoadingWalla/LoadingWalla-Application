@@ -20,8 +20,9 @@ import {
   fetchGpsDevicesRequest,
   fetchTokenRequest,
   initProfile,
-  websocketConnect,
+  // websocketConnect,
 } from '../../Store/Actions/Actions';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import {backgroundColorNew, textColor} from '../../Color/color';
 
 const MyGpsScreen = ({navigation}) => {

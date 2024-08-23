@@ -20,9 +20,10 @@ import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
-  websocketConnect,
+  // websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 
 const truck = {
   id: '1',

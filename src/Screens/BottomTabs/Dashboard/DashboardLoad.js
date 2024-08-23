@@ -17,8 +17,9 @@ import {
   fetchTokenRequest,
   initDashboard,
   myPostLoadFailure,
-  websocketDisconnect,
+  // websocketDisconnect,
 } from '../../../Store/Actions/Actions';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');

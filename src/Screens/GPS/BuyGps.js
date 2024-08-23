@@ -14,9 +14,10 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   fetchGpsPlansRequest,
-  websocketConnect,
+  // websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 
 const Plan = ({text}) => {
   return (

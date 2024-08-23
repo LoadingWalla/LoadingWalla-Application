@@ -21,20 +21,14 @@ import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAddressRequest} from '../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
+import VehicleIcon from './GpsVehicleIcon';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [fullAddress, setFullAddress] = useState('Show Full Address');
   const [isFetchingAddress, setIsFetchingAddress] = useState(false);
 
-  const dispatch = useDispatch();
-  // console.log(66666, item);
-  const {fullAddressLoading, fullAddressData, fullAddressStatus} = useSelector(
-    state => {
-      // console.log(7777777777, state.data);
-      return state.data;
-    },
-  );
+  console.log(66666, item);
 
   const {position = [], status, name, disabled, id, lastUpdate} = item;
   const attributes = position[0]?.attributes || {};
@@ -87,17 +81,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     }
   };
 
-  // const handleAddressPress = () => {
-  //   dispatch(fetchAddressRequest(position[0].latitude, position[0].longitude));
-  // };
-
-  // const getAddressDisplay = () => {
-  //   if (fullAddressData && fullAddressData.length > 0) {
-  //     return fullAddressData[0].display_name;
-  //   }
-  //   return 'Show Full Address';
-  // };
-
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
@@ -109,6 +92,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               }}
               style={styles.image}
             />
+            {/* <VehicleIcon category={item.category} size={50} color="#000" /> */}
           </View>
         </View>
         <TouchableOpacity
@@ -137,10 +121,10 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
               <Text style={styles.distanceText}>Ignition</Text>
               <Text
                 style={[
-                  styles.ignitionText(ignition),
+                  styles.ignitionText(ignition || motion),
                   {marginLeft: 5, textTransform: 'uppercase'},
                 ]}>
-                {ignition ? 'on' : 'off'}
+                {ignition || motion ? 'on' : 'off'}
               </Text>
             </View>
           </View>
@@ -180,9 +164,9 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         </TouchableOpacity>
         <View>
           <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${(distance / 1000).toFixed(
-              2,
-            )} KM`}</Text>
+            <Text style={styles.highlightText}>{`${(
+              item.distance / 1000
+            ).toFixed(2)} KM`}</Text>
             <Text style={styles.distanceText}>Today Distance</Text>
             <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
               {motion ? 'Running' : 'Stopped'}
@@ -219,20 +203,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                 </Text>
               )}
             </TouchableOpacity>
-            {/* <TouchableOpacity onPress={handleAddressPress}>
-              {fullAddressLoading ? (
-                <ActivityIndicator
-                  size="small"
-                  color={backgroundColorNew}
-                  style={{marginLeft: 20}}
-                />
-              ) : (
-                <Text
-                  style={styles.addressText(fullAddressData ? true : false)}>
-                  {getAddressDisplay()}
-                </Text>
-              )}
-            </TouchableOpacity> */}
           </View>
           <TouchableOpacity
             style={styles.center}

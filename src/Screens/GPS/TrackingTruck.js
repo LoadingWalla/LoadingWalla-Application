@@ -298,9 +298,19 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={KeyIcon}
-              text={positions?.[0]?.attributes?.ignition ? 'ON' : 'OFF'}
+              text={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'ON'
+                  : 'OFF'
+              }
               iconSize={18}
-              color={positions?.[0]?.attributes?.ignition ? 'green' : 'red'}
+              color={
+                positions?.[0]?.attributes?.ignition ||
+                positions?.[0]?.attributes?.motion
+                  ? 'green'
+                  : 'red'
+              }
               index={4}
               activeIndex={activeIndex}
               onPress={() => handlePress(4)}

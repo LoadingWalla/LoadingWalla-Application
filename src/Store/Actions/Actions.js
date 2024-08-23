@@ -1027,12 +1027,11 @@ export const fetchSingleGpsDeviceFailure = payload => ({
   payload,
 });
 
-// Gps Websocket Connect
-
-export const websocketConnect = cookie => ({
-  type: actionTypes.WEBSOCKET_CONNECT,
-  payload: {cookie},
-});
+// // Gps Websocket Connect
+// export const websocketConnect = cookie => ({
+//   type: actionTypes.WEBSOCKET_CONNECT,
+//   payload: {cookie},
+// });
 
 export const websocketDisconnect = () => ({
   type: actionTypes.WEBSOCKET_DISCONNECT,

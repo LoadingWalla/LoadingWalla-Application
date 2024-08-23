@@ -4,9 +4,10 @@ import {
   fetchGpsDevicesRequest,
   fetchTokenFailure,
   fetchTokenRequest,
-  websocketConnect,
+  // websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   ActivityIndicator,
