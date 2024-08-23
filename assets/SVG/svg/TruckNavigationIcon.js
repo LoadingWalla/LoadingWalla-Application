@@ -15,37 +15,94 @@ function TruckNavigationIcon(props) {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 247.36 387.1"
       {...props}>
-      <G
-        xmlns="http://www.w3.org/2000/svg"
-        transform="rotate(-90 119.97 119.97)">
-        <Defs>
-          <LinearGradient
-            id="a"
-            x1={168.12}
-            y1={55.33}
-            x2={239.94}
-            y2={55.33}
-            gradientUnits="userSpaceOnUse">
-            <Stop offset={0} stopColor="#fdf8d6" />
-            <Stop offset={0.17} stopColor="#fdf8d6" stopOpacity={0.99} />
-            <Stop offset={0.3} stopColor="#fdf8d6" stopOpacity={0.95} />
-            <Stop offset={0.42} stopColor="#fdf8d6" stopOpacity={0.88} />
-            <Stop offset={0.53} stopColor="#fdf8d6" stopOpacity={0.79} />
-            <Stop offset={0.64} stopColor="#fdf8d6" stopOpacity={0.67} />
-            <Stop offset={0.74} stopColor="#fdf8d6" stopOpacity={0.52} />
-            <Stop offset={0.84} stopColor="#fdf8d6" stopOpacity={0.34} />
-            <Stop offset={0.94} stopColor="#fdf8d6" stopOpacity={0.14} />
-            <Stop offset={1} stopColor="#fdf8d6" stopOpacity={0} />
-          </LinearGradient>
-          <LinearGradient x1={168.34} y1={22.6} x2={239.94} y2={22.6} />
-        </Defs>
-        <Path
-          d="M104.21 65.89v-52.5h54.06c4.76 0 8.63 3.86 8.63 8.63v35.24c0 4.77-3.86 8.63-8.63 8.63h-54.06z"
-          fill="#ed1c24"
+      <Defs>
+        <LinearGradient
+          id="a"
+          x1={100.35}
+          y1={312.51}
+          x2={151.48}
+          y2={283.7}
+          gradientUnits="userSpaceOnUse">
+          <Stop offset={0} stopColor="#fff" />
+          <Stop offset={0.34} stopColor="#fcfcfc" />
+          <Stop offset={0.48} stopColor="#f5f5f5" />
+          <Stop offset={0.59} stopColor="#e9e9e9" />
+          <Stop offset={0.68} stopColor="#d7d7d7" />
+          <Stop offset={0.75} stopColor="#c1c0c1" />
+          <Stop offset={0.82} stopColor="#a4a4a4" />
+          <Stop offset={0.88} stopColor="#838283" />
+          <Stop offset={0.94} stopColor="#5d5c5d" />
+          <Stop offset={0.97} stopColor="#434243" />
+        </LinearGradient>
+        <LinearGradient
+          id="b"
+          x1={-509.23}
+          y1={175.47}
+          x2={-508.42}
+          y2={176.87}
+          gradientTransform="rotate(.99 -6449.695 37868.768)"
+          gradientUnits="userSpaceOnUse">
+          <Stop offset={0} stopColor="#d0cabe" />
+          <Stop offset={0} stopColor="#d1ccc0" />
+          <Stop offset={0.05} stopColor="#e2dfd5" />
+          <Stop offset={0.08} stopColor="#e9e7dd" />
+          <Stop offset={0.33} stopColor="#e9e7dd" />
+          <Stop offset={0.35} stopColor="#e9e7dd" />
+          <Stop offset={0.39} stopColor="#dddad0" />
+          <Stop offset={0.46} stopColor="#cdcabf" />
+          <Stop offset={0.54} stopColor="#c2bfb3" />
+          <Stop offset={0.67} stopColor="#bcb8ac" />
+          <Stop offset={1} stopColor="#bbb7ab" />
+        </LinearGradient>
+      </Defs>
+      <G data-name="Layer 1">
+        <Rect
+          x={184.4}
+          y={325.49}
+          width={5.68}
+          height={34.07}
+          rx={1.05}
+          ry={1.05}
+          fill="#231f20"
+          strokeWidth={0}
+        />
+        <Rect
+          x={184.4}
+          y={286.99}
+          width={5.68}
+          height={34.07}
+          rx={1.05}
+          ry={1.05}
+          fill="#231f20"
+          strokeWidth={0}
+        />
+        <Rect
+          x={51.09}
+          y={325.49}
+          width={5.68}
+          height={34.07}
+          rx={1.05}
+          ry={1.05}
+          fill="#231f20"
+          strokeWidth={0}
+        />
+        <Rect
+          x={51.09}
+          y={286.99}
+          width={5.68}
+          height={34.07}
+          rx={1.05}
+          ry={1.05}
+          fill="#231f20"
           strokeWidth={0}
         />
         <Path
-          d="M132.34 14.24h-20.91l-.76 3.72h13.75l8.01-3.22c.26-.11.19-.49-.1-.49z"
+          d="M179.94 155.58H62.6V40.3c0-10.16 8.63-18.4 19.28-18.4h78.78c10.65 0 19.28 8.24 19.28 18.4v115.28z"
+          fill="#e82329"
+          strokeWidth={0}
+        />
+        <Path
+          d="M64.5 95.58v44.59l8.31 1.61v-29.32l-7.2-17.09c-.24-.56-1.11-.4-1.11.2z"
           fill="#3a6f82"
           strokeWidth={0}
         />
