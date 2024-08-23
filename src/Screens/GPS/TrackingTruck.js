@@ -41,6 +41,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import MapViewDirections from 'react-native-maps-directions';
 
+
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
     .flatMap(message => message.positions || [])
@@ -376,6 +377,10 @@ const TrackingTruck = ({navigation, route}) => {
                   onError={errorMessage => {
                     console.error('Error in MapViewDirections:', errorMessage);
                   }}
+                <Polyline
+                  coordinates={livePositions}
+                  strokeColor="#0158AF"
+                  strokeWidth={2}
                 />
               )}
 

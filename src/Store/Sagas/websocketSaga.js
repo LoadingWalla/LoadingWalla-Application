@@ -61,12 +61,11 @@ function* handleWebSocketConnection(cookie) {
       yield put(action);
 
       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-        // console.log(123456789, action.payload);
+        console.log(123456789, action.payload);
 
         // Add checks to ensure action.payload is not null or undefined and not an empty object
         if (action.payload && Object.keys(action.payload).length !== 0) {
           const {devices, positions, events} = action.payload;
-
           // console.log(987654321, devices, 11111, positions, 222222, events);
 
           // Update devices if they exist and are not empty
@@ -87,7 +86,7 @@ function* handleWebSocketConnection(cookie) {
             yield put(actions.updateEvents(events));
           }
         } else {
-          console.log('Received empty payload in WEBSOCKET_MESSAGE');
+          // console.log('Received empty payload in WEBSOCKET_MESSAGE');
         }
       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
         console.log('WebSocket connection closed');
@@ -127,7 +126,9 @@ function* websocketSaga() {
       retryCount++;
       if (retryCount <= 5) {
         console.log('WebSocket retry attempt:', retryCount);
-        yield delay(5000); // Retry after 5 seconds
+        // yield delay(5000); // Retry after 5 seconds
+        const delayDuration = Math.min(2 ** retryCount * 1000, 30000); // Max delay of 30 seconds
+        yield delay(delayDuration);
         connectionTask = yield fork(handleWebSocketConnection, cookie);
       } else {
         console.log('Max retry attempts reached');

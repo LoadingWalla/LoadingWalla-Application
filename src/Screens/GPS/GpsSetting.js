@@ -11,12 +11,13 @@ import GpsSettingItem from '../../Components/GpsSettingItem';
 import Button from '../../Components/Button';
 import {useFocusEffect} from '@react-navigation/native';
 import {
-  websocketConnect,
+  // websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 
 const GpsSetting = ({navigation, route}) => {
   const {deviceId} = route.params;

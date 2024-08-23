@@ -19,6 +19,7 @@ import {
   initBooking,
   websocketDisconnect,
 } from '../../../Store/Actions/Actions';
+
 import BookingItem from '../../../Components/Bookingitem';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
@@ -58,7 +59,7 @@ const Booking = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initBooking(2));
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   const bookingStatus = (bookingId, status, isCancel) => {

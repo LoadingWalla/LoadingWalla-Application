@@ -4,6 +4,7 @@ import {GradientColor1, titleColor} from '../Color/color';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
+import CheckCircle from '../../assets/SVG/svg/CheckCircle';
 
 const PercentageBar = ({
   navigation,
@@ -11,11 +12,11 @@ const PercentageBar = ({
   verify,
   height = 48,
   backgroundColor = '#fffaed',
-  completedColor = '#4dc100',
+  completedColor = '#F7FFF5',
   // incompleteColor = '#ff5353',
   incompleteColor = '#ddd',
   midColor = '#F0C200',
-  highColor = '#4dc100',
+  highColor = '#F7FFF5',
 }) => {
   let barColor;
   if (percentage < 30) {
@@ -32,7 +33,7 @@ const PercentageBar = ({
 
   return (
     <TouchableOpacity
-      style={[styles.barContainer, {height, borderColor: barColor}]}
+      style={[styles.barContainer, {height, borderColor: '#ddd'}]}
       onPress={() => navigation.navigate('KYC')}
       disabled={verify === 1}>
       <View style={[styles.backgroundBar, {backgroundColor, height}]} />
@@ -42,9 +43,16 @@ const PercentageBar = ({
           {width: `${percentage}%`, backgroundColor: barColor, height},
         ]}
       />
-      <Text style={styles.barText}>{`${percentage}%  ${t(
-        Constants.COMPLETE,
-      )}`}</Text>
+      {percentage === 100 ? (
+        <View style={styles.completeView}>
+          <CheckCircle size={20} color={'#109500'} strokeColor={'#FFFFFF'} />
+          <Text style={styles.completeText}>{t(Constants.VERIFIED)}</Text>
+        </View>
+      ) : (
+        <Text style={styles.barText}>{`${percentage}%  ${t(
+          Constants.COMPLETE,
+        )}`}</Text>
+      )}
       {verify !== 1 && (
         <View style={styles.arrowView}>
           <RightArrow size={20} color={GradientColor1} />
@@ -64,6 +72,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     borderWidth: 1,
     alignItems: 'center',
+    borderColor: '#00000057',
   },
   backgroundBar: {
     position: 'absolute',
@@ -90,10 +99,23 @@ const styles = StyleSheet.create({
   arrowView: {
     marginLeft: 'auto',
     elevation: 1,
-    borderWidth: 0,
+    // borderWidth: 0,
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
     right: 10,
+  },
+  completeView: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  completeText: {
+    fontSize: 14,
+    textAlign: 'center',
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    marginStart: 15,
   },
 });
 

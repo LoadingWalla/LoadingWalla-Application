@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -17,14 +17,14 @@ import DashboardHeader from '../../Components/DashboardHeader';
 import GpsItem from '../../Components/GpsItem';
 import {
   fetchGpsDevicesRequest,
-  fetchTokenFailure,
   fetchTokenRequest,
   initProfile,
-  websocketConnect,
-  websocketDisconnect,
+  // websocketConnect,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
+import {websocketConnect} from '../../Store/Actions/WebSocketActions';
+import {backgroundColorNew, textColor} from '../../Color/color';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -42,46 +42,46 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    // console.log('MyGpsScreen -----------------', state.data);
+    console.log('MY Gps Screeen --------', state.data);
     return state.data;
   });
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
+  // Function to fetch GPS data
+  const fetchGpsData = useCallback(() => {
+    if (gpsTokenData !== null) {
+      const {cookie, email, password} = gpsTokenData;
+      dispatch(websocketConnect(cookie));
+      dispatch(
+        fetchGpsDevicesRequest(
+          encodeURIComponent(email),
+          encodeURIComponent(password),
+        ),
+      );
+    } else {
+      dispatch(fetchTokenRequest());
+    }
+  }, [dispatch, gpsTokenData]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-
-    if (gpsTokenData) {
-      const {cookie, email, password} = gpsTokenData;
-      dispatch(websocketConnect(cookie));
-      dispatch(
-        fetchGpsDevicesRequest(
-          encodeURIComponent(email),
-          encodeURIComponent(password),
-        ),
-      );
-    } else {
-      dispatch(fetchTokenRequest());
-    }
-
+    fetchGpsData();
     setRefreshing(false);
-  }, [dispatch, gpsTokenData]);
+  }, [fetchGpsData]);
 
-  useEffect(() => {
-    if (gpsTokenData) {
-      const {cookie, email, password} = gpsTokenData;
-      dispatch(websocketConnect(cookie));
-      dispatch(
-        fetchGpsDevicesRequest(
-          encodeURIComponent(email),
-          encodeURIComponent(password),
-        ),
-      );
-    } else {
-      dispatch(fetchTokenRequest());
-    }
-  }, [dispatch, gpsTokenData]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchGpsData();
+      if (!DashboardUser) {
+        dispatch(initProfile());
+      }
+      return () => {
+        Snackbar.dismiss();
+      };
+    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser]),
+  );
 
   useEffect(() => {
     if (wsError) {
@@ -146,6 +146,7 @@ const MyGpsScreen = ({navigation}) => {
       return Array.from(deviceMap.values()).map(device => {
         device.position = device.position || [];
         device.events = device.events || [];
+        // console.log(123456775576974, device);
         return device;
       });
     },
@@ -164,15 +165,17 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
-  const renderGpsItem = useCallback(
-    ({item}) => (
-      <GpsItem
-        item={item}
-        icon={true}
-        navigation={navigation}
-        isDisable={!wsConnected}
-      />
-    ),
+  const renderGpsItem = useMemo(
+    () =>
+      ({item}) =>
+        (
+          <GpsItem
+            item={item}
+            icon={true}
+            navigation={navigation}
+            isDisable={!wsConnected}
+          />
+        ),
     [navigation, wsConnected],
   );
 
@@ -264,11 +267,14 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#FFFFFF',
     zIndex: 9999,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
   contentContainer: {
     flex: 1,
     marginVertical: 60,
     padding: 10,
+    // borderWidth: 1,
   },
   loadingStyle: {
     flex: 1,
@@ -309,6 +315,7 @@ const styles = StyleSheet.create({
     flex: 0.75,
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
   },
   getNowView: {
     // borderWidth: 1,

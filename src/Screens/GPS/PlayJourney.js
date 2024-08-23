@@ -14,7 +14,6 @@ import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
-  websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
@@ -47,7 +46,11 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsLoading,
     gpsStopsError,
     gpsStopsData,
-  } = useSelector(state => state.data);
+    wsConnected,
+  } = useSelector(state => {
+    console.log('Play Journey -----------------------', state.data);
+    return state.data;
+  });
 
   const coordinates = useMemo(
     () =>
@@ -98,29 +101,34 @@ export default function PlayJourney({navigation, route}) {
     React.useCallback(() => {
       const defaultFrom = from || moment().utc().startOf('day').toISOString();
       const defaultTo = to || moment().utc().endOf('day').toISOString();
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
 
-      // Disconnect WebSocket and call REST APIs
-      dispatch(websocketDisconnect());
-      dispatch(
-        fetchPositionsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
-      dispatch(
-        fetchGpsStopsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
+      if (!gpsReplayData) {
+        dispatch(
+          fetchPositionsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
+      }
+      if (gpsStopsData === null) {
+        dispatch(
+          fetchGpsStopsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
+      }
       return () => {
-        dispatch(websocketConnect(gpsTokenData.cookie));
+        // dispatch(websocketConnect(gpsTokenData.cookie));
       };
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
@@ -159,7 +167,7 @@ export default function PlayJourney({navigation, route}) {
                 longitude: newPosition.longitude,
               },
               // Do not change zoom level
-              zoom: 50, // Set a default zoom level, adjust as needed
+              zoom: 30, // Set a default zoom level, adjust as needed
               duration: 1000 / playbackSpeed,
             });
           }
@@ -291,8 +299,8 @@ export default function PlayJourney({navigation, route}) {
                 initialRegion={initialRegion}>
                 <Polyline
                   coordinates={coordinates}
-                  strokeColor="#000"
-                  strokeWidth={6}
+                  strokeColor="#0158AF"
+                  strokeWidth={3}
                 />
                 {currentPosition && (
                   <Marker.Animated
@@ -302,17 +310,7 @@ export default function PlayJourney({navigation, route}) {
                       2,
                     )} km/h`}
                     rotation={currentPosition.course || 0}>
-                    <TruckNavigationIcon
-                      width={50}
-                      height={50}
-                      style={{
-                        transform: [
-                          // {
-                          //   rotate: `${currentPosition.course}deg`,
-                          // },
-                        ],
-                      }}
-                    />
+                    <TruckNavigationIcon width={50} height={50} />
                   </Marker.Animated>
                 )}
                 {gpsStopsData?.map((stop, index) => (
@@ -480,7 +478,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 10,
-    marginTop: 5,
+    // marginTop: 5,
     elevation: 2,
   },
   mapContainer: {flex: 1},

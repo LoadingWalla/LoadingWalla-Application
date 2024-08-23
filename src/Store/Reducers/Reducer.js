@@ -179,7 +179,7 @@ const initialState = {
   // gps replay
   gpsReplayLoading: false,
   gpsReplayError: null,
-  gpsReplayData: null,
+  gpsReplayData: [],
   // gps stops
   gpsStopsLoading: false,
   gpsStopsError: null,
@@ -1359,7 +1359,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         gpsReplayLoading: true,
         gpsReplayError: null,
-        gpsReplayData: null,
+        gpsReplayData: [],
       };
     case actionTypes.FETCH_POSITIONS_SUCCESS:
       return updateState(state, {
@@ -1370,7 +1370,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsReplayLoading: false,
         gpsReplayError: payload,
-        gpsReplayData: null,
+        gpsReplayData: [],
       });
 
     // GPS Stops

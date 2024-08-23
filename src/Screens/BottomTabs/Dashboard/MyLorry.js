@@ -81,7 +81,7 @@ const MyLorry = ({navigation}) => {
         }
       };
       fetchUserType();
-    }, [selected, dispatch]),
+    }, [selected, dispatch, wsConnected]),
   );
 
   const bannerButton = async () => {

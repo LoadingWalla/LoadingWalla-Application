@@ -78,7 +78,6 @@ import StopsScreen from '../Screens/GPS/StopsScreen';
 import QuickFilters from '../Screens/GPS/QuickFilters';
 import OwnedGPS from '../Screens/GPS/OwnedGPS';
 import PaymentGPS from '../Screens/GPS/PaymentGPS';
-// import GpsTrackings from '../Screens/GPS/GpsTrackings';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';

@@ -21,6 +21,7 @@ import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAddressRequest} from '../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
+import VehicleIcon from './GpsVehicleIcon';
 
 const GpsItem = ({navigation, item, icon, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -170,24 +171,6 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
         <View style={styles.expiryDate}>
           <View style={styles.addressContainer}>
             <LocationShadowIcon size={15} color={'#3BA700'} />
-            {/* <TouchableOpacity
-              onPress={handleAddressPress}
-              disabled={fullAddress !== 'Show Full Address'}>
-              {isFetchingAddress ? (
-                <ActivityIndicator
-                  size="small"
-                  color={backgroundColorNew}
-                  style={{marginLeft: 20}}
-                />
-              ) : (
-                <Text
-                  style={styles.addressText(
-                    fullAddress === 'Show Full Address' ? true : false,
-                  )}>
-                  {fullAddress}
-                </Text>
-              )}
-            </TouchableOpacity> */}
             <Text style={styles.addressText(false)}>{item.address}</Text>
           </View>
           <TouchableOpacity
