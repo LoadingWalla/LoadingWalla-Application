@@ -71,13 +71,17 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
       <View style={styles.itemContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.imgBox}>
-            <Image
+            {/* <Image
               source={{
                 uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
               }}
               style={styles.image}
+            /> */}
+            <VehicleIcon
+              category={item.category === null ? 'default' : item.category}
+              size={50}
+              color="#000"
             />
-            {/* <VehicleIcon category={item.category} size={50} color="#000" /> */}
           </View>
         </View>
         <TouchableOpacity

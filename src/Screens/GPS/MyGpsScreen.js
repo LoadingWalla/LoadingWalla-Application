@@ -24,7 +24,6 @@ import {
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-import {backgroundColorNew, textColor} from '../../Color/color';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
