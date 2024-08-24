@@ -24,7 +24,6 @@ import {
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-import {backgroundColorNew, textColor} from '../../Color/color';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -42,7 +41,7 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('MY Gps Screeen --------', state.data);
+    // console.log('MY Gps Screeen --------', state.data);
     return state.data;
   });
 

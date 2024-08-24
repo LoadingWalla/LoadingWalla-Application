@@ -24,9 +24,10 @@ const GPSHomePage = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {DashboardUser, dashboardLoading, wsConnected, gpsTokenData} = useSelector(state => {
-    return state.data;
-  });
+  const {DashboardUser, dashboardLoading, wsConnected, gpsTokenData} =
+    useSelector(state => {
+      return state.data;
+    });
 
   useEffect(() => {
     if (gpsTokenData === null) {

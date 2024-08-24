@@ -1314,6 +1314,46 @@ export function* fetchGpsOrderDetail({id}) {
   }
 }
 
+// gps replay details
+export function* setGpsRelayData({deviceId, types}) {
+  try {
+    console.log(4444, deviceId, types);
+
+    // Make the API call
+    const data = yield API.get(`gps/relay?device_id=${deviceId}&type=${types}`);
+    console.log('set Gps relay', data);
+
+    // Handle the response based on the status code
+    if (data?.data?.status === 200) {
+      yield put(actions.setGpsRelaySuccess(data?.data));
+    } else {
+      yield put(actions.setGpsRelayFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.setGpsRelayFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
+export function* fetchGpsRelayData({deviceId}) {
+  try {
+    console.log(4444, deviceId);
+    // Make the API call
+    const data = yield API.get(`gps/relay?device_id=${deviceId}`);
+    console.log('Gps Plan', data);
+
+    // Handle the response based on the status code
+    if (data?.data?.status === 200) {
+      yield put(actions.gpsRelaySuccess(data?.data));
+    } else {
+      yield put(actions.gpsRelayFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.gpsRelayFailure(error.message));
+    // console.log('error', error);
+  }
+}
+
 // full address
 // "https://maps.googleapis.com/maps/api/geocode/json?latlng=LATITUDE,LONGITUDE&key=YOUR_API_KEY"
 export function* fetchFullAddress({lat, lan}) {

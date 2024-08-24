@@ -129,9 +129,9 @@ const Profile = ({navigation, route}) => {
           onPress: async () => {
             try {
               dispatch(initLogout());
-              dispatch(clearStore());
               await AsyncStorage.removeItem('UserType');
               await AsyncStorage.removeItem('auth-token');
+              dispatch(clearStore());
 
               navigation.reset({
                 index: 0,

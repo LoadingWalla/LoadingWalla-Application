@@ -88,6 +88,7 @@ import OrdersPayment from '../Screens/GPS/OrdersPayment';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 import Geofencing from '../Screens/GPS/Geofencing';
 import HeaderMenuButton from '../Components/HeaderMenuButton';
+import GpsRelay from '../Screens/GPS/GpsRelay';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1937,6 +1938,26 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="purchasingStatus"
         component={PurchasingStatus}
+        options={({route}) => ({
+          headerShown: false,
+          animation: 'slide_from_bottom',
+          presentation: 'transparentModal',
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+
+      <Stack.Screen
+        name="GpsRelay"
+        component={GpsRelay}
         options={({route}) => ({
           headerShown: false,
           animation: 'slide_from_bottom',

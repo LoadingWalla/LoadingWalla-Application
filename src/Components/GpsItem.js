@@ -1,12 +1,5 @@
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useState, memo} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
 import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
@@ -18,24 +11,17 @@ import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchAddressRequest} from '../Store/Actions/Actions';
-import {useFocusEffect} from '@react-navigation/native';
 import VehicleIcon from './GpsVehicleIcon';
 
-const GpsItem = ({navigation, item, icon, isDisable}) => {
+const GpsItem = ({navigation, item, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  const [fullAddress, setFullAddress] = useState('Show Full Address');
-  const [isFetchingAddress, setIsFetchingAddress] = useState(false);
-
-  console.log(66666, item);
+  // console.log(4444, item);
 
   const {position = [], status, name, disabled, id, lastUpdate} = item;
   const attributes = position[0]?.attributes || {};
   const {
     ignition,
     motion,
-    distance,
     batteryLevel,
     alarm,
     fuel,
@@ -45,14 +31,12 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
   } = attributes;
 
   const isNavigationDisabled =
-    disabled || position.length === 0 || position[0].latitude === undefined;
-  const showAlert = message => {
-    AlertBox(message);
-  };
+    disabled || position.length === 0 || !position[0]?.latitude;
 
-  const handlePress = index => {
+  const showAlert = message => AlertBox(message);
+
+  const handlePress = index =>
     setActiveIndex(activeIndex === index ? null : index);
-  };
 
   const renderStatus = () => {
     if (status === 'online') {
@@ -66,38 +50,38 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
     );
   };
 
+  const handleNavigation = () => {
+    if (isNavigationDisabled) {
+      showAlert(
+        disabled
+          ? 'Service unavailable! Your Plan has been Expired.'
+          : 'Wait! GPS Network Error.',
+      );
+    } else {
+      navigation.navigate('trackingtruck', {
+        deviceId: id,
+        lat: position[0]?.latitude,
+        long: position[0]?.longitude,
+        item,
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.itemContainer}>
         <View style={styles.imgContainer}>
           <View style={styles.imgBox}>
-            <Image
-              source={{
-                uri: 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png',
-              }}
-              style={styles.image}
+            <VehicleIcon
+              category={item.category || 'default'}
+              size={50}
+              color="#000"
             />
-            {/* <VehicleIcon category={item.category} size={50} color="#000" /> */}
           </View>
         </View>
         <TouchableOpacity
           disabled={isDisable}
-          onPress={() => {
-            if (isNavigationDisabled) {
-              showAlert(
-                disabled
-                  ? 'Service unavailable! Your Plan has been Expired.'
-                  : 'Wait! GPS Network Error.',
-              );
-            } else {
-              navigation.navigate('trackingtruck', {
-                deviceId: id,
-                lat: position[0]?.latitude,
-                long: position[0]?.longitude,
-                item,
-              });
-            }
-          }}
+          onPress={handleNavigation}
           style={styles.textContainer}>
           <Text style={styles.highlightText}>{name}</Text>
           <View style={styles.ignBox}>
@@ -118,13 +102,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             <View style={styles.iconRow}>
               <BatteryIcon
                 size={15}
-                color={
-                  batteryLevel
-                    ? batteryLevel > 60
-                      ? 'green'
-                      : 'red'
-                    : '#727272'
-                }
+                color={batteryLevel > 60 ? 'green' : 'red' || '#727272'}
                 charge={charge}
                 batteryLevel={batteryLevel}
               />
@@ -143,34 +121,25 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
                   onPress={() => handlePress(2)}
                 />
               )}
-              {fuel && <FuelIcon size={15} color={'#727272'} />}
+              {fuel && <FuelIcon size={15} color="#727272" />}
               {geofence && <GeoFencingIcon size={15} />}
             </View>
           </View>
         </TouchableOpacity>
-        <View>
-          <View style={styles.distanceBox}>
-            <Text style={styles.highlightText}>{`${(
-              item.distance / 1000
-            ).toFixed(2)} KM`}</Text>
-            <Text style={styles.distanceText}>Today Distance</Text>
-            <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
-              {motion ? 'Running' : 'Stopped'}
-            </Text>
-          </View>
+        <View style={styles.distanceBox}>
+          <Text style={styles.highlightText}>{`${(item.distance / 1000).toFixed(
+            2,
+          )} KM`}</Text>
+          <Text style={styles.distanceText}>Today Distance</Text>
+          <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
+            {motion ? 'Running' : 'Stopped'}
+          </Text>
         </View>
       </View>
-      <View
-        style={{
-          backgroundColor: '#F7F7F7',
-          paddingHorizontal: 10,
-          paddingVertical: 5,
-          borderRadius: 8,
-          flexDirection: 'column',
-        }}>
+      <View style={styles.additionalInfoContainer}>
         <View style={styles.expiryDate}>
           <View style={styles.addressContainer}>
-            <LocationShadowIcon size={15} color={'#3BA700'} />
+            <LocationShadowIcon size={15} color="#3BA700" />
             <Text style={styles.addressText(false)}>{item.address}</Text>
           </View>
           <TouchableOpacity
@@ -190,13 +159,7 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
             <SettingIcon size={15} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
-        <Text
-          style={{
-            color: PrivacyPolicy,
-            fontFamily: 'PlusJakartaSans-SemiBold',
-            fontSize: 8,
-            paddingLeft: 25,
-          }}>
+        <Text style={styles.lastUpdate}>
           {moment(item?.lastUpdate).format('hh:mm A DD MMM YYYY')}
         </Text>
       </View>
@@ -204,29 +167,36 @@ const GpsItem = ({navigation, item, icon, isDisable}) => {
   );
 };
 
-export default GpsItem;
+export default memo(GpsItem);
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
     borderRadius: 8,
-    // borderTopLeftRadius: 0,
     marginBottom: 20,
     elevation: 2,
-    // shadowColor: 'blue',
   },
   itemContainer: {
     flexDirection: 'row',
   },
-  image: {
-    width: 50,
-    height: 50,
+  imgContainer: {
+    padding: 5,
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  imgBox: {
+    backgroundColor: '#ededed',
+    borderRadius: 6,
+    width: 65,
+    height: 60,
+    marginTop: 5,
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
     flex: 1,
     justifyContent: 'center',
-    // padding: 10,
-    // borderWidth: 1,
     paddingTop: 8,
   },
   highlightText: {
@@ -255,7 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     minWidth: 180,
-    // borderWidth: 1,
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
@@ -268,21 +237,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  imgContainer: {
-    padding: 5,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  imgBox: {
-    backgroundColor: '#f7f7f7',
-    borderRadius: 6,
-    width: 65,
-    height: 60,
-    marginTop: 5,
-    marginLeft: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   ignitionText: status => ({
     color: status ? 'green' : 'red',
     fontFamily: 'PlusJakartaSans-SemiBold',
@@ -294,11 +248,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginLeft: 10,
   }),
-  inactiveText: {
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-Italic',
-    fontSize: 12,
-  },
   lastUpdateText: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Regular',
@@ -316,7 +265,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     minWidth: 40,
     marginRight: 8,
-    // borderWidth: 1,
   },
   addressContainer: {
     maxWidth: '90%',
@@ -326,5 +274,18 @@ const styles = StyleSheet.create({
   center: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  additionalInfoContainer: {
+    backgroundColor: '#F7F7F7',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    flexDirection: 'column',
+  },
+  lastUpdate: {
+    color: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 8,
+    paddingLeft: 25,
   },
 });

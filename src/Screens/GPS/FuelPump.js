@@ -20,6 +20,8 @@ const fetchData = async (latitude, longitude, type) => {
         type: type,
       },
     });
+    // console.log(4444, response.data.results);
+
     return response.data.results;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -43,6 +45,8 @@ const fetchDistances = async (origins, destinations) => {
 };
 
 const FuelPumpItem = ({item, distance}) => {
+  console.log(44444, item, distance);
+
   const handleNavigate = () => {
     const url = `google.navigation:q=${item?.geometry?.location?.lat},${item?.geometry?.location?.lng}`;
     Linking.openURL(url).catch(err =>
@@ -54,6 +58,7 @@ const FuelPumpItem = ({item, distance}) => {
     <View style={styles.container}>
       <View style={styles.detailBox}>
         <Text style={styles.headerText}>{item.name}</Text>
+        <Text style={styles.headerTextValue}>{item?.vicinity}</Text>
         <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
       <TouchableOpacity style={styles.iconContainer} onPress={handleNavigate}>
@@ -66,17 +71,17 @@ const FuelPumpItem = ({item, distance}) => {
 };
 
 const FuelPump = ({navigation, route}) => {
-  const {theft} = route.params;
+  const {theft, latitude, longitude} = route.params;
   const [locations, setLocations] = useState([]);
   const [distances, setDistances] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log(55555555, route);
+
   useEffect(() => {
     const fetchLocationsAndDistances = async () => {
       try {
-        const latitude = 25.829027; // Replace with actual latitude
-        const longitude = 84.980179; // Replace with actual longitude
         const type = theft ? 'police' : 'gas_station';
         const data = await fetchData(latitude, longitude, type);
 

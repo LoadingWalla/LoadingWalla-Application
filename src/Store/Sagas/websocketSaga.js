@@ -61,7 +61,7 @@ function* handleWebSocketConnection(cookie) {
       yield put(action);
 
       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-        console.log(123456789, action.payload);
+        // console.log(123456789, action.payload);
 
         // Add checks to ensure action.payload is not null or undefined and not an empty object
         if (action.payload && Object.keys(action.payload).length !== 0) {
