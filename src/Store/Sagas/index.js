@@ -80,6 +80,8 @@ function* rootSaga() {
     saga.fetchGpsNotifications,
   );
   yield takeLatest(actions.FETCH_FULLADDRESS_REQUEST, saga.fetchFullAddress);
+  yield takeLatest(actions.GPS_RELAY_REQUEST, saga.fetchGpsRelayData);
+  yield takeLatest(actions.SET_GPS_RELAY_REQUEST, saga.setGpsRelayData);
 }
 
 export default rootSaga;

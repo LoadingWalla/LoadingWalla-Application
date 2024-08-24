@@ -1,5 +1,4 @@
 import React from 'react';
-import TruckNavigationIcon from '../../assets/SVG/svg/TruckNavigationIcon';
 import DefaultGpsIcon from '../../assets/SVG/svg/DefaultGpsIcon';
 import PickUpIcon from '../../assets/SVG/svg/PickUpIcon';
 import BikeGpsIcon from '../../assets/SVG/svg/BikeGpsIcon';

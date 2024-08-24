@@ -9,11 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  backgroundColorNew,
-  GradientColor1,
-  titleColor,
-} from '../../Color/color';
+import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
@@ -36,10 +32,13 @@ import {
   fetchAddressFailure,
   fetchAddressRequest,
   fetchPositionsRequest,
+  gpsRelayFailure,
+  gpsRelayRequest,
 } from '../../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import MapViewDirections from 'react-native-maps-directions';
+import RelayIcon from '../../../assets/SVG/svg/RelayIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -50,13 +49,13 @@ const getLivePositions = (wsMessages, deviceId) => {
       latitude: position.latitude,
       longitude: position.longitude,
       course: position.course,
-      totalDistance: position.attributes.totalDistance,
+      // totalDistance: position.attributes.totalDistance,
     }));
 };
 
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long, item} = route.params;
-  console.log(8888888888888, item);
+  // console.log(8888888888888, item);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -66,6 +65,7 @@ const TrackingTruck = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
   const [mapType, setMapType] = useState('standard');
   const [totalDistance, setTotalDistance] = useState(0);
+  const [currentAddress, setCurrentAddress] = useState(item.address);
 
   const {
     wsMessages,
@@ -77,6 +77,7 @@ const TrackingTruck = ({navigation, route}) => {
     fullAddressLoading,
     gpsReplayData,
     gpsTokenData,
+    gpsRelayData,
   } = useSelector(state => {
     console.log('Tracking Truck -------------->>>>>', state.data);
     return state.data;
@@ -99,6 +100,10 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
+  useEffect(() => {
+    console.log('Live positions:', livePositions);
+  }, [livePositions]);
+
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);
   const events = wsEvents.filter(e => e.deviceId === deviceId);
@@ -118,7 +123,7 @@ const TrackingTruck = ({navigation, route}) => {
       const replayPositions = gpsReplayData.map(position => ({
         latitude: position.latitude,
         longitude: position.longitude,
-        totalDistance: position.attributes.totalDistance,
+        // totalDistance: position.attributes.totalDistance,
       }));
       setLivePositions(replayPositions);
       setLoading(false);
@@ -157,6 +162,7 @@ const TrackingTruck = ({navigation, route}) => {
 
   useFocusEffect(
     useCallback(() => {
+      dispatch(gpsRelayRequest(deviceId));
       return () => {
         dispatch(fetchAddressFailure());
       };
@@ -186,7 +192,9 @@ const TrackingTruck = ({navigation, route}) => {
           ...position.map(p => ({
             latitude: p.latitude,
             longitude: p.longitude,
-            totalDistance: p.totalDistance,
+            course: p.course,
+            // totalDistance: p.totalDistance,
+            deviceId: p.id,
           })),
         ]);
         updateMarkerPosition(position[position.length - 1]);
@@ -252,7 +260,9 @@ const TrackingTruck = ({navigation, route}) => {
         <View style={styles.leftTopContainer}>
           <View style={styles.distanceBox}>
             <Text style={styles.distanceText}>Today Distance:</Text>
-            <Text style={styles.highlightText}>{`${totalDistance} km`}</Text>
+            <Text style={styles.highlightText}>{`${(
+              item.distance / 1000
+            ).toFixed(2)} km`}</Text>
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
@@ -366,11 +376,11 @@ const TrackingTruck = ({navigation, route}) => {
                   }}
                   apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
                   strokeWidth={3}
-                  strokeColor="hotpink"
+                  strokeColor="blue"
                   optimizeWaypoints={true}
                   onReady={result => {
                     console.log(`Distance: ${result.distance} km`);
-                    console.log(`Duration: ${result.duration} min.`);
+                    // console.log(`Duration: ${result.duration} min.`);
                     setTotalDistance(result.distance.toFixed(2)); // Update the distance state
                   }}
                   onError={errorMessage => {
@@ -382,29 +392,10 @@ const TrackingTruck = ({navigation, route}) => {
               {livePositions.length > 0 && (
                 <Marker.Animated
                   ref={markerRef}
-                  coordinate={animatedMarkerPosition}
-                  onPress={handleTruckIconPress}>
+                  coordinate={animatedMarkerPosition}>
                   <View style={styles.markerContainer}>
                     <View style={styles.addressContainer}>
-                      {fullAddressLoading ? (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                          }}>
-                          <Text style={styles.addressText}>
-                            Getting Address...
-                          </Text>
-                          <ActivityIndicator
-                            size="small"
-                            color={GradientColor1}
-                          />
-                        </View>
-                      ) : (
-                        <Text style={styles.addressText}>
-                          {fullAddressData || 'Show Full Address'}
-                        </Text>
-                      )}
+                      <Text style={styles.addressText}>{currentAddress}</Text>
                     </View>
                     <View style={styles.arrowBottom} />
                     <View style={styles.truckIconContainer}>
@@ -464,6 +455,21 @@ const TrackingTruck = ({navigation, route}) => {
             }
           />
           <IconWithName
+            IconComponent={RelayIcon}
+            iconSize={30}
+            title={'Relay'}
+            dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+            dynamicTitleColor={gpsRelayData?.relay ? 'green' : 'red'}
+            onPress={() => {
+              navigation.navigate('GpsRelay', {
+                deviceId: deviceId,
+                item: item,
+                gpsRelayData,
+              });
+              dispatch(gpsRelayFailure());
+            }}
+          />
+          <IconWithName
             IconComponent={FuelPumpIcon}
             iconSize={25}
             title={'Fuel Pump'}
@@ -471,6 +477,8 @@ const TrackingTruck = ({navigation, route}) => {
               navigation.navigate('FuelPump', {
                 headerTitle: 'Fuel Pump',
                 theft: false,
+                latitude: livePositions[livePositions.length - 1].latitude,
+                longitude: livePositions[livePositions.length - 1].longitude,
               })
             }
           />
@@ -482,6 +490,8 @@ const TrackingTruck = ({navigation, route}) => {
               navigation.navigate('FuelPump', {
                 headerTitle: 'Nearby Police Station',
                 theft: true,
+                latitude: livePositions[livePositions.length - 1].latitude,
+                longitude: livePositions[livePositions.length - 1].longitude,
               })
             }
           />

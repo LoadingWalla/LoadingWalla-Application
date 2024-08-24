@@ -1322,6 +1322,45 @@ export const fetchAddressFailure = payload => ({
   payload,
 });
 
+// Gps relay
+export const gpsRelayRequest = deviceId => {
+  console.log(66666666, deviceId);
+  return {
+    type: actionTypes.GPS_RELAY_REQUEST,
+    deviceId,
+  };
+};
+
+export const gpsRelaySuccess = data => ({
+  type: actionTypes.GPS_RELAY_SUCCESS,
+  payload: data,
+});
+
+export const gpsRelayFailure = error => ({
+  type: actionTypes.GPS_RELAY_FAILURE,
+  payload: error,
+});
+
+// set gps relay
+export const setGpsRelayRequest = (deviceId, types) => {
+  console.log(66666666, deviceId, types);
+  return {
+    type: actionTypes.SET_GPS_RELAY_REQUEST,
+    deviceId,
+    types,
+  };
+};
+
+export const setGpsRelaySuccess = data => ({
+  type: actionTypes.SET_GPS_RELAY_SUCCESS,
+  payload: data,
+});
+
+export const setGpsRelayFailure = error => ({
+  type: actionTypes.SET_GPS_RELAY_FAILURE,
+  payload: error,
+});
+
 // Clear store on logout
 export const clearStore = () => ({
   type: actionTypes.CLEAR_STORE,

@@ -41,7 +41,7 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('MY Gps Screeen --------', state.data);
+    // console.log('MY Gps Screeen --------', state.data);
     return state.data;
   });
 

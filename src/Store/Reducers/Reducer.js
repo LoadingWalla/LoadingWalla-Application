@@ -210,6 +210,14 @@ const initialState = {
   fullAddressLoading: false,
   fullAddressData: null,
   fullAddressStatus: null,
+  // gps relay
+  gpsRelayloading: false,
+  gpsRelayData: null,
+  gpsRelayStatus: null,
+  // set gps relay
+  setGpsRelayloading: false,
+  setGpsRelayData: null,
+  setGpsRelayStatus: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1237,7 +1245,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsDeviceLoading: true,
-        gpsDeviceData: null,
         gpsDeviceStatus: null,
       };
     case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
@@ -1252,7 +1259,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.FETCH_GPS_DEVICES_FAILURE:
       return updateState(state, {
         gpsDeviceLoading: false,
-        gpsDeviceData: null,
         gpsDeviceStatus: null,
       });
 
@@ -1503,6 +1509,43 @@ const reducer = (state = initialState, action) => {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
         fullAddressData: null,
+      });
+
+    // Gps Relay
+    case actionTypes.GPS_RELAY_REQUEST:
+      return {
+        ...state,
+        gpsRelayloading: true,
+        gpsRelayStatus: null,
+      };
+    case actionTypes.GPS_RELAY_SUCCESS:
+      return updateState(state, {
+        gpsRelayloading: false,
+        gpsRelayData: payload?.data,
+        gpsRelayStatus: payload?.status,
+      });
+    case actionTypes.GPS_RELAY_FAILURE:
+      return updateState(state, {
+        gpsRelayloading: false,
+        gpsRelayStatus: payload?.status,
+      });
+    // set gps relay
+    case actionTypes.SET_GPS_RELAY_REQUEST:
+      return {
+        ...state,
+        setGpsRelayloading: true,
+        setGpsRelayStatus: null,
+      };
+    case actionTypes.SET_GPS_RELAY_SUCCESS:
+      return updateState(state, {
+        setGpsRelayloading: false,
+        setGpsRelayData: payload?.data,
+        setGpsRelayStatus: payload?.status,
+      });
+    case actionTypes.SET_GPS_RELAY_FAILURE:
+      return updateState(state, {
+        setGpsRelayloading: false,
+        setGpsRelayStatus: payload?.status,
       });
 
     // Clear Store on logout
