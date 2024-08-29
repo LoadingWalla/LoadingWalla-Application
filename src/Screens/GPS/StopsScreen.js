@@ -2,10 +2,13 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import ShareIcon from '../../../assets/SVG/svg/ShareIcon';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchGpsStopsRequest} from '../../Store/Actions/Actions';
+import {useFocusEffect} from '@react-navigation/native';
+import moment from 'moment';
 
 const RenderItem = React.memo(({item, index}) => {
-  console.log(4444, item, index);
+  // console.log(4444, item, index);
   const formattedDate = new Date(item.startTime).toLocaleDateString();
   const formattedEndTime = new Date(item.endTime).toLocaleTimeString();
   const distanceCovered = (item.endOdometer - item.startOdometer) / 1000;
@@ -49,8 +52,35 @@ const RenderItem = React.memo(({item, index}) => {
   );
 });
 
-const StopsScreen = () => {
-  const {gpsStopsData} = useSelector(state => state.data);
+const StopsScreen = ({navigation, route}) => {
+  // const {deviceId, from, to} = route.params;
+
+  const {gpsStopsData, gpsTokenData} = useSelector(state => state.data);
+  const dispatch = useDispatch();
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const defaultFrom = from || moment().utc().startOf('day').toISOString();
+  //     const defaultTo = to || moment().utc().endOf('day').toISOString();
+
+  //     // Fetch summary report
+  //     dispatch(
+  //       fetchGpsStopsRequest(
+  //         gpsTokenData?.email,
+  //         gpsTokenData?.password,
+  //         deviceId,
+  //         defaultFrom,
+  //         defaultTo,
+  //         true,
+  //       ),
+  //     );
+
+  //     // Optional cleanup function
+  //     return () => {
+  //       // Any cleanup actions
+  //     };
+  //   }, [gpsTokenData, deviceId, from, to, dispatch]),
+  // );
 
   return (
     <FlatList

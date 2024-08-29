@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState, useMemo, useRef} from 'react';
-import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import MapView, {AnimatedRegion, Marker} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
@@ -24,6 +24,8 @@ import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import MapViewDirections from 'react-native-maps-directions';
+import MapComponent from './MapComponent';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
@@ -48,9 +50,97 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsData,
     wsConnected,
   } = useSelector(state => {
-    console.log('Play Journey -----------------------', state.data);
+    console.log('Play Journey ----------------->', state.data);
     return state.data;
   });
+
+  // Consolidate data fetching logic
+  const fetchData = React.useCallback(() => {
+    const defaultFrom = from || moment().utc().startOf('day').toISOString();
+    const defaultTo = to || moment().utc().endOf('day').toISOString();
+
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+
+    if (!gpsReplayData || gpsReplayData.length === 0) {
+      dispatch(
+        fetchPositionsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+    }
+
+    if (!gpsStopsData || gpsStopsData.length === 0) {
+      dispatch(
+        fetchGpsStopsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+    }
+  }, [
+    dispatch,
+    deviceId,
+    from,
+    to,
+    gpsTokenData,
+    wsConnected,
+    gpsReplayData,
+    gpsStopsData,
+  ]);
+
+  useFocusEffect(fetchData);
+
+  useEffect(() => {
+    let interval = null;
+    if (isPlaying && currentIndex < coordinates?.length) {
+      interval = setInterval(() => {
+        setCurrentIndex(prevIndex => {
+          const newIndex = prevIndex + 1;
+          const newPosition = coordinates[newIndex];
+          setCurrentPosition(newPosition);
+          animatedMarkerPosition
+            .timing({
+              latitude: newPosition?.latitude,
+              longitude: newPosition?.longitude,
+              duration: 1000 / playbackSpeed,
+              useNativeDriver: false,
+            })
+            .start();
+
+          setSliderValue(newIndex / (coordinates?.length - 1));
+          if (mapRef.current && newPosition) {
+            mapRef.current.animateCamera({
+              center: {
+                latitude: newPosition.latitude,
+                longitude: newPosition.longitude,
+              },
+              zoom: 15,
+              duration: 1000 / playbackSpeed,
+            });
+          }
+          return newIndex;
+        });
+      }, 1000 / playbackSpeed);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+
+  useEffect(() => {
+    if (gpsStopsData && gpsStopsData?.length > 0) {
+      setCurrentStop(gpsStopsData[0]);
+    }
+  }, [gpsStopsData]);
 
   const coordinates = useMemo(
     () =>
@@ -84,107 +174,6 @@ export default function PlayJourney({navigation, route}) {
       longitudeDelta: 0.0421,
     }),
   ).current;
-
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const changePlaybackSpeed = speed => {
-    setPlaybackSpeed(speed);
-    if (isPlaying) {
-      togglePlayback();
-      togglePlayback();
-    }
-  };
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const defaultFrom = from || moment().utc().startOf('day').toISOString();
-      const defaultTo = to || moment().utc().endOf('day').toISOString();
-      if (wsConnected) {
-        dispatch(websocketDisconnect());
-      }
-
-      if (!gpsReplayData) {
-        dispatch(
-          fetchPositionsRequest(
-            gpsTokenData?.email,
-            gpsTokenData?.password,
-            deviceId,
-            defaultFrom,
-            defaultTo,
-          ),
-        );
-      }
-      if (gpsStopsData === null) {
-        dispatch(
-          fetchGpsStopsRequest(
-            gpsTokenData?.email,
-            gpsTokenData?.password,
-            deviceId,
-            defaultFrom,
-            defaultTo,
-          ),
-        );
-      }
-      return () => {
-        // dispatch(websocketConnect(gpsTokenData.cookie));
-      };
-    }, [dispatch, from, to, deviceId, gpsTokenData]),
-  );
-
-  useEffect(() => {
-    let interval = null;
-    if (isPlaying && currentIndex < coordinates?.length) {
-      interval = setInterval(() => {
-        setCurrentIndex(prevIndex => {
-          const newIndex = prevIndex + 1;
-          const newPosition = coordinates[newIndex];
-          setCurrentPosition(newPosition);
-          animatedMarkerPosition
-            .timing({
-              latitude: newPosition?.latitude,
-              longitude: newPosition?.longitude,
-              duration: 1000 / playbackSpeed,
-              useNativeDriver: false,
-            })
-            .start();
-
-          setSliderValue(newIndex / (coordinates?.length - 1));
-          // Only change the position, not the zoom level
-          // if (mapRef.current && newPosition) {
-          //   mapRef.current.animateToRegion({
-          //     latitude: newPosition?.latitude,
-          //     longitude: newPosition?.longitude,
-          //     latitudeDelta: 0.0922,
-          //     longitudeDelta: 0.0421,
-          //   });
-          // }
-          if (mapRef.current && newPosition) {
-            mapRef.current.animateCamera({
-              center: {
-                latitude: newPosition.latitude,
-                longitude: newPosition.longitude,
-              },
-              // Do not change zoom level
-              zoom: 30, // Set a default zoom level, adjust as needed
-              duration: 1000 / playbackSpeed,
-            });
-          }
-          return newIndex;
-        });
-      }, 1000 / playbackSpeed);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
-
-  useEffect(() => {
-    if (gpsStopsData && gpsStopsData?.length > 0) {
-      setCurrentStop(gpsStopsData[0]);
-    }
-  }, [gpsStopsData]);
 
   const goToNextStop = () => {
     if (currentStopIndex < gpsStopsData?.length - 1) {
@@ -232,6 +221,18 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
+  const togglePlayback = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const changePlaybackSpeed = speed => {
+    setPlaybackSpeed(speed);
+    if (isPlaying) {
+      togglePlayback();
+      togglePlayback();
+    }
+  };
+
   const totalStops = gpsStopsData ? gpsStopsData.length : 0;
   const totalRun =
     gpsStopsData && gpsStopsData.length > 0
@@ -250,12 +251,18 @@ export default function PlayJourney({navigation, route}) {
     const minutes = Math.floor((duration / (1000 * 60)) % 60);
     const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
-    const hoursStr = hours < 10 ? `0${hours}` : hours;
-    const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
-    const secondsStr = seconds < 10 ? `0${seconds}` : seconds;
-
-    return `${hoursStr}:${minutesStr}:${secondsStr}`;
+    return `${hours < 10 ? `0${hours}` : hours}:${
+      minutes < 10 ? `0${minutes}` : minutes
+    }:${seconds < 10 ? `0${seconds}` : seconds}`;
   };
+
+  if (gpsReplayLoading || gpsStopsLoading || !gpsReplayData || !gpsStopsData) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color={backgroundColorNew} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -284,21 +291,39 @@ export default function PlayJourney({navigation, route}) {
         </View>
       </View>
       <View style={styles.mapContainer}>
-        {gpsReplayLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
-          </View>
-        ) : (
-          <View style={styles.mapView}>
+        {/* <View style={styles.mapView}>
             {initialRegion && (
               <MapView
                 ref={mapRef}
                 style={StyleSheet.absoluteFillObject}
                 initialRegion={initialRegion}>
-                <Polyline
-                  coordinates={coordinates}
-                  strokeColor="#0158AF"
+                <MapViewDirections
+                  origin={simplifiedCoordinates[0]}
+                  destination={
+                    simplifiedCoordinates[simplifiedCoordinates.length - 1]
+                  }
+                  waypoints={simplifiedCoordinates.slice(1, -1)}
+                  apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
                   strokeWidth={3}
+                  strokeColor="blue"
+                  optimizeWaypoints={true}
+                  onReady={result => {
+                    console.log(`Distance: ${result.distance} km`);
+                    console.log(`Duration: ${result.duration} min.`);
+                  }}
+                  onError={errorMessage => {
+                    console.error('Error in MapViewDirections:', errorMessage);
+                  }}
+                />
+                <Marker
+                  coordinate={coordinates[0]}
+                  title="Start Point"
+                  pinColor="green"
+                />
+                <Marker
+                  coordinate={coordinates[coordinates.length - 1]}
+                  title="End Point"
+                  pinColor="red"
                 />
                 {currentPosition && (
                   <Marker.Animated
@@ -318,29 +343,33 @@ export default function PlayJourney({navigation, route}) {
                       latitude: stop.latitude,
                       longitude: stop.longitude,
                     }}
-                    pinColor={index === currentStopIndex ? 'blue' : 'red'}
+                    pinColor={index === currentStopIndex ? 'blue' : 'orange'}
                     title={`Stop ${index + 1}`}
                     description={stop.address}
                   />
                 ))}
               </MapView>
             )}
-            <View style={styles.extraButtonBox}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('stops')}
-                style={styles.stopsBtnStyle}>
-                <AlertsIcon size={20} />
-                <Text style={styles.alertButtonText}>Stops</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.ctrlBtn} onPress={goToPrevStop}>
-                <PrevIcon size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.ctrlBtn} onPress={goToNextStop}>
-                <NextIcon size={30} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+          </View> */}
+        <MapComponent
+          gpsData={gpsReplayData}
+          stops={gpsStopsData}
+          currentPosition={currentPosition}
+        />
+        <View style={styles.extraButtonBox}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('stops', {deviceId, from, to})}
+            style={styles.stopsBtnStyle}>
+            <AlertsIcon size={20} />
+            <Text style={styles.alertButtonText}>Stops</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={goToPrevStop}>
+            <PrevIcon size={30} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.ctrlBtn} onPress={goToNextStop}>
+            <NextIcon size={30} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.bottomContainer}>
         <View style={styles.controlsContainer}>
@@ -434,13 +463,13 @@ export default function PlayJourney({navigation, route}) {
               {formatDuration(totalDuration)}
             </Text>
           </View>
-          <View style={styles.verticalLine} />
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#E0BD00'}]}>
-              Signal Losts: 0 KM
-            </Text>
-            <Text style={styles.stopCount}>00:00:00</Text>
-          </View>
+          {/* <View style={styles.verticalLine} />
+            <View style={styles.stopBox}>
+              <Text style={[styles.stopText, {color: '#E0BD00'}]}>
+                Signal Losts: 0 KM
+              </Text>
+              <Text style={styles.stopCount}>00:00:00</Text>
+            </View> */}
         </View>
       </View>
     </View>
@@ -476,7 +505,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     padding: 10,
-    // marginTop: 5,
     elevation: 2,
   },
   mapContainer: {flex: 1},
@@ -524,7 +552,7 @@ const styles = StyleSheet.create({
   totalBox: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     paddingVertical: 10,
     marginTop: 10,
   },

@@ -1116,13 +1116,13 @@ export function* fetchGpsSummary({
   daily,
 }) {
   try {
-    // console.log(33333, username, password, deviceId, from, to, daily);
+    console.log(33333, username, password, deviceId, from, to, daily);
     const data = yield gpsApi.get(
       `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
       username,
       password,
     );
-    // console.log('Gps Summary', data);
+    console.log('Gps Summary', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchSummaryReportSuccess(data?.data));
@@ -1187,7 +1187,7 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
       username,
       password,
     );
-    // console.log('Gps Replay', data);
+    console.log('Gps stops', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsStopsSuccess(data?.data));
@@ -1203,23 +1203,23 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
 // gps trips
 export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   try {
-    // console.log(99888999, username, password, deviceId, from, to);
+    console.log(99888999, username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/trips?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
-    // console.log('Gps Trips', data);
+    console.log('Gps Trips --------------->', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchGpsTripsSuccess(data?.data));
     } else {
-      // console.log('else', data);
-      yield put(actions.fetchGpsTripsFailure(data.status));
+      yield put(actions.fetchGpsTripsFailure(data));
+      console.log('else', data);
     }
   } catch (error) {
     yield put(actions.fetchGpsTripsFailure(error.message));
-    // console.log('error4444', error);
+    console.log('error4444', error);
   }
 }
 
@@ -1355,9 +1355,10 @@ export function* fetchGpsRelayData({deviceId}) {
 }
 
 // full address
-// "https://maps.googleapis.com/maps/api/geocode/json?latlng=LATITUDE,LONGITUDE&key=YOUR_API_KEY"
 export function* fetchFullAddress({lat, lan}) {
   try {
+    console.log(999999, lat, lan);
+
     const data = yield googleApi().get(`geocode/json?latlng=${lat},${lan}`);
     console.log('Gps Address--------------', data);
     if (data?.status === 200) {

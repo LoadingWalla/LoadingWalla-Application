@@ -60,6 +60,7 @@ const GpsItem = ({navigation, item, isDisable}) => {
     } else {
       navigation.navigate('trackingtruck', {
         deviceId: id,
+        name,
         lat: position[0]?.latitude,
         long: position[0]?.longitude,
         item,
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   addressText: color => ({
     color: color ? backgroundColorNew : PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-BoldItalic',
-    fontSize: 10,
+    fontSize: 12,
     marginLeft: 10,
   }),
   lastUpdateText: {

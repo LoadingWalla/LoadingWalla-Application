@@ -3,6 +3,7 @@ import {take, call, put, fork, cancel, delay} from 'redux-saga/effects';
 import {WS_URL} from '../../Utils/Url';
 import * as actionTypes from '../Actions/ActionTypes';
 import * as actions from '../Actions/Actions';
+import {throttle} from 'lodash';
 
 function createWebSocketChannel(cookie) {
   return eventChannel(emit => {
@@ -52,41 +53,80 @@ function createWebSocketChannel(cookie) {
   });
 }
 
+// function* handleWebSocketConnection(cookie) {
+//   const channel = yield call(createWebSocketChannel, cookie);
+
+//   try {
+//     while (true) {
+//       const action = yield take(channel);
+//       yield put(action);
+
+//       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
+//         // console.log(123456789, action.payload);
+
+//         // Add checks to ensure action.payload is not null or undefined and not an empty object
+//         if (action.payload && Object.keys(action.payload).length !== 0) {
+//           const {devices, positions, events} = action.payload;
+//           // console.log(987654321, devices, 11111, positions, 222222, events);
+
+//           // Update devices if they exist and are not empty
+//           if (devices && devices.length > 0) {
+//             // console.log(33333, devices);
+//             yield put(actions.updateDevices(devices));
+//           }
+
+//           // Update positions if they exist and are not empty
+//           if (positions && positions.length > 0) {
+//             // console.log(11111, positions);
+//             yield put(actions.updatePositions(positions));
+//           }
+
+//           // Update events if they exist and are not empty
+//           if (events && events.length > 0) {
+//             // console.log(222222, events);
+//             yield put(actions.updateEvents(events));
+//           }
+//         } else {
+//           // console.log('Received empty payload in WEBSOCKET_MESSAGE');
+//         }
+//       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
+//         console.log('WebSocket connection closed');
+//       }
+//     }
+//   } finally {
+//     console.log('WebSocket connection finally block, cleaning up');
+//     channel.close();
+//   }
+// }
+
+// Handle WebSocket connection
 function* handleWebSocketConnection(cookie) {
   const channel = yield call(createWebSocketChannel, cookie);
+
+  // Throttle data processing
+  const handleWebSocketMessage = throttle(function* (data) {
+    if (data.devices && data.devices.length > 0) {
+      yield put(actions.updateDevices(data.devices));
+    }
+
+    if (data.positions && data.positions.length > 0) {
+      yield put(actions.updatePositions(data.positions));
+    }
+
+    if (data.events && data.events.length > 0) {
+      yield put(actions.updateEvents(data.events));
+    }
+  }, 1000); // Process data at most once per second
 
   try {
     while (true) {
       const action = yield take(channel);
-      yield put(action);
 
       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-        // console.log(123456789, action.payload);
+        const data = action.payload;
 
-        // Add checks to ensure action.payload is not null or undefined and not an empty object
-        if (action.payload && Object.keys(action.payload).length !== 0) {
-          const {devices, positions, events} = action.payload;
-          // console.log(987654321, devices, 11111, positions, 222222, events);
-
-          // Update devices if they exist and are not empty
-          if (devices && devices.length > 0) {
-            // console.log(33333, devices);
-            yield put(actions.updateDevices(devices));
-          }
-
-          // Update positions if they exist and are not empty
-          if (positions && positions.length > 0) {
-            // console.log(11111, positions);
-            yield put(actions.updatePositions(positions));
-          }
-
-          // Update events if they exist and are not empty
-          if (events && events.length > 0) {
-            // console.log(222222, events);
-            yield put(actions.updateEvents(events));
-          }
-        } else {
-          // console.log('Received empty payload in WEBSOCKET_MESSAGE');
+        if (data && Object.keys(data).length !== 0) {
+          yield* handleWebSocketMessage(data);
         }
       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
         console.log('WebSocket connection closed');

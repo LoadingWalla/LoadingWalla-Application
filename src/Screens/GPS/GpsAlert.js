@@ -1,44 +1,35 @@
+import React from 'react';
 import {
+  ActivityIndicator,
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchGpsNotificationsRequest} from '../../Store/Actions/Actions';
 
-const renderItem = ({call, item}) => {
-  // console.log(44444444, item);
-  return (
-    <View style={styles.headerbox}>
-      <View style={styles.textView}>
-        <View style={styles.speedBox}>
-          <Text style={styles.headerText}>{item?.type}</Text>
-          {/* <Text style={styles.headerTextValue}>70KMPH</Text> */}
-        </View>
-        {/* <View style={styles.timeDateBox}>
-          <Text style={styles.mediumTextStyle}>June 10, 2024</Text>
-          <View style={styles.verticalLine} />
-          <Text style={styles.mediumTextStyle}>12:30 PM - 01:00 PM</Text>
-        </View> */}
+const renderItem = ({call, item}) => (
+  <View style={styles.headerbox}>
+    <View style={styles.textView}>
+      <View style={styles.speedBox}>
+        <Text style={styles.headerText}>{item?.type}</Text>
       </View>
-      {call ? (
-        <View style={styles.callBox}>
-          <TouchableOpacity style={styles.iconBox}>
-            <PhoneCall size={20} color={backgroundColorNew} />
-          </TouchableOpacity>
-          <Text style={styles.mediumTextStyle}>Call Owner</Text>
-        </View>
-      ) : null}
     </View>
-  );
-};
+    {call && (
+      <View style={styles.callBox}>
+        <TouchableOpacity style={styles.iconBox}>
+          <PhoneCall size={20} color={backgroundColorNew} />
+        </TouchableOpacity>
+        <Text style={styles.mediumTextStyle}>Call Owner</Text>
+      </View>
+    )}
+  </View>
+);
 
 const GpsAlert = () => {
   const dispatch = useDispatch();
@@ -47,26 +38,39 @@ const GpsAlert = () => {
     gpsNotificationLoading,
     gpsNotificationError,
     gpsNotificationData,
-  } = useSelector(state => {
-    console.log('Gps Alerts', state.data);
-    return state.data;
-  });
+  } = useSelector(state => state.data);
 
   useFocusEffect(
     React.useCallback(() => {
-      // console.log(4444, gpsTokenData?.email, gpsTokenData?.password);
-      dispatch(
-        fetchGpsNotificationsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-        ),
-      );
-      // Optional cleanup function
-      return () => {
-        // Any cleanup actions
-      };
-    }, [dispatch]), // Dependencies
+      if (gpsTokenData?.email && gpsTokenData?.password) {
+        dispatch(
+          fetchGpsNotificationsRequest(
+            gpsTokenData.email,
+            gpsTokenData.password,
+          ),
+        );
+      }
+    }, [dispatch, gpsTokenData?.email, gpsTokenData?.password]),
   );
+
+  if (gpsNotificationLoading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color={backgroundColorNew} />
+      </View>
+    );
+  }
+
+  if (
+    !gpsNotificationLoading &&
+    (!gpsNotificationData || gpsNotificationData.length === 0)
+  ) {
+    return (
+      <View style={styles.noDataContainer}>
+        <Text style={styles.noDataText}>No Alerts</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -84,6 +88,21 @@ export default GpsAlert;
 
 const styles = StyleSheet.create({
   container: {flex: 1, padding: 10},
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataText: {
+    fontSize: 16,
+    color: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
   headerbox: {
     paddingVertical: 10,
     paddingHorizontal: 15,
@@ -107,35 +126,24 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    // paddingVertical: 5,
     fontFamily: 'PlusJakartaSans-Bold',
-  },
-  headerTextValue: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: backgroundColorNew,
   },
   textView: {
-    // borderWidth: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   speedBox: {
-    //   borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   timeDateBox: {
-    //   borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
     marginVertical: 5,
   },
   callBox: {
-    // borderWidth: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

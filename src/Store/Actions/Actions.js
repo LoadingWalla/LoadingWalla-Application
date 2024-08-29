@@ -1125,6 +1125,10 @@ export const fetchSummaryReportFailure = error => ({
   payload: error,
 });
 
+export const clearSummaryReportData = () => ({
+  type: actionTypes.CLEAR_SUMMARY_REPORT_DATA,
+});
+
 // GPS Notifications
 export const fetchGpsNotificationsRequest = (username, password) => ({
   type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
@@ -1215,9 +1219,13 @@ export const fetchGpsTripsSuccess = data => ({
   payload: data,
 });
 
-export const fetchGpsTripsFailure = error => ({
+export const fetchGpsTripsFailure = payload => ({
   type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
-  payload: error,
+  payload,
+});
+
+export const clearGpsTripsData = () => ({
+  type: actionTypes.CLEAR_GPS_TRIPS_DATA,
 });
 
 // GPS Tripa

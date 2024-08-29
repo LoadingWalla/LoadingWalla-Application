@@ -171,11 +171,11 @@ const initialState = {
   // gps summary
   gpsSummaryLoading: false,
   gpsSummaryError: null,
-  gpsSummaryData: null,
+  gpsSummaryData: [],
   // gps notification
   gpsNotificationLoading: false,
   gpsNotificationError: null,
-  gpsNotificationData: null,
+  gpsNotificationData: [],
   // gps replay
   gpsReplayLoading: false,
   gpsReplayError: null,
@@ -183,11 +183,11 @@ const initialState = {
   // gps stops
   gpsStopsLoading: false,
   gpsStopsError: null,
-  gpsStopsData: null,
+  gpsStopsData: [],
   // gps trips
   gpsTripsLoading: false,
   gpsTripsError: null,
-  gpsTripsData: null,
+  gpsTripsData: [],
   // gps plans
   gpsPlansData: [],
   rechargePlansData: [],
@@ -1337,7 +1337,11 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsSummaryLoading: false,
         gpsSummaryError: payload,
-        gpsSummaryData: null,
+      });
+    case actionTypes.CLEAR_SUMMARY_REPORT_DATA:
+      return updateState(state, {
+        gpsSummaryError: null,
+        gpsSummaryData: [],
       });
 
     // GPS Notification
@@ -1356,7 +1360,6 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsNotificationLoading: false,
         gpsNotificationError: payload,
-        gpsNotificationData: null,
       });
 
     // GPS Replay
@@ -1376,7 +1379,6 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsReplayLoading: false,
         gpsReplayError: payload,
-        gpsReplayData: [],
       });
 
     // GPS Stops
@@ -1384,8 +1386,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsStopsLoading: true,
-        gpsStopsError: null,
-        gpsStopsData: null,
       };
     case actionTypes.FETCH_GPS_STOPS_SUCCESS:
       return updateState(state, {
@@ -1397,7 +1397,6 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsStopsLoading: false,
         gpsStopsError: payload,
-        gpsStopsData: null,
       });
 
     // GPS Trips
@@ -1405,20 +1404,23 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsTripsLoading: true,
-        gpsTripsError: null,
         gpsTripsData: null,
       };
     case actionTypes.FETCH_GPS_TRIPS_SUCCESS:
       return updateState(state, {
         gpsTripsLoading: false,
-        gpsTripsError: null,
         gpsTripsData: payload,
       });
     case actionTypes.FETCH_GPS_TRIPS_FAILURE:
       return updateState(state, {
         gpsTripsLoading: false,
         gpsTripsError: payload,
-        gpsTripsData: null,
+        gpsTripsData: [],
+      });
+    case actionTypes.CLEAR_GPS_TRIPS_DATA:
+      return updateState(state, {
+        gpsTripsData: [],
+        gpsTripsError: null,
       });
 
     // GPS Plans
@@ -1501,8 +1503,8 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
-        // fullAddressData: payload,
-        fullAddressData: payload.results[0].formatted_address,
+        // fullAddressData: payload, // openmap
+        fullAddressData: payload.results[0].formatted_address, // google
       });
     case actionTypes.FETCH_FULLADDRESS_FAILURE:
       return updateState(state, {

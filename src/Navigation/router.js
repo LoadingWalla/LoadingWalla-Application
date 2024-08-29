@@ -89,6 +89,7 @@ import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 import Geofencing from '../Screens/GPS/Geofencing';
 import HeaderMenuButton from '../Components/HeaderMenuButton';
 import GpsRelay from '../Screens/GPS/GpsRelay';
+import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1591,10 +1592,11 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="trackingtruck"
         component={TrackingTruck}
+        // component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Tracking truck',
+          title: route.params.name || 'Tracking truck',
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',

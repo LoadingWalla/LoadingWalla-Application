@@ -55,7 +55,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long, item} = route.params;
-  // console.log(8888888888888, item);
+  // console.log(8888888888888, route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -450,7 +450,7 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('LocationHistory', {
                 deviceId: deviceId,
-                name: device?.name,
+                name: item?.name,
               })
             }
           />
