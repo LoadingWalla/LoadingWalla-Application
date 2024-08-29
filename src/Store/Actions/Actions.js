@@ -1311,12 +1311,13 @@ export const fetchGpsOrderDetailFailure = error => ({
 });
 
 // Get full address
-export const fetchAddressRequest = (lat, lan) => {
-  // console.log(8888888888888, lat, lan);
+export const fetchAddressRequest = (lat, lan, customId) => {
+  console.log(8888888888888, lat, lan, customId);
   return {
     type: actionTypes.FETCH_FULLADDRESS_REQUEST,
     lat,
     lan,
+    customId,
   };
 };
 

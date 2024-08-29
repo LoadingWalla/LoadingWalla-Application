@@ -210,6 +210,7 @@ const initialState = {
   fullAddressLoading: false,
   fullAddressData: null,
   fullAddressStatus: null,
+  fullAddressCustomId: null,
   // gps relay
   gpsRelayloading: false,
   gpsRelayData: null,
@@ -1504,6 +1505,7 @@ const reducer = (state = initialState, action) => {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
         // fullAddressData: payload, // openmap
+        fullAddressCustomId: payload.customId,
         fullAddressData: payload.results[0].formatted_address, // google
       });
     case actionTypes.FETCH_FULLADDRESS_FAILURE:

@@ -31,45 +31,50 @@ const convertMillisToTime = millis => {
   return `${hours}h ${minutes}m`;
 };
 
-const TripItem = React.memo(({item, onShowAddress}) => (
-  <View style={styles.tripItemContainer}>
-    <View style={styles.statusIndicatorContainer}>
-      <View style={styles.greenIndicator} />
-      <View style={styles.line} />
-      <View style={styles.redIndicator} />
+const TripItem = React.memo(({item, onShowAddress}) => {
+  // console.log(8888888888, item);
+  return (
+    <View style={styles.tripItemContainer}>
+      <View style={styles.statusIndicatorContainer}>
+        <View style={styles.greenIndicator} />
+        <View style={styles.line} />
+        <View style={styles.redIndicator} />
+      </View>
+      <View style={styles.tripDetailsContainer}>
+        <TripDetail
+          address={item?.startAddress}
+          time={item?.startTime}
+          lat={item?.startLat}
+          lng={item?.startLon}
+          itemId={item.startPositionId}
+          onShowAddress={onShowAddress}
+        />
+        <TripStats
+          distance={item?.distance}
+          averageSpeed={item?.averageSpeed}
+          duration={item?.duration}
+        />
+        <TripDetail
+          address={item?.endAddress}
+          time={item?.endTime}
+          lat={item?.endLat}
+          lng={item?.endLon}
+          itemId={item.endPositionId}
+          onShowAddress={onShowAddress}
+        />
+      </View>
     </View>
-    <View style={styles.tripDetailsContainer}>
-      <TripDetail
-        address={item?.startAddress}
-        time={item?.startTime}
-        lat={item?.startLat}
-        lng={item?.startLng}
-        itemId={item.id}
-        onShowAddress={onShowAddress}
-      />
-      <TripStats
-        distance={item?.distance}
-        averageSpeed={item?.averageSpeed}
-        duration={item?.duration}
-      />
-      <TripDetail
-        address={item?.endAddress}
-        time={item?.endTime}
-        lat={item?.endLat}
-        lng={item?.endLng}
-        itemId={item.id}
-        onShowAddress={onShowAddress}
-      />
-    </View>
-  </View>
-));
+  );
+});
 
 const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
-  const {shownAddressId, fullAddressData} = useSelector(state => state.data);
+  const {fullAddressData, fullAddressCustomId} = useSelector(
+    state => state.data,
+  );
 
   return (
     <View style={styles.detailContainer}>
-      {address || (shownAddressId === itemId && fullAddressData) ? (
+      {address || (fullAddressCustomId === itemId && fullAddressData) ? (
         <Text style={styles.addressText}>{address || fullAddressData}</Text>
       ) : (
         <ShowFullAddress
@@ -136,8 +141,6 @@ const LocationHistory = ({navigation, route}) => {
     gpsSummaryData,
     gpsTripsError,
     gpsSummaryError,
-    shownAddressId,
-    fullAddressData,
   } = useSelector(state => state.data);
 
   useEffect(() => {
@@ -222,6 +225,27 @@ const LocationHistory = ({navigation, route}) => {
     [],
   );
 
+  const calculateAverageSpeed = () => {
+    if (gpsTripsData && gpsTripsData.length > 0) {
+      const totalSpeed = gpsTripsData.reduce(
+        (acc, trip) => acc + (trip.averageSpeed || 0),
+        0,
+      );
+      return (totalSpeed / gpsTripsData.length).toFixed(2);
+    }
+    return '0.00';
+  };
+
+  const shouldCalculateAverageSpeed =
+    gpsSummaryData &&
+    gpsSummaryData.length > 0 &&
+    (gpsSummaryData[0]?.averageSpeed === 0 ||
+      gpsSummaryData[0]?.averageSpeed === 'NaN');
+
+  const averageSpeed = !shouldCalculateAverageSpeed
+    ? (gpsSummaryData[0]?.averageSpeed * 1.852).toFixed(2)
+    : calculateAverageSpeed();
+
   if (initialLoading) {
     return (
       <View style={styles.loaderContainer}>
@@ -250,11 +274,16 @@ const LocationHistory = ({navigation, route}) => {
           />
           <StopBox
             label="Avg. Speed"
-            value={
-              gpsSummaryData && gpsSummaryData.length > 0
-                ? `${(gpsSummaryData[0]?.averageSpeed * 1.852).toFixed(2)} KM/H`
-                : '0.00 KM/H'
-            }
+            // value={
+            //   gpsSummaryData && gpsSummaryData.length > 0
+            //     ? gpsSummaryData[0]?.averageSpeed === 'NaN'
+            //       ? '0.00 KM/H'
+            //       : `${(gpsSummaryData[0]?.averageSpeed * 1.852).toFixed(
+            //           2,
+            //         )} KM/H`
+            //     : '0.00 KM/H'
+            // }
+            value={`${averageSpeed} KM/H`}
           />
           <View style={styles.iconButtonsContainer}>
             <TouchableOpacity style={styles.downloadIconBox} onPress={() => {}}>
