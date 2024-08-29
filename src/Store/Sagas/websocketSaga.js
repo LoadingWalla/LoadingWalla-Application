@@ -2,7 +2,7 @@ import {eventChannel} from 'redux-saga';
 import {take, call, put, fork, cancel, delay} from 'redux-saga/effects';
 import {WS_URL} from '../../Utils/Url';
 import * as actionTypes from '../Actions/ActionTypes';
-import * as actions from '../Actions/Actions';
+import * as actions from '../Actions/WebSocketActions';
 import {throttle} from 'lodash';
 
 function createWebSocketChannel(cookie) {

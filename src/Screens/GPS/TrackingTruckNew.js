@@ -8,15 +8,8 @@ import {
   View,
 } from 'react-native';
 import {backgroundColorNew, titleColor} from '../../Color/color';
-import ToggleIconText from '../../Components/ToggleIconText';
 import {AnimatedRegion} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
-import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import AlertIcon from '../../../assets/SVG/AlertIcon';
-import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
@@ -170,6 +163,8 @@ const TrackingTruckNew = ({navigation, route}) => {
       const replayPositions = gpsReplayData.map(position => ({
         latitude: position.latitude,
         longitude: position.longitude,
+        deviceId: position.deviceId,
+        timeStamps: position.serverTime,
         // totalDistance: position.attributes.totalDistance,
       }));
       setLivePositions(replayPositions);
@@ -191,12 +186,15 @@ const TrackingTruckNew = ({navigation, route}) => {
       if (position.length > 0) {
         setLivePositions(prevPositions => [
           ...prevPositions,
-          ...position.map(p => ({
-            latitude: p.latitude,
-            longitude: p.longitude,
-            course: p.course,
-            deviceId: p.id,
-          })),
+          ...position.map(p => {
+            console.log('>>>>>>>>>>liveposition single -------------->', p);
+            return {
+              latitude: p.latitude,
+              longitude: p.longitude,
+              course: p.course,
+              deviceId: p.id,
+            };
+          }),
         ]);
         updateMarkerPosition(position[position.length - 1]);
       }
@@ -247,96 +245,6 @@ const TrackingTruckNew = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={styles.leftTopContainer}>
-          <View style={styles.distanceBox}>
-            <Text style={styles.distanceText}>Today Distance:</Text>
-            <Text style={styles.highlightText}>{`${(
-              item.distance / 1000
-            ).toFixed(2)} km`}</Text>
-          </View>
-          <View style={styles.horizontalLine} />
-          <View style={styles.iconBox}>
-            <ToggleIconText
-              IconComponent={FuelIcon}
-              text="Fuel"
-              iconSize={25}
-              color={'#727272'}
-              index={0}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(0)}
-            />
-            <ToggleIconText
-              IconComponent={BatteryIcon}
-              text={positions[0]?.attributes?.batteryLevel || 'Battery'}
-              iconSize={20}
-              color={
-                positions[0]?.attributes?.batteryLevel
-                  ? positions[0]?.attributes?.batteryLevel > 60
-                    ? 'green'
-                    : 'red'
-                  : '#727272'
-              }
-              index={1}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(1)}
-            />
-            <ToggleIconText
-              IconComponent={NetworkIcon}
-              text="Network"
-              iconSize={18}
-              color={'#727272'}
-              index={2}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(2)}
-            />
-            <ToggleIconText
-              IconComponent={GeoFencingIcon}
-              text="GeoFencing"
-              iconSize={18}
-              color={'#727272'}
-              index={3}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(3)}
-            />
-            <ToggleIconText
-              IconComponent={KeyIcon}
-              text={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'ON'
-                  : 'OFF'
-              }
-              iconSize={18}
-              color={
-                positions?.[0]?.attributes?.ignition ||
-                positions?.[0]?.attributes?.motion
-                  ? 'green'
-                  : 'red'
-              }
-              index={4}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(4)}
-            />
-
-            <ToggleIconText
-              IconComponent={AlertIcon}
-              text="Damage"
-              iconSize={23}
-              color={'#727272'}
-              index={5}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(5)}
-            />
-          </View>
-        </View>
-        <View style={styles.speedButton}>
-          <Text style={styles.speedText}>
-            {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
-          </Text>
-          <Text style={styles.speedUnit}>kmph</Text>
-        </View>
-      </View>
       <View style={styles.mapContainer}>
         <MapComponent
           positions={livePositions}

@@ -1591,8 +1591,8 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        component={TrackingTruck}
-        // component={TrackingTruckNew}
+        // component={TrackingTruck}
+        component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',

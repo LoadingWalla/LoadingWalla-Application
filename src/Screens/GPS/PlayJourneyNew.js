@@ -14,7 +14,6 @@ import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
-  websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -26,6 +25,7 @@ import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import MapViewDirections from 'react-native-maps-directions';
 import MapComponent from './MapComponent';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;

@@ -10,10 +10,13 @@ export const websocketDisconnect = () => ({
   type: actionTypes.WEBSOCKET_DISCONNECT,
 });
 
-export const websocketMessage = message => ({
-  type: actionTypes.WEBSOCKET_MESSAGE,
-  payload: message,
-});
+export const websocketMessage = payload => {
+  console.log(99999999, payload);
+  return {
+    type: actionTypes.WEBSOCKET_MESSAGE,
+    payload,
+  };
+};
 
 export const websocketError = error => ({
   type: actionTypes.WEBSOCKET_ERROR,

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import ToggleIconText from '../../Components/ToggleIconText';
-import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import MapView, {AnimatedRegion, Marker} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
@@ -49,13 +49,11 @@ const getLivePositions = (wsMessages, deviceId) => {
       latitude: position.latitude,
       longitude: position.longitude,
       course: position.course,
-      // totalDistance: position.attributes.totalDistance,
     }));
 };
 
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long, item} = route.params;
-  // console.log(8888888888888, route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);

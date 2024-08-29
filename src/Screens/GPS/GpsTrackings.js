@@ -4,10 +4,11 @@ import {
   fetchGpsDevicesRequest,
   fetchTokenFailure,
   fetchTokenRequest,
-  // websocketConnect,
-  websocketDisconnect,
 } from '../../Store/Actions/Actions';
-import {websocketConnect} from '../../Store/Actions/WebSocketActions';
+import {
+  websocketConnect,
+  websocketDisconnect,
+} from '../../Store/Actions/WebSocketActions';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   ActivityIndicator,
@@ -39,22 +40,6 @@ const GpsTrackings = ({navigation}) => {
   });
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
-
-  // useEffect(() => {
-  //   if (gpsTokenData) {
-  //     const {cookie, email, password} = gpsTokenData;
-  //     // console.log(77777, gpsTokenData);
-  //     dispatch(websocketConnect(cookie));
-  //     dispatch(
-  //       fetchGpsDevicesRequest(
-  //         encodeURIComponent(email),
-  //         encodeURIComponent(password),
-  //       ),
-  //     );
-  //   } else {
-  //     dispatch(fetchTokenRequest());
-  //   }
-  // }, [dispatch, gpsTokenData]);
 
   useFocusEffect(
     React.useCallback(() => {

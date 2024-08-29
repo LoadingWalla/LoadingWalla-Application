@@ -10,10 +10,7 @@ import {textColor} from '../../Color/color';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import Button from '../../Components/Button';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  // websocketConnect,
-  websocketDisconnect,
-} from '../../Store/Actions/Actions';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';

@@ -8,23 +8,39 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import MapView, {Marker, AnimatedRegion} from 'react-native-maps';
+import MapView, {Marker, AnimatedRegion, Polyline} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+
+const filterRepeatedPositions = (positions, tolerance = 0) => {
+  return positions.filter((position, index, array) => {
+    if (index === 0 || index === positions.length - 1) {
+      return true;
+    }
+    const prevPosition = array[index - 1];
+    const latDiff = Math.abs(position.latitude - prevPosition.latitude);
+    const lonDiff = Math.abs(position.longitude - prevPosition.longitude);
+    return latDiff > tolerance || lonDiff > tolerance;
+  });
+};
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const MapComponent = () => {
+const MapComponent = ({positions}) => {
+  console.log('ooooooo============>', positions);
+  const filteredPositions = filterRepeatedPositions(positions);
+  console.log('ooooooo============>', filteredPositions);
   const initialPosition = {
     latitude: 25.605710555555554,
     longitude: 85.19782388888889,
     course: 187,
   };
+
   const [directionsCoordinates, setDirectionsCoordinates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [mapType, setMapType] = useState('standard');
@@ -117,13 +133,17 @@ const MapComponent = () => {
           longitudeDelta: LONGITUDE_DELTA * 5,
         }}>
         {/* Display MapViewDirections to show the exact path */}
-        <MapViewDirections
-          origin={initialPosition}
-          waypoints={[]}
-          destination={{
-            latitude: 25.601602222222223,
-            longitude: 85.19568666666667,
-          }}
+
+        <Polyline
+          coordinates={filteredPositions}
+          strokeWidth={3}
+          strokeColor="blue"
+        />
+
+        {/* <MapViewDirections
+          origin={filteredPositions[0]}
+          waypoints={filteredPositions.slice(1, -1)}
+          destination={filteredPositions[filteredPositions.length - 1]}
           apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
           strokeWidth={3}
           strokeColor="blue"
@@ -140,7 +160,22 @@ const MapComponent = () => {
               },
             });
           }}
-        />
+        /> */}
+
+        {/* Display markers for all positions */}
+        {filteredPositions.map((position, index) => (
+          <Marker
+            key={index}
+            coordinate={position}
+            title={
+              index === 0
+                ? 'Start'
+                : index === filteredPositions.length - 1
+                ? 'End'
+                : `Stop ${index}`
+            }
+          />
+        ))}
 
         {/* Display animated marker for current position */}
         {directionsCoordinates.length > 0 && (

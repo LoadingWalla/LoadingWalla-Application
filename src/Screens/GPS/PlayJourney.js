@@ -14,7 +14,6 @@ import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
   fetchGpsStopsRequest,
   fetchPositionsRequest,
-  websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -24,6 +23,7 @@ import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
@@ -127,9 +127,7 @@ export default function PlayJourney({navigation, route}) {
           ),
         );
       }
-      return () => {
-        // dispatch(websocketConnect(gpsTokenData.cookie));
-      };
+      return () => {};
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
 

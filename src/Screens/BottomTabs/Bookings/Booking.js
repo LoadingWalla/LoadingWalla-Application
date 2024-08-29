@@ -17,7 +17,6 @@ import {
   acceptRejectFailure,
   initAcceptReject,
   initBooking,
-  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 
 import BookingItem from '../../../Components/Bookingitem';
@@ -26,6 +25,7 @@ import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {backgroundColorNew} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 const Booking = ({navigation}) => {
   const dispatch = useDispatch();

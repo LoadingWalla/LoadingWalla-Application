@@ -19,7 +19,6 @@ import {
   fetchGpsDevicesRequest,
   fetchTokenRequest,
   initProfile,
-  // websocketConnect,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
@@ -100,8 +99,6 @@ const MyGpsScreen = ({navigation}) => {
         dispatch(initProfile());
       }
       return () => {
-        // dispatch(websocketDisconnect());
-        // dispatch(fetchTokenFailure());
         Snackbar.dismiss();
       };
     }, [dispatch, DashboardUser]),

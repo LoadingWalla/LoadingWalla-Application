@@ -16,7 +16,6 @@ import {
   fetchGpsTripsRequest,
   fetchSummaryReportRequest,
   fetchTokenRequest,
-  websocketDisconnect,
 } from '../../Store/Actions/Actions';
 import {formatDate} from '../../Utils/dateUtils';
 import moment from 'moment';
@@ -24,6 +23,7 @@ import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import RightArrow from '../../../assets/SVG/svg/RightArrow';
 import {backgroundColorNew, titleColor} from '../../Color/color';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));

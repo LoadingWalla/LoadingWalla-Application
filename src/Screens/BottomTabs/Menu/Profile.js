@@ -23,7 +23,6 @@ import {
   clearStore,
   initLogout,
   initProfile,
-  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -56,9 +55,9 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
-// import InAppReview from 'react-native-in-app-review';
 import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
