@@ -46,11 +46,12 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsLoading,
     gpsStopsError,
     gpsStopsData,
-    wsConnected,
   } = useSelector(state => {
     console.log('Play Journey -----------------------', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const coordinates = useMemo(
     () =>

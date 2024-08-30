@@ -44,12 +44,13 @@ const DashboardLoad = ({navigation}) => {
     findLoadData,
     findLoadLoading,
     findLoadStatus,
-    wsConnected,
     gpsTokenData,
   } = useSelector(state => {
     console.log('My Lorry/Load', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const handleNavigate = useRef(false);
   useEffect(() => {

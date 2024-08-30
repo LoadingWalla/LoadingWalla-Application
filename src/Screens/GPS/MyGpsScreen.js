@@ -36,20 +36,21 @@ const MyGpsScreen = ({navigation}) => {
     wsDevices,
     wsEvents,
     wsError,
-    wsConnected,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => {
-    console.log('MY Gps Screeen --------', state.data.gpsDeviceData);
-    return state.data;
+  } = useSelector(state => state.data);
+
+  const {wsConnected} = useSelector(state => {
+    console.log('WEBSOCKET My Gps Screen---', state.wsData);
+    return state.wsData;
   });
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Function to fetch GPS data
+  // Fetch GPS data
   const fetchGpsData = useCallback(() => {
-    if (gpsTokenData !== null) {
+    if (gpsTokenData) {
       const {cookie, email, password} = gpsTokenData;
       dispatch(websocketConnect(cookie));
       dispatch(
@@ -63,12 +64,25 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [dispatch, gpsTokenData]);
 
+  // Manual refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchGpsData();
     setRefreshing(false);
   }, [fetchGpsData]);
 
+  // Auto-refresh when wsConnected is false
+  useEffect(() => {
+    if (!wsConnected) {
+      const interval = setInterval(() => {
+        fetchGpsData();
+      }, 5000); // Auto-refresh every 5 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [wsConnected, fetchGpsData]);
+
+  // Initial fetch on screen focus
   useFocusEffect(
     useCallback(() => {
       fetchGpsData();
@@ -78,13 +92,13 @@ const MyGpsScreen = ({navigation}) => {
       return () => {
         Snackbar.dismiss();
       };
-    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser]),
+    }, [dispatch, fetchGpsData, DashboardUser]),
   );
 
   useEffect(() => {
     if (wsError) {
       Snackbar.show({
-        text: 'Something Error in Connecting in GPS',
+        text: 'Please Wait while Connecting to GPS',
         duration: Snackbar.LENGTH_LONG,
         fontFamily: 'PlusJakartaSans-SemiBold',
         textColor: '#000000',
@@ -93,17 +107,7 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [wsError]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!DashboardUser) {
-        dispatch(initProfile());
-      }
-      return () => {
-        Snackbar.dismiss();
-      };
-    }, [dispatch, DashboardUser]),
-  );
-
+  // Merge GPS data with WebSocket data
   const mergeDeviceData = useCallback(
     (devices = [], latestDevices = [], positions = [], events = []) => {
       const deviceMap = new Map();
@@ -142,13 +146,13 @@ const MyGpsScreen = ({navigation}) => {
       return Array.from(deviceMap.values()).map(device => {
         device.position = device.position || [];
         device.events = device.events || [];
-        // console.log(123456775576974, device);
         return device;
       });
     },
     [],
   );
 
+  // Update merged device data when data changes
   useEffect(() => {
     if (gpsDeviceData) {
       const updatedData = mergeDeviceData(
@@ -161,6 +165,7 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
+  // Memoized render function for GpsItem
   const renderGpsItem = useMemo(
     () =>
       ({item}) =>
@@ -202,7 +207,7 @@ const MyGpsScreen = ({navigation}) => {
             <Image
               source={require('../../../assets/noGps.png')}
               resizeMode="contain"
-              style={styles.splashImage}
+              style={styles.splashImage(250, 250)}
             />
             <Text style={styles.notFoundText}>No GPS available!</Text>
           </View>
@@ -270,7 +275,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 60,
     padding: 10,
-    // borderWidth: 1,
   },
   loadingStyle: {
     flex: 1,
@@ -301,20 +305,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   homeView: {
-    // borderWidth: 1,
     flex: 1,
     marginVertical: 60,
     justifyContent: 'center',
   },
   notFoundView: {
-    // borderWidth: 1,
     flex: 0.75,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderWidth: 1,
   },
   getNowView: {
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 0.25,

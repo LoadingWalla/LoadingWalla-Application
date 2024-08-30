@@ -58,7 +58,7 @@ const Geofencing = ({navigation, route}) => {
   const [sliderValue, setSliderValue] = useState(0.5);
 
   const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
-    useSelector(state => state.data);
+    useSelector(state => state.wsData);
 
   const device = wsDevices.find(d => d.id === deviceId);
   const positions = wsPositions.filter(p => p.deviceId === deviceId);

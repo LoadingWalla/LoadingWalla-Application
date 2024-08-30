@@ -41,11 +41,12 @@ const Booking = ({navigation}) => {
     accept_rejectStatus,
     DashboardUser,
     dashboardLoading,
-    wsConnected,
   } = useSelector(state => {
     // console.log('My Bookings', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

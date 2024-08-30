@@ -157,13 +157,6 @@ const initialState = {
   gpsDeviceLoading: false,
   gpsDeviceData: null,
   gpsDeviceStatus: null,
-  // websocket
-  wsMessages: [],
-  wsConnected: false,
-  wsError: null,
-  wsDevices: [],
-  wsEvents: [],
-  wsPositions: [],
   // gps address
   gpsAddressLoading: false,
   gpsAddressData: null,
@@ -1281,27 +1274,6 @@ const reducer = (state = initialState, action) => {
         singleGpsDeviceLoading: false,
         singleGpsDevice: null,
       });
-
-    // Gps Websocket Connect
-    case actionTypes.WEBSOCKET_CONNECT:
-      return {...state, wsConnected: true};
-    case actionTypes.WEBSOCKET_DISCONNECT:
-      return updateState(state, {wsConnected: false, wsError: null});
-    case actionTypes.WEBSOCKET_MESSAGE:
-      return updateState(state, {
-        wsMessages: [...state.wsMessages, payload],
-        wsConnected: true,
-      });
-    case actionTypes.WEBSOCKET_ERROR:
-      return updateState(state, {wsError: payload, wsConnected: false});
-    case actionTypes.WEBSOCKET_CLOSED:
-      return updateState(state, {wsConnected: false});
-    case actionTypes.UPDATE_DEVICES:
-      return updateState(state, {wsDevices: payload, wsConnected: true});
-    case actionTypes.UPDATE_POSITIONS:
-      return updateState(state, {wsPositions: payload, wsConnected: true});
-    case actionTypes.UPDATE_EVENTS:
-      return updateState(state, {wsEvents: payload, wsConnected: true});
 
     // GPS Address
     case actionTypes.FETCH_GPS_ADDRESS_REQUEST:

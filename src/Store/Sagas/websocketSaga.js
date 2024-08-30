@@ -19,7 +19,7 @@ function createWebSocketChannel(cookie) {
 
     ws.onmessage = event => {
       const data = JSON.parse(event.data);
-      console.log('websocket onmessage', data);
+      // console.log('websocket onmessage', data);
       emit(actions.websocketMessage(data));
     };
 
@@ -60,17 +60,23 @@ function* handleWebSocketConnection(cookie) {
   // Throttle data processing
   const handleWebSocketMessage = throttle(function* (data) {
     if (data.devices && data.devices.length > 0) {
+      // console.log('<<<<<<<<<<<<<< devices true');
       yield put(actions.updateDevices(data.devices));
     }
 
     if (data.positions && data.positions.length > 0) {
+      // console.log('<<<<<<<<<<<<<< positions true');
       yield put(actions.updatePositions(data.positions));
     }
 
     if (data.events && data.events.length > 0) {
+      // console.log('<<<<<<<<<<<<<< events true');
       yield put(actions.updateEvents(data.events));
+    } else {
+      // console.log('<<<<<<<<<<<<<< all true');
+      yield put(actions.websocketMessage(data));
     }
-  }, 1000); // Process data at most once per second
+  }, 5000); // Process data at most once per second
 
   try {
     while (true) {
@@ -99,7 +105,7 @@ function* websocketSaga() {
   while (true) {
     const {payload} = yield take(actionTypes.WEBSOCKET_CONNECT);
     const {cookie} = payload;
-    console.log('WebSocket connection requested with cookie:', cookie);
+    // console.log('WebSocket connection requested with cookie:', cookie);
 
     if (connectionTask) {
       yield cancel(connectionTask);
@@ -113,14 +119,13 @@ function* websocketSaga() {
     ]);
 
     if (action.type === actionTypes.WEBSOCKET_DISCONNECT) {
-      console.log('WebSocket disconnect requested');
+      // console.log('WebSocket disconnect requested');
       yield cancel(connectionTask);
       console.log('WebSocket connection cancelled Successfully');
     } else if (action.type === actionTypes.WEBSOCKET_RETRY) {
       retryCount++;
       if (retryCount <= 5) {
         console.log('WebSocket retry attempt:', retryCount);
-        // yield delay(5000); // Retry after 5 seconds
         const delayDuration = Math.min(2 ** retryCount * 1000, 30000); // Max delay of 30 seconds
         yield delay(delayDuration);
         connectionTask = yield fork(handleWebSocketConnection, cookie);

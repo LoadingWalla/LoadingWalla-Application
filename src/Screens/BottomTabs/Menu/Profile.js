@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -69,24 +69,26 @@ const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {
-    UserVerifyPercentage,
-    profileLoading,
-    profileSetupData,
-    Userdata,
-    wsConnected,
-  } = useSelector(state => {
-    // console.log('profile Data', state.data);
-    return state.data;
+  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
+    useSelector(state => {
+      // console.log('profile Data', state.data);
+      return state.data;
+    });
+  const {wsConnected} = useSelector(state => {
+    console.log('WEBSOCKET profile ----', state.wsData);
+    return state.wsData;
   });
+
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected]);
 
   useFocusEffect(
     React.useCallback(() => {
-      if (wsConnected) {
-        dispatch(websocketDisconnect());
-      }
       dispatch(initProfile());
-    }, [dispatch, profileSetupData, wsConnected]),
+    }, [dispatch, profileSetupData]),
   );
 
   const bigImage = () => {

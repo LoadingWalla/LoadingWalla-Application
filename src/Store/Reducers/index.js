@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
 import data from './Reducer';
-import webSocketData from './WebSocketReducer';
+import wsData from './WebSocketReducer';
 
 const rootReducer = combineReducers({
   data,
-  webSocketData,
+  wsData,
 });
 
 export default rootReducer;

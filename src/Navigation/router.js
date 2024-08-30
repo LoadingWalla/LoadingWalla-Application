@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
+import {Animated, BackHandler, Dimensions} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -22,9 +22,7 @@ import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
 import {
   backgroundColorNew,
-  GradientColor1,
   GradientColor2,
-  GradientColor3,
   tabIndicatorColor,
 } from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
@@ -43,7 +41,7 @@ import FindLoadResult from '../Screens/BottomTabs/Dashboard/FindLoadResult';
 import RCVerification from '../Screens/RC/RCVerification';
 import StatusChangeModal from '../Screens/Modals/StatusChangeModal';
 import Requests from '../Screens/Requests/Requests';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import ViewDetail from '../Screens/Details/ViewDetail';
 import PostLoads from '../Screens/Home/PostLoads';
 import AddLorry from '../Screens/Home/AddLorry';
@@ -81,7 +79,6 @@ import PaymentGPS from '../Screens/GPS/PaymentGPS';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
-import TabBar from './BottomTabComponent/TabBar';
 import GPSHomePage from '../Screens/GPS/GPSHomePage';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
@@ -1591,8 +1588,8 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        // component={TrackingTruck}
-        component={TrackingTruckNew}
+        component={TrackingTruck}
+        // component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',

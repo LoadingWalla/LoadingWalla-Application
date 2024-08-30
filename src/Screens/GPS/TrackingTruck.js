@@ -66,11 +66,6 @@ const TrackingTruck = ({navigation, route}) => {
   const [currentAddress, setCurrentAddress] = useState(item.address);
 
   const {
-    wsMessages,
-    wsConnected,
-    wsDevices,
-    wsPositions,
-    wsEvents,
     fullAddressData,
     fullAddressLoading,
     gpsReplayData,
@@ -80,6 +75,12 @@ const TrackingTruck = ({navigation, route}) => {
     console.log('Tracking Truck -------------->>>>>', state.data);
     return state.data;
   });
+
+  const {wsConnected, wsDevices, wsError, wsEvents, wsMessages, wsPositions} =
+    useSelector(state => {
+      console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
+      return state.wsData;
+    });
 
   const handleTruckIconPress = () => {
     if (livePositions.length > 0) {

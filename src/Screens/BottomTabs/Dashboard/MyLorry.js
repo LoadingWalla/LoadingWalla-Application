@@ -54,11 +54,12 @@ const MyLorry = ({navigation}) => {
     myLorryLoding,
     DashboardUser,
     dashboardLoading,
-    wsConnected,
   } = useSelector(state => {
     console.log('My Lorry/Load', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const routes = useMemo(() => getRoutesForUserType(userType, t), [userType]);
 

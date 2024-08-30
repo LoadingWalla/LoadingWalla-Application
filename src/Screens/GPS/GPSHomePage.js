@@ -1,12 +1,5 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  BackHandler,
-  StyleSheet,
-  Text,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {View, BackHandler, StyleSheet, Text, Image} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -21,10 +14,10 @@ const GPSHomePage = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {DashboardUser, dashboardLoading, wsConnected, gpsTokenData} =
-    useSelector(state => {
-      return state.data;
-    });
+  const {DashboardUser, dashboardLoading, gpsTokenData} = useSelector(state => {
+    return state.data;
+  });
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
     if (gpsTokenData === null) {

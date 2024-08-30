@@ -67,11 +67,6 @@ const TrackingTruckNew = ({navigation, route}) => {
   const [loading, setLoading] = useState(true);
 
   const {
-    wsMessages,
-    wsConnected,
-    wsDevices,
-    wsPositions,
-    wsEvents,
     fullAddressData,
     fullAddressLoading,
     gpsReplayData,
@@ -81,6 +76,9 @@ const TrackingTruckNew = ({navigation, route}) => {
     console.log('Tracking Truck -------------->>>>>', state.data);
     return state.data;
   });
+
+  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
+    useSelector(state => state.wsData);
 
   const device = wsDevices.find(d => d.id === item?.id);
   const positions = wsPositions.filter(p => p.deviceId === item?.id);

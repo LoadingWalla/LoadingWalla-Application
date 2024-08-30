@@ -9,22 +9,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView, {Marker, AnimatedRegion, Polyline} from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
 import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-
-const filterRepeatedPositions = (positions, tolerance = 0) => {
-  return positions.filter((position, index, array) => {
-    if (index === 0 || index === positions.length - 1) {
-      return true;
-    }
-    const prevPosition = array[index - 1];
-    const latDiff = Math.abs(position.latitude - prevPosition.latitude);
-    const lonDiff = Math.abs(position.longitude - prevPosition.longitude);
-    return latDiff > tolerance || lonDiff > tolerance;
-  });
-};
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -33,13 +20,6 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MapComponent = ({positions}) => {
   console.log('ooooooo============>', positions);
-  const filteredPositions = filterRepeatedPositions(positions);
-  console.log('ooooooo============>', filteredPositions);
-  const initialPosition = {
-    latitude: 25.605710555555554,
-    longitude: 85.19782388888889,
-    course: 187,
-  };
 
   const [directionsCoordinates, setDirectionsCoordinates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -51,12 +31,16 @@ const MapComponent = ({positions}) => {
 
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
-      latitude: initialPosition.latitude,
-      longitude: initialPosition.longitude,
+      latitude: positions[0].latitude,
+      longitude: positions[0].longitude,
       latitudeDelta: LATITUDE_DELTA,
       longitudeDelta: LONGITUDE_DELTA,
     }),
   ).current;
+
+  useEffect(() => {
+    fetchOSMRoute();
+  }, []);
 
   useEffect(() => {
     if (isPlaying && directionsCoordinates.length > 0) {
@@ -79,6 +63,30 @@ const MapComponent = ({positions}) => {
       return () => clearInterval(interval);
     }
   }, [isPlaying, currentIndex, directionsCoordinates]);
+
+  const fetchOSMRoute = async () => {
+    try {
+      const coordinates = positions
+        .map(pos => `${pos.longitude},${pos.latitude}`)
+        .join(';');
+
+      const response = await fetch(
+        `http://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`,
+      );
+
+      const data = await response.json();
+      if (data.routes.length) {
+        const routeCoordinates = data.routes[0].geometry.coordinates.map(
+          ([longitude, latitude]) => ({latitude, longitude}),
+        );
+        setDirectionsCoordinates(routeCoordinates);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Error fetching the route:', error);
+      setIsLoading(false);
+    }
+  };
 
   const animate = (latitude, longitude, course) => {
     const newCoordinate = {latitude, longitude};
@@ -121,56 +129,33 @@ const MapComponent = ({positions}) => {
 
   return (
     <View style={styles.mapContainer}>
-      {isLoading && <ActivityIndicator size="large" isLoading={isLoading} />}
+      {isLoading && <ActivityIndicator size="large" />}
       <MapView
         ref={mapRef}
         mapType={mapType}
         style={StyleSheet.absoluteFillObject}
         initialRegion={{
-          latitude: initialPosition.latitude,
-          longitude: initialPosition.longitude,
+          latitude: positions[0].latitude,
+          longitude: positions[0].longitude,
           latitudeDelta: LATITUDE_DELTA * 5,
           longitudeDelta: LONGITUDE_DELTA * 5,
         }}>
-        {/* Display MapViewDirections to show the exact path */}
-
+        {/* Display the fetched route */}
         <Polyline
-          coordinates={filteredPositions}
+          coordinates={directionsCoordinates}
           strokeWidth={3}
           strokeColor="blue"
         />
 
-        {/* <MapViewDirections
-          origin={filteredPositions[0]}
-          waypoints={filteredPositions.slice(1, -1)}
-          destination={filteredPositions[filteredPositions.length - 1]}
-          apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
-          strokeWidth={3}
-          strokeColor="blue"
-          optimizeWaypoints={true}
-          onReady={result => {
-            setDirectionsCoordinates(result.coordinates);
-            setIsLoading(false);
-            mapRef.current.fitToCoordinates(result.coordinates, {
-              edgePadding: {
-                right: width / 20,
-                bottom: height / 20,
-                left: width / 20,
-                top: height / 20,
-              },
-            });
-          }}
-        /> */}
-
         {/* Display markers for all positions */}
-        {filteredPositions.map((position, index) => (
+        {positions.map((position, index) => (
           <Marker
             key={index}
             coordinate={position}
             title={
               index === 0
                 ? 'Start'
-                : index === filteredPositions.length - 1
+                : index === positions.length - 1
                 ? 'End'
                 : `Stop ${index}`
             }

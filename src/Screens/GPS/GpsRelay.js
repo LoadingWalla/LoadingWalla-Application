@@ -12,7 +12,8 @@ const GpsRelay = ({navigation, route}) => {
   // console.log('gpsrelay-----------', route);
 
   const dispatch = useDispatch();
-  const {wsConnected, gpsRelayData} = useSelector(state => state.data);
+  const {gpsRelayData} = useSelector(state => state.data);
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
     if (wsConnected) {

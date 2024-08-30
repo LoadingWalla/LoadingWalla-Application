@@ -48,11 +48,12 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsLoading,
     gpsStopsError,
     gpsStopsData,
-    wsConnected,
   } = useSelector(state => {
     console.log('Play Journey ----------------->', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   // Consolidate data fetching logic
   const fetchData = React.useCallback(() => {

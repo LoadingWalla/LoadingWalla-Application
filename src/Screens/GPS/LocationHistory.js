@@ -137,11 +137,12 @@ const LocationHistory = ({navigation, route}) => {
     gpsTripsLoading,
     gpsTripsData,
     gpsTokenData,
-    wsConnected,
     gpsSummaryData,
     gpsTripsError,
     gpsSummaryError,
   } = useSelector(state => state.data);
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
     if (gpsTokenData) {

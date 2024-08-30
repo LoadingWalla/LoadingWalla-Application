@@ -33,11 +33,11 @@ const GpsTrackings = ({navigation}) => {
     wsDevices,
     wsEvents,
     wsError,
-    wsConnected,
   } = useSelector(state => {
     console.log('GpsTrackings', state.data);
     return state.data;
   });
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
 

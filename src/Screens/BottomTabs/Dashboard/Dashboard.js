@@ -43,12 +43,12 @@ const Dashboard = ({navigation}) => {
     locationData,
     dashboardLoading,
     loadTruckLoading,
-    wsConnected,
     gpsTokenData,
   } = useSelector(state => {
     // console.log('Dashboard Truck', state.data);
     return state.data;
   });
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
     if (gpsTokenData === null) {
