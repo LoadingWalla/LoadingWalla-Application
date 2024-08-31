@@ -168,7 +168,7 @@ const initialState = {
   // gps notification
   gpsNotificationLoading: false,
   gpsNotificationError: null,
-  gpsNotificationData: [],
+  gpsNotificationData: null,
   // gps replay
   gpsReplayLoading: false,
   gpsReplayError: null,
@@ -1240,6 +1240,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         gpsDeviceLoading: true,
         gpsDeviceStatus: null,
+        gpsDeviceData: null,
       };
     case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
       return updateState(state, {
@@ -1323,6 +1324,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         gpsNotificationLoading: true,
         gpsNotificationError: null,
+        gpsNotificationData: null,
       };
     case actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS:
       return updateState(state, {

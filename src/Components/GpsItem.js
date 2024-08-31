@@ -14,6 +14,7 @@ import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 
 const GpsItem = ({navigation, item, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  console.log(444444, item);
 
   const {
     position = [],
@@ -163,13 +164,16 @@ const GpsItem = ({navigation, item, isDisable}) => {
             <Text style={styles.distanceText}>KM/H</Text>
           </View>
         </View>
-        <View style={styles.additionalInfoContainer}>
+        <TouchableOpacity
+          disabled={isDisable}
+          onPress={handleNavigation}
+          style={styles.additionalInfoContainer}>
           <View style={styles.expiryDate}>
             <View style={styles.addressContainer}>
               <Text style={styles.addressText}>{address}</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>
@@ -329,8 +333,9 @@ const styles = StyleSheet.create({
   additionalInfoContainer: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 8,
+    // borderRadius: 8,
     flexDirection: 'column',
+    // borderWidth: 1,
   },
   footerContainer: {
     flexDirection: 'row',

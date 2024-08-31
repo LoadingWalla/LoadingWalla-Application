@@ -46,11 +46,11 @@ const HeaderMenuButton = ({navigation, latitude, longitude, deviceId}) => {
             <TouchableOpacity style={styles.menuItem} onPress={handleShare}>
               <Text style={styles.menuText}>Share</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.menuItem}
               onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
               <Text style={styles.menuText}>Setting</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() =>

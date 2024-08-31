@@ -1,43 +1,64 @@
 import {StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Switch from 'toggle-switch-react-native';
 import {GradientColor2, PrivacyPolicy, seperator} from '../Color/color';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const GpsSettingItem = ({detailInput, title}) => {
+const GpsSettingItem = ({detailInput, title, storageKey}) => {
   const [switchOn, setSwitchOn] = useState(false);
 
-  const toggleSwitch = () => {
+  // Load switch state from AsyncStorage
+  useEffect(() => {
+    const loadSwitchState = async () => {
+      try {
+        const savedState = await AsyncStorage.getItem(storageKey);
+        if (savedState !== null) {
+          setSwitchOn(JSON.parse(savedState));
+        }
+      } catch (error) {
+        console.error('Failed to load switch state', error);
+      }
+    };
+    loadSwitchState();
+  }, [storageKey]);
+
+  // Toggle switch and save the state to AsyncStorage
+  const toggleSwitch = async () => {
     const newSwitchState = !switchOn;
     setSwitchOn(newSwitchState);
+    try {
+      await AsyncStorage.setItem(storageKey, JSON.stringify(newSwitchState));
+    } catch (error) {
+      console.error('Failed to save switch state', error);
+    }
   };
   return (
     <View style={styles.detailBox}>
       <View style={styles.switchBox}>
-        <Text style={styles.textHeader}>{title}</Text>
+        <View style={{flexDirection: 'column'}}>
+          <Text style={styles.textHeader}>{title}</Text>
+          {detailInput ? (
+            <View style={styles.inputBox}>
+              <View style={styles.inputView}>
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.textInput}
+                  value={'60'}
+                />
+                <Text style={styles.textInputCaption}>min</Text>
+              </View>
+            </View>
+          ) : null}
+        </View>
         <Switch
           isOn={switchOn}
           onColor={GradientColor2}
           offColor={seperator}
-          size="medium"
+          size="small"
           onToggle={toggleSwitch}
           // disabled={true}
         />
       </View>
-      {detailInput ? (
-        <View style={styles.inputBox}>
-          <Text style={styles.detailText}>
-            You’ll get notified when vehicle stops for longer duration.
-          </Text>
-          <View style={styles.inputView}>
-            <TextInput
-              keyboardType="numeric"
-              style={styles.textInput}
-              value={'60'}
-            />
-            <Text style={styles.textInputCaption}>min</Text>
-          </View>
-        </View>
-      ) : null}
     </View>
   );
 };
@@ -49,12 +70,16 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#FFFFFF',
     flexDirection: 'column',
-    elevation: 2,
+    // elevation: 2,
     marginVertical: 5,
+    borderWidth: 1,
+    borderColor: '#00000029',
+    borderRadius: 8,
+    width: '48%',
   },
 
   textHeader: {
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   switchBox: {
@@ -62,16 +87,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    // borderWidth: 1,
   },
-  inputBox: {flexDirection: 'row', marginTop: 10},
-  detailText: {flex: 1, fontSize: 12, color: PrivacyPolicy},
+  inputBox: {flexDirection: 'row', marginTop: 10, backgroundColor: '#f7f7f7'},
   inputView: {
     // borderWidth: 1,
     width: 100,
     height: 40,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     elevation: 2,
     borderRadius: 8,
     backgroundColor: '#ffffff',
@@ -80,7 +105,16 @@ const styles = StyleSheet.create({
     width: 50,
     // borderWidth: 1,
     textAlign: 'center',
-    backgroundColor: '#f7f7f7',
+    // backgroundColor: '#f7f7f7',
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
-  textInputCaption: {textAlign: 'center', marginLeft: 5},
+  textInputCaption: {
+    textAlign: 'center',
+    marginLeft: 5,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
+    backgroundColor: '#ffffff',
+    // borderWidth: 1,
+  },
 });

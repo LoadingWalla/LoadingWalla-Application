@@ -23,6 +23,7 @@ import {
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
+import EmptyListComponent from '../../Components/EmptyListComponent';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -193,14 +194,7 @@ const MyGpsScreen = ({navigation}) => {
             <ActivityIndicator size="large" color={backgroundColorNew} />
           </View>
         ) : gpsDeviceData === null ? (
-          <View style={styles.notFoundView}>
-            <Image
-              source={require('../../../assets/noGps.png')}
-              resizeMode="contain"
-              style={styles.splashImage(250, 250)}
-            />
-            <Text style={styles.notFoundText}>No GPS available!</Text>
-          </View>
+          <View />
         ) : (
           <FlatList
             data={mergedDeviceData}
@@ -209,28 +203,9 @@ const MyGpsScreen = ({navigation}) => {
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              <View style={styles.homeView}>
-                <View style={styles.notFoundView}>
-                  <Image
-                    source={require('../../../assets/noGps.png')}
-                    resizeMode="contain"
-                    style={styles.splashImage(250, 250)}
-                  />
-                  <Text style={styles.notFoundText}>No GPS available!</Text>
-                  <Text style={styles.subText}>
-                    Get a GPS Plan for your vehicle
-                  </Text>
-                </View>
-                <View style={styles.getNowView}>
-                  <Text style={styles.offerText}>Buy and save up to 50%</Text>
-                  <InnerButton
-                    navigation={() => navigation.navigate('BuyGPS')}
-                    title={'Get Now'}
-                    enabledStyle={styles.btnStyle}
-                    textStyle={styles.btnText}
-                  />
-                </View>
-              </View>
+              gpsDeviceData.length === 0 ? (
+                <EmptyListComponent navigation={navigation} />
+              ) : null
             }
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

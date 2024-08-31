@@ -53,7 +53,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const TrackingTruck = ({navigation, route}) => {
-  const {deviceId, lat, long, item} = route.params;
+  const {deviceId, lat, long, item, name} = route.params;
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -420,7 +420,7 @@ const TrackingTruck = ({navigation, route}) => {
 
           <TouchableOpacity
             style={styles.alertButton}
-            onPress={() => navigation.navigate('GpsAlert')}>
+            onPress={() => navigation.navigate('GpsAlert', {deviceId})}>
             <AlertsIcon size={20} />
             <Text style={styles.alertButtonText}>Alerts</Text>
           </TouchableOpacity>
@@ -449,7 +449,9 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('LocationHistory', {
                 deviceId: deviceId,
-                name: item?.name,
+                name: name,
+                from: moment().utc().startOf('day').toISOString(),
+                to: moment().utc().endOf('day').toISOString(),
               })
             }
           />
