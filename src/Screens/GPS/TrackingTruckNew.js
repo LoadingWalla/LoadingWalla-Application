@@ -56,8 +56,8 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const TrackingTruckNew = ({navigation, route}) => {
-  const {item} = route.params;
-  // console.log(8888888888888, item);
+  const {item, name, lat, long, deviceId} = route.params;
+  console.log(8888888888888, route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -130,7 +130,7 @@ const TrackingTruckNew = ({navigation, route}) => {
   useEffect(() => {
     if (device?.name) {
       navigation.setOptions({
-        title: device.name,
+        title: name,
       });
     }
   }, [device, navigation]);
@@ -286,8 +286,10 @@ const TrackingTruckNew = ({navigation, route}) => {
             title={'History'}
             onPress={() =>
               navigation.navigate('LocationHistory', {
-                deviceId: item?.id,
-                name: device?.name,
+                deviceId: deviceId,
+                name: name,
+                from: moment().utc().startOf('day').toISOString(),
+                to: moment().utc().endOf('day').toISOString(),
               })
             }
           />

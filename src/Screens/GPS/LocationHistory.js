@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  Platform,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -24,6 +27,10 @@ import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import RightArrow from '../../../assets/SVG/svg/RightArrow';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import {convertToCSV} from '../../Utils/CSVutils';
+import RNFS from 'react-native-fs';
+import Share from 'react-native-share';
+import AlertBox from '../../Components/AlertBox';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -127,6 +134,7 @@ const VerticalLine = () => <View style={styles.verticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
   const {deviceId, name, from, to} = route.params;
+  // console.log(777777, route);
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -143,6 +151,86 @@ const LocationHistory = ({navigation, route}) => {
   } = useSelector(state => state.data);
 
   const {wsConnected} = useSelector(state => state.wsData);
+
+  const handleDownload = async () => {
+    if (gpsTripsData && gpsTripsData.length > 0) {
+      const csvData = convertToCSV(gpsTripsData);
+
+      const path = `${RNFS.DocumentDirectoryPath}/gps_replay_data.csv`;
+
+      // Write the file to the device
+      await RNFS.writeFile(path, csvData, 'utf8')
+        .then(() => {
+          // Share the file
+          Share.open({
+            url: `file://${path}`,
+            type: 'text/csv',
+            filename: 'gps_replay_data',
+            showAppsToView: true,
+          })
+            .then(res => console.log('File shared:', res))
+            .catch(err => console.error('Error sharing file:', err));
+        })
+        .catch(err => {
+          console.error('Error writing file:', err);
+        });
+    } else {
+      // alert('No data available to download.');
+    }
+  };
+
+  // const checkStoragePermission = async () => {
+  //   if (Platform.OS === 'android') {
+  //     try {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+  //         {
+  //           title: 'Storage Permission',
+  //           message: 'App needs access to your storage to download files.',
+  //           buttonNeutral: 'Ask Me Later',
+  //           buttonNegative: 'Cancel',
+  //           buttonPositive: 'OK',
+  //         },
+  //       );
+
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         console.log('Storage permission granted');
+  //       } else if (granted === PermissionsAndroid.RESULTS.DENIED) {
+  //         Alert.alert(
+  //           'Permission Denied',
+  //           'Storage permission is required to download the file. Please enable it from settings.',
+  //         );
+  //       } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+  //         Alert.alert(
+  //           'Permission Denied',
+  //           'You have selected never ask again. Please enable storage permission manually from settings.',
+  //         );
+  //       }
+  //     } catch (err) {
+  //       console.warn(err);
+  //     }
+  //   }
+  // };
+
+  // const handleDownload = useCallback(async () => {
+  //   if (!gpsTripsData || gpsTripsData.length === 0) return;
+
+  //   const hasPermission = await checkStoragePermission();
+  //   if (!hasPermission) {
+  //     return;
+  //   }
+
+  //   const csvContent = convertToCSV(gpsTripsData);
+  //   const filePath = `${RNFS.DownloadDirectoryPath}/gps_trips.csv`;
+
+  //   try {
+  //     await RNFS.writeFile(filePath, csvContent, 'utf8');
+  //     console.log('File written successfully to:', filePath);
+  //     Alert.alert('Download complete', `File saved to: ${filePath}`);
+  //   } catch (error) {
+  //     console.error('Failed to write file:', error);
+  //   }
+  // }, [gpsTripsData]);
 
   useEffect(() => {
     if (gpsTokenData) {
@@ -287,7 +375,9 @@ const LocationHistory = ({navigation, route}) => {
             value={`${averageSpeed} KM/H`}
           />
           <View style={styles.iconButtonsContainer}>
-            <TouchableOpacity style={styles.downloadIconBox} onPress={() => {}}>
+            <TouchableOpacity
+              style={styles.downloadIconBox}
+              onPress={handleDownload}>
               <DownloadIcon size={20} />
             </TouchableOpacity>
             <TouchableOpacity
