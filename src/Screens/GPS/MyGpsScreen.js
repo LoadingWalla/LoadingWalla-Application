@@ -32,18 +32,19 @@ const MyGpsScreen = ({navigation}) => {
     gpsTokenData,
     gpsDeviceLoading,
     gpsDeviceData,
-    wsPositions,
-    wsDevices,
-    wsEvents,
-    wsError,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => state.data);
-
-  const {wsConnected} = useSelector(state => {
-    console.log('WEBSOCKET My Gps Screen---', state.wsData);
-    return state.wsData;
+  } = useSelector(state => {
+    console.log('My Gps Screen---', state.data);
+    return state.data;
   });
+
+  const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
+    state => {
+      console.log('WEBSOCKET My Gps Screen---', state.wsData);
+      return state.wsData;
+    },
+  );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -70,17 +71,6 @@ const MyGpsScreen = ({navigation}) => {
     fetchGpsData();
     setRefreshing(false);
   }, [fetchGpsData]);
-
-  // Auto-refresh when wsConnected is false
-  useEffect(() => {
-    if (!wsConnected) {
-      const interval = setInterval(() => {
-        fetchGpsData();
-      }, 5000); // Auto-refresh every 5 seconds
-
-      return () => clearInterval(interval);
-    }
-  }, [wsConnected, fetchGpsData]);
 
   // Initial fetch on screen focus
   useFocusEffect(

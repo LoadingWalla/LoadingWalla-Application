@@ -84,7 +84,7 @@ const TrackingTruck = ({navigation, route}) => {
 
   const handleTruckIconPress = () => {
     if (livePositions.length > 0) {
-      console.log('Live positions:', livePositions);
+      // console.log('Live positions:', livePositions);
       dispatch(
         fetchAddressRequest(
           livePositions[livePositions.length - 1].latitude,
@@ -100,7 +100,7 @@ const TrackingTruck = ({navigation, route}) => {
   };
 
   useEffect(() => {
-    console.log('Live positions:', livePositions);
+    // console.log('Live positions:', livePositions);
   }, [livePositions]);
 
   const device = wsDevices.find(d => d.id === deviceId);

@@ -19,8 +19,14 @@ function createWebSocketChannel(cookie) {
 
     ws.onmessage = event => {
       const data = JSON.parse(event.data);
-      // console.log('websocket onmessage', data);
-      emit(actions.websocketMessage(data));
+      // console.log('------------------websocket onmessage', data);
+      // Check if the data object is not empty before emitting the action
+      if (data && Object.keys(data).length > 0) {
+        console.log('------------------websocket onmessage', data);
+        emit(actions.websocketMessage(data));
+      } else {
+        console.log('----Received an empty object, not emitting action.-----');
+      }
     };
 
     ws.onerror = error => {
@@ -76,7 +82,7 @@ function* handleWebSocketConnection(cookie) {
       // console.log('<<<<<<<<<<<<<< all true');
       yield put(actions.websocketMessage(data));
     }
-  }, 5000); // Process data at most once per second
+  }, 1000); // Process data at most once per second
 
   try {
     while (true) {
