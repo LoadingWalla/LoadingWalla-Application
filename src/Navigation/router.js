@@ -803,6 +803,7 @@ const Navigation = ({language}) => {
           title: t(Constants.SELECT_LANGUAGE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -843,6 +844,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || t(Constants.LEGAL_POLICIES),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={() => ({
@@ -866,6 +868,7 @@ const Navigation = ({language}) => {
           title: t(Constants.VERIFY_NUMBER_TITLE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={() => ({
@@ -958,6 +961,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -994,6 +998,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1017,6 +1022,7 @@ const Navigation = ({language}) => {
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1039,6 +1045,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1062,6 +1069,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1101,6 +1109,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1123,6 +1132,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerBackground: () => (
             <LinearGradient
@@ -1156,6 +1166,7 @@ const Navigation = ({language}) => {
           title: t(Constants.HELP_GUIDE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1178,6 +1189,7 @@ const Navigation = ({language}) => {
           title: t(Constants.WALLET),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1218,6 +1230,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_right',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1241,6 +1254,7 @@ const Navigation = ({language}) => {
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1263,6 +1277,7 @@ const Navigation = ({language}) => {
           title: t(Constants.KYC),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1285,6 +1300,7 @@ const Navigation = ({language}) => {
           title: t(Constants.RC_VERIFICATION),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1313,6 +1329,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1336,6 +1353,7 @@ const Navigation = ({language}) => {
           title: t(Constants.SAVED_ADDRESS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1359,6 +1377,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1442,6 +1461,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1464,6 +1484,7 @@ const Navigation = ({language}) => {
           title: t(Constants.DOCUMENT_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1526,6 +1547,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1549,6 +1571,7 @@ const Navigation = ({language}) => {
           title: 'Complete Booking',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1571,6 +1594,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || null,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1588,8 +1612,8 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        component={TrackingTruck}
-        // component={TrackingTruckNew}
+        // component={TrackingTruck}
+        component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
@@ -1597,23 +1621,24 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
-            // fontSize: 20,
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
-            <HeaderMenuButton
+            // <HeaderMenuButton
+            //   navigation={navigation}
+            //   latitude={route?.params?.lat}
+            //   longitude={route?.params?.long}
+            //   deviceId={route?.params?.deviceId}
+            //   name={route?.params?.name}
+            // />
+            <HeaderHelpButton
+              shareIcon={true}
               navigation={navigation}
               latitude={route.params.lat}
               longitude={route.params.long}
-              deviceId={route.params.deviceId}
             />
           ),
-          // <HeaderHelpButton
-          //      shareIcon={false}
-          //      navigation={navigation}
-          //      // latitude={route.params.lat}
-          //      // longitude={route.params.long}
-          //    />
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1637,6 +1662,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1663,6 +1689,7 @@ const Navigation = ({language}) => {
           title: 'Alerts',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1689,6 +1716,7 @@ const Navigation = ({language}) => {
           title: 'History',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1715,6 +1743,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || null,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1741,6 +1770,7 @@ const Navigation = ({language}) => {
           title: 'Purchase GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1787,6 +1817,7 @@ const Navigation = ({language}) => {
           title: 'Purchase GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1813,6 +1844,7 @@ const Navigation = ({language}) => {
           title: 'Provide delivery details',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           // headerRight: () => (
@@ -1836,9 +1868,10 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Play Journey',
+          title: route?.params?.name || 'Play Journey',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1865,6 +1898,7 @@ const Navigation = ({language}) => {
           title: 'Stops',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1891,6 +1925,7 @@ const Navigation = ({language}) => {
           title: 'Quick filters',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1917,6 +1952,7 @@ const Navigation = ({language}) => {
           title: 'Owned GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1983,6 +2019,7 @@ const Navigation = ({language}) => {
           title: t(Constants.ORDERS_PAYMENT),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -2003,9 +2040,10 @@ const Navigation = ({language}) => {
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Geofencing',
+          title: route?.params?.name || 'Geofencing',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerRight: () => (
             <HeaderHelpButton

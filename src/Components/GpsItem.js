@@ -14,7 +14,7 @@ import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 
 const GpsItem = ({navigation, item, isDisable}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  console.log(444444, item);
+  // console.log(444444, item);
 
   const {
     position = [],

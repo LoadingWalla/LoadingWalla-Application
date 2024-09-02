@@ -500,7 +500,14 @@ const TrackingTruck = ({navigation, route}) => {
         <View style={{justifyContent: 'center'}}>
           <TouchableOpacity
             style={styles.btnContainer}
-            onPress={() => navigation.navigate('PlayJourney', {deviceId})}>
+            onPress={() =>
+              navigation.navigate('PlayJourney', {
+                deviceId,
+                from: moment().utc().startOf('day').toISOString(),
+                to: moment().utc().endOf('day').toISOString(),
+                name: name,
+              })
+            }>
             <PlayIcon
               size={25}
               style={styles.iconStyle}

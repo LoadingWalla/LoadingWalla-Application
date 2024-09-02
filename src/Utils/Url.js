@@ -13,3 +13,5 @@ export const traccarApi = 'https://gpsapi.loadingwalla.com/api/';
 export const WS_URL = 'wss://gpsapi.loadingwalla.com/api/socket';
 export const GOOGLE_API_BASE_URL = 'https://maps.googleapis.com/maps/api/';
 export const NOMINATIM_API_BASE_URL = 'https://nominatim.openstreetmap.org/';
+
+export const GOOGLE_API_KEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';

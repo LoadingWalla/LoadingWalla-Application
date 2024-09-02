@@ -27,6 +27,8 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to} = route.params;
+  console.log('88888---Play Journey route', route);
+
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,51 +54,6 @@ export default function PlayJourney({navigation, route}) {
   });
 
   const {wsConnected} = useSelector(state => state.wsData);
-
-  const coordinates = useMemo(
-    () =>
-      gpsReplayData?.map(point => ({
-        latitude: point.latitude,
-        longitude: point.longitude,
-        course: point.course,
-        speed: point.speed,
-      })),
-    [gpsReplayData],
-  );
-
-  const initialRegion = useMemo(
-    () =>
-      coordinates?.length > 0
-        ? {
-            latitude: coordinates[0].latitude,
-            longitude: coordinates[0].longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }
-        : null,
-    [coordinates],
-  );
-
-  const animatedMarkerPosition = useRef(
-    new AnimatedRegion({
-      latitude: coordinates?.[0]?.latitude || 0,
-      longitude: coordinates?.[0]?.longitude || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
-  ).current;
-
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const changePlaybackSpeed = speed => {
-    setPlaybackSpeed(speed);
-    if (isPlaying) {
-      togglePlayback();
-      togglePlayback();
-    }
-  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -150,23 +107,13 @@ export default function PlayJourney({navigation, route}) {
             .start();
 
           setSliderValue(newIndex / (coordinates?.length - 1));
-          // Only change the position, not the zoom level
-          // if (mapRef.current && newPosition) {
-          //   mapRef.current.animateToRegion({
-          //     latitude: newPosition?.latitude,
-          //     longitude: newPosition?.longitude,
-          //     latitudeDelta: 0.0922,
-          //     longitudeDelta: 0.0421,
-          //   });
-          // }
           if (mapRef.current && newPosition) {
             mapRef.current.animateCamera({
               center: {
                 latitude: newPosition.latitude,
                 longitude: newPosition.longitude,
               },
-              // Do not change zoom level
-              zoom: 30, // Set a default zoom level, adjust as needed
+              zoom: 30,
               duration: 1000 / playbackSpeed,
             });
           }
@@ -184,6 +131,51 @@ export default function PlayJourney({navigation, route}) {
       setCurrentStop(gpsStopsData[0]);
     }
   }, [gpsStopsData]);
+
+  const coordinates = useMemo(
+    () =>
+      gpsReplayData?.map(point => ({
+        latitude: point.latitude,
+        longitude: point.longitude,
+        course: point.course,
+        speed: point.speed,
+      })),
+    [gpsReplayData],
+  );
+
+  const initialRegion = useMemo(
+    () =>
+      coordinates?.length > 0
+        ? {
+            latitude: coordinates[0].latitude,
+            longitude: coordinates[0].longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }
+        : null,
+    [coordinates],
+  );
+
+  const animatedMarkerPosition = useRef(
+    new AnimatedRegion({
+      latitude: coordinates?.[0]?.latitude || 0,
+      longitude: coordinates?.[0]?.longitude || 0,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }),
+  ).current;
+
+  const togglePlayback = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const changePlaybackSpeed = speed => {
+    setPlaybackSpeed(speed);
+    if (isPlaying) {
+      togglePlayback();
+      togglePlayback();
+    }
+  };
 
   const goToNextStop = () => {
     if (currentStopIndex < gpsStopsData?.length - 1) {

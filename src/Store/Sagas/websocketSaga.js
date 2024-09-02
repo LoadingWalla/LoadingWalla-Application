@@ -82,7 +82,7 @@ function* handleWebSocketConnection(cookie) {
       // console.log('<<<<<<<<<<<<<< all true');
       yield put(actions.websocketMessage(data));
     }
-  }, 1000); // Process data at most once per second
+  }, 100); // Process data at most once per second
 
   try {
     while (true) {
