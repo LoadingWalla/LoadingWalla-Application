@@ -1116,7 +1116,16 @@ export function* fetchGpsSummary({
   daily,
 }) {
   try {
-    console.log(33333, username, password, deviceId, from, to, daily);
+    console.log(
+      33333,
+      'Gps Summary',
+      username,
+      password,
+      deviceId,
+      from,
+      to,
+      daily,
+    );
     const data = yield gpsApi.get(
       `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
       username,

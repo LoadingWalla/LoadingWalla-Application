@@ -57,8 +57,11 @@ export default function PlayJourney({navigation, route}) {
 
   // Consolidate data fetching logic
   const fetchData = React.useCallback(() => {
-    const defaultFrom = from || moment().utc().startOf('day').toISOString();
-    const defaultTo = to || moment().utc().endOf('day').toISOString();
+    // const defaultFrom = from || moment().utc().startOf('day').toISOString();
+    // const defaultTo = to || moment().utc().endOf('day').toISOString();
+    const defaultFrom =
+      from || moment().utcOffset(330).startOf('day').toISOString();
+    const defaultTo = to || moment().utcOffset(330).endOf('day').toISOString();
 
     if (wsConnected) {
       dispatch(websocketDisconnect());

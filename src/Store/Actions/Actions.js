@@ -1006,6 +1006,10 @@ export const fetchGpsDevicesFailure = payload => ({
   payload,
 });
 
+export const clearGpsDeviceData = () => ({
+  type: actionTypes.CLEAR_GPS_DEVICES_DATA,
+});
+
 // single gps devices
 export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
   console.log(999999, username, password, deviceId);

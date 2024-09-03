@@ -52,7 +52,7 @@ const SettingsSection = React.memo(() => (
     <View style={styles.settingsRow}>
       <GpsSettingItem
         detailInput={false}
-        title={'Overspeeding alerts'}
+        title={'Overspeeding Alerts'}
         storageKey="overspeeding"
       />
       <GpsSettingItem
@@ -187,9 +187,11 @@ const styles = StyleSheet.create({
   settingsContainer: {
     flex: 1,
     padding: 10,
+    paddingBottom: 50,
     backgroundColor: '#ffffff',
     marginBottom: 10,
     elevation: 2,
+    // borderWidth: 1,
   },
   settingsRow: {
     flexDirection: 'row',

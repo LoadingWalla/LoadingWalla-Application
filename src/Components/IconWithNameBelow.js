@@ -1,16 +1,15 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-const IconWithName = ({
+const IconWithNameBelow = ({
   title,
   dynamicTitle,
   dynamicTitleColor,
   IconComponent,
   iconSize,
-  onPress,
   color,
 }) => (
-  <TouchableOpacity style={styles.iconView} onPress={onPress}>
+  <View style={styles.iconView}>
     <View style={{borderWidth: 0, minWidth: 20}}>
       <IconComponent size={iconSize} color={color} />
     </View>
@@ -20,10 +19,10 @@ const IconWithName = ({
         {dynamicTitle}
       </Text>
     </Text>
-  </TouchableOpacity>
+  </View>
 );
 
-export default IconWithName;
+export default IconWithNameBelow;
 
 const styles = StyleSheet.create({
   iconView: {

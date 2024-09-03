@@ -35,7 +35,7 @@ const GpsSettingItem = ({detailInput, title, storageKey}) => {
   return (
     <View style={styles.detailBox}>
       <View style={styles.switchBox}>
-        <View style={{flexDirection: 'column'}}>
+        <View style={{flexDirection: 'column', maxWidth: 100}}>
           <Text style={styles.textHeader}>{title}</Text>
           {detailInput ? (
             <View style={styles.inputBox}>

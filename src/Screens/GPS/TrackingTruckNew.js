@@ -59,6 +59,7 @@ const TrackingTruckNew = ({navigation, route}) => {
           }}
           item={item}
           positions={filteredPositions}
+          navigation={navigation}
         />
       </View>
 
@@ -77,6 +78,8 @@ const TrackingTruckNew = ({navigation, route}) => {
         navigation={navigation}
         latitude={lat}
         longitude={long}
+        item={item}
+        positions={filteredPositions}
       />
     </View>
   );

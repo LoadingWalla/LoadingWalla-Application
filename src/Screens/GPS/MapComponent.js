@@ -11,13 +11,16 @@ import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAddressRequest} from '../../Store/Actions/Actions';
+import moment from 'moment';
+import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
+import {backgroundColorNew} from '../../Color/color';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const MapComponent = ({initialRegion, item, positions}) => {
+const MapComponent = ({initialRegion, item, positions, navigation}) => {
   const [mapType, setMapType] = useState('standard');
   const [previousPosition, setPreviousPosition] = useState(null);
   const mapRef = useRef();
@@ -28,15 +31,16 @@ const MapComponent = ({initialRegion, item, positions}) => {
     // console.log('Tracking Truck -------------->>>>>', state.data);
     return state.data;
   });
+  // console.log(33333, item);
 
-  console.log(
-    'Positions:',
-    positions,
-    'Item:',
-    item,
-    'Initial Region:',
-    initialRegion,
-  );
+  // console.log(
+  //   'Positions:',
+  //   positions,
+  //   'Item:',
+  //   item,
+  //   'Initial Region:',
+  //   initialRegion,
+  // );
 
   const initialMapRegion = {
     ...initialRegion,
@@ -59,31 +63,49 @@ const MapComponent = ({initialRegion, item, positions}) => {
   useEffect(() => {
     if (positions.length > 0) {
       const lastPosition = positions[0];
-      // Check if the position has changed
+
       if (
         !previousPosition ||
         previousPosition.latitude !== lastPosition.latitude ||
         previousPosition.longitude !== lastPosition.longitude
       ) {
-        // Update the previous position
-        console.log(888888888, 'New Positon');
-
         setPreviousPosition(lastPosition);
 
-        // Fetch the new address
         dispatch(
           fetchAddressRequest(
             lastPosition.latitude,
             lastPosition.longitude,
-            positions[0].id,
+            lastPosition.id,
           ),
         );
+
+        // Animate the map to the new position
+        mapRef.current.animateToRegion(
+          {
+            latitude: lastPosition.latitude,
+            longitude: lastPosition.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          },
+          1000,
+        );
+
+        // Optionally, move the marker smoothly if needed
+        if (markerRef.current) {
+          markerRef.current.animateMarkerToCoordinate(
+            {
+              latitude: lastPosition.latitude,
+              longitude: lastPosition.longitude,
+            },
+            1000,
+          );
+        }
       }
     }
   }, [positions, previousPosition, dispatch]);
 
   const hasPositions = positions.length > 0;
-  console.log(89898989899, hasPositions ? positions : 0);
+  // console.log(89898989899, hasPositions ? positions : 0);
 
   return (
     <View style={styles.mapContainer}>
@@ -119,7 +141,6 @@ const MapComponent = ({initialRegion, item, positions}) => {
                       {fullAddressData === null
                         ? item?.address
                         : fullAddressData}
-                      {/* {`Lat: ${position.latitude}, Long: ${position.longitude}`} */}
                     </Text>
                   </View>
                 </Callout>
@@ -138,7 +159,6 @@ const MapComponent = ({initialRegion, item, positions}) => {
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>
                   {fullAddressData === null ? item?.address : fullAddressData}
-                  {/* {`Lat: ${initialRegion.latitude}, Long: ${initialRegion.longitude}`} */}
                 </Text>
               </View>
             </Callout>
@@ -156,10 +176,39 @@ const MapComponent = ({initialRegion, item, positions}) => {
         />
       </TouchableOpacity>
       <View style={styles.speedDistanceBox}>
-        <Text>
-          {hasPositions ? positions[0]?.speed : item?.position[0].speed}
-        </Text>
-        <Text>{item?.distance}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <View>
+            <Text>{`${(item?.distance / 1000).toFixed(2)} KM`}</Text>
+            <Text>Today distance</Text>
+          </View>
+          <View style={styles.verticalLine} />
+          <Text>
+            {Math.floor(
+              (hasPositions ? positions[0]?.speed : item?.position[0]?.speed) *
+                1.852,
+            )}
+          </Text>
+          <Text>Speed</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.btnContainer}
+          onPress={() =>
+            navigation.navigate('PlayJourney', {
+              deviceId: item?.id,
+              from: moment().utcOffset(330).startOf('day').toISOString(),
+              to: moment().utcOffset(330).endOf('day').toISOString(),
+              // from: moment().utc().startOf('day').toISOString(),
+              // to: moment().utc().endOf('day').toISOString(),
+              name: item?.name,
+            })
+          }>
+          <PlayIcon
+            size={25}
+            style={styles.iconStyle}
+            color={backgroundColorNew}
+          />
+          <Text style={styles.btnText}>Play Journey</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -184,10 +233,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     elevation: 3,
     zIndex: 99,
-    borderWidth: 1,
+    // borderWidth: 1,
+    borderRadius: 8,
     width: '95%',
     alignSelf: 'center',
     padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   calloutView: {
     width: 300,
@@ -201,4 +253,28 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   imageStyle: {width: 40, height: 40},
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    borderRadius: 20,
+    elevation: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  iconStyle: {marginRight: 5},
+  btnText: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  verticalLine: {
+    backgroundColor: '#707070',
+    width: 1,
+    marginHorizontal: 5,
+    height: 40,
+    alignSelf: 'center',
+  },
 });

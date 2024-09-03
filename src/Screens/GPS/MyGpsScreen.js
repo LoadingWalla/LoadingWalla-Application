@@ -165,7 +165,7 @@ const MyGpsScreen = ({navigation}) => {
             item={item}
             icon={true}
             navigation={navigation}
-            isDisable={!wsConnected}
+            // isDisable={!wsConnected}
           />
         ),
     [navigation, wsConnected],

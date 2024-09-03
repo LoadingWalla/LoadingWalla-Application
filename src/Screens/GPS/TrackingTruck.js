@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -18,17 +18,16 @@ import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
 import AlertIcon from '../../../assets/SVG/AlertIcon';
-import FuelIcon from '../../../assets/SVG/svg/FuelIcon';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
 import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import IconWithName from '../../Components/IconWithName';
-import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import {
+  clearGpsDeviceData,
   fetchAddressFailure,
   fetchAddressRequest,
   fetchPositionsRequest,
@@ -39,6 +38,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import MapViewDirections from 'react-native-maps-directions';
 import RelayIcon from '../../../assets/SVG/svg/RelayIcon';
+import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -52,61 +52,85 @@ const getLivePositions = (wsMessages, deviceId) => {
     }));
 };
 
+const getFilteredPositions = (wsMessages22, deviceId) => {
+  return wsMessages22.positions.filter(
+    position => position.deviceId === deviceId,
+  );
+};
+
 const TrackingTruck = ({navigation, route}) => {
   const {deviceId, lat, long, item, name} = route.params;
+  // console.log(333333333, route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const markerRef = useRef(null);
+
   const [activeIndex, setActiveIndex] = useState(null);
-  const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mapType, setMapType] = useState('standard');
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [currentAddress, setCurrentAddress] = useState(item.address);
+  const [previousPosition, setPreviousPosition] = useState(null);
 
-  const {
-    fullAddressData,
-    fullAddressLoading,
-    gpsReplayData,
-    gpsTokenData,
-    gpsRelayData,
-  } = useSelector(state => {
-    console.log('Tracking Truck -------------->>>>>', state.data);
-    return state.data;
-  });
+  // const [livePositions, setLivePositions] = useState([]);
+  const [filteredPositions, setFilteredPositions] = useState([]);
 
-  const {wsConnected, wsDevices, wsError, wsEvents, wsMessages, wsPositions} =
+  const {fullAddressData, gpsReplayData, gpsTokenData, gpsRelayData} =
     useSelector(state => {
-      console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
-      return state.wsData;
+      // console.log('Tracking Truck -------------->>>>>', state.data);
+      return state.data;
     });
 
-  const handleTruckIconPress = () => {
-    if (livePositions.length > 0) {
-      // console.log('Live positions:', livePositions);
-      dispatch(
-        fetchAddressRequest(
-          livePositions[livePositions.length - 1].latitude,
-          livePositions[livePositions.length - 1].longitude,
-        ),
-      );
-      if (markerRef.current) {
-        markerRef.current.showCallout();
-      }
-    } else {
-      console.log('No live positions available to fetch the address.');
-    }
-  };
+  const {
+    wsConnected,
+    wsDevices,
+    wsEvents,
+    wsMessages,
+    wsPositions,
+    wsMessages22,
+  } = useSelector(state => {
+    // console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
+    return state.wsData;
+  });
+
+  const device = useMemo(
+    () => wsDevices.find(d => d.id === deviceId),
+    [wsDevices, deviceId],
+  );
+  const positions = useMemo(
+    () => wsPositions.filter(p => p.deviceId === deviceId),
+    [wsPositions, deviceId],
+  );
+  const events = useMemo(
+    () => wsEvents.filter(e => e.deviceId === deviceId),
+    [wsEvents, deviceId],
+  );
 
   useEffect(() => {
-    // console.log('Live positions:', livePositions);
-  }, [livePositions]);
+    const filpositions = getFilteredPositions(wsMessages22, deviceId);
+    setFilteredPositions(positions);
+  }, [wsMessages22, deviceId]);
 
-  const device = wsDevices.find(d => d.id === deviceId);
-  const positions = wsPositions.filter(p => p.deviceId === deviceId);
-  const events = wsEvents.filter(e => e.deviceId === deviceId);
-  // console.log(999999999, positions);
+  useEffect(() => {
+    if (positions.length > 0) {
+      const lastPosition = positions[0];
+
+      if (
+        !previousPosition ||
+        previousPosition.latitude !== lastPosition.latitude ||
+        previousPosition.longitude !== lastPosition.longitude
+      ) {
+        setPreviousPosition(lastPosition);
+
+        dispatch(
+          fetchAddressRequest(
+            lastPosition.latitude,
+            lastPosition.longitude,
+            lastPosition.id,
+          ),
+        );
+      }
+    }
+  }, [positions, previousPosition, dispatch]);
 
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
@@ -117,30 +141,32 @@ const TrackingTruck = ({navigation, route}) => {
     }),
   ).current;
 
-  useEffect(() => {
-    if (gpsReplayData && gpsReplayData.length > 0) {
-      const replayPositions = gpsReplayData.map(position => ({
-        latitude: position.latitude,
-        longitude: position.longitude,
-        // totalDistance: position.attributes.totalDistance,
-      }));
-      setLivePositions(replayPositions);
-      setLoading(false);
-      if (replayPositions.length > 0) {
-        animatedMarkerPosition.setValue({
-          latitude: replayPositions[replayPositions.length - 1].latitude,
-          longitude: replayPositions[replayPositions.length - 1].longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      }
-    }
-  }, [gpsReplayData]);
+  // useEffect(() => {
+  //   if (gpsReplayData && gpsReplayData.length > 0) {
+  //     const replayPositions = gpsReplayData.map(position => ({
+  //       latitude: position.latitude,
+  //       longitude: position.longitude,
+  //       // totalDistance: position.attributes.totalDistance,
+  //     }));
+  //     setLivePositions(replayPositions);
+  //     setLoading(false);
+  //     if (replayPositions.length > 0) {
+  //       animatedMarkerPosition.setValue({
+  //         latitude: replayPositions[replayPositions.length - 1].latitude,
+  //         longitude: replayPositions[replayPositions.length - 1].longitude,
+  //         latitudeDelta: 0.0922,
+  //         longitudeDelta: 0.0421,
+  //       });
+  //     }
+  //   }
+  // }, [gpsReplayData]);
 
   const fetchPositions = useCallback(() => {
     if (gpsTokenData && deviceId) {
-      const defaultFrom = moment().utc().startOf('day').toISOString();
-      const defaultTo = moment().utc().endOf('day').toISOString();
+      const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
+      // const defaultFrom = moment().utc().startOf('day').toISOString();
+      // const defaultTo = moment().utc().endOf('day').toISOString();
       dispatch(
         fetchPositionsRequest(
           gpsTokenData.email,
@@ -164,17 +190,10 @@ const TrackingTruck = ({navigation, route}) => {
       dispatch(gpsRelayRequest(deviceId));
       return () => {
         dispatch(fetchAddressFailure());
+        dispatch(clearGpsDeviceData());
       };
     }, []),
   );
-
-  useEffect(() => {
-    if (device?.name) {
-      navigation.setOptions({
-        title: device.name,
-      });
-    }
-  }, [device, navigation]);
 
   const toggleMapType = () => {
     setMapType(prevType =>
@@ -182,27 +201,45 @@ const TrackingTruck = ({navigation, route}) => {
     );
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (wsConnected) {
+  //     const position = getLivePositions(wsMessages, deviceId);
+  //     if (position.length > 0) {
+  //       setLivePositions(prevPositions => [
+  //         ...prevPositions,
+  //         ...position.map(p => ({
+  //           latitude: p.latitude,
+  //           longitude: p.longitude,
+  //           course: p.course,
+  //           // totalDistance: p.totalDistance,
+  //           deviceId: p.id,
+  //         })),
+  //       ]);
+  //       updateMarkerPosition(position[position.length - 1]);
+  //     }
+  //     setLoading(false);
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // }, [wsMessages, wsConnected]);
+  const livePositions = useMemo(() => {
     if (wsConnected) {
-      const position = getLivePositions(wsMessages, deviceId);
-      if (position.length > 0) {
-        setLivePositions(prevPositions => [
-          ...prevPositions,
-          ...position.map(p => ({
-            latitude: p.latitude,
-            longitude: p.longitude,
-            course: p.course,
-            // totalDistance: p.totalDistance,
-            deviceId: p.id,
-          })),
-        ]);
-        updateMarkerPosition(position[position.length - 1]);
-      }
-      setLoading(false);
-    } else {
+      return getLivePositions(wsMessages, deviceId);
+    }
+    return gpsReplayData?.map(position => ({
+      latitude: position.latitude,
+      longitude: position.longitude,
+      course: position.course,
+    }));
+  }, [wsMessages, gpsReplayData, wsConnected, deviceId]);
+
+  useEffect(() => {
+    if (livePositions.length > 0) {
+      const lastPosition = livePositions[livePositions.length - 1];
+      updateMarkerPosition(lastPosition);
       setLoading(false);
     }
-  }, [wsMessages, wsConnected]);
+  }, [livePositions]);
 
   const updateMarkerPosition = position => {
     animatedMarkerPosition
@@ -243,15 +280,7 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
-    if (livePositions.length > 1) {
-      const startPosition = livePositions[0];
-      const endPosition = livePositions[livePositions.length - 1];
-      const distanceCovered =
-        (endPosition.totalDistance - startPosition.totalDistance) / 1000;
-      setTotalDistance(distanceCovered.toFixed(2));
-    }
-  }, [fetchPositions]);
+  // console.log(9999999, filteredPositions, 88888888, livePositions);
 
   return (
     <View style={styles.container}>
@@ -265,15 +294,6 @@ const TrackingTruck = ({navigation, route}) => {
           </View>
           <View style={styles.horizontalLine} />
           <View style={styles.iconBox}>
-            <ToggleIconText
-              IconComponent={FuelIcon}
-              text="Fuel"
-              iconSize={25}
-              color={'#727272'}
-              index={0}
-              activeIndex={activeIndex}
-              onPress={() => handlePress(0)}
-            />
             <ToggleIconText
               IconComponent={BatteryIcon}
               text={positions[0]?.attributes?.batteryLevel || 'Battery'}
@@ -340,7 +360,9 @@ const TrackingTruck = ({navigation, route}) => {
         </View>
         <View style={styles.speedButton}>
           <Text style={styles.speedText}>
-            {positions[0]?.speed ? Math.ceil(positions[0]?.speed) : '0'}
+            {Math.floor(
+              (positions[0]?.speed ?? item?.position[0]?.speed) * 1.852,
+            )}
           </Text>
           <Text style={styles.speedUnit}>kmph</Text>
         </View>
@@ -378,9 +400,7 @@ const TrackingTruck = ({navigation, route}) => {
                   strokeColor="blue"
                   optimizeWaypoints={true}
                   onReady={result => {
-                    console.log(`Distance: ${result.distance} km`);
-                    // console.log(`Duration: ${result.duration} min.`);
-                    setTotalDistance(result.distance.toFixed(2)); // Update the distance state
+                    // console.log(result);
                   }}
                   onError={errorMessage => {
                     console.error('Error in MapViewDirections:', errorMessage);
@@ -394,11 +414,23 @@ const TrackingTruck = ({navigation, route}) => {
                   coordinate={animatedMarkerPosition}>
                   <View style={styles.markerContainer}>
                     <View style={styles.addressContainer}>
-                      <Text style={styles.addressText}>{currentAddress}</Text>
+                      {/* <Text style={styles.addressText}>{item.address}</Text> */}
+                      <Text style={styles.addressText}>
+                        {fullAddressData === null
+                          ? item?.address
+                          : fullAddressData}
+                      </Text>
                     </View>
                     <View style={styles.arrowBottom} />
                     <View style={styles.truckIconContainer}>
-                      <TruckNavigationIcon width={50} height={50} />
+                      {/* <TruckNavigationIcon width={50} height={50} /> */}
+                      <ActiveLocation
+                        size={40}
+                        course={
+                          livePositions[livePositions.length - 1]?.course ||
+                          item?.position[0]?.course
+                        }
+                      />
                     </View>
                   </View>
                 </Marker.Animated>
@@ -450,8 +482,10 @@ const TrackingTruck = ({navigation, route}) => {
               navigation.navigate('LocationHistory', {
                 deviceId: deviceId,
                 name: name,
-                from: moment().utc().startOf('day').toISOString(),
-                to: moment().utc().endOf('day').toISOString(),
+                // from: moment().utc().startOf('day').toISOString(),
+                // to: moment().utc().endOf('day').toISOString(),
+                from: moment().utcOffset(330).startOf('day').toISOString(),
+                to: moment().utcOffset(330).endOf('day').toISOString(),
               })
             }
           />
@@ -503,8 +537,10 @@ const TrackingTruck = ({navigation, route}) => {
             onPress={() =>
               navigation.navigate('PlayJourney', {
                 deviceId,
-                from: moment().utc().startOf('day').toISOString(),
-                to: moment().utc().endOf('day').toISOString(),
+                from: moment().utcOffset(330).startOf('day').toISOString(),
+                to: moment().utcOffset(330).endOf('day').toISOString(),
+                // from: moment().utc().startOf('day').toISOString(),
+                // to: moment().utc().endOf('day').toISOString(),
                 name: name,
               })
             }>

@@ -1,3 +1,4 @@
+import React, {useEffect, useState, useMemo, useRef} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -5,13 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useState, useMemo, useRef} from 'react';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
+  fetchAddressRequest,
   fetchGpsStopsRequest,
   fetchPositionsRequest,
 } from '../../Store/Actions/Actions';
@@ -24,10 +25,10 @@ import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 
 export default function PlayJourney({navigation, route}) {
-  const {deviceId, from, to} = route.params;
-  console.log('88888---Play Journey route', route);
+  const {deviceId, from, to, name} = route.params;
 
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -43,28 +44,32 @@ export default function PlayJourney({navigation, route}) {
   const {
     gpsTokenData,
     gpsReplayLoading,
-    gpsReplayError,
     gpsReplayData,
-    gpsStopsLoading,
-    gpsStopsError,
     gpsStopsData,
-  } = useSelector(state => {
-    console.log('Play Journey -----------------------', state.data);
-    return state.data;
-  });
+    gpsStopsLoading,
+    fullAddressData,
+    fullAddressCustomId,
+  } = useSelector(state => state.data);
 
   const {wsConnected} = useSelector(state => state.wsData);
 
+  const loading = gpsReplayLoading || gpsStopsLoading;
+
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected]);
+
   useFocusEffect(
     React.useCallback(() => {
-      const defaultFrom = from || moment().utc().startOf('day').toISOString();
-      const defaultTo = to || moment().utc().endOf('day').toISOString();
-      if (wsConnected) {
-        dispatch(websocketDisconnect());
-      }
+      const defaultFrom =
+        from || moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo =
+        to || moment().utcOffset(330).endOf('day').toISOString();
 
-      if (!gpsReplayData) {
-        dispatch(
+      const fetchData = async () => {
+        await dispatch(
           fetchPositionsRequest(
             gpsTokenData?.email,
             gpsTokenData?.password,
@@ -73,9 +78,8 @@ export default function PlayJourney({navigation, route}) {
             defaultTo,
           ),
         );
-      }
-      if (gpsStopsData === null) {
-        dispatch(
+
+        await dispatch(
           fetchGpsStopsRequest(
             gpsTokenData?.email,
             gpsTokenData?.password,
@@ -84,10 +88,36 @@ export default function PlayJourney({navigation, route}) {
             defaultTo,
           ),
         );
-      }
+      };
+
+      fetchData();
+
       return () => {};
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
+
+  useEffect(() => {
+    if (gpsStopsData && gpsStopsData.length > 0) {
+      setCurrentStop(gpsStopsData[0]);
+    }
+  }, [gpsStopsData]);
+
+  // Fetch address if currentStop.address is null and the stop has changed
+  useEffect(() => {
+    if (
+      currentStop &&
+      !currentStop.address &&
+      fullAddressCustomId !== currentStop.positionId
+    ) {
+      dispatch(
+        fetchAddressRequest(
+          currentStop.latitude,
+          currentStop.longitude,
+          currentStop.positionId,
+        ),
+      );
+    }
+  }, [currentStop, fullAddressCustomId, dispatch]);
 
   useEffect(() => {
     let interval = null;
@@ -125,12 +155,6 @@ export default function PlayJourney({navigation, route}) {
     }
     return () => clearInterval(interval);
   }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
-
-  useEffect(() => {
-    if (gpsStopsData && gpsStopsData?.length > 0) {
-      setCurrentStop(gpsStopsData[0]);
-    }
-  }, [gpsStopsData]);
 
   const coordinates = useMemo(
     () =>
@@ -250,6 +274,11 @@ export default function PlayJourney({navigation, route}) {
 
   return (
     <View style={styles.container}>
+      {loading && (
+        <View style={styles.loaderOverlay}>
+          <ActivityIndicator size="large" color={backgroundColorNew} />
+        </View>
+      )}
       <View style={styles.topContainer}>
         <View style={styles.stopBox}>
           <Text style={styles.stopText}>Stop</Text>
@@ -270,16 +299,12 @@ export default function PlayJourney({navigation, route}) {
                 navigationPath: 'PlayJourney',
               })
             }>
-            <FilterIcon size={30} color={backgroundColorNew} />
+            <FilterIcon size={20} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
       </View>
       <View style={styles.mapContainer}>
-        {gpsReplayLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
-          </View>
-        ) : (
+        {!loading && (
           <View style={styles.mapView}>
             {initialRegion && (
               <MapView
@@ -309,10 +334,9 @@ export default function PlayJourney({navigation, route}) {
                       latitude: stop.latitude,
                       longitude: stop.longitude,
                     }}
-                    pinColor={index === currentStopIndex ? 'blue' : 'red'}
-                    title={`Stop ${index + 1}`}
-                    description={stop.address}
-                  />
+                    title={stop.address}>
+                    <StopsIcon size={30} number={index + 1} />
+                  </Marker>
                 ))}
               </MapView>
             )}
@@ -412,9 +436,11 @@ export default function PlayJourney({navigation, route}) {
         <View style={styles.totalBox}>
           <View style={styles.stopBox}>
             <Text style={[styles.stopText, {color: '#3BA700'}]}>
-              Total run: {Math.ceil(totalRun)} KM
+              Total run:
             </Text>
-            <Text style={styles.stopCount}>00:00:00</Text>
+            <Text style={styles.stopCount}>
+              {Math.abs(totalRun).toFixed(2)} KM
+            </Text>
           </View>
           <View style={styles.verticalLine} />
           <View style={styles.stopBox}>
@@ -425,13 +451,6 @@ export default function PlayJourney({navigation, route}) {
               {formatDuration(totalDuration)}
             </Text>
           </View>
-          <View style={styles.verticalLine} />
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#E0BD00'}]}>
-              Signal Losts: 0 KM
-            </Text>
-            <Text style={styles.stopCount}>00:00:00</Text>
-          </View>
         </View>
       </View>
     </View>
@@ -440,12 +459,18 @@ export default function PlayJourney({navigation, route}) {
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#ffffff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
   verticalLine: {
     backgroundColor: '#AFAFAF',
     width: 1,
     marginHorizontal: 5,
-    height: '100%',
+    height: '90%',
   },
   extraButtonBox: {
     flexDirection: 'row',
@@ -458,7 +483,7 @@ const styles = StyleSheet.create({
   },
   addressText: {
     flex: 1,
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'PlusJakartaSans-Italic',
     color: titleColor,
   },
@@ -466,9 +491,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    padding: 10,
-    // marginTop: 5,
+    padding: 5,
     elevation: 2,
+    // borderWidth: 1,
   },
   mapContainer: {flex: 1},
   mapView: {flex: 1, width: '100%', height: '100%'},
@@ -502,20 +527,20 @@ const styles = StyleSheet.create({
   stopText: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 10,
+    fontSize: 8,
     textAlign: 'center',
   },
   stopCount: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 18,
+    fontSize: 12,
     textAlign: 'center',
     marginTop: -5,
   },
   totalBox: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     paddingVertical: 10,
     marginTop: 10,
   },
@@ -582,8 +607,8 @@ const styles = StyleSheet.create({
   },
   calendarIconBox: {
     padding: 8,
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,

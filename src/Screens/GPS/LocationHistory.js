@@ -91,7 +91,10 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
           onShowAddress={onShowAddress}
         />
       )}
-      <Text style={styles.timeText}>{formatDate(time)}</Text>
+      {/* <Text style={styles.timeText}>{formatDate(time)}</Text> */}
+      <Text style={styles.timeText}>
+        {moment(time).utcOffset('+05:30').format('DD/MM/YYYY hh:mm A')}
+      </Text>
     </View>
   );
 };
@@ -133,13 +136,13 @@ const StatBox = ({value, label}) => (
 const VerticalLine = () => <View style={styles.verticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
-  const {deviceId, name, from, to} = route.params;
+  const {deviceId, name, from, to} = route?.params;
   // console.log(777777, route);
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const defaultFrom = from || moment().utc().startOf('day').toISOString();
-  const defaultTo = to || moment().utc().endOf('day').toISOString();
+  // const defaultFrom = from || moment().utc().startOf('day').toISOString();
+  // const defaultTo = to || moment().utc().endOf('day').toISOString();
 
   const {
     gpsTripsLoading,
@@ -179,59 +182,6 @@ const LocationHistory = ({navigation, route}) => {
     }
   };
 
-  // const checkStoragePermission = async () => {
-  //   if (Platform.OS === 'android') {
-  //     try {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-  //         {
-  //           title: 'Storage Permission',
-  //           message: 'App needs access to your storage to download files.',
-  //           buttonNeutral: 'Ask Me Later',
-  //           buttonNegative: 'Cancel',
-  //           buttonPositive: 'OK',
-  //         },
-  //       );
-
-  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //         console.log('Storage permission granted');
-  //       } else if (granted === PermissionsAndroid.RESULTS.DENIED) {
-  //         Alert.alert(
-  //           'Permission Denied',
-  //           'Storage permission is required to download the file. Please enable it from settings.',
-  //         );
-  //       } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-  //         Alert.alert(
-  //           'Permission Denied',
-  //           'You have selected never ask again. Please enable storage permission manually from settings.',
-  //         );
-  //       }
-  //     } catch (err) {
-  //       console.warn(err);
-  //     }
-  //   }
-  // };
-
-  // const handleDownload = useCallback(async () => {
-  //   if (!gpsTripsData || gpsTripsData.length === 0) return;
-
-  //   const hasPermission = await checkStoragePermission();
-  //   if (!hasPermission) {
-  //     return;
-  //   }
-
-  //   const csvContent = convertToCSV(gpsTripsData);
-  //   const filePath = `${RNFS.DownloadDirectoryPath}/gps_trips.csv`;
-
-  //   try {
-  //     await RNFS.writeFile(filePath, csvContent, 'utf8');
-  //     console.log('File written successfully to:', filePath);
-  //     Alert.alert('Download complete', `File saved to: ${filePath}`);
-  //   } catch (error) {
-  //     console.error('Failed to write file:', error);
-  //   }
-  // }, [gpsTripsData]);
-
   useEffect(() => {
     if (gpsTokenData) {
       setTimeout(() => setInitialLoading(false), 1000);
@@ -262,8 +212,8 @@ const LocationHistory = ({navigation, route}) => {
             gpsTokenData.email,
             gpsTokenData.password,
             deviceId,
-            defaultFrom,
-            defaultTo,
+            encodeURIComponent(from),
+            encodeURIComponent(to),
             false,
           ),
         );
@@ -272,8 +222,8 @@ const LocationHistory = ({navigation, route}) => {
             gpsTokenData.email,
             gpsTokenData.password,
             deviceId,
-            defaultFrom,
-            defaultTo,
+            from,
+            to,
           ),
         );
       }
@@ -292,8 +242,8 @@ const LocationHistory = ({navigation, route}) => {
           gpsTokenData.email,
           gpsTokenData.password,
           deviceId,
-          defaultFrom,
-          defaultTo,
+          from,
+          to,
           false,
         ),
       );
@@ -302,8 +252,8 @@ const LocationHistory = ({navigation, route}) => {
           gpsTokenData.email,
           gpsTokenData.password,
           deviceId,
-          defaultFrom,
-          defaultTo,
+          from,
+          to,
         ),
       );
     }
@@ -361,19 +311,7 @@ const LocationHistory = ({navigation, route}) => {
                 : '0.00 KM'
             }
           />
-          <StopBox
-            label="Avg. Speed"
-            // value={
-            //   gpsSummaryData && gpsSummaryData.length > 0
-            //     ? gpsSummaryData[0]?.averageSpeed === 'NaN'
-            //       ? '0.00 KM/H'
-            //       : `${(gpsSummaryData[0]?.averageSpeed * 1.852).toFixed(
-            //           2,
-            //         )} KM/H`
-            //     : '0.00 KM/H'
-            // }
-            value={`${averageSpeed} KM/H`}
-          />
+          <StopBox label="Avg. Speed" value={`${averageSpeed} KM/H`} />
           <View style={styles.iconButtonsContainer}>
             <TouchableOpacity
               style={styles.downloadIconBox}

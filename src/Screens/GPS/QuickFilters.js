@@ -52,45 +52,81 @@ const QuickFilters = ({navigation, route}) => {
         endTime: '',
       });
 
-      const {start, end} = getDateRange(filter);
-      console.log(`From: ${start}`);
-      console.log(`To: ${end}`);
+      // const {start, end} = getDateRange(filter);
+      // console.log(`From: ${start}`);
+      // console.log(`To: ${end}`);
     }
   };
 
   const getDateRange = filter => {
     const rangeMap = {
       Today: {
-        start: moment().utc().startOf('day').toISOString(),
-        end: moment().utc().endOf('day').toISOString(),
+        start: moment().utcOffset(330).startOf('day').toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
+        // start: moment().utc().startOf('day').toISOString(),
+        // end: moment().utc().endOf('day').toISOString(),
       },
       Yesterday: {
-        start: moment().utc().subtract(1, 'days').startOf('day').toISOString(),
-        end: moment().utc().subtract(1, 'days').endOf('day').toISOString(),
+        start: moment()
+          .utcOffset(330)
+          .subtract(1, 'days')
+          .startOf('day')
+          .toISOString(),
+        end: moment()
+          .utcOffset(330)
+          .subtract(1, 'days')
+          .endOf('day')
+          .toISOString(),
+        // start: moment().utc().subtract(1, 'days').startOf('day').toISOString(),
+        // end: moment().utc().subtract(1, 'days').endOf('day').toISOString(),
       },
       'This Week': {
-        start: moment().utc().startOf('week').toISOString(),
-        end: moment().utc().endOf('week').toISOString(),
+        start: moment().utcOffset(330).startOf('week').toISOString(),
+        end: moment().utcOffset(330).endOf('week').toISOString(),
+        // start: moment().utc().startOf('week').toISOString(),
+        // end: moment().utc().endOf('week').toISOString(),
       },
       'Previous Week': {
         start: moment()
-          .utc()
+          .utcOffset(330)
           .subtract(1, 'weeks')
           .startOf('week')
           .toISOString(),
-        end: moment().utc().subtract(1, 'weeks').endOf('week').toISOString(),
+        end: moment()
+          .utcOffset(330)
+          .subtract(1, 'weeks')
+          .endOf('week')
+          .toISOString(),
+        // start: moment()
+        //   .utc()
+        //   .subtract(1, 'weeks')
+        //   .startOf('week')
+        //   .toISOString(),
+        // end: moment().utc().subtract(1, 'weeks').endOf('week').toISOString(),
       },
       'This Month': {
-        start: moment().utc().startOf('month').toISOString(),
-        end: moment().utc().endOf('month').toISOString(),
+        start: moment().utcOffset(330).startOf('month').toISOString(),
+        end: moment().utcOffset(330).endOf('month').toISOString(),
+        // start: moment().utc().startOf('month').toISOString(),
+        // end: moment().utc().endOf('month').toISOString(),
       },
       'Previous Month': {
         start: moment()
-          .utc()
+          .utcOffset(330)
           .subtract(1, 'months')
           .startOf('month')
           .toISOString(),
-        end: moment().utc().subtract(1, 'months').endOf('month').toISOString(),
+        end: moment()
+          .utcOffset(330)
+          .subtract(1, 'months')
+          .endOf('month')
+          .toISOString(),
+        // start: moment()
+        //   .utc()
+        //   .subtract(1, 'months')
+        //   .startOf('month')
+        //   .toISOString(),
+        // end: moment().utc().subtract(1, 'months').endOf('month').toISOString(),
       },
     };
 
@@ -108,8 +144,8 @@ const QuickFilters = ({navigation, route}) => {
       from = start;
       to = end;
     }
-    console.log(`From: ${from}`);
-    console.log(`To: ${to}`);
+    // console.log(`From: ${from}`);
+    // console.log(`To: ${to}`);
     navigation.navigate(navigationPath, {from, to, deviceId, name});
   };
 

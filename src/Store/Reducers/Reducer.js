@@ -1253,6 +1253,10 @@ const reducer = (state = initialState, action) => {
         gpsDeviceLoading: false,
         gpsDeviceStatus: null,
       });
+    case actionTypes.CLEAR_GPS_DEVICES_DATA:
+      return updateState(state, {
+        gpsDeviceData: null,
+      });
 
     // Single GPS device cases
     case actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST:

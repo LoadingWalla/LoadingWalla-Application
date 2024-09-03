@@ -12,7 +12,7 @@ import moment from 'moment';
 import VehicleIcon from './GpsVehicleIcon';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 
-const GpsItem = ({navigation, item, isDisable}) => {
+const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   // console.log(444444, item);
 
@@ -92,11 +92,12 @@ const GpsItem = ({navigation, item, isDisable}) => {
   }, [status, lastUpdate]);
 
   const ignitionStatus = ignition || motion ? 'on' : 'off';
-  const speedText = Math.ceil(position[0]?.speed || 0);
+  const speedInKnots = position[0]?.speed || 0;
+  const speedText = Math.floor(speedInKnots * 1.852);
 
   return (
     <View style={styles.cardContainer}>
-      <View style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={handleNavigation}>
         <View style={styles.itemContainer}>
           <View style={styles.imgContainer}>
             <View style={styles.imgBox}>
@@ -104,10 +105,7 @@ const GpsItem = ({navigation, item, isDisable}) => {
             </View>
           </View>
           <View style={styles.textContainer}>
-            <TouchableOpacity
-              disabled={isDisable}
-              onPress={handleNavigation}
-              style={styles.textViewContainer}>
+            <View style={styles.textViewContainer}>
               <View style={styles.rowContainer}>
                 <Text style={styles.highlightText}>{name}</Text>
                 <Text style={[styles.ignitionText(motion), styles.motionText]}>
@@ -129,7 +127,7 @@ const GpsItem = ({navigation, item, isDisable}) => {
                   </Text>
                 </View>
               </View>
-            </TouchableOpacity>
+            </View>
             <View style={styles.iconBox}>
               <View style={styles.iconRow}>
                 <BatteryIcon
@@ -164,20 +162,20 @@ const GpsItem = ({navigation, item, isDisable}) => {
             <Text style={styles.distanceText}>KM/H</Text>
           </View>
         </View>
-        <TouchableOpacity
-          disabled={isDisable}
-          onPress={handleNavigation}
-          style={styles.additionalInfoContainer}>
+        <View style={styles.additionalInfoContainer}>
           <View style={styles.expiryDate}>
             <View style={styles.addressContainer}>
               <Text style={styles.addressText}>{address}</Text>
             </View>
           </View>
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>
-          {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')}
+          {/* {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')} */}
+          {moment(lastUpdate)
+            .utcOffset('+05:30')
+            .format('MMM DD, YYYY hh:mm A')}
         </Text>
         <View style={styles.verticalLine} />
         <View style={styles.footerDistanceContainer}>
@@ -204,6 +202,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     elevation: 2,
+    // borderWidth: 1,
   },
   itemContainer: {
     flexDirection: 'row',
