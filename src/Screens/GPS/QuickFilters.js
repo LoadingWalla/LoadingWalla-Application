@@ -7,12 +7,12 @@ import {
   View,
   Platform,
   TextInput,
-  Alert,
 } from 'react-native';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import AlertBox from '../../Components/AlertBox';
 
 const QuickFilters = ({navigation, route}) => {
   const {deviceId, name, navigationPath} = route.params;
@@ -51,7 +51,6 @@ const QuickFilters = ({navigation, route}) => {
         endDate: '',
         endTime: '',
       });
-
       // const {start, end} = getDateRange(filter);
       // console.log(`From: ${start}`);
       // console.log(`To: ${end}`);
@@ -63,8 +62,6 @@ const QuickFilters = ({navigation, route}) => {
       Today: {
         start: moment().utcOffset(330).startOf('day').toISOString(),
         end: moment().utcOffset(330).endOf('day').toISOString(),
-        // start: moment().utc().startOf('day').toISOString(),
-        // end: moment().utc().endOf('day').toISOString(),
       },
       Yesterday: {
         start: moment()
@@ -77,14 +74,10 @@ const QuickFilters = ({navigation, route}) => {
           .subtract(1, 'days')
           .endOf('day')
           .toISOString(),
-        // start: moment().utc().subtract(1, 'days').startOf('day').toISOString(),
-        // end: moment().utc().subtract(1, 'days').endOf('day').toISOString(),
       },
       'This Week': {
         start: moment().utcOffset(330).startOf('week').toISOString(),
         end: moment().utcOffset(330).endOf('week').toISOString(),
-        // start: moment().utc().startOf('week').toISOString(),
-        // end: moment().utc().endOf('week').toISOString(),
       },
       'Previous Week': {
         start: moment()
@@ -97,18 +90,10 @@ const QuickFilters = ({navigation, route}) => {
           .subtract(1, 'weeks')
           .endOf('week')
           .toISOString(),
-        // start: moment()
-        //   .utc()
-        //   .subtract(1, 'weeks')
-        //   .startOf('week')
-        //   .toISOString(),
-        // end: moment().utc().subtract(1, 'weeks').endOf('week').toISOString(),
       },
       'This Month': {
         start: moment().utcOffset(330).startOf('month').toISOString(),
         end: moment().utcOffset(330).endOf('month').toISOString(),
-        // start: moment().utc().startOf('month').toISOString(),
-        // end: moment().utc().endOf('month').toISOString(),
       },
       'Previous Month': {
         start: moment()
@@ -121,12 +106,6 @@ const QuickFilters = ({navigation, route}) => {
           .subtract(1, 'months')
           .endOf('month')
           .toISOString(),
-        // start: moment()
-        //   .utc()
-        //   .subtract(1, 'months')
-        //   .startOf('month')
-        //   .toISOString(),
-        // end: moment().utc().subtract(1, 'months').endOf('month').toISOString(),
       },
     };
 
@@ -137,44 +116,51 @@ const QuickFilters = ({navigation, route}) => {
     let from, to;
 
     if (activeFilter === 'Custom') {
-      from = `${dateRange.startDate}`;
-      to = `${dateRange.endDate}`;
+      const startDateTime = `${dateRange.startDate}T${dateRange.startTime}`;
+      const endDateTime = `${dateRange.endDate}T${dateRange.endTime}`;
+      from = moment(startDateTime)
+        .utcOffset(330)
+        .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+      to = moment(endDateTime)
+        .utcOffset(330)
+        .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
     } else {
       const {start, end} = getDateRange(activeFilter);
       from = start;
       to = end;
     }
-    // console.log(`From: ${from}`);
-    // console.log(`To: ${to}`);
+    console.log(`From: ${from}`);
+    console.log(`To: ${to}`);
     navigation.navigate(navigationPath, {from, to, deviceId, name});
   };
 
   const handleDateChange = (type, event, selectedDate) => {
     setShowDatePicker(prev => ({...prev, [type]: false}));
+
     if (selectedDate && selectedDate <= new Date()) {
-      const formattedDate = formatDate(selectedDate);
+      // Use moment to ensure date and time are in the correct UTC format
+      const formattedDate = moment(selectedDate)
+        .utcOffset(330)
+        .format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+
       if (type.includes('Date')) {
         setDateRange(prev => ({
           ...prev,
-          [type]: formattedDate.split('T')[0],
+          [type]: formattedDate.split('T')[0], // Store only the date part
         }));
         setShowDatePicker(prev => ({
           ...prev,
-          [type.replace('Date', 'Time')]: true,
+          [type.replace('Date', 'Time')]: true, // Show time picker after date selection
         }));
       } else {
         setDateRange(prev => ({
           ...prev,
-          [type]: formattedDate.split('T')[1]?.split('Z')[0],
+          [type]: formattedDate.split('T')[1]?.split('Z')[0], // Store only the time part
         }));
       }
     } else if (selectedDate > new Date()) {
-      Alert.alert('Invalid Date', 'You cannot select a future date.');
+      AlertBox('Invalid Date', 'You cannot select a future date.');
     }
-  };
-
-  const formatDate = date => {
-    return date.toISOString().split('.')[0] + 'Z';
   };
 
   return (

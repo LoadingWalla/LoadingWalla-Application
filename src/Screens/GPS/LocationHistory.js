@@ -6,9 +6,6 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
-  Platform,
-  PermissionsAndroid,
-  Alert,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -20,7 +17,6 @@ import {
   fetchSummaryReportRequest,
   fetchTokenRequest,
 } from '../../Store/Actions/Actions';
-import {formatDate} from '../../Utils/dateUtils';
 import moment from 'moment';
 import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
@@ -30,7 +26,6 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {convertToCSV} from '../../Utils/CSVutils';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
-import AlertBox from '../../Components/AlertBox';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
