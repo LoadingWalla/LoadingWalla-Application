@@ -6,7 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import MapView, {
+  AnimatedRegion,
+  Callout,
+  Marker,
+  Polyline,
+} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
@@ -15,6 +20,7 @@ import {
   fetchAddressRequest,
   fetchGpsStopsRequest,
   fetchPositionsRequest,
+  fetchSummaryReportRequest,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -26,6 +32,8 @@ import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
+import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
+import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to, name} = route.params;
@@ -38,7 +46,10 @@ export default function PlayJourney({navigation, route}) {
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [currentStop, setCurrentStop] = useState(null);
 
+  const {convertMillisToTime} = useConvertMillisToTime();
+
   const mapRef = useRef(null);
+  const markerRefs = useRef([]);
 
   const dispatch = useDispatch();
   const {
@@ -47,19 +58,27 @@ export default function PlayJourney({navigation, route}) {
     gpsReplayData,
     gpsStopsData,
     gpsStopsLoading,
-    fullAddressData,
     fullAddressCustomId,
+    gpsSummaryLoading,
+    gpsSummaryData,
   } = useSelector(state => state.data);
 
   const {wsConnected} = useSelector(state => state.wsData);
 
-  const loading = gpsReplayLoading || gpsStopsLoading;
+  const loading = gpsReplayLoading || gpsStopsLoading || gpsSummaryLoading;
 
   useEffect(() => {
     if (wsConnected) {
       dispatch(websocketDisconnect());
     }
   }, [wsConnected]);
+
+  const handleMapLayout = () => {
+    // Show the callout for the first marker (you can modify this to show callouts for all)
+    if (markerRefs.current[0]) {
+      markerRefs.current[0].showCallout();
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -88,6 +107,17 @@ export default function PlayJourney({navigation, route}) {
             defaultTo,
           ),
         );
+
+        await dispatch(
+          fetchSummaryReportRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+            false,
+          ),
+        );
       };
 
       fetchData();
@@ -101,6 +131,13 @@ export default function PlayJourney({navigation, route}) {
       setCurrentStop(gpsStopsData[0]);
     }
   }, [gpsStopsData]);
+
+  useEffect(() => {
+    // Show callout when data is available for the current stop
+    if (markerRefs.current[currentStopIndex]) {
+      markerRefs.current[currentStopIndex].showCallout();
+    }
+  }, [currentStopIndex, gpsStopsData]);
 
   // Fetch address if currentStop.address is null and the stop has changed
   useEffect(() => {
@@ -142,8 +179,10 @@ export default function PlayJourney({navigation, route}) {
               center: {
                 latitude: newPosition.latitude,
                 longitude: newPosition.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
               },
-              zoom: 30,
+              // zoom: 20,
               duration: 1000 / playbackSpeed,
             });
           }
@@ -248,12 +287,7 @@ export default function PlayJourney({navigation, route}) {
   };
 
   const totalStops = gpsStopsData ? gpsStopsData.length : 0;
-  const totalRun =
-    gpsStopsData && gpsStopsData.length > 0
-      ? (gpsStopsData[gpsStopsData.length - 1].endOdometer -
-          gpsStopsData[0].startOdometer) /
-        1000
-      : 0;
+  const totalRun = gpsSummaryData[0]?.distance / 1000;
 
   const totalDuration =
     gpsStopsData && gpsStopsData.length > 0
@@ -272,6 +306,15 @@ export default function PlayJourney({navigation, route}) {
     return `${hoursStr}:${minutesStr}:${secondsStr}`;
   };
 
+  const isDataAvailable = () => {
+    return (
+      gpsTokenData &&
+      gpsReplayData?.length > 0 &&
+      gpsStopsData?.length > 0 &&
+      gpsSummaryData?.length > 0
+    );
+  };
+
   return (
     <View style={styles.container}>
       {loading && (
@@ -279,18 +322,9 @@ export default function PlayJourney({navigation, route}) {
           <ActivityIndicator size="large" color={backgroundColorNew} />
         </View>
       )}
-      <View style={styles.topContainer}>
-        <View style={styles.stopBox}>
-          <Text style={styles.stopText}>Stop</Text>
-          <Text style={styles.stopCount}>{currentStopIndex + 1}</Text>
-        </View>
-        <View style={styles.verticalLine} />
-        <Text style={styles.addressText}>
-          {currentStop && currentStop.address
-            ? `${currentStop.address}`
-            : 'No address available'}
-        </Text>
-        <View>
+      {!loading && !isDataAvailable() && (
+        <View style={styles.noDataContainer}>
+          <Text style={styles.noDataText}>No data available</Text>
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
@@ -302,157 +336,221 @@ export default function PlayJourney({navigation, route}) {
             <FilterIcon size={20} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.mapContainer}>
-        {!loading && (
-          <View style={styles.mapView}>
-            {initialRegion && (
-              <MapView
-                ref={mapRef}
-                style={StyleSheet.absoluteFillObject}
-                initialRegion={initialRegion}>
-                <Polyline
-                  coordinates={coordinates}
-                  strokeColor="#0158AF"
-                  strokeWidth={3}
-                />
-                {currentPosition && (
-                  <Marker.Animated
-                    coordinate={animatedMarkerPosition}
-                    title="Speed"
-                    description={`${(currentPosition.speed * 1.852).toFixed(
-                      2,
-                    )} km/h`}
-                    rotation={currentPosition.course || 0}>
-                    <TruckNavigationIcon width={50} height={50} />
-                  </Marker.Animated>
-                )}
-                {gpsStopsData?.map((stop, index) => (
-                  <Marker
-                    key={index}
-                    coordinate={{
-                      latitude: stop.latitude,
-                      longitude: stop.longitude,
-                    }}
-                    title={stop.address}>
-                    <StopsIcon size={30} number={index + 1} />
-                  </Marker>
-                ))}
-              </MapView>
-            )}
-            <View style={styles.extraButtonBox}>
+      )}
+      {!loading && isDataAvailable() && (
+        <>
+          {/* <View style={styles.topContainer}>
+            <View style={styles.stopBox}>
+              <Text style={styles.stopText}>Stop</Text>
+              <Text style={styles.stopCount}>{currentStopIndex + 1}</Text>
+            </View>
+            <View style={styles.verticalLine} />
+            <Text style={styles.addressText}>
+              {currentStop && currentStop.address
+                ? `${currentStop.address}`
+                : 'No address available'}
+            </Text>
+            <View>
               <TouchableOpacity
-                onPress={() => navigation.navigate('stops')}
-                style={styles.stopsBtnStyle}>
-                <AlertsIcon size={20} />
-                <Text style={styles.alertButtonText}>Stops</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.ctrlBtn} onPress={goToPrevStop}>
-                <PrevIcon size={30} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.ctrlBtn} onPress={goToNextStop}>
-                <NextIcon size={30} />
+                style={styles.calendarIconBox}
+                onPress={() =>
+                  navigation.navigate('quickfilters', {
+                    deviceId,
+                    navigationPath: 'PlayJourney',
+                  })
+                }>
+                <FilterIcon size={20} color={backgroundColorNew} />
               </TouchableOpacity>
             </View>
-          </View>
-        )}
-      </View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.controlsContainer}>
+          </View> */}
           <TouchableOpacity
-            style={styles.playPauseButton}
-            onPress={togglePlayback}>
-            {isPlaying ? (
-              <PauseIcon size={20} color={backgroundColorNew} />
-            ) : (
-              <PlayIcon size={20} color={backgroundColorNew} />
-            )}
+            style={styles.calendarIconBox}
+            onPress={() =>
+              navigation.navigate('quickfilters', {
+                deviceId,
+                navigationPath: 'PlayJourney',
+              })
+            }>
+            <FilterIcon size={25} color={backgroundColorNew} />
           </TouchableOpacity>
-          <View style={styles.sliderContainer}>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={1}
-              minimumTrackTintColor={backgroundColorNew}
-              maximumTrackTintColor="#FFDCD3"
-              thumbTintColor={backgroundColorNew}
-              value={sliderValue}
-              onValueChange={value => {
-                setSliderValue(value);
-                const newIndex = Math.round(value * (coordinates?.length - 1));
-                setCurrentIndex(newIndex);
-                const newPosition = coordinates[newIndex];
-                setCurrentPosition(newPosition);
-                animatedMarkerPosition
-                  .timing({
-                    latitude: newPosition.latitude,
-                    longitude: newPosition.longitude,
-                    duration: 500,
-                    useNativeDriver: false,
-                  })
-                  .start();
-                if (mapRef.current && newPosition) {
-                  mapRef.current.animateToRegion({
-                    latitude: newPosition?.latitude,
-                    longitude: newPosition?.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  });
-                }
-              }}
-            />
+          <View style={styles.mapContainer}>
+            {!loading && (
+              <View style={styles.mapView}>
+                {initialRegion && (
+                  <MapView
+                    ref={mapRef}
+                    style={StyleSheet.absoluteFillObject}
+                    initialRegion={initialRegion}
+                    onLayout={handleMapLayout}>
+                    <Polyline
+                      coordinates={coordinates}
+                      strokeColor="#0158AF"
+                      strokeWidth={3}
+                    />
+                    {currentPosition && (
+                      <Marker.Animated
+                        coordinate={animatedMarkerPosition}
+                        // title="Speed"
+                        // description={`${(currentPosition.speed * 1.852).toFixed(
+                        //   2,
+                        // )} km/h`}
+                        // rotation={currentPosition.course || 0}
+                      >
+                        {/* <TruckNavigationIcon width={50} height={50} /> */}
+                        <ActiveLocation size={40} course={90} />
+                      </Marker.Animated>
+                    )}
+                    {gpsStopsData?.map((stop, index) => (
+                      <Marker
+                        key={index}
+                        ref={el => (markerRefs.current[index] = el)}
+                        coordinate={{
+                          latitude: stop.latitude,
+                          longitude: stop.longitude,
+                        }}
+                        title={stop.address}>
+                        <StopsIcon size={40} number={index + 1} />
+                        <Callout>
+                          <View style={styles.calloutView}>
+                            <Text style={styles.calloutText}>
+                              {stop.address}
+                            </Text>
+                          </View>
+                        </Callout>
+                      </Marker>
+                    ))}
+                  </MapView>
+                )}
+                <View style={styles.extraButtonBox}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('stops')}
+                    style={styles.stopsBtnStyle}>
+                    <AlertsIcon size={20} />
+                    <Text style={styles.alertButtonText}>Stops</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.ctrlBtn}
+                    onPress={goToPrevStop}>
+                    <PrevIcon size={30} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.ctrlBtn}
+                    onPress={goToNextStop}>
+                    <NextIcon size={30} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           </View>
-          <View style={styles.speedButtonsContainer}>
-            <TouchableOpacity
-              style={[
-                styles.speedButton,
-                playbackSpeed === 1 && styles.activeSpeedButton,
-              ]}
-              onPress={() => changePlaybackSpeed(1)}>
-              <Text
-                style={[
-                  styles.speedButtonText,
-                  playbackSpeed === 1 && styles.activeSpeedButtonText,
-                ]}>
-                1X
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.speedButton,
-                playbackSpeed === 2 && styles.activeSpeedButton,
-              ]}
-              onPress={() => changePlaybackSpeed(2)}>
-              <Text
-                style={[
-                  styles.speedButtonText,
-                  playbackSpeed === 2 && styles.activeSpeedButtonText,
-                ]}>
-                2X
-              </Text>
-            </TouchableOpacity>
+          <View style={styles.bottomContainer}>
+            <View style={styles.controlsContainer}>
+              <TouchableOpacity
+                style={styles.playPauseButton}
+                onPress={togglePlayback}>
+                {isPlaying ? (
+                  <PauseIcon size={20} color={backgroundColorNew} />
+                ) : (
+                  <PlayIcon size={20} color={backgroundColorNew} />
+                )}
+              </TouchableOpacity>
+              <View style={styles.sliderContainer}>
+                <Slider
+                  style={styles.slider}
+                  minimumValue={0}
+                  maximumValue={1}
+                  minimumTrackTintColor={backgroundColorNew}
+                  maximumTrackTintColor="#FFDCD3"
+                  thumbTintColor={backgroundColorNew}
+                  value={sliderValue}
+                  onValueChange={value => {
+                    setSliderValue(value);
+                    const newIndex = Math.round(
+                      value * (coordinates?.length - 1),
+                    );
+                    setCurrentIndex(newIndex);
+                    const newPosition = coordinates[newIndex];
+                    setCurrentPosition(newPosition);
+                    animatedMarkerPosition
+                      .timing({
+                        latitude: newPosition.latitude,
+                        longitude: newPosition.longitude,
+                        duration: 500,
+                        useNativeDriver: false,
+                      })
+                      .start();
+                    if (mapRef.current && newPosition) {
+                      mapRef.current.animateToRegion({
+                        latitude: newPosition?.latitude,
+                        longitude: newPosition?.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                      });
+                    }
+                  }}
+                />
+              </View>
+              <View style={styles.speedButtonsContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.speedButton,
+                    playbackSpeed === 1 && styles.activeSpeedButton,
+                  ]}
+                  onPress={() => changePlaybackSpeed(1)}>
+                  <Text
+                    style={[
+                      styles.speedButtonText,
+                      playbackSpeed === 1 && styles.activeSpeedButtonText,
+                    ]}>
+                    1X
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.speedButton,
+                    playbackSpeed === 2 && styles.activeSpeedButton,
+                  ]}
+                  onPress={() => changePlaybackSpeed(2)}>
+                  <Text
+                    style={[
+                      styles.speedButtonText,
+                      playbackSpeed === 2 && styles.activeSpeedButtonText,
+                    ]}>
+                    2X
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.totalBox}>
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#3BA700'}]}>
+                  Total Distance:
+                </Text>
+                <Text style={styles.stopCount}>
+                  {Math.abs(totalRun).toFixed(2)} KM
+                </Text>
+              </View>
+              <View style={styles.verticalLine} />
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#F50000'}]}>
+                  Total Stops: {totalStops}
+                </Text>
+                <Text style={styles.stopCount}>
+                  {formatDuration(totalDuration)}
+                </Text>
+              </View>
+              <View style={styles.verticalLine} />
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#E0BD00'}]}>
+                  Engine Hours
+                </Text>
+                <Text style={styles.stopCount}>
+                  {convertMillisToTime(gpsSummaryData[0]?.engineHours)}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
-        <View style={styles.totalBox}>
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#3BA700'}]}>
-              Total run:
-            </Text>
-            <Text style={styles.stopCount}>
-              {Math.abs(totalRun).toFixed(2)} KM
-            </Text>
-          </View>
-          <View style={styles.verticalLine} />
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#F50000'}]}>
-              Total Stops: {totalStops}
-            </Text>
-            <Text style={styles.stopCount}>
-              {formatDuration(totalDuration)}
-            </Text>
-          </View>
-        </View>
-      </View>
+        </>
+      )}
     </View>
   );
 }
@@ -491,7 +589,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    padding: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     elevation: 2,
     // borderWidth: 1,
   },
@@ -527,13 +626,13 @@ const styles = StyleSheet.create({
   stopText: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 8,
+    fontSize: 10,
     textAlign: 'center',
   },
   stopCount: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
+    fontSize: 16,
     textAlign: 'center',
     marginTop: -5,
   },
@@ -606,13 +705,49 @@ const styles = StyleSheet.create({
     color: '#FFF',
   },
   calendarIconBox: {
+    position: 'absolute',
+    zIndex: 99,
+    right: 10,
+    top: 10,
     padding: 8,
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor: '#f7f7f7',
     elevation: 2,
+  },
+  // calendarIconBox: {
+  //   padding: 8,
+  //   width: 30,
+  //   height: 30,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   borderRadius: 8,
+  //   backgroundColor: '#f7f7f7',
+  //   elevation: 2,
+  // },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataText: {
+    fontSize: 18,
+    color: '#555',
+    fontFamily: 'PlusJakartaSans-Bold',
+    marginBottom: 20,
+  },
+  calloutView: {
+    width: 300,
+    // padding: 5,
+    // backgroundColor: 'rgba(1, 1, 0, 0.7)',
+    borderRadius: 5,
+    borderWidth: 1,
+  },
+  calloutText: {
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
