@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react';
 import {
   ActivityIndicator,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -29,7 +30,6 @@ import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
-import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
@@ -45,6 +45,7 @@ export default function PlayJourney({navigation, route}) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [currentStop, setCurrentStop] = useState(null);
+  const [mapType, setMapType] = useState('standard');
 
   const {convertMillisToTime} = useConvertMillisToTime();
 
@@ -59,6 +60,7 @@ export default function PlayJourney({navigation, route}) {
     gpsStopsData,
     gpsStopsLoading,
     fullAddressCustomId,
+    fullAddressData,
     gpsSummaryLoading,
     gpsSummaryData,
   } = useSelector(state => state.data);
@@ -73,11 +75,10 @@ export default function PlayJourney({navigation, route}) {
     }
   }, [wsConnected]);
 
-  const handleMapLayout = () => {
-    // Show the callout for the first marker (you can modify this to show callouts for all)
-    if (markerRefs.current[0]) {
-      markerRefs.current[0].showCallout();
-    }
+  const toggleMapType = () => {
+    setMapType(prevType =>
+      prevType === 'standard' ? 'satellite' : 'standard',
+    );
   };
 
   useFocusEffect(
@@ -133,65 +134,46 @@ export default function PlayJourney({navigation, route}) {
   }, [gpsStopsData]);
 
   useEffect(() => {
-    // Show callout when data is available for the current stop
     if (markerRefs.current[currentStopIndex]) {
       markerRefs.current[currentStopIndex].showCallout();
     }
   }, [currentStopIndex, gpsStopsData]);
 
-  // Fetch address if currentStop.address is null and the stop has changed
-  useEffect(() => {
-    if (
-      currentStop &&
-      !currentStop.address &&
-      fullAddressCustomId !== currentStop.positionId
-    ) {
-      dispatch(
-        fetchAddressRequest(
-          currentStop.latitude,
-          currentStop.longitude,
-          currentStop.positionId,
-        ),
-      );
-    }
-  }, [currentStop, fullAddressCustomId, dispatch]);
-
   useEffect(() => {
     let interval = null;
+
     if (isPlaying && currentIndex < coordinates?.length) {
+      const adjustedPlaybackSpeed = playbackSpeed * 1000; // Adjust playback speed
+
       interval = setInterval(() => {
         setCurrentIndex(prevIndex => {
           const newIndex = prevIndex + 1;
           const newPosition = coordinates[newIndex];
-          setCurrentPosition(newPosition);
-          animatedMarkerPosition
-            .timing({
-              latitude: newPosition?.latitude,
-              longitude: newPosition?.longitude,
-              duration: 1000 / playbackSpeed,
-              useNativeDriver: false,
-            })
-            .start();
 
-          setSliderValue(newIndex / (coordinates?.length - 1));
-          if (mapRef.current && newPosition) {
-            mapRef.current.animateCamera({
-              center: {
+          if (newPosition) {
+            // Set the new currentPosition
+            setCurrentPosition(newPosition);
+
+            // Animate marker movement
+            animatedMarkerPosition
+              .timing({
                 latitude: newPosition.latitude,
                 longitude: newPosition.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              },
-              // zoom: 20,
-              duration: 1000 / playbackSpeed,
-            });
+                duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
+                useNativeDriver: false,
+              })
+              .start();
+
+            setSliderValue(newIndex / (coordinates?.length - 1));
           }
+
           return newIndex;
         });
-      }, 1000 / playbackSpeed);
+      }, 1000 / adjustedPlaybackSpeed); // Interval based on adjusted speed
     } else {
       clearInterval(interval);
     }
+
     return () => clearInterval(interval);
   }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
 
@@ -202,6 +184,7 @@ export default function PlayJourney({navigation, route}) {
         longitude: point.longitude,
         course: point.course,
         speed: point.speed,
+        time: point.deviceTime,
       })),
     [gpsReplayData],
   );
@@ -245,6 +228,18 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex + 1;
       setCurrentStopIndex(newIndex);
       const nextStop = gpsStopsData[newIndex];
+
+      // Fetch the address for the next stop if not already fetched
+      if (!nextStop.address && fullAddressCustomId !== nextStop.positionId) {
+        dispatch(
+          fetchAddressRequest(
+            nextStop.latitude,
+            nextStop.longitude,
+            nextStop.positionId,
+          ),
+        );
+      }
+
       animatedMarkerPosition
         .timing({
           latitude: nextStop.latitude,
@@ -253,6 +248,7 @@ export default function PlayJourney({navigation, route}) {
           useNativeDriver: false,
         })
         .start();
+
       setCurrentStop(nextStop);
       mapRef.current?.animateToRegion({
         latitude: nextStop.latitude,
@@ -268,6 +264,18 @@ export default function PlayJourney({navigation, route}) {
       const newIndex = currentStopIndex - 1;
       setCurrentStopIndex(newIndex);
       const prevStop = gpsStopsData[newIndex];
+
+      // Fetch the address for the previous stop if not already fetched
+      if (!prevStop.address && fullAddressCustomId !== prevStop.positionId) {
+        dispatch(
+          fetchAddressRequest(
+            prevStop.latitude,
+            prevStop.longitude,
+            prevStop.positionId,
+          ),
+        );
+      }
+
       animatedMarkerPosition
         .timing({
           latitude: prevStop.latitude,
@@ -276,6 +284,7 @@ export default function PlayJourney({navigation, route}) {
           useNativeDriver: false,
         })
         .start();
+
       setCurrentStop(prevStop);
       mapRef.current?.animateToRegion({
         latitude: prevStop.latitude,
@@ -285,6 +294,52 @@ export default function PlayJourney({navigation, route}) {
       });
     }
   };
+
+  // const goToNextStop = () => {
+  //   if (currentStopIndex < gpsStopsData?.length - 1) {
+  //     const newIndex = currentStopIndex + 1;
+  //     setCurrentStopIndex(newIndex);
+  //     const nextStop = gpsStopsData[newIndex];
+  //     animatedMarkerPosition
+  //       .timing({
+  //         latitude: nextStop.latitude,
+  //         longitude: nextStop.longitude,
+  //         duration: 500,
+  //         useNativeDriver: false,
+  //       })
+  //       .start();
+  //     setCurrentStop(nextStop);
+  //     mapRef.current?.animateToRegion({
+  //       latitude: nextStop.latitude,
+  //       longitude: nextStop.longitude,
+  //       latitudeDelta: 0.0922,
+  //       longitudeDelta: 0.0421,
+  //     });
+  //   }
+  // };
+
+  // const goToPrevStop = () => {
+  //   if (currentStopIndex > 0) {
+  //     const newIndex = currentStopIndex - 1;
+  //     setCurrentStopIndex(newIndex);
+  //     const prevStop = gpsStopsData[newIndex];
+  //     animatedMarkerPosition
+  //       .timing({
+  //         latitude: prevStop.latitude,
+  //         longitude: prevStop.longitude,
+  //         duration: 1000,
+  //         useNativeDriver: false,
+  //       })
+  //       .start();
+  //     setCurrentStop(prevStop);
+  //     mapRef.current?.animateToRegion({
+  //       latitude: prevStop.latitude,
+  //       longitude: prevStop.longitude,
+  //       latitudeDelta: 0.0922,
+  //       longitudeDelta: 0.0421,
+  //     });
+  //   }
+  // };
 
   const totalStops = gpsStopsData ? gpsStopsData.length : 0;
   const totalRun = gpsSummaryData[0]?.distance / 1000;
@@ -315,6 +370,15 @@ export default function PlayJourney({navigation, route}) {
     );
   };
 
+  const handleMarkerPress = (stop, index) => {
+    // Fetch the address if it's not available and not already being fetched
+    if (!stop.address && fullAddressCustomId !== stop.positionId) {
+      dispatch(
+        fetchAddressRequest(stop.latitude, stop.longitude, stop.positionId),
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       {loading && (
@@ -331,6 +395,7 @@ export default function PlayJourney({navigation, route}) {
               navigation.navigate('quickfilters', {
                 deviceId,
                 navigationPath: 'PlayJourney',
+                name,
               })
             }>
             <FilterIcon size={20} color={backgroundColorNew} />
@@ -339,36 +404,13 @@ export default function PlayJourney({navigation, route}) {
       )}
       {!loading && isDataAvailable() && (
         <>
-          {/* <View style={styles.topContainer}>
-            <View style={styles.stopBox}>
-              <Text style={styles.stopText}>Stop</Text>
-              <Text style={styles.stopCount}>{currentStopIndex + 1}</Text>
-            </View>
-            <View style={styles.verticalLine} />
-            <Text style={styles.addressText}>
-              {currentStop && currentStop.address
-                ? `${currentStop.address}`
-                : 'No address available'}
-            </Text>
-            <View>
-              <TouchableOpacity
-                style={styles.calendarIconBox}
-                onPress={() =>
-                  navigation.navigate('quickfilters', {
-                    deviceId,
-                    navigationPath: 'PlayJourney',
-                  })
-                }>
-                <FilterIcon size={20} color={backgroundColorNew} />
-              </TouchableOpacity>
-            </View>
-          </View> */}
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
               navigation.navigate('quickfilters', {
                 deviceId,
                 navigationPath: 'PlayJourney',
+                name,
               })
             }>
             <FilterIcon size={25} color={backgroundColorNew} />
@@ -381,7 +423,8 @@ export default function PlayJourney({navigation, route}) {
                     ref={mapRef}
                     style={StyleSheet.absoluteFillObject}
                     initialRegion={initialRegion}
-                    onLayout={handleMapLayout}>
+                    // onLayout={handleMapLayout}
+                    mapType={mapType}>
                     <Polyline
                       coordinates={coordinates}
                       strokeColor="#0158AF"
@@ -389,38 +432,71 @@ export default function PlayJourney({navigation, route}) {
                     />
                     {currentPosition && (
                       <Marker.Animated
-                        coordinate={animatedMarkerPosition}
-                        // title="Speed"
-                        // description={`${(currentPosition.speed * 1.852).toFixed(
-                        //   2,
-                        // )} km/h`}
-                        // rotation={currentPosition.course || 0}
-                      >
-                        {/* <TruckNavigationIcon width={50} height={50} /> */}
-                        <ActiveLocation size={40} course={90} />
+                        coordinate={{
+                          latitude: currentPosition.latitude,
+                          longitude: currentPosition.longitude,
+                        }}>
+                        <View style={styles.markerContainer}>
+                          <View style={styles.addressContainer}>
+                            <Text style={styles.kmText}>
+                              {`${Math.floor(
+                                currentPosition.speed * 1.852,
+                              )} km/h`}
+                            </Text>
+                            <Text style={styles.kmText}>
+                              {`${moment(currentPosition.time)
+                                .utcOffset(330)
+                                .format('D MMM YYYY, h:mm A')}`}
+                            </Text>
+                          </View>
+                          <View style={styles.arrowBottom} />
+                          <View style={styles.truckIconContainer}>
+                            <ActiveLocation
+                              size={40}
+                              course={currentPosition.course || 0}
+                            />
+                          </View>
+                        </View>
                       </Marker.Animated>
                     )}
                     {gpsStopsData?.map((stop, index) => (
                       <Marker
-                        key={index}
+                        key={`stop-${index}`}
                         ref={el => (markerRefs.current[index] = el)}
                         coordinate={{
                           latitude: stop.latitude,
                           longitude: stop.longitude,
                         }}
-                        title={stop.address}>
-                        <StopsIcon size={40} number={index + 1} />
-                        <Callout>
-                          <View style={styles.calloutView}>
-                            <Text style={styles.calloutText}>
-                              {stop.address}
+                        onPress={() => handleMarkerPress(stop, index)}>
+                        <View style={styles.markerContainer}>
+                          <View style={styles.addressContainer}>
+                            <Text style={styles.kmText}>
+                              {fullAddressCustomId === stop.positionId
+                                ? fullAddressData
+                                : stop.address || 'Click below to Show Address'}
                             </Text>
                           </View>
-                        </Callout>
+                          <View style={styles.arrowBottom} />
+                          <View style={styles.truckIconContainer}>
+                            <StopsIcon size={40} number={index + 1} />
+                          </View>
+                        </View>
                       </Marker>
                     ))}
                   </MapView>
                 )}
+                <TouchableOpacity
+                  style={styles.mapToggleButton}
+                  onPress={toggleMapType}>
+                  <Image
+                    source={
+                      mapType === 'standard'
+                        ? require('../../../assets/satellite-view.png')
+                        : require('../../../assets/satellites.png')
+                    }
+                    style={{width: 40, height: 40}}
+                  />
+                </TouchableOpacity>
                 <View style={styles.extraButtonBox}>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('stops')}
@@ -523,7 +599,7 @@ export default function PlayJourney({navigation, route}) {
             <View style={styles.totalBox}>
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#3BA700'}]}>
-                  Total Distance:
+                  Total Distance
                 </Text>
                 <Text style={styles.stopCount}>
                   {Math.abs(totalRun).toFixed(2)} KM
@@ -583,7 +659,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 10,
     fontFamily: 'PlusJakartaSans-Italic',
-    color: titleColor,
+    // color: titleColor,
+    color: '#FFFFFF',
   },
   topContainer: {
     flexDirection: 'row',
@@ -592,7 +669,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     elevation: 2,
-    // borderWidth: 1,
   },
   mapContainer: {flex: 1},
   mapView: {flex: 1, width: '100%', height: '100%'},
@@ -718,16 +794,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
     elevation: 2,
   },
-  // calendarIconBox: {
-  //   padding: 8,
-  //   width: 30,
-  //   height: 30,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   borderRadius: 8,
-  //   backgroundColor: '#f7f7f7',
-  //   elevation: 2,
-  // },
   noDataContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -741,13 +807,50 @@ const styles = StyleSheet.create({
   },
   calloutView: {
     width: 300,
-    // padding: 5,
-    // backgroundColor: 'rgba(1, 1, 0, 0.7)',
     borderRadius: 5,
     borderWidth: 1,
   },
   calloutText: {
     fontSize: 14,
     textAlign: 'center',
+  },
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    // borderWidth: 1,
+  },
+  addressContainer: {
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    elevation: 5,
+    backgroundColor: 'rgba(1, 1, 0, 0.5)',
+    maxWidth: 300,
+    // borderWidth: 1,
+  },
+  kmText: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
+    color: '#FFFFFF',
+  },
+  arrowBottom: {
+    width: 0,
+    height: 0,
+    borderLeftWidth: 5,
+    borderRightWidth: 5,
+    borderBottomWidth: 10,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'rgba(1, 1, 0, 0.5)',
+    transform: [{rotate: '180deg'}],
+    alignSelf: 'center',
+  },
+  mapToggleButton: {
+    position: 'absolute',
+    top: 60,
+    right: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 50,
+    elevation: 3,
   },
 });

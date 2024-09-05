@@ -266,6 +266,7 @@ const QuickFilters = ({navigation, route}) => {
             handleDateChange('startDate', e, selectedDate)
           }
           maximumDate={new Date()}
+          minimumDate={new Date(2024, 7, 14)} // Minimum date set to 14/08/2024
         />
       )}
       {showDatePicker.startTime && (
@@ -287,6 +288,7 @@ const QuickFilters = ({navigation, route}) => {
             handleDateChange('endDate', e, selectedDate)
           }
           maximumDate={new Date()}
+          minimumDate={new Date(2024, 7, 14)}
         />
       )}
       {showDatePicker.endTime && (

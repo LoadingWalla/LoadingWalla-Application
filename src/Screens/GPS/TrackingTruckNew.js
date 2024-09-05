@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import {AnimatedRegion} from 'react-native-maps';
@@ -6,9 +6,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import {
+  clearGpsDeviceData,
   fetchAddressFailure,
   fetchAddressRequest,
   fetchPositionsRequest,
+  fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
 } from '../../Store/Actions/Actions';
@@ -25,11 +27,16 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
 
 const TrackingTruckNew = ({navigation, route}) => {
   const {item, name, lat, long, deviceId} = route.params;
-  const {gpsReplayData, gpsTokenData, gpsRelayData, fullAddressData} =
-    useSelector(state => {
-      console.log('Tracking Truck -------------->>>>>', state.data);
-      return state.data;
-    });
+  const {
+    gpsReplayData,
+    gpsTokenData,
+    gpsRelayData,
+    fullAddressData,
+    gpsRoutesData,
+  } = useSelector(state => {
+    console.log('Tracking Truck -------------->>>>>', state.data);
+    return state.data;
+  });
   const {
     wsMessages,
     wsConnected,
@@ -41,6 +48,40 @@ const TrackingTruckNew = ({navigation, route}) => {
     console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
     return state.wsData;
   });
+
+  const dispatch = useDispatch();
+
+  const fetchRoutes = useCallback(() => {
+    if (gpsTokenData && deviceId) {
+      const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
+      dispatch(
+        fetchRouteRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
+    }
+  }, [dispatch, gpsTokenData, deviceId]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchRoutes();
+    }, [fetchRoutes]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(gpsRelayRequest(deviceId));
+      return () => {
+        dispatch(fetchAddressFailure());
+        dispatch(clearGpsDeviceData());
+      };
+    }, []),
+  );
 
   const [filteredPositions, setFilteredPositions] = useState([]);
   useEffect(() => {
@@ -60,6 +101,7 @@ const TrackingTruckNew = ({navigation, route}) => {
           item={item}
           positions={filteredPositions}
           navigation={navigation}
+          routeData={gpsRoutesData}
         />
       </View>
 

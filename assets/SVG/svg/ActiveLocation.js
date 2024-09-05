@@ -138,6 +138,13 @@ function ActiveLocation({size, course}) {
             fill="#fff"
             strokeWidth={0}
           />
+          <Path
+            data-name="Icon akar-triangle-right-fill"
+            d="M34.64 54.97c2.76-1.31-.74-2.51-1.91-3.1a3.457 3.457 0 00-3.63.33L1.39 72.98a3.463 3.463 0 000 5.54L29.1 99.3c1.05.79 2.45.91 3.63.33 1.17-.59 4.67-1.79 1.91-3.1a79.986 79.986 0 01-3.24-20.78 79.92 79.92 0 013.24-20.78z"
+            fill="green"
+            strokeWidth={0}
+            transform={`rotate(${course} ${115} ${75})`}
+          />
         </G>
         <G data-name="Group 24578">
           <G data-name="Group 24572">
@@ -9327,13 +9334,13 @@ function ActiveLocation({size, course}) {
           </G>
         </G>
       </G>
-      <Path
+      {/* <Path
         data-name="Icon akar-triangle-right-fill"
         d="M34.64 54.97c2.76-1.31-.74-2.51-1.91-3.1a3.457 3.457 0 00-3.63.33L1.39 72.98a3.463 3.463 0 000 5.54L29.1 99.3c1.05.79 2.45.91 3.63.33 1.17-.59 4.67-1.79 1.91-3.1a79.986 79.986 0 01-3.24-20.78 79.92 79.92 0 013.24-20.78z"
         fill="green"
         strokeWidth={0}
         transform={`rotate(${course} ${115} ${75})`}
-      />
+      /> */}
     </Svg>
   );
 }

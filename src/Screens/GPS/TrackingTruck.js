@@ -280,7 +280,7 @@ const TrackingTruck = ({navigation, route}) => {
     }
   };
 
-  // console.log(9999999, filteredPositions, 88888888, livePositions);
+  console.log(88888888, livePositions);
 
   return (
     <View style={styles.container}>
@@ -327,7 +327,7 @@ const TrackingTruck = ({navigation, route}) => {
               activeIndex={activeIndex}
               onPress={() => handlePress(3)}
             />
-            <ToggleIconText
+            {/* <ToggleIconText
               IconComponent={KeyIcon}
               text={
                 positions?.[0]?.attributes?.ignition ||
@@ -341,6 +341,21 @@ const TrackingTruck = ({navigation, route}) => {
                 positions?.[0]?.attributes?.motion
                   ? 'green'
                   : 'red'
+              }
+              index={4}
+              activeIndex={activeIndex}
+              onPress={() => handlePress(4)}
+            /> */}
+            <ToggleIconText
+              IconComponent={KeyIcon}
+              text={
+                // filteredPositions?.[0]?.attributes?.ignition ||
+                filteredPositions?.[0]?.attributes?.motion ? 'ON' : 'OFF'
+              }
+              iconSize={18}
+              color={
+                // filteredPositions?.[0]?.attributes?.ignition ||
+                filteredPositions?.[0]?.attributes?.motion ? 'green' : 'red'
               }
               index={4}
               activeIndex={activeIndex}

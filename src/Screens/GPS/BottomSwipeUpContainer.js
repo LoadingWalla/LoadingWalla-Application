@@ -19,6 +19,29 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const MIN_HEIGHT = 110;
 const MAX_HEIGHT = SCREEN_HEIGHT / 2;
 
+// Helper function to calculate signal strength from cell tower data
+const calculateSignalStrength = cellTowers => {
+  // You can use some logic based on `cellId`, `locationAreaCode`, etc.
+  // Here's a simple example assuming the presence of cell towers gives good signal
+  // You can adjust the logic based on real-world calculations if you have more data
+
+  if (cellTowers && cellTowers.length > 0) {
+    // Assume a good signal if `cellId` is available
+    const {cellId} = cellTowers[0];
+
+    // Example logic: stronger signal if `cellId` is higher or in a valid range
+    if (cellId > 20000) {
+      return 80; // Strong signal
+    } else if (cellId > 10000) {
+      return 50; // Medium signal
+    } else {
+      return 20; // Weak signal
+    }
+  }
+  // Default weak signal if no cell towers
+  return 0;
+};
+
 const getIconColor = (type, item, positions) => {
   // console.log(888888888, item);
 
@@ -33,14 +56,21 @@ const getIconColor = (type, item, positions) => {
     case 'Battery':
       return '#696969';
     case 'Network':
-      if (position?.network?.wifiAccessPoints) {
-        const signalStrength =
-          position.network.wifiAccessPoints[0].signalStrength;
-        const networkStrength = signalStrength > -70 ? '#3BA700' : '#FFDE21';
-        return `Network: ${networkStrength}`;
+      if (position?.network?.cellTowers) {
+        const signalStrength = calculateSignalStrength(
+          position.network.cellTowers,
+        );
+        const networkStrengthColor =
+          signalStrength > 70
+            ? '#3BA700'
+            : signalStrength > 30
+            ? '#FFDE21'
+            : '#FF3500';
+        return networkStrengthColor;
       } else {
         return '#FF3500';
       }
+
     case 'Geozone':
       return '#696969';
     case 'Breakdown':
@@ -59,13 +89,19 @@ const getIconTitle = (type, item, positions) => {
         ? `${position.attributes.batteryLevel}%`
         : 'Battery';
     case 'Network':
-      if (position?.network?.wifiAccessPoints) {
-        const signalStrength =
-          position.network.wifiAccessPoints[0].signalStrength;
-        const networkStrength = signalStrength > -70 ? 'Strong' : 'Weak';
-        return `Network: ${networkStrength}`;
+      if (position?.network?.cellTowers) {
+        const signalStrength = calculateSignalStrength(
+          position.network.cellTowers,
+        );
+        const networkStrengthColor =
+          signalStrength > 70
+            ? 'Strong'
+            : signalStrength > 30
+            ? 'Weak'
+            : 'Poor';
+        return networkStrengthColor;
       } else {
-        return 'Poor';
+        return 'Unknown';
       }
     case 'Ignition':
       return 'Ignition';
@@ -174,6 +210,17 @@ const BottomSwipeUpContainer = ({
           </View>
         ))}
       </View>
+      <View
+        style={{
+          borderWidth: 1,
+          margin: 10,
+          padding: 10,
+          marginHorizontal: 10,
+          paddingVertical: 5,
+          borderRadius: 8,
+          borderColor: '#00000029',
+          backgroundColor: '#FFFFFF',
+        }}></View>
     </Animated.View>
   );
 };

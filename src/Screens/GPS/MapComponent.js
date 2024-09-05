@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useMemo, useCallback} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,59 +6,58 @@ import {
   Dimensions,
   Image,
   Text,
+  ActivityIndicator, // Add ActivityIndicator for loading spinner
 } from 'react-native';
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
-import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAddressRequest} from '../../Store/Actions/Actions';
 import moment from 'moment';
+import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../../Color/color';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.01;
+const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const MapComponent = ({initialRegion, item, positions, navigation}) => {
+const MapComponent = ({
+  initialRegion,
+  item,
+  positions,
+  navigation,
+  routeData,
+}) => {
   const [mapType, setMapType] = useState('standard');
   const [previousPosition, setPreviousPosition] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [polylineReady, setPolylineReady] = useState(false);
   const mapRef = useRef();
   const markerRef = useRef();
   const dispatch = useDispatch();
 
-  const {fullAddressData} = useSelector(state => {
-    // console.log('Tracking Truck -------------->>>>>', state.data);
-    return state.data;
-  });
-  // console.log(33333, item);
+  const fullAddressData = useSelector(state => state.data.fullAddressData);
 
-  // console.log(
-  //   'Positions:',
-  //   positions,
-  //   'Item:',
-  //   item,
-  //   'Initial Region:',
-  //   initialRegion,
-  // );
+  const initialMapRegion = useMemo(
+    () => ({
+      ...initialRegion,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    }),
+    [initialRegion],
+  );
 
-  const initialMapRegion = {
-    ...initialRegion,
-    latitudeDelta: LATITUDE_DELTA,
-    longitudeDelta: LONGITUDE_DELTA,
-  };
-
-  const handleMapLayout = () => {
+  const handleMapLayout = useCallback(() => {
     if (markerRef.current) {
       markerRef.current.showCallout();
     }
-  };
+  }, []);
 
-  const toggleMapType = () => {
+  const toggleMapType = useCallback(() => {
     setMapType(prevType =>
       prevType === 'standard' ? 'satellite' : 'standard',
     );
-  };
+  }, []);
 
   useEffect(() => {
     if (positions.length > 0) {
@@ -80,7 +79,7 @@ const MapComponent = ({initialRegion, item, positions, navigation}) => {
         );
 
         // Animate the map to the new position
-        mapRef.current.animateToRegion(
+        mapRef.current?.animateToRegion(
           {
             latitude: lastPosition.latitude,
             longitude: lastPosition.longitude,
@@ -90,81 +89,88 @@ const MapComponent = ({initialRegion, item, positions, navigation}) => {
           1000,
         );
 
-        // Optionally, move the marker smoothly if needed
-        if (markerRef.current) {
-          markerRef.current.animateMarkerToCoordinate(
-            {
-              latitude: lastPosition.latitude,
-              longitude: lastPosition.longitude,
-            },
-            1000,
-          );
-        }
+        // Move the marker smoothly
+        markerRef.current?.animateMarkerToCoordinate(
+          {
+            latitude: lastPosition.latitude,
+            longitude: lastPosition.longitude,
+          },
+          1000,
+        );
+
+        // Delay drawing the polyline until marker has moved
+        setTimeout(() => setPolylineReady(true), 1000);
       }
+
+      // Hide loader after everything is rendered
+      setLoading(false);
     }
   }, [positions, previousPosition, dispatch]);
 
-  const hasPositions = positions.length > 0;
-  // console.log(89898989899, hasPositions ? positions : 0);
+  // Combine positions and routeData
+  const combinedRouteData = useMemo(() => {
+    const routeDataCoords = routeData.map(({latitude, longitude}) => ({
+      latitude,
+      longitude,
+    }));
+    const positionCoords = positions.map(({latitude, longitude}) => ({
+      latitude,
+      longitude,
+    }));
+    return [...routeDataCoords, ...positionCoords];
+  }, [routeData, positions]);
+
+  const renderMarkers = useMemo(() => {
+    return positions.map((position, index) => (
+      <Marker
+        key={index}
+        coordinate={{
+          latitude: position.latitude,
+          longitude: position.longitude,
+        }}
+        ref={index === 0 ? markerRef : null}>
+        <ActiveLocation size={40} course={50} />
+        <Callout tooltip>
+          <View style={styles.calloutView}>
+            <Text style={styles.calloutText}>
+              {fullAddressData === null ? item?.address : fullAddressData}
+            </Text>
+          </View>
+        </Callout>
+      </Marker>
+    ));
+  }, [positions, fullAddressData, item]);
 
   return (
     <View style={styles.mapContainer}>
+      {loading && ( // Show loader while map is loading
+        <ActivityIndicator
+          size="large"
+          color={backgroundColorNew}
+          style={styles.loader}
+        />
+      )}
+
       <MapView
         ref={mapRef}
         mapType={mapType}
         style={StyleSheet.absoluteFillObject}
         initialRegion={initialMapRegion}
         onLayout={handleMapLayout}>
-        {hasPositions ? (
+        {positions.length > 0 && (
           <>
-            <Polyline
-              coordinates={positions.map(position => ({
-                latitude: position.latitude,
-                longitude: position.longitude,
-              }))}
-              strokeColor="#000" // Customize the color
-              strokeWidth={3} // Customize the width
-            />
-            {/* Show markers for each position with direction  */}
-            {positions.map((position, index) => (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: initialRegion.latitude,
-                  longitude: initialRegion.longitude,
-                }}
-                ref={markerRef}>
-                <ActiveLocation size={30} course={50} />
-                <Callout>
-                  <View style={styles.calloutView}>
-                    <Text style={styles.calloutText}>
-                      {fullAddressData === null
-                        ? item?.address
-                        : fullAddressData}
-                    </Text>
-                  </View>
-                </Callout>
-              </Marker>
-            ))}
+            {renderMarkers}
+            {polylineReady && (
+              <Polyline
+                coordinates={combinedRouteData}
+                strokeColor="blue"
+                strokeWidth={3}
+              />
+            )}
           </>
-        ) : (
-          <Marker
-            coordinate={{
-              latitude: initialRegion.latitude,
-              longitude: initialRegion.longitude,
-            }}
-            ref={markerRef}>
-            <ActiveLocation size={30} course={50} />
-            <Callout>
-              <View style={styles.calloutView}>
-                <Text style={styles.calloutText}>
-                  {fullAddressData === null ? item?.address : fullAddressData}
-                </Text>
-              </View>
-            </Callout>
-          </Marker>
         )}
       </MapView>
+
       <TouchableOpacity style={styles.mapToggleButton} onPress={toggleMapType}>
         <Image
           source={
@@ -175,21 +181,26 @@ const MapComponent = ({initialRegion, item, positions, navigation}) => {
           style={styles.imageStyle}
         />
       </TouchableOpacity>
+
       <View style={styles.speedDistanceBox}>
-        <View style={{flexDirection: 'row'}}>
-          <View>
-            <Text>{`${(item?.distance / 1000).toFixed(2)} KM`}</Text>
-            <Text>Today distance</Text>
+        <View style={styles.infoBox}>
+          <View style={styles.infoColumn}>
+            <Text style={styles.boldText}>{`${(item?.distance / 1000).toFixed(
+              2,
+            )} KM`}</Text>
+            <Text style={styles.labelText}>Today distance</Text>
           </View>
           <View style={styles.verticalLine} />
-          <Text>
-            {Math.floor(
-              (hasPositions ? positions[0]?.speed : item?.position[0]?.speed) *
-                1.852,
-            )}
-          </Text>
-          <Text>Speed</Text>
+          <View style={styles.infoColumn}>
+            <Text style={styles.boldText}>
+              {`${Math.ceil(
+                (positions[0]?.speed || item?.position[0]?.speed) * 1.852,
+              )} KMPH`}
+            </Text>
+            <Text style={styles.labelText}>Vehicle Speed</Text>
+          </View>
         </View>
+
         <TouchableOpacity
           style={styles.btnContainer}
           onPress={() =>
@@ -197,15 +208,13 @@ const MapComponent = ({initialRegion, item, positions, navigation}) => {
               deviceId: item?.id,
               from: moment().utcOffset(330).startOf('day').toISOString(),
               to: moment().utcOffset(330).endOf('day').toISOString(),
-              // from: moment().utc().startOf('day').toISOString(),
-              // to: moment().utc().endOf('day').toISOString(),
               name: item?.name,
             })
           }>
           <PlayIcon
             size={25}
-            style={styles.iconStyle}
             color={backgroundColorNew}
+            style={styles.iconStyle}
           />
           <Text style={styles.btnText}>Play Journey</Text>
         </TouchableOpacity>
@@ -218,9 +227,16 @@ export default MapComponent;
 
 const styles = StyleSheet.create({
   mapContainer: {flex: 1},
+  loader: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    zIndex: 100,
+    transform: [{translateX: -25}, {translateY: -25}],
+  },
   mapToggleButton: {
     position: 'absolute',
-    top: 70,
+    top: 80,
     right: 10,
     backgroundColor: '#ffffff',
     borderRadius: 50,
@@ -233,7 +249,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     elevation: 3,
     zIndex: 99,
-    // borderWidth: 1,
     borderRadius: 8,
     width: '95%',
     alignSelf: 'center',
@@ -243,14 +258,17 @@ const styles = StyleSheet.create({
   },
   calloutView: {
     width: 300,
-    // padding: 5,
-    // backgroundColor: 'rgba(1, 1, 0, 0.7)',
-    borderRadius: 5,
-    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: 'rgba(1, 1, 0, 0.5)',
+    borderColor: '#707070',
+    marginBottom: 5,
   },
   calloutText: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: 'center',
+    color: '#FFFFFF',
+    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
   },
   imageStyle: {width: 40, height: 40},
   btnContainer: {
@@ -276,5 +294,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     height: 40,
     alignSelf: 'center',
+  },
+  infoBox: {flexDirection: 'row', alignItems: 'center'},
+  infoColumn: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  boldText: {fontFamily: 'PlusJakartaSans-ExtraBold', fontSize: 12},
+  labelText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 8,
+    color: '#434343',
   },
 });

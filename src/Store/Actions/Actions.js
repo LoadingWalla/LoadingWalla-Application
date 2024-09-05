@@ -1107,6 +1107,29 @@ export const fetchGpsNotificationsFailure = error => ({
   payload: error,
 });
 
+// GPS Routes
+export const fetchRouteRequest = (username, password, deviceId, from, to) => {
+  // console.log('Gps Routes ---------->', username, password, deviceId, from, to);
+  return {
+    type: actionTypes.FETCH_ROUTES_REQUEST,
+    username,
+    password,
+    deviceId,
+    from,
+    to,
+  };
+};
+
+export const fetchRouteSuccess = data => ({
+  type: actionTypes.FETCH_ROUTES_SUCCESS,
+  payload: data,
+});
+
+export const fetchRouteFailure = error => ({
+  type: actionTypes.FETCH_POSITIONS_FAILURE,
+  payload: error,
+});
+
 // GPS Replay
 export const fetchPositionsRequest = (
   username,

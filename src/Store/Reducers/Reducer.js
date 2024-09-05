@@ -173,6 +173,10 @@ const initialState = {
   gpsReplayLoading: false,
   gpsReplayError: null,
   gpsReplayData: [],
+  // gps routes
+  gpsRoutesLoading: false,
+  gpsRoutesError: null,
+  gpsRoutesData: [],
   // gps stops
   gpsStopsLoading: false,
   gpsStopsError: null,
@@ -1355,6 +1359,25 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsReplayLoading: false,
         gpsReplayError: payload,
+      });
+
+    // GPS Routes
+    case actionTypes.FETCH_ROUTES_REQUEST:
+      return {
+        ...state,
+        gpsRoutesLoading: true,
+        gpsRoutesError: null,
+        gpsRoutesData: [],
+      };
+    case actionTypes.FETCH_ROUTES_SUCCESS:
+      return updateState(state, {
+        gpsRoutesLoading: false,
+        gpsRoutesData: payload,
+      });
+    case actionTypes.FETCH_ROUTES_FAILURE:
+      return updateState(state, {
+        gpsRoutesLoading: false,
+        gpsRoutesError: payload,
       });
 
     // GPS Stops

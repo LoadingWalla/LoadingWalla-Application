@@ -1187,6 +1187,29 @@ export function* fetchGpsReplay({username, password, deviceId, from, to}) {
   }
 }
 
+// gps route
+export function* fetchGpsRoute({username, password, deviceId, from, to}) {
+  try {
+    // console.log(999999, username, password, deviceId, from, to);
+    const data = yield gpsApi.get(
+      `reports/route?from=${from}&to=${to}&deviceId=${deviceId}`,
+      username,
+      password,
+    );
+    // console.log('Gps Route -------->', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchRouteSuccess(data?.data));
+    } else {
+      // console.log('else', data);
+      yield put(actions.fetchRouteFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.fetchRouteFailure(error));
+    // console.log('error4444', error);
+  }
+}
+
 // gps stops
 export function* fetchGpsStops({username, password, deviceId, from, to}) {
   try {
