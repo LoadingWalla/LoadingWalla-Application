@@ -1148,7 +1148,7 @@ export function* fetchGpsSummary({
 // gps summary
 export function* fetchGpsNotifications({username, password}) {
   try {
-    // console.log(33333, username, password);
+    // console.log(888888999999, username, password);
     const data = yield gpsApi.get('notifications', username, password);
     // console.log('Gps Notification', data);
     if (data?.status === 200) {

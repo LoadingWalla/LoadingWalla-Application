@@ -1,15 +1,9 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import {AnimatedRegion} from 'react-native-maps';
+import React, {useCallback, useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import {
   clearGpsDeviceData,
   fetchAddressFailure,
-  fetchAddressRequest,
-  fetchPositionsRequest,
   fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
@@ -79,6 +73,7 @@ const TrackingTruckNew = ({navigation, route}) => {
       return () => {
         dispatch(fetchAddressFailure());
         dispatch(clearGpsDeviceData());
+        dispatch(gpsRelayFailure());
       };
     }, []),
   );
@@ -122,6 +117,7 @@ const TrackingTruckNew = ({navigation, route}) => {
         longitude={long}
         item={item}
         positions={filteredPositions}
+        gpsRelayData={gpsRelayData}
       />
     </View>
   );

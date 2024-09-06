@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useMemo, useCallback} from 'react';
 import {
   Animated,
   PanResponder,
@@ -6,6 +6,10 @@ import {
   View,
   Dimensions,
   Easing,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Linking,
 } from 'react-native';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
@@ -13,38 +17,35 @@ import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
 import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
 import AlertIcon from '../../../assets/SVG/AlertIcon';
 import IconWithNameBelow from '../../Components/IconWithNameBelow';
+import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
+import {GradientColor2, seperator, titleColor} from '../../Color/color';
+import Switch from 'toggle-switch-react-native';
+import RelayIcon from '../../../assets/SVG/svg/RelayIcon';
+import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
+import moment from 'moment';
+import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
+import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MIN_HEIGHT = 110;
-const MAX_HEIGHT = SCREEN_HEIGHT / 2;
+const MAX_HEIGHT = SCREEN_HEIGHT / 2.7;
 
-// Helper function to calculate signal strength from cell tower data
 const calculateSignalStrength = cellTowers => {
-  // You can use some logic based on `cellId`, `locationAreaCode`, etc.
-  // Here's a simple example assuming the presence of cell towers gives good signal
-  // You can adjust the logic based on real-world calculations if you have more data
-
   if (cellTowers && cellTowers.length > 0) {
-    // Assume a good signal if `cellId` is available
     const {cellId} = cellTowers[0];
-
-    // Example logic: stronger signal if `cellId` is higher or in a valid range
     if (cellId > 20000) {
-      return 80; // Strong signal
+      return 80;
     } else if (cellId > 10000) {
-      return 50; // Medium signal
+      return 50;
     } else {
-      return 20; // Weak signal
+      return 20;
     }
   }
-  // Default weak signal if no cell towers
   return 0;
 };
 
 const getIconColor = (type, item, positions) => {
-  // console.log(888888888, item);
-
   const position = positions[0];
   switch (type) {
     case 'Ignition':
@@ -54,7 +55,7 @@ const getIconColor = (type, item, positions) => {
         ? '#3BA700'
         : '#FF3500';
     case 'Battery':
-      return '#696969';
+      return position?.attributes?.batteryLevel > 60 ? '3BA700' : '#FF3500';
     case 'Network':
       if (position?.network?.cellTowers) {
         const signalStrength = calculateSignalStrength(
@@ -72,9 +73,14 @@ const getIconColor = (type, item, positions) => {
       }
 
     case 'Geozone':
-      return '#696969';
-    case 'Breakdown':
-      return '#696969';
+      return position?.geofenceIds && position.geofenceIds.length > 0
+        ? '#3BA700'
+        : item?.position[0]?.geofenceIds &&
+          item?.position[0]?.geofenceIds.length > 0
+        ? '#3BA700'
+        : '#696969';
+    case 'Alarm':
+      return position?.attributes?.alarm ? '#FF3500' : '#696969';
     default:
       return '#696969';
   }
@@ -101,46 +107,55 @@ const getIconTitle = (type, item, positions) => {
             : 'Poor';
         return networkStrengthColor;
       } else {
-        return 'Unknown';
+        return 'No Signal';
       }
     case 'Ignition':
-      return 'Ignition';
+      return position?.attributes?.ignition
+        ? 'ON'
+        : item?.position[0]?.ignition
+        ? 'ON'
+        : 'OFF';
     case 'Geozone':
       return 'Geozone';
-    case 'Breakdown':
-      return 'Breakdown';
+    case 'Alarm':
+      return position?.attributes?.alarm
+        ? position?.attributes?.alarm
+        : 'Alarm';
     default:
       return '';
   }
 };
 
-const ICONS = (item, positions) => [
-  {
-    title: getIconTitle('Battery', item, positions),
-    icon: BatteryIcon,
-    color: getIconColor('Battery', item, positions),
-  },
-  {
-    title: getIconTitle('Network', item, positions),
-    icon: NetworkIcon,
-    color: getIconColor('Network', item, positions),
-  },
-  {
-    title: getIconTitle('Ignition', item, positions),
-    icon: KeyIcon,
-    color: getIconColor('Ignition', item, positions),
-  },
-  {
-    title: getIconTitle('Geozone', item, positions),
-    icon: GeoFencingIcon,
-    color: getIconColor('Geozone', item, positions),
-  },
-  {
-    title: getIconTitle('Breakdown', item, positions),
-    icon: AlertIcon,
-    color: getIconColor('Breakdown', item, positions),
-  },
-];
+const ICONS = (item, positions) =>
+  useMemo(() => {
+    return [
+      {
+        title: getIconTitle('Battery', item, positions),
+        icon: BatteryIcon,
+        color: getIconColor('Battery', item, positions),
+      },
+      {
+        title: getIconTitle('Network', item, positions),
+        icon: NetworkIcon,
+        color: getIconColor('Network', item, positions),
+      },
+      {
+        title: getIconTitle('Ignition', item, positions),
+        icon: KeyIcon,
+        color: getIconColor('Ignition', item, positions),
+      },
+      {
+        title: getIconTitle('Geozone', item, positions),
+        icon: GeoFencingIcon,
+        color: getIconColor('Geozone', item, positions),
+      },
+      {
+        title: getIconTitle('Alarm', item, positions),
+        icon: AlertIcon,
+        color: getIconColor('Alarm', item, positions),
+      },
+    ];
+  }, [item, positions]);
 
 const BottomSwipeUpContainer = ({
   navigation,
@@ -148,47 +163,115 @@ const BottomSwipeUpContainer = ({
   longitude,
   item,
   positions,
+  gpsRelayData,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [switchOn, setSwitchOn] = useState(false);
   const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
 
-  console.log(item, positions);
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (evt, gestureState) => {
+          // Allow pan responder only when there's significant vertical movement
+          return Math.abs(gestureState.dy) > 0;
+        },
+        onPanResponderMove: (evt, gestureState) => {
+          // Disable further swipe-up when already expanded
+          if (isExpanded && gestureState.dy < 0) {
+            return;
+          }
+          const newHeight = Math.max(
+            MIN_HEIGHT,
+            Math.min(MAX_HEIGHT, MIN_HEIGHT - gestureState.dy),
+          );
+          animatedHeight.setValue(newHeight);
+        },
+        onPanResponderRelease: (evt, gestureState) => {
+          if (gestureState.dy < 0 && !isExpanded) {
+            // Swipe up to expand
+            setIsExpanded(true);
+            Animated.timing(animatedHeight, {
+              toValue: MAX_HEIGHT,
+              duration: 300,
+              easing: Easing.out(Easing.ease),
+              useNativeDriver: false,
+            }).start();
+          } else if (gestureState.dy > 0 && isExpanded) {
+            // Swipe down to collapse
+            setIsExpanded(false);
+            Animated.spring(animatedHeight, {
+              toValue: MIN_HEIGHT,
+              friction: 5,
+              tension: 30,
+              useNativeDriver: false,
+            }).start();
+          }
+        },
+      }),
+    [isExpanded, animatedHeight],
+  );
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return Math.abs(gestureState.dy) > 0;
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        const newHeight = Math.max(
-          MIN_HEIGHT,
-          Math.min(MAX_HEIGHT, MIN_HEIGHT - gestureState.dy),
-        );
-        animatedHeight.setValue(newHeight);
-      },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (gestureState.dy < 0) {
-          // Swipe up
-          setIsExpanded(true);
-          Animated.timing(animatedHeight, {
-            toValue: MAX_HEIGHT,
-            duration: 300,
-            easing: Easing.out(Easing.ease),
-            useNativeDriver: false,
-          }).start();
-        } else if (gestureState.dy > 0) {
-          // Swipe down
-          setIsExpanded(false);
-          Animated.spring(animatedHeight, {
-            toValue: MIN_HEIGHT,
-            friction: 5,
-            tension: 30,
-            useNativeDriver: false,
-          }).start();
-        }
-      },
-    }),
-  ).current;
+  // console.log(1111111, item, positions);
+
+  const toggleSwitch = useCallback(() => {
+    setSwitchOn(prevState => !prevState);
+  }, []);
+
+  const onNavigatePress = () => {
+    const destination = positions[positions.length - 1] || item?.position[0];
+    if (destination) {
+      const url = `google.navigation:q=${destination.latitude},${destination.longitude}`;
+      Linking.openURL(url).catch(err =>
+        console.error('Error opening Google Maps', err),
+      );
+    }
+  };
+
+  const onHistoryPress = () => {
+    console.log('History Pressed');
+    navigation.navigate('LocationHistory', {
+      deviceId: item?.id,
+      name: item?.name,
+      from: moment().utcOffset(330).startOf('day').toISOString(),
+      to: moment().utcOffset(330).endOf('day').toISOString(),
+    });
+  };
+
+  const onGeozonePress = () => {
+    navigation.navigate('geofencing', {
+      deviceId: item?.id,
+      lat: positions[0]?.latitude || item.position[0]?.latitude,
+      lon: positions[0]?.longitude || item.position[0]?.longitude,
+      name: item?.name,
+    });
+  };
+
+  const onTheftPress = () => {
+    navigation.navigate('FuelPump', {
+      headerTitle: 'Nearby Police Station',
+      theft: true,
+      latitude: positions[0]?.latitude || item?.position[0]?.latitude,
+      longitude: positions[0]?.longitude || item?.position[0]?.longitude,
+    });
+  };
+
+  const onRelayPress = () => {
+    navigation.navigate('GpsRelay', {
+      deviceId: item?.id,
+      item: item,
+      gpsRelayData,
+    });
+  };
+
+  const onFuelPumpPress = () => {
+    navigation.navigate('FuelPump', {
+      headerTitle: 'Fuel Pump',
+      theft: false,
+      latitude: positions[0]?.latitude || item?.position[0]?.latitude,
+      longitude: positions[0]?.longitude || item?.position[0]?.longitude,
+    });
+  };
 
   return (
     <Animated.View
@@ -204,28 +287,111 @@ const BottomSwipeUpContainer = ({
               title={iconItem.title}
               color={iconItem.color}
             />
-            {index < ICONS(item, positions).length - 1 && (
-              <View style={styles.verticalLine} />
-            )}
           </View>
         ))}
       </View>
-      <View
-        style={{
-          borderWidth: 1,
-          margin: 10,
-          padding: 10,
-          marginHorizontal: 10,
-          paddingVertical: 5,
-          borderRadius: 8,
-          borderColor: '#00000029',
-          backgroundColor: '#FFFFFF',
-        }}></View>
+
+      <View style={styles.infoSection}>
+        {renderButtonSections({
+          onNavigatePress,
+          onHistoryPress,
+          onGeozonePress,
+          onTheftPress,
+          onRelayPress,
+          onFuelPumpPress,
+          gpsRelayData,
+        })}
+      </View>
+
+      <View style={styles.parkingAlarm}>
+        <Text style={styles.parkingText}>Parking Alarm</Text>
+        <Switch
+          isOn={switchOn}
+          onColor={GradientColor2}
+          offColor={seperator}
+          size="small"
+          onToggle={toggleSwitch}
+        />
+      </View>
     </Animated.View>
   );
 };
 
 export default BottomSwipeUpContainer;
+
+const renderButtonSections = ({
+  onNavigatePress,
+  onHistoryPress,
+  onGeozonePress,
+  onTheftPress,
+  onRelayPress,
+  onFuelPumpPress,
+  gpsRelayData,
+}) => (
+  <>
+    <View style={styles.buttonRow}>
+      <ButtonComponent
+        icon={NavigationIcon}
+        label="Navigate"
+        onPress={onNavigatePress}
+      />
+      <ButtonComponent
+        icon={LocationHistory}
+        label="History"
+        onPress={onHistoryPress}
+        size={20}
+      />
+      <ButtonComponent
+        icon={RelayIcon}
+        label="Relay"
+        dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+        dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+        onPress={onRelayPress}
+        size={20}
+        color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+        bgcolor={gpsRelayData?.relay}
+      />
+    </View>
+    <View style={styles.buttonRow}>
+      <ButtonComponent
+        icon={TheftIcon}
+        label="Theft"
+        onPress={onTheftPress}
+        size={20}
+      />
+      <ButtonComponent
+        icon={FuelPumpIcon}
+        label="Fuel Pump"
+        onPress={onFuelPumpPress}
+        size={20}
+      />
+      <ButtonComponent
+        icon={GeoFencingIcon}
+        label="Geozone"
+        onPress={onGeozonePress}
+      />
+    </View>
+  </>
+);
+
+const ButtonComponent = ({
+  icon: Icon,
+  label,
+  onPress,
+  dynamicTitleColor,
+  dynamicTitle,
+  color = '#ff7753',
+  size = 25,
+  bgcolor = false,
+}) => (
+  <TouchableOpacity style={styles.button(bgcolor)} onPress={onPress}>
+    <Icon size={size} color={color} />
+    <Text style={styles.buttonText}>
+      {label}
+      <Text style={{color: dynamicTitleColor}}>{dynamicTitle}</Text>
+    </Text>
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
   bottomContainer: {
@@ -262,6 +428,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    // borderWidth: 1,
   },
   verticalLine: {
     backgroundColor: '#707070',
@@ -269,5 +437,53 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     height: 40,
     alignSelf: 'center',
+  },
+  infoSection: {
+    borderWidth: 1,
+    margin: 10,
+    padding: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderColor: '#00000029',
+    backgroundColor: '#FFFFFF',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 5,
+  },
+  button: color => ({
+    backgroundColor: color ? '#F7FFF2' : '#FFF7F5',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    elevation: 1,
+    borderRadius: 5,
+    minWidth: '30%',
+    maxWidth: '32%',
+  }),
+  buttonText: {
+    marginLeft: 10,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    color: titleColor,
+  },
+  parkingAlarm: {
+    borderWidth: 1,
+    marginHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderColor: '#00000029',
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  parkingText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: '#696969',
   },
 });

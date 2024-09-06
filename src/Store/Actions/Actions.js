@@ -1091,11 +1091,14 @@ export const clearSummaryReportData = () => ({
 });
 
 // GPS Notifications
-export const fetchGpsNotificationsRequest = (username, password) => ({
-  type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
-  username,
-  password,
-});
+export const fetchGpsNotificationsRequest = (username, password) => {
+  console.log(444444444, username, password);
+  return {
+    type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
+    username,
+    password,
+  };
+};
 
 export const fetchGpsNotificationsSuccess = payload => ({
   type: actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS,

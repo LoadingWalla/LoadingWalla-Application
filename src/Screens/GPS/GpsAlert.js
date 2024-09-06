@@ -66,6 +66,8 @@ const SettingsSection = React.memo(() => (
 
 const GpsAlert = ({navigation, route}) => {
   const {deviceId} = route.params;
+  console.log(77777777, route);
+
   const dispatch = useDispatch();
 
   const {gpsTokenData, gpsNotificationLoading, gpsNotificationData} =
@@ -76,8 +78,8 @@ const GpsAlert = ({navigation, route}) => {
       if (gpsTokenData?.email && gpsTokenData?.password) {
         dispatch(
           fetchGpsNotificationsRequest(
-            gpsTokenData.email,
-            gpsTokenData.password,
+            gpsTokenData?.email,
+            gpsTokenData?.password,
           ),
         );
       }

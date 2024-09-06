@@ -25,6 +25,8 @@ import AnimatedText from '../../Components/AnimatedText';
 import Button from '../../Components/Button';
 import Slider from '@react-native-community/slider';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
+import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
+import InactiveLocation from '../../../assets/SVG/svg/InactiveLocation';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -159,12 +161,9 @@ const Geofencing = ({navigation, route}) => {
               }}>
               {livePositions.length > 0 && (
                 <>
-                  <Marker.Animated
-                    coordinate={animatedMarkerPosition}
-                    rotation={
-                      livePositions[livePositions.length - 1].course || 0
-                    }>
-                    <TruckNavigationIcon width={50} height={50} />
+                  <Marker.Animated coordinate={animatedMarkerPosition}>
+                    {/* <ActiveLocation size={40} course={50} /> */}
+                    <InactiveLocation size={40} course={50} />
                   </Marker.Animated>
                   <Circle
                     center={livePositions[livePositions.length - 1]}

@@ -6,7 +6,7 @@ import {
   Dimensions,
   Image,
   Text,
-  ActivityIndicator, // Add ActivityIndicator for loading spinner
+  ActivityIndicator,
 } from 'react-native';
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,6 +15,8 @@ import moment from 'moment';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../../Color/color';
+import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
+import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -143,7 +145,7 @@ const MapComponent = ({
 
   return (
     <View style={styles.mapContainer}>
-      {loading && ( // Show loader while map is loading
+      {loading && (
         <ActivityIndicator
           size="large"
           color={backgroundColorNew}
@@ -181,6 +183,16 @@ const MapComponent = ({
           style={styles.imageStyle}
         />
       </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.alertButton}
+        onPress={() => navigation.navigate('GpsAlert', {deviceId: item?.id})}>
+        <AlertsIcon size={25} />
+      </TouchableOpacity>
+
+      {/* <TouchableOpacity style={styles.gpsButton} onPress={() => {}}>
+        <GpsIcon2 size={25} />
+      </TouchableOpacity> */}
 
       <View style={styles.speedDistanceBox}>
         <View style={styles.infoBox}>
@@ -242,6 +254,26 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     elevation: 3,
     zIndex: 99,
+  },
+  alertButton: {
+    position: 'absolute',
+    top: 130,
+    right: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 50,
+    elevation: 3,
+    zIndex: 99,
+    padding: 5,
+  },
+  gpsButton: {
+    position: 'absolute',
+    top: 170,
+    right: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 50,
+    elevation: 3,
+    zIndex: 99,
+    padding: 5,
   },
   speedDistanceBox: {
     position: 'absolute',
