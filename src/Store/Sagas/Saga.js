@@ -1255,6 +1255,42 @@ export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   }
 }
 
+// GPS Combined Data
+export function* fetchGpsCombinedData({
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+}) {
+  try {
+    console.log(
+      'GPS Combined Data ----------->',
+      username,
+      password,
+      deviceId,
+      from,
+      to,
+    );
+    const data = yield gpsApi.get(
+      `reports/combined?deviceId=${deviceId}&from=${from}&to=${to}`,
+      username,
+      password,
+    );
+    console.log('GPS Combined Data -----------> --------------->', data);
+    if (data?.status === 200) {
+      // console.log('success', data);
+      yield put(actions.fetchCombinedGpsDataSuccess(data?.data));
+    } else {
+      yield put(actions.fetchCombinedGpsDataFailure(data));
+      console.log('else', data);
+    }
+  } catch (error) {
+    yield put(actions.fetchCombinedGpsDataFailure(error.message));
+    console.log('error4444', error);
+  }
+}
+
 // gps plans
 export function* fetchGpsPlans() {
   try {

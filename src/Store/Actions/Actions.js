@@ -1357,6 +1357,36 @@ export const setGpsRelayFailure = error => ({
   payload: error,
 });
 
+// combined gps data
+export const fetchCombinedGpsDataRequest = ({
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+}) => ({
+  type: actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST,
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+});
+
+export const fetchCombinedGpsDataSuccess = payload => ({
+  type: actionTypes.FETCH_COMBINED_GPS_DATA_SUCCESS,
+  payload,
+});
+
+export const fetchCombinedGpsDataFailure = payload => ({
+  type: actionTypes.FETCH_COMBINED_GPS_DATA_FAILURE,
+  payload,
+});
+
+export const clearCombinedGpsData = () => ({
+  type: actionTypes.CLEAR_COMBINED_GPS_DATA,
+});
+
 // Clear store on logout
 export const clearStore = () => ({
   type: actionTypes.CLEAR_STORE,

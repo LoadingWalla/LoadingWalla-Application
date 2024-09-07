@@ -216,6 +216,10 @@ const initialState = {
   setGpsRelayloading: false,
   setGpsRelayData: null,
   setGpsRelayStatus: null,
+  // GPS combined data
+  gpsCombinedloading: false,
+  gpsCombinedData: [],
+  gpsCombinedError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1421,6 +1425,30 @@ const reducer = (state = initialState, action) => {
         gpsTripsData: [],
         gpsTripsError: null,
       });
+
+    // GPS Combined Data
+    case actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST:
+      return {
+        ...state,
+        gpsCombinedloading: true,
+        gpsCombinedError: null,
+      };
+    case actionTypes.FETCH_COMBINED_GPS_DATA_SUCCESS:
+      return updateState(state, {
+        gpsCombinedloading: false,
+        gpsCombinedData: payload,
+      });
+    case actionTypes.FETCH_COMBINED_GPS_DATA_FAILURE:
+      return updateState(state, {
+        gpsCombinedloading: false,
+        gpsCombinedError: payload,
+      });
+    case actionTypes.CLEAR_COMBINED_GPS_DATA:
+      return {
+        gpsCombinedloading: false,
+        gpsCombinedData: [],
+        gpsCombinedError: null,
+      };
 
     // GPS Plans
     case actionTypes.FETCH_GPS_PLANS_REQUEST:
