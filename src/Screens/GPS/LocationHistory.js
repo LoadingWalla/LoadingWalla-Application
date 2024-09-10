@@ -34,7 +34,7 @@ const convertMillisToTime = millis => {
 };
 
 const TripItem = React.memo(({item, onShowAddress}) => {
-  // console.log(8888888888, item);
+  console.log(8888888888, item);
   return (
     <View style={styles.tripItemContainer}>
       <View style={styles.statusIndicatorContainer}>
@@ -86,7 +86,6 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
           onShowAddress={onShowAddress}
         />
       )}
-      {/* <Text style={styles.timeText}>{formatDate(time)}</Text> */}
       <Text style={styles.timeText}>
         {moment(time).utcOffset('+05:30').format('DD/MM/YYYY hh:mm A')}
       </Text>

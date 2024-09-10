@@ -124,7 +124,7 @@ const initializeFetchClient = async () => {
 
   const defaultOptions = {
     baseURL: baseURL,
-    timeout: 10000,
+    timeout: 60000,
     retry: 3,
     retryDelay: 5000,
     headers: {
@@ -158,7 +158,7 @@ export const multipartAPI = async () => {
 
   const defaultOptions = {
     baseURL: baseURL,
-    timeout: 5000,
+    timeout: 10000,
     headers: {
       'content-type': 'multipart/form-data',
     },

@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   clearGpsDeviceData,
   fetchAddressFailure,
+  fetchCombinedGpsDataRequest,
   fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
@@ -21,16 +22,13 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
 
 const TrackingTruckNew = ({navigation, route}) => {
   const {item, name, lat, long, deviceId} = route.params;
-  const {
-    gpsReplayData,
-    gpsTokenData,
-    gpsRelayData,
-    fullAddressData,
-    gpsRoutesData,
-  } = useSelector(state => {
-    console.log('Tracking Truck -------------->>>>>', state.data);
-    return state.data;
-  });
+  console.log(11111, 'TrackingTruck Params ------>', route);
+
+  const {gpsTokenData, gpsRelayData, gpsRoutesData, gpsCombinedData} =
+    useSelector(state => {
+      console.log('Tracking Truck -------------->>>>>', state.data);
+      return state.data;
+    });
   const {
     wsMessages,
     wsConnected,
@@ -49,10 +47,28 @@ const TrackingTruckNew = ({navigation, route}) => {
     if (gpsTokenData && deviceId) {
       const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
+      console.log(
+        111111,
+        gpsTokenData?.email,
+        gpsTokenData?.password,
+        deviceId,
+        defaultFrom,
+        defaultTo,
+      );
+
+      // dispatch(
+      //   fetchCombinedGpsDataRequest(
+      //     gpsTokenData?.email,
+      //     gpsTokenData?.password,
+      //     deviceId,
+      //     defaultFrom,
+      //     defaultTo,
+      //   ),
+      // );
       dispatch(
         fetchRouteRequest(
-          gpsTokenData.email,
-          gpsTokenData.password,
+          gpsTokenData?.email,
+          gpsTokenData?.password,
           deviceId,
           defaultFrom,
           defaultTo,
@@ -97,6 +113,7 @@ const TrackingTruckNew = ({navigation, route}) => {
           positions={filteredPositions}
           navigation={navigation}
           routeData={gpsRoutesData}
+          // routeData={gpsCombinedData}
         />
       </View>
 

@@ -8,7 +8,6 @@ import {
   Easing,
   Text,
   TouchableOpacity,
-  ScrollView,
   Linking,
 } from 'react-native';
 import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
@@ -29,7 +28,7 @@ import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const MIN_HEIGHT = 110;
-const MAX_HEIGHT = SCREEN_HEIGHT / 2.7;
+const MAX_HEIGHT = SCREEN_HEIGHT / 2.1;
 
 const calculateSignalStrength = cellTowers => {
   if (cellTowers && cellTowers.length > 0) {
@@ -429,7 +428,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    // borderWidth: 1,
   },
   verticalLine: {
     backgroundColor: '#707070',
@@ -467,7 +465,7 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 10,
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
+    fontSize: 10,
     color: titleColor,
   },
   parkingAlarm: {

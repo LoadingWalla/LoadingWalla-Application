@@ -1110,29 +1110,6 @@ export const fetchGpsNotificationsFailure = error => ({
   payload: error,
 });
 
-// GPS Routes
-export const fetchRouteRequest = (username, password, deviceId, from, to) => {
-  // console.log('Gps Routes ---------->', username, password, deviceId, from, to);
-  return {
-    type: actionTypes.FETCH_ROUTES_REQUEST,
-    username,
-    password,
-    deviceId,
-    from,
-    to,
-  };
-};
-
-export const fetchRouteSuccess = data => ({
-  type: actionTypes.FETCH_ROUTES_SUCCESS,
-  payload: data,
-});
-
-export const fetchRouteFailure = error => ({
-  type: actionTypes.FETCH_POSITIONS_FAILURE,
-  payload: error,
-});
-
 // GPS Replay
 export const fetchPositionsRequest = (
   username,
@@ -1357,21 +1334,48 @@ export const setGpsRelayFailure = error => ({
   payload: error,
 });
 
-// combined gps data
-export const fetchCombinedGpsDataRequest = ({
-  username,
-  password,
-  deviceId,
-  from,
-  to,
-}) => ({
-  type: actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST,
-  username,
-  password,
-  deviceId,
-  from,
-  to,
+// GPS Routes
+export const fetchRouteRequest = (username, password, deviceId, from, to) => {
+  // console.log('Gps Routes ---------->', username, password, deviceId, from, to);
+  return {
+    type: actionTypes.FETCH_ROUTES_REQUEST,
+    username,
+    password,
+    deviceId,
+    from,
+    to,
+  };
+};
+
+export const fetchRouteSuccess = data => ({
+  type: actionTypes.FETCH_ROUTES_SUCCESS,
+  payload: data,
 });
+
+export const fetchRouteFailure = error => ({
+  type: actionTypes.FETCH_POSITIONS_FAILURE,
+  payload: error,
+});
+
+// combined gps data
+export const fetchCombinedGpsDataRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => {
+  // console.log(1111111, username, password, deviceId, from, to);
+
+  return {
+    type: actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST,
+    username,
+    password,
+    deviceId,
+    from,
+    to,
+  };
+};
 
 export const fetchCombinedGpsDataSuccess = payload => ({
   type: actionTypes.FETCH_COMBINED_GPS_DATA_SUCCESS,

@@ -160,14 +160,7 @@ const MyGpsScreen = ({navigation}) => {
   const renderGpsItem = useMemo(
     () =>
       ({item}) =>
-        (
-          <GpsItem
-            item={item}
-            icon={true}
-            navigation={navigation}
-            // isDisable={!wsConnected}
-          />
-        ),
+        <GpsItem item={item} icon={true} navigation={navigation} />,
     [navigation, wsConnected],
   );
 
@@ -198,7 +191,7 @@ const MyGpsScreen = ({navigation}) => {
         ) : (
           <FlatList
             data={mergedDeviceData}
-            initialNumToRender={6}
+            initialNumToRender={4}
             showsVerticalScrollIndicator={false}
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}

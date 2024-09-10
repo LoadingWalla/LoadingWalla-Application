@@ -36,7 +36,8 @@ import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 
 export default function PlayJourney({navigation, route}) {
-  const {deviceId, from, to, name} = route.params;
+  const {deviceId, from, to, name, item} = route.params;
+  console.log(1111, 'PlayJourney Parmas----->', route);
 
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -63,7 +64,11 @@ export default function PlayJourney({navigation, route}) {
     fullAddressData,
     gpsSummaryLoading,
     gpsSummaryData,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log(55555, 'playJourney---->', state.data);
+
+    return state.data;
+  });
 
   const {wsConnected} = useSelector(state => state.wsData);
 
@@ -84,9 +89,13 @@ export default function PlayJourney({navigation, route}) {
   useFocusEffect(
     React.useCallback(() => {
       const defaultFrom =
-        from || moment().utcOffset(330).startOf('day').toISOString();
+        // from || moment().utcOffset(330).startOf('day').toISOString();
+        from || moment().utc().startOf('day').toISOString();
+
       const defaultTo =
-        to || moment().utcOffset(330).endOf('day').toISOString();
+        // to || moment().utcOffset(330).endOf('day').toISOString();
+
+        to || moment().utc().endOf('day').toISOString();
 
       const fetchData = async () => {
         await dispatch(
@@ -388,7 +397,7 @@ export default function PlayJourney({navigation, route}) {
       )}
       {!loading && !isDataAvailable() && (
         <View style={styles.noDataContainer}>
-          <Text style={styles.noDataText}>No data available</Text>
+          {/* <Text style={styles.noDataText}>No data available</Text> */}
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>

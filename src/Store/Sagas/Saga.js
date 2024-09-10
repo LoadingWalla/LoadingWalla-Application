@@ -1,4 +1,4 @@
-import {put} from 'redux-saga/effects';
+import {call, cancel, cancelled, fork, put} from 'redux-saga/effects';
 import * as actions from '../Actions/Actions';
 import API from '../../Utils/FetchClient';
 import multiPartApi from '../../Utils/multiPartApi';
@@ -550,11 +550,47 @@ export function* getWallet() {
   }
 }
 
+// cancel all api before logout
+function* apiCall() {
+  // const controller = new AbortController();
+  // const signal = controller.signal;
+  // try {
+  //   const response = yield call(
+  //     fetch,
+  //     'https://loadingwalla.com/api/gps/devices?username=%2B919708278288%40loadingwalla.com&password=%2B919708278288%4076009',
+  //     {
+  //       method: 'GET',
+  //       signal,
+  //     },
+  //   );
+  //   const data = yield response.json();
+  //   console.log('API call completed:', data);
+  //   // Handle successful response if needed
+  // } finally {
+  //   if (yield cancelled()) {
+  //     // Abort the API call if the saga is cancelled
+  //     controller.abort();
+  //     console.log('GPS devices API call was cancelled');
+  //   }
+  // }
+  try {
+    // Simulating some API call here
+    // const data = yield call(API.get, 'some-api-endpoint');
+    console.log('API call completed');
+  } finally {
+    if (yield cancelled()) {
+      console.log('API call was cancelled');
+    }
+  }
+}
+
 // Saga Logout
 export function* logout() {
   try {
+    const apiTask = yield fork(apiCall);
     const data = yield API.get('logout');
     if (data?.data?.status === 200) {
+      yield cancel(apiTask);
       yield put(actions.logoutSuccess(data));
     } else {
       yield put(actions.logoutFailure(data.status));
@@ -1167,13 +1203,13 @@ export function* fetchGpsNotifications({username, password}) {
 // gps replay
 export function* fetchGpsReplay({username, password, deviceId, from, to}) {
   try {
-    // console.log(999999, username, password, deviceId, from, to);
+    console.log(999999, 'replaydata', username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `positions?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
-    // console.log('Gps Replay', data);
+    console.log('Gps Replay', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchPositionsSuccess(data?.data));
@@ -1213,7 +1249,7 @@ export function* fetchGpsRoute({username, password, deviceId, from, to}) {
 // gps stops
 export function* fetchGpsStops({username, password, deviceId, from, to}) {
   try {
-    // console.log(999999, username, password, deviceId, from, to);
+    console.log(999999, 'stops data', username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/stops?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
@@ -1235,7 +1271,7 @@ export function* fetchGpsStops({username, password, deviceId, from, to}) {
 // gps trips
 export function* fetchGpsTrips({username, password, deviceId, from, to}) {
   try {
-    console.log(99888999, username, password, deviceId, from, to);
+    // console.log(99888999, username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/trips?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
@@ -1264,30 +1300,22 @@ export function* fetchGpsCombinedData({
   to,
 }) {
   try {
-    console.log(
-      'GPS Combined Data ----------->',
-      username,
-      password,
-      deviceId,
-      from,
-      to,
-    );
     const data = yield gpsApi.get(
       `reports/combined?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
-    console.log('GPS Combined Data -----------> --------------->', data);
+    console.log(1111, 'GPS Combined Data -------->', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchCombinedGpsDataSuccess(data?.data));
     } else {
       yield put(actions.fetchCombinedGpsDataFailure(data));
-      console.log('else', data);
+      // console.log('else', data);
     }
   } catch (error) {
     yield put(actions.fetchCombinedGpsDataFailure(error.message));
-    console.log('error4444', error);
+    // console.log('error4444', error);
   }
 }
 

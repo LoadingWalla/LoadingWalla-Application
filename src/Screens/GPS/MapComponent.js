@@ -17,6 +17,8 @@ import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../../Color/color';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import {useFocusEffect} from '@react-navigation/native';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -30,9 +32,18 @@ const MapComponent = ({
   navigation,
   routeData,
 }) => {
+  console.log(
+    11111,
+    'MapComponent--->',
+    initialRegion,
+    item,
+    positions,
+    routeData,
+  );
+
   const [mapType, setMapType] = useState('standard');
   const [previousPosition, setPreviousPosition] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   const [polylineReady, setPolylineReady] = useState(false);
   const mapRef = useRef();
   const markerRef = useRef();
@@ -105,11 +116,12 @@ const MapComponent = ({
       }
 
       // Hide loader after everything is rendered
-      setLoading(false);
+      // setLoading(false);
     }
   }, [positions, previousPosition, dispatch]);
 
   // Combine positions and routeData
+  // console.log(333333, routeData);
   const combinedRouteData = useMemo(() => {
     const routeDataCoords = routeData.map(({latitude, longitude}) => ({
       latitude,
@@ -130,8 +142,9 @@ const MapComponent = ({
           latitude: position.latitude,
           longitude: position.longitude,
         }}
-        ref={index === 0 ? markerRef : null}>
+        ref={markerRef}>
         <ActiveLocation size={40} course={50} />
+        {/* <TruckNavigationIcon size={30} /> */}
         <Callout tooltip>
           <View style={styles.calloutView}>
             <Text style={styles.calloutText}>
@@ -145,13 +158,13 @@ const MapComponent = ({
 
   return (
     <View style={styles.mapContainer}>
-      {loading && (
+      {/* {loading && (
         <ActivityIndicator
           size="large"
           color={backgroundColorNew}
           style={styles.loader}
         />
-      )}
+      )} */}
 
       <MapView
         ref={mapRef}
@@ -159,18 +172,16 @@ const MapComponent = ({
         style={StyleSheet.absoluteFillObject}
         initialRegion={initialMapRegion}
         onLayout={handleMapLayout}>
-        {positions.length > 0 && (
-          <>
-            {renderMarkers}
-            {polylineReady && (
-              <Polyline
-                coordinates={combinedRouteData}
-                strokeColor="blue"
-                strokeWidth={3}
-              />
-            )}
-          </>
-        )}
+        <>
+          {renderMarkers}
+          {polylineReady && (
+            <Polyline
+              coordinates={combinedRouteData}
+              strokeColor="blue"
+              strokeWidth={3}
+            />
+          )}
+        </>
       </MapView>
 
       <TouchableOpacity style={styles.mapToggleButton} onPress={toggleMapType}>
@@ -205,7 +216,7 @@ const MapComponent = ({
           <View style={styles.verticalLine} />
           <View style={styles.infoColumn}>
             <Text style={styles.boldText}>
-              {`${Math.ceil(
+              {`${Math.floor(
                 (positions[0]?.speed || item?.position[0]?.speed) * 1.852,
               )} KMPH`}
             </Text>
@@ -218,9 +229,12 @@ const MapComponent = ({
           onPress={() =>
             navigation.navigate('PlayJourney', {
               deviceId: item?.id,
-              from: moment().utcOffset(330).startOf('day').toISOString(),
-              to: moment().utcOffset(330).endOf('day').toISOString(),
+              from: moment().utc().startOf('day').toISOString(),
+              to: moment().utc().endOf('day').toISOString(),
+              // from: moment().utcOffset(330).startOf('day').toISOString(),
+              // to: moment().utcOffset(330).endOf('day').toISOString(),
               name: item?.name,
+              item,
             })
           }>
           <PlayIcon
@@ -291,7 +305,8 @@ const styles = StyleSheet.create({
   calloutView: {
     width: 300,
     borderRadius: 8,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
     backgroundColor: 'rgba(1, 1, 0, 0.5)',
     borderColor: '#707070',
     marginBottom: 5,

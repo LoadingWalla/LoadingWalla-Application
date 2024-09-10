@@ -111,7 +111,7 @@ function* websocketSaga() {
   while (true) {
     const {payload} = yield take(actionTypes.WEBSOCKET_CONNECT);
     const {cookie} = payload;
-    // console.log('WebSocket connection requested with cookie:', cookie);
+    console.log('WebSocket connection requested with cookie:', cookie);
 
     if (connectionTask) {
       yield cancel(connectionTask);
