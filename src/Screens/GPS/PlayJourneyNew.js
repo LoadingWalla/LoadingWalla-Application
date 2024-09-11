@@ -116,7 +116,7 @@ export default function PlayJourneyNew({navigation, route}) {
               latitude: newPosition?.latitude,
               longitude: newPosition?.longitude,
               duration: 1000 / playbackSpeed,
-              useNativeDriver: false,
+              useNativeDriver: true,
             })
             .start();
 
@@ -189,7 +189,7 @@ export default function PlayJourneyNew({navigation, route}) {
           latitude: nextStop.latitude,
           longitude: nextStop.longitude,
           duration: 500,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
         .start();
       setCurrentStop(nextStop);
@@ -212,7 +212,7 @@ export default function PlayJourneyNew({navigation, route}) {
           latitude: prevStop.latitude,
           longitude: prevStop.longitude,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
         .start();
       setCurrentStop(prevStop);
@@ -406,7 +406,7 @@ export default function PlayJourneyNew({navigation, route}) {
                     latitude: newPosition.latitude,
                     longitude: newPosition.longitude,
                     duration: 500,
-                    useNativeDriver: false,
+                    useNativeDriver: true,
                   })
                   .start();
                 if (mapRef.current && newPosition) {

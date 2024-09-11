@@ -156,165 +156,160 @@ const ICONS = (item, positions) =>
     ];
   }, [item, positions]);
 
-const BottomSwipeUpContainer = ({
-  navigation,
-  latitude,
-  longitude,
-  item,
-  positions,
-  gpsRelayData,
-}) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [switchOn, setSwitchOn] = useState(false);
-  const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
+const BottomSwipeUpContainer = React.memo(
+  ({navigation, latitude, longitude, item, positions, gpsRelayData}) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [switchOn, setSwitchOn] = useState(false);
+    const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
 
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onMoveShouldSetPanResponder: (evt, gestureState) => {
-          // Allow pan responder only when there's significant vertical movement
-          return Math.abs(gestureState.dy) > 0;
-        },
-        onPanResponderMove: (evt, gestureState) => {
-          // Disable further swipe-up when already expanded
-          if (isExpanded && gestureState.dy < 0) {
-            return;
-          }
-          const newHeight = Math.max(
-            MIN_HEIGHT,
-            Math.min(MAX_HEIGHT, MIN_HEIGHT - gestureState.dy),
-          );
-          animatedHeight.setValue(newHeight);
-        },
-        onPanResponderRelease: (evt, gestureState) => {
-          if (gestureState.dy < 0 && !isExpanded) {
-            // Swipe up to expand
-            setIsExpanded(true);
-            Animated.timing(animatedHeight, {
-              toValue: MAX_HEIGHT,
-              duration: 300,
-              easing: Easing.out(Easing.ease),
-              useNativeDriver: false,
-            }).start();
-          } else if (gestureState.dy > 0 && isExpanded) {
-            // Swipe down to collapse
-            setIsExpanded(false);
-            Animated.spring(animatedHeight, {
-              toValue: MIN_HEIGHT,
-              friction: 5,
-              tension: 30,
-              useNativeDriver: false,
-            }).start();
-          }
-        },
-      }),
-    [isExpanded, animatedHeight],
-  );
+    const panResponder = useMemo(
+      () =>
+        PanResponder.create({
+          onMoveShouldSetPanResponder: (evt, gestureState) => {
+            // Allow pan responder only when there's significant vertical movement
+            return Math.abs(gestureState.dy) > 0;
+          },
+          onPanResponderMove: (evt, gestureState) => {
+            // Disable further swipe-up when already expanded
+            if (isExpanded && gestureState.dy < 0) {
+              return;
+            }
+            const newHeight = Math.max(
+              MIN_HEIGHT,
+              Math.min(MAX_HEIGHT, MIN_HEIGHT - gestureState.dy),
+            );
+            animatedHeight.setValue(newHeight);
+          },
+          onPanResponderRelease: (evt, gestureState) => {
+            if (gestureState.dy < 0 && !isExpanded) {
+              // Swipe up to expand
+              setIsExpanded(true);
+              Animated.timing(animatedHeight, {
+                toValue: MAX_HEIGHT,
+                duration: 300,
+                easing: Easing.out(Easing.ease),
+                useNativeDriver: false,
+              }).start();
+            } else if (gestureState.dy > 0 && isExpanded) {
+              // Swipe down to collapse
+              setIsExpanded(false);
+              Animated.spring(animatedHeight, {
+                toValue: MIN_HEIGHT,
+                friction: 5,
+                tension: 30,
+                useNativeDriver: false,
+              }).start();
+            }
+          },
+        }),
+      [isExpanded, animatedHeight],
+    );
 
-  // console.log(1111111, item, positions);
+    // console.log(1111111, item, positions);
 
-  const toggleSwitch = useCallback(() => {
-    setSwitchOn(prevState => !prevState);
-  }, []);
+    const toggleSwitch = useCallback(() => {
+      setSwitchOn(prevState => !prevState);
+    }, []);
 
-  const onNavigatePress = () => {
-    const destination = positions[positions.length - 1] || item?.position[0];
-    if (destination) {
-      const url = `google.navigation:q=${destination.latitude},${destination.longitude}`;
-      Linking.openURL(url).catch(err =>
-        console.error('Error opening Google Maps', err),
-      );
-    }
-  };
+    const onNavigatePress = () => {
+      const destination = positions[positions.length - 1] || item?.position[0];
+      if (destination) {
+        const url = `google.navigation:q=${destination.latitude},${destination.longitude}`;
+        Linking.openURL(url).catch(err =>
+          console.error('Error opening Google Maps', err),
+        );
+      }
+    };
 
-  const onHistoryPress = () => {
-    console.log('History Pressed');
-    navigation.navigate('LocationHistory', {
-      deviceId: item?.id,
-      name: item?.name,
-      from: moment().utcOffset(330).startOf('day').toISOString(),
-      to: moment().utcOffset(330).endOf('day').toISOString(),
-    });
-  };
+    const onHistoryPress = () => {
+      console.log('History Pressed');
+      navigation.navigate('LocationHistory', {
+        deviceId: item?.id,
+        name: item?.name,
+        from: moment().utcOffset(330).startOf('day').toISOString(),
+        to: moment().utcOffset(330).endOf('day').toISOString(),
+      });
+    };
 
-  const onGeozonePress = () => {
-    navigation.navigate('geofencing', {
-      deviceId: item?.id,
-      lat: positions[0]?.latitude || item.position[0]?.latitude,
-      lon: positions[0]?.longitude || item.position[0]?.longitude,
-      name: item?.name,
-    });
-  };
+    const onGeozonePress = () => {
+      navigation.navigate('geofencing', {
+        deviceId: item?.id,
+        lat: positions[0]?.latitude || item.position[0]?.latitude,
+        lon: positions[0]?.longitude || item.position[0]?.longitude,
+        name: item?.name,
+      });
+    };
 
-  const onTheftPress = () => {
-    navigation.navigate('FuelPump', {
-      headerTitle: 'Nearby Police Station',
-      theft: true,
-      latitude: positions[0]?.latitude || item?.position[0]?.latitude,
-      longitude: positions[0]?.longitude || item?.position[0]?.longitude,
-    });
-  };
+    const onTheftPress = () => {
+      navigation.navigate('FuelPump', {
+        headerTitle: 'Nearby Police Station',
+        theft: true,
+        latitude: positions[0]?.latitude || item?.position[0]?.latitude,
+        longitude: positions[0]?.longitude || item?.position[0]?.longitude,
+      });
+    };
 
-  const onRelayPress = () => {
-    navigation.navigate('GpsRelay', {
-      deviceId: item?.id,
-      item: item,
-      gpsRelayData,
-    });
-  };
+    const onRelayPress = () => {
+      navigation.navigate('GpsRelay', {
+        deviceId: item?.id,
+        item: item,
+        gpsRelayData,
+      });
+    };
 
-  const onFuelPumpPress = () => {
-    navigation.navigate('FuelPump', {
-      headerTitle: 'Fuel Pump',
-      theft: false,
-      latitude: positions[0]?.latitude || item?.position[0]?.latitude,
-      longitude: positions[0]?.longitude || item?.position[0]?.longitude,
-    });
-  };
+    const onFuelPumpPress = () => {
+      navigation.navigate('FuelPump', {
+        headerTitle: 'Fuel Pump',
+        theft: false,
+        latitude: positions[0]?.latitude || item?.position[0]?.latitude,
+        longitude: positions[0]?.longitude || item?.position[0]?.longitude,
+      });
+    };
 
-  return (
-    <Animated.View
-      style={[styles.bottomContainer, {height: animatedHeight}]}
-      {...panResponder.panHandlers}>
-      <View style={styles.swipeIndicator} />
-      <View style={styles.iconRow}>
-        {ICONS(item, positions).map((iconItem, index) => (
-          <View key={index} style={styles.iconContainer}>
-            <IconWithNameBelow
-              IconComponent={iconItem.icon}
-              iconSize={SCREEN_WIDTH * 0.05}
-              title={iconItem.title}
-              color={iconItem.color}
-            />
-          </View>
-        ))}
-      </View>
+    return (
+      <Animated.View
+        style={[styles.bottomContainer, {height: animatedHeight}]}
+        {...panResponder.panHandlers}>
+        <View style={styles.swipeIndicator} />
+        <View style={styles.iconRow}>
+          {ICONS(item, positions).map((iconItem, index) => (
+            <View key={index} style={styles.iconContainer}>
+              <IconWithNameBelow
+                IconComponent={iconItem.icon}
+                iconSize={SCREEN_WIDTH * 0.05}
+                title={iconItem.title}
+                color={iconItem.color}
+              />
+            </View>
+          ))}
+        </View>
 
-      <View style={styles.infoSection}>
-        {renderButtonSections({
-          onNavigatePress,
-          onHistoryPress,
-          onGeozonePress,
-          onTheftPress,
-          onRelayPress,
-          onFuelPumpPress,
-          gpsRelayData,
-        })}
-      </View>
+        <View style={styles.infoSection}>
+          {renderButtonSections({
+            onNavigatePress,
+            onHistoryPress,
+            onGeozonePress,
+            onTheftPress,
+            onRelayPress,
+            onFuelPumpPress,
+            gpsRelayData,
+          })}
+        </View>
 
-      <View style={styles.parkingAlarm}>
-        <Text style={styles.parkingText}>Parking Alarm</Text>
-        <Switch
-          isOn={switchOn}
-          onColor={GradientColor2}
-          offColor={seperator}
-          size="small"
-          onToggle={toggleSwitch}
-        />
-      </View>
-    </Animated.View>
-  );
-};
+        <View style={styles.parkingAlarm}>
+          <Text style={styles.parkingText}>Parking Alarm</Text>
+          <Switch
+            isOn={switchOn}
+            onColor={GradientColor2}
+            offColor={seperator}
+            size="small"
+            onToggle={toggleSwitch}
+          />
+        </View>
+      </Animated.View>
+    );
+  },
+);
 
 export default BottomSwipeUpContainer;
 

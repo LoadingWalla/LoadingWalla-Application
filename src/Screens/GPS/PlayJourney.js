@@ -164,7 +164,7 @@ export default function PlayJourney({navigation, route}) {
                 latitude: newPosition.latitude,
                 longitude: newPosition.longitude,
                 duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
-                useNativeDriver: false,
+                useNativeDriver: true,
               })
               .start();
 
@@ -249,7 +249,7 @@ export default function PlayJourney({navigation, route}) {
           latitude: nextStop.latitude,
           longitude: nextStop.longitude,
           duration: 500,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
         .start();
 
@@ -309,7 +309,7 @@ export default function PlayJourney({navigation, route}) {
   //         latitude: nextStop.latitude,
   //         longitude: nextStop.longitude,
   //         duration: 500,
-  //         useNativeDriver: false,
+  //         useNativeDriver: true,
   //       })
   //       .start();
   //     setCurrentStop(nextStop);
@@ -332,7 +332,7 @@ export default function PlayJourney({navigation, route}) {
   //         latitude: prevStop.latitude,
   //         longitude: prevStop.longitude,
   //         duration: 1000,
-  //         useNativeDriver: false,
+  //         useNativeDriver: true,
   //       })
   //       .start();
   //     setCurrentStop(prevStop);
@@ -555,7 +555,7 @@ export default function PlayJourney({navigation, route}) {
                         latitude: newPosition.latitude,
                         longitude: newPosition.longitude,
                         duration: 500,
-                        useNativeDriver: false,
+                        useNativeDriver: true,
                       })
                       .start();
                     if (mapRef.current && newPosition) {

@@ -84,7 +84,7 @@ const Geofencing = ({navigation, route}) => {
           latitude: position.latitude,
           longitude: position.longitude,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
         .start();
     }

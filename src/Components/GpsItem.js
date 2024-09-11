@@ -14,7 +14,7 @@ import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 
 const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  console.log(444444, 'GpsItem---->', item);
+  // console.log(444444, 'GpsItem---->', item);
 
   const {
     position = [],
@@ -29,7 +29,7 @@ const GpsItem = ({navigation, item}) => {
     category = 'default',
   } = item;
 
-  const attributes = position[0]?.attributes || {};
+  const attributes = useMemo(() => position[0]?.attributes || {}, [position]);
   const {
     ignition,
     motion,
@@ -41,10 +41,7 @@ const GpsItem = ({navigation, item}) => {
     charge,
   } = attributes;
 
-  const isNavigationDisabled = useMemo(
-    () => disabled || position.length === 0 || !position[0]?.latitude,
-    [disabled, position],
-  );
+  const isNavigationDisabled = useMemo(() => disabled, [disabled]);
 
   const showAlert = useCallback(message => AlertBox(message), []);
 
@@ -91,9 +88,14 @@ const GpsItem = ({navigation, item}) => {
     );
   }, [status, lastUpdate]);
 
-  const ignitionStatus = ignition || motion ? 'on' : 'off';
-  const speedInKnots = position[0]?.speed || 0;
-  const speedText = Math.floor(speedInKnots * 1.852);
+  const ignitionStatus = useMemo(
+    () => (ignition || motion ? 'on' : 'off'),
+    [ignition, motion],
+  );
+  const speedText = useMemo(
+    () => Math.floor((position[0]?.speed || 0) * 1.852),
+    [position],
+  );
 
   return (
     <View style={styles.cardContainer}>
@@ -172,10 +174,7 @@ const GpsItem = ({navigation, item}) => {
       </TouchableOpacity>
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>
-          {/* {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')} */}
-          {moment(lastUpdate)
-            .utcOffset('+05:30')
-            .format('MMM DD, YYYY hh:mm A')}
+          {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')}
         </Text>
         <View style={styles.verticalLine} />
         <View style={styles.footerDistanceContainer}>

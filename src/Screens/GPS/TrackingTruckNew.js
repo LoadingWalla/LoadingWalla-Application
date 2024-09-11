@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -94,11 +94,13 @@ const TrackingTruckNew = ({navigation, route}) => {
     }, []),
   );
 
-  const [filteredPositions, setFilteredPositions] = useState([]);
-  useEffect(() => {
-    // Filter positions whenever wsMessages22 or deviceId changes
-    const positions = getFilteredPositions(wsMessages22, deviceId);
-    setFilteredPositions(positions);
+  // const [filteredPositions, setFilteredPositions] = useState([]);
+  // useEffect(() => {
+  //   const positions = getFilteredPositions(wsMessages22, deviceId);
+  //   setFilteredPositions(positions);
+  // }, [wsMessages22, deviceId]);
+  const filteredPositions = useMemo(() => {
+    return getFilteredPositions(wsMessages22, deviceId);
   }, [wsMessages22, deviceId]);
 
   return (

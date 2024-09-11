@@ -1,11 +1,9 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   FlatList,
   ActivityIndicator,
-  Image,
   RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -21,7 +19,6 @@ import {
   initProfile,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
-import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import EmptyListComponent from '../../Components/EmptyListComponent';
 
@@ -143,7 +140,6 @@ const MyGpsScreen = ({navigation}) => {
     [],
   );
 
-  // Update merged device data when data changes
   useEffect(() => {
     if (gpsDeviceData) {
       const updatedData = mergeDeviceData(
@@ -156,11 +152,8 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
-  // Memoized render function for GpsItem
-  const renderGpsItem = useMemo(
-    () =>
-      ({item}) =>
-        <GpsItem item={item} icon={true} navigation={navigation} />,
+  const renderGpsItem = useCallback(
+    ({item}) => <GpsItem item={item} icon={true} navigation={navigation} />,
     [navigation, wsConnected],
   );
 
@@ -192,6 +185,8 @@ const MyGpsScreen = ({navigation}) => {
           <FlatList
             data={mergedDeviceData}
             initialNumToRender={4}
+            maxToRenderPerBatch={5}
+            windowSize={5}
             showsVerticalScrollIndicator={false}
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
