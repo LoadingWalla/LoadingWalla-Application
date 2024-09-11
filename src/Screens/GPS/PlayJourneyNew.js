@@ -27,7 +27,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import MapComponent from './MapComponent';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
-export default function PlayJourney({navigation, route}) {
+export default function PlayJourneyNew({navigation, route}) {
   const {deviceId, from, to} = route.params;
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);

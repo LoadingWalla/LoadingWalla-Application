@@ -7,12 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import MapView, {
-  AnimatedRegion,
-  Callout,
-  Marker,
-  Polyline,
-} from 'react-native-maps';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';

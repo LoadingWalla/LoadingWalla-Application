@@ -87,6 +87,7 @@ import Geofencing from '../Screens/GPS/Geofencing';
 import HeaderMenuButton from '../Components/HeaderMenuButton';
 import GpsRelay from '../Screens/GPS/GpsRelay';
 import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
+import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -1865,6 +1866,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="PlayJourney"
         component={PlayJourney}
+        // component={PlayJourneyNew}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',

@@ -43,8 +43,6 @@ const MapComponent = ({
 
   const [mapType, setMapType] = useState('standard');
   const [previousPosition, setPreviousPosition] = useState(null);
-  // const [loading, setLoading] = useState(true);
-  const [polylineReady, setPolylineReady] = useState(false);
   const mapRef = useRef();
   const markerRef = useRef();
   const dispatch = useDispatch();
@@ -110,13 +108,7 @@ const MapComponent = ({
           },
           1000,
         );
-
-        // Delay drawing the polyline until marker has moved
-        setTimeout(() => setPolylineReady(true), 1000);
       }
-
-      // Hide loader after everything is rendered
-      // setLoading(false);
     }
   }, [positions, previousPosition, dispatch]);
 
@@ -135,37 +127,48 @@ const MapComponent = ({
   }, [routeData, positions]);
 
   const renderMarkers = useMemo(() => {
-    return positions.map((position, index) => (
-      <Marker
-        key={index}
-        coordinate={{
-          latitude: position.latitude,
-          longitude: position.longitude,
-        }}
-        ref={markerRef}>
-        <ActiveLocation size={40} course={50} />
-        {/* <TruckNavigationIcon size={30} /> */}
-        <Callout tooltip>
-          <View style={styles.calloutView}>
-            <Text style={styles.calloutText}>
-              {fullAddressData === null ? item?.address : fullAddressData}
-            </Text>
-          </View>
-        </Callout>
-      </Marker>
-    ));
-  }, [positions, fullAddressData, item]);
+    if (positions.length === 0 || !positions[0]) {
+      return (
+        <Marker
+          coordinate={{
+            latitude: initialRegion.latitude,
+            longitude: initialRegion.longitude,
+          }}
+          ref={markerRef}>
+          <ActiveLocation size={40} course={50} />
+          <Callout tooltip>
+            <View style={styles.calloutView}>
+              <Text style={styles.calloutText}>
+                {fullAddressData === null ? item?.address : fullAddressData}
+              </Text>
+            </View>
+          </Callout>
+        </Marker>
+      );
+    } else {
+      return positions.map((position, index) => (
+        <Marker
+          key={index}
+          coordinate={{
+            latitude: position.latitude,
+            longitude: position.longitude,
+          }}
+          ref={markerRef}>
+          <ActiveLocation size={40} course={50} />
+          <Callout tooltip>
+            <View style={styles.calloutView}>
+              <Text style={styles.calloutText}>
+                {fullAddressData === null ? item?.address : fullAddressData}
+              </Text>
+            </View>
+          </Callout>
+        </Marker>
+      ));
+    }
+  }, [positions, initialRegion, fullAddressData, item]);
 
   return (
     <View style={styles.mapContainer}>
-      {/* {loading && (
-        <ActivityIndicator
-          size="large"
-          color={backgroundColorNew}
-          style={styles.loader}
-        />
-      )} */}
-
       <MapView
         ref={mapRef}
         mapType={mapType}
@@ -174,13 +177,11 @@ const MapComponent = ({
         onLayout={handleMapLayout}>
         <>
           {renderMarkers}
-          {polylineReady && (
-            <Polyline
-              coordinates={combinedRouteData}
-              strokeColor="blue"
-              strokeWidth={3}
-            />
-          )}
+          <Polyline
+            coordinates={combinedRouteData}
+            strokeColor="blue"
+            strokeWidth={3}
+          />
         </>
       </MapView>
 
