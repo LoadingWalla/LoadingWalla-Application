@@ -223,10 +223,8 @@ const MapComponent = React.memo(
             onPress={() =>
               navigation.navigate('PlayJourney', {
                 deviceId: item?.id,
-                from: moment().utc().startOf('day').toISOString(),
-                to: moment().utc().endOf('day').toISOString(),
-                // from: moment().utcOffset(330).startOf('day').toISOString(),
-                // to: moment().utcOffset(330).endOf('day').toISOString(),
+                from: moment().utcOffset(330).startOf('day').toISOString(),
+                to: moment().utcOffset(330).endOf('day').toISOString(),
                 name: item?.name,
                 item,
               })

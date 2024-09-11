@@ -141,32 +141,10 @@ const TrackingTruck = ({navigation, route}) => {
     }),
   ).current;
 
-  // useEffect(() => {
-  //   if (gpsReplayData && gpsReplayData.length > 0) {
-  //     const replayPositions = gpsReplayData.map(position => ({
-  //       latitude: position.latitude,
-  //       longitude: position.longitude,
-  //       // totalDistance: position.attributes.totalDistance,
-  //     }));
-  //     setLivePositions(replayPositions);
-  //     setLoading(false);
-  //     if (replayPositions.length > 0) {
-  //       animatedMarkerPosition.setValue({
-  //         latitude: replayPositions[replayPositions.length - 1].latitude,
-  //         longitude: replayPositions[replayPositions.length - 1].longitude,
-  //         latitudeDelta: 0.0922,
-  //         longitudeDelta: 0.0421,
-  //       });
-  //     }
-  //   }
-  // }, [gpsReplayData]);
-
   const fetchPositions = useCallback(() => {
     if (gpsTokenData && deviceId) {
       const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
-      // const defaultFrom = moment().utc().startOf('day').toISOString();
-      // const defaultTo = moment().utc().endOf('day').toISOString();
       dispatch(
         fetchPositionsRequest(
           gpsTokenData.email,
@@ -497,8 +475,6 @@ const TrackingTruck = ({navigation, route}) => {
               navigation.navigate('LocationHistory', {
                 deviceId: deviceId,
                 name: name,
-                // from: moment().utc().startOf('day').toISOString(),
-                // to: moment().utc().endOf('day').toISOString(),
                 from: moment().utcOffset(330).startOf('day').toISOString(),
                 to: moment().utcOffset(330).endOf('day').toISOString(),
               })
@@ -554,8 +530,6 @@ const TrackingTruck = ({navigation, route}) => {
                 deviceId,
                 from: moment().utcOffset(330).startOf('day').toISOString(),
                 to: moment().utcOffset(330).endOf('day').toISOString(),
-                // from: moment().utc().startOf('day').toISOString(),
-                // to: moment().utc().endOf('day').toISOString(),
                 name: name,
               })
             }>

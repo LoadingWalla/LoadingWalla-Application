@@ -135,9 +135,6 @@ const LocationHistory = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
 
-  // const defaultFrom = from || moment().utc().startOf('day').toISOString();
-  // const defaultTo = to || moment().utc().endOf('day').toISOString();
-
   const {
     gpsTripsLoading,
     gpsTripsData,
