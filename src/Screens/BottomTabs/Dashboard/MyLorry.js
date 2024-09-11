@@ -5,11 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import * as Constants from '../../../Constants/Constant';
-import {
-  initMyLoad,
-  initMyLorry,
-  websocketDisconnect,
-} from '../../../Store/Actions/Actions';
+import {initMyLoad, initMyLorry} from '../../../Store/Actions/Actions';
 import MyLorryShimmer from '../../../Components/Shimmer/MyLorryShimmer';
 import MyLorryItem from '../../../Components/MyLorryItem';
 import DashboardHeader from '../../../Components/DashboardHeader';
@@ -18,6 +14,7 @@ import Button from '../../../Components/Button';
 import RenderTabBar from '../../Requests/RenderTabBar';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 function getRoutesForUserType(type, t) {
   if (type === '1') {
@@ -57,11 +54,12 @@ const MyLorry = ({navigation}) => {
     myLorryLoding,
     DashboardUser,
     dashboardLoading,
-    wsConnected,
   } = useSelector(state => {
     console.log('My Lorry/Load', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const routes = useMemo(() => getRoutesForUserType(userType, t), [userType]);
 

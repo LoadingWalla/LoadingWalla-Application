@@ -2,7 +2,8 @@ import {eventChannel} from 'redux-saga';
 import {take, call, put, fork, cancel, delay} from 'redux-saga/effects';
 import {WS_URL} from '../../Utils/Url';
 import * as actionTypes from '../Actions/ActionTypes';
-import * as actions from '../Actions/Actions';
+import * as actions from '../Actions/WebSocketActions';
+import {throttle} from 'lodash';
 
 function createWebSocketChannel(cookie) {
   return eventChannel(emit => {
@@ -18,8 +19,14 @@ function createWebSocketChannel(cookie) {
 
     ws.onmessage = event => {
       const data = JSON.parse(event.data);
-      console.log('websocket onmessage', data);
-      emit(actions.websocketMessage(data));
+      // console.log('------------------websocket onmessage', data);
+      // Check if the data object is not empty before emitting the action
+      if (data && Object.keys(data).length > 0) {
+        console.log('------------------websocket onmessage', data);
+        emit(actions.websocketMessage(data));
+      } else {
+        console.log('----Received an empty object, not emitting action.-----');
+      }
     };
 
     ws.onerror = error => {
@@ -52,41 +59,40 @@ function createWebSocketChannel(cookie) {
   });
 }
 
+// Handle WebSocket connection
 function* handleWebSocketConnection(cookie) {
   const channel = yield call(createWebSocketChannel, cookie);
+
+  // Throttle data processing
+  const handleWebSocketMessage = throttle(function* (data) {
+    if (data.devices && data.devices.length > 0) {
+      // console.log('<<<<<<<<<<<<<< devices true');
+      yield put(actions.updateDevices(data.devices));
+    }
+
+    if (data.positions && data.positions.length > 0) {
+      // console.log('<<<<<<<<<<<<<< positions true');
+      yield put(actions.updatePositions(data.positions));
+    }
+
+    if (data.events && data.events.length > 0) {
+      // console.log('<<<<<<<<<<<<<< events true');
+      yield put(actions.updateEvents(data.events));
+    } else {
+      // console.log('<<<<<<<<<<<<<< all true');
+      yield put(actions.websocketMessage(data));
+    }
+  }, 500); // Process data at most once per second
 
   try {
     while (true) {
       const action = yield take(channel);
-      yield put(action);
 
       if (action.type === actionTypes.WEBSOCKET_MESSAGE) {
-        // console.log(123456789, action.payload);
+        const data = action.payload;
 
-        // Add checks to ensure action.payload is not null or undefined and not an empty object
-        if (action.payload && Object.keys(action.payload).length !== 0) {
-          const {devices, positions, events} = action.payload;
-          // console.log(987654321, devices, 11111, positions, 222222, events);
-
-          // Update devices if they exist and are not empty
-          if (devices && devices.length > 0) {
-            // console.log(33333, devices);
-            yield put(actions.updateDevices(devices));
-          }
-
-          // Update positions if they exist and are not empty
-          if (positions && positions.length > 0) {
-            // console.log(11111, positions);
-            yield put(actions.updatePositions(positions));
-          }
-
-          // Update events if they exist and are not empty
-          if (events && events.length > 0) {
-            // console.log(222222, events);
-            yield put(actions.updateEvents(events));
-          }
-        } else {
-          // console.log('Received empty payload in WEBSOCKET_MESSAGE');
+        if (data && Object.keys(data).length !== 0) {
+          yield* handleWebSocketMessage(data);
         }
       } else if (action.type === actionTypes.WEBSOCKET_CLOSED) {
         console.log('WebSocket connection closed');
@@ -119,14 +125,13 @@ function* websocketSaga() {
     ]);
 
     if (action.type === actionTypes.WEBSOCKET_DISCONNECT) {
-      console.log('WebSocket disconnect requested');
+      // console.log('WebSocket disconnect requested');
       yield cancel(connectionTask);
       console.log('WebSocket connection cancelled Successfully');
     } else if (action.type === actionTypes.WEBSOCKET_RETRY) {
       retryCount++;
       if (retryCount <= 5) {
         console.log('WebSocket retry attempt:', retryCount);
-        // yield delay(5000); // Retry after 5 seconds
         const delayDuration = Math.min(2 ** retryCount * 1000, 30000); // Max delay of 30 seconds
         yield delay(delayDuration);
         connectionTask = yield fork(handleWebSocketConnection, cookie);

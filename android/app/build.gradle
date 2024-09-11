@@ -80,8 +80,8 @@ android {
         applicationId "com.loadingwalla"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20
-        versionName "6"
+        versionCode 24
+        versionName "7.1"
     }
     signingConfigs {
         debug {
@@ -106,10 +106,22 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
+            minifyEnabled false
             signingConfig signingConfigs.debug
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // for react-native-fs
+    android {
+        if (project.hasProperty('requestLegacyExternalStorage')) {
+            project.android {
+                defaultConfig {
+                    manifestPlaceholders = [requestLegacyExternalStorage: "true"]
+                }
+            }
         }
     }
 }
@@ -130,6 +142,8 @@ dependencies {
     implementation 'com.facebook.fresco:webpsupport:3.1.3'
     // For WebP support, without animations
     implementation 'com.facebook.fresco:webpsupport:3.1.3'
+    // react-native-fs
+    implementation project(':react-native-fs')
 
 
     if (hermesEnabled.toBoolean()) {

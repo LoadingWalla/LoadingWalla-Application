@@ -9,12 +9,13 @@ import Svg, {
   Ellipse,
 } from 'react-native-svg';
 
-function TruckNavigationIcon(props) {
+function TruckNavigationIcon({size}) {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 247.36 387.1"
-      {...props}>
+      height={size}
+      width={size}>
       <Defs>
         <LinearGradient
           id="a"

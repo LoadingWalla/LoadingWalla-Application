@@ -1006,6 +1006,10 @@ export const fetchGpsDevicesFailure = payload => ({
   payload,
 });
 
+export const clearGpsDeviceData = () => ({
+  type: actionTypes.CLEAR_GPS_DEVICES_DATA,
+});
+
 // single gps devices
 export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
   console.log(999999, username, password, deviceId);
@@ -1025,49 +1029,6 @@ export const fetchSingleGpsDeviceSuccess = payload => ({
 export const fetchSingleGpsDeviceFailure = payload => ({
   type: actionTypes.FETCH_SINGLE_GPS_DEVICE_FAILURE,
   payload,
-});
-
-// // Gps Websocket Connect
-// export const websocketConnect = cookie => ({
-//   type: actionTypes.WEBSOCKET_CONNECT,
-//   payload: {cookie},
-// });
-
-export const websocketDisconnect = () => ({
-  type: actionTypes.WEBSOCKET_DISCONNECT,
-});
-
-export const websocketMessage = message => ({
-  type: actionTypes.WEBSOCKET_MESSAGE,
-  payload: message,
-});
-
-export const websocketError = error => ({
-  type: actionTypes.WEBSOCKET_ERROR,
-  payload: error,
-});
-
-export const websocketClosed = () => ({
-  type: actionTypes.WEBSOCKET_CLOSED,
-});
-
-export const websocketRetry = () => ({
-  type: actionTypes.WEBSOCKET_RETRY,
-});
-
-export const updateDevices = devices => ({
-  type: actionTypes.UPDATE_DEVICES,
-  payload: devices,
-});
-
-export const updatePositions = positions => ({
-  type: actionTypes.UPDATE_POSITIONS,
-  payload: positions,
-});
-
-export const updateEvents = events => ({
-  type: actionTypes.UPDATE_EVENTS,
-  payload: events,
 });
 
 // GPS Address
@@ -1125,12 +1086,19 @@ export const fetchSummaryReportFailure = error => ({
   payload: error,
 });
 
-// GPS Notifications
-export const fetchGpsNotificationsRequest = (username, password) => ({
-  type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
-  username,
-  password,
+export const clearSummaryReportData = () => ({
+  type: actionTypes.CLEAR_SUMMARY_REPORT_DATA,
 });
+
+// GPS Notifications
+export const fetchGpsNotificationsRequest = (username, password) => {
+  console.log(444444444, username, password);
+  return {
+    type: actionTypes.FETCH_GPS_NOTIFICATIONS_REQUEST,
+    username,
+    password,
+  };
+};
 
 export const fetchGpsNotificationsSuccess = payload => ({
   type: actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS,
@@ -1215,9 +1183,13 @@ export const fetchGpsTripsSuccess = data => ({
   payload: data,
 });
 
-export const fetchGpsTripsFailure = error => ({
+export const fetchGpsTripsFailure = payload => ({
   type: actionTypes.FETCH_GPS_TRIPS_FAILURE,
-  payload: error,
+  payload,
+});
+
+export const clearGpsTripsData = () => ({
+  type: actionTypes.CLEAR_GPS_TRIPS_DATA,
 });
 
 // GPS Tripa
@@ -1303,12 +1275,13 @@ export const fetchGpsOrderDetailFailure = error => ({
 });
 
 // Get full address
-export const fetchAddressRequest = (lat, lan) => {
-  // console.log(8888888888888, lat, lan);
+export const fetchAddressRequest = (lat, lan, customId) => {
+  console.log(8888888888888, lat, lan, customId);
   return {
     type: actionTypes.FETCH_FULLADDRESS_REQUEST,
     lat,
     lan,
+    customId,
   };
 };
 
@@ -1359,6 +1332,63 @@ export const setGpsRelaySuccess = data => ({
 export const setGpsRelayFailure = error => ({
   type: actionTypes.SET_GPS_RELAY_FAILURE,
   payload: error,
+});
+
+// GPS Routes
+export const fetchRouteRequest = (username, password, deviceId, from, to) => {
+  // console.log('Gps Routes ---------->', username, password, deviceId, from, to);
+  return {
+    type: actionTypes.FETCH_ROUTES_REQUEST,
+    username,
+    password,
+    deviceId,
+    from,
+    to,
+  };
+};
+
+export const fetchRouteSuccess = data => ({
+  type: actionTypes.FETCH_ROUTES_SUCCESS,
+  payload: data,
+});
+
+export const fetchRouteFailure = error => ({
+  type: actionTypes.FETCH_POSITIONS_FAILURE,
+  payload: error,
+});
+
+// combined gps data
+export const fetchCombinedGpsDataRequest = (
+  username,
+  password,
+  deviceId,
+  from,
+  to,
+) => {
+  // console.log(1111111, username, password, deviceId, from, to);
+
+  return {
+    type: actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST,
+    username,
+    password,
+    deviceId,
+    from,
+    to,
+  };
+};
+
+export const fetchCombinedGpsDataSuccess = payload => ({
+  type: actionTypes.FETCH_COMBINED_GPS_DATA_SUCCESS,
+  payload,
+});
+
+export const fetchCombinedGpsDataFailure = payload => ({
+  type: actionTypes.FETCH_COMBINED_GPS_DATA_FAILURE,
+  payload,
+});
+
+export const clearCombinedGpsData = () => ({
+  type: actionTypes.CLEAR_COMBINED_GPS_DATA,
 });
 
 // Clear store on logout

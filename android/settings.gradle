@@ -6,3 +6,7 @@ includeBuild('../node_modules/@react-native/gradle-plugin')
 // react-native-vision-camera
 include ':react-native-vision-camera'
 project(':react-native-vision-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vision-camera/android')
+
+// react-native-fs for downloading csv file
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')

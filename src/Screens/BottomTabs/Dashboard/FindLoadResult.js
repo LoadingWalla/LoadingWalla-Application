@@ -46,7 +46,7 @@ const FindLoadResult = ({navigation, route}) => {
       toValue: 1,
       duration: 5000,
       easing: Easing.linear,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
   }, []);
 

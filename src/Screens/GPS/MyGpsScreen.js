@@ -1,11 +1,9 @@
-import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   FlatList,
   ActivityIndicator,
-  Image,
   RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,11 +17,10 @@ import {
   fetchGpsDevicesRequest,
   fetchTokenRequest,
   initProfile,
-  // websocketConnect,
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
-import InnerButton from '../../Components/InnerButton';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
+import EmptyListComponent from '../../Components/EmptyListComponent';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -33,24 +30,26 @@ const MyGpsScreen = ({navigation}) => {
     gpsTokenData,
     gpsDeviceLoading,
     gpsDeviceData,
-    wsPositions,
-    wsDevices,
-    wsEvents,
-    wsError,
-    wsConnected,
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    // console.log('MY Gps Screeen --------', state.data);
+    console.log('My Gps Screen---', state.data);
     return state.data;
   });
+
+  const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
+    state => {
+      console.log('WEBSOCKET My Gps Screen---', state.wsData);
+      return state.wsData;
+    },
+  );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Function to fetch GPS data
+  // Fetch GPS data
   const fetchGpsData = useCallback(() => {
-    if (gpsTokenData !== null) {
+    if (gpsTokenData) {
       const {cookie, email, password} = gpsTokenData;
       dispatch(websocketConnect(cookie));
       dispatch(
@@ -64,12 +63,14 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [dispatch, gpsTokenData]);
 
+  // Manual refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchGpsData();
     setRefreshing(false);
   }, [fetchGpsData]);
 
+  // Initial fetch on screen focus
   useFocusEffect(
     useCallback(() => {
       fetchGpsData();
@@ -79,13 +80,13 @@ const MyGpsScreen = ({navigation}) => {
       return () => {
         Snackbar.dismiss();
       };
-    }, [dispatch, fetchGpsData, gpsTokenData, DashboardUser]),
+    }, [dispatch, fetchGpsData, DashboardUser]),
   );
 
   useEffect(() => {
     if (wsError) {
       Snackbar.show({
-        text: 'Something Error in Connecting in GPS',
+        text: 'Please Wait while Connecting to GPS',
         duration: Snackbar.LENGTH_LONG,
         fontFamily: 'PlusJakartaSans-SemiBold',
         textColor: '#000000',
@@ -94,19 +95,7 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [wsError]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (!DashboardUser) {
-        dispatch(initProfile());
-      }
-      return () => {
-        // dispatch(websocketDisconnect());
-        // dispatch(fetchTokenFailure());
-        Snackbar.dismiss();
-      };
-    }, [dispatch, DashboardUser]),
-  );
-
+  // Merge GPS data with WebSocket data
   const mergeDeviceData = useCallback(
     (devices = [], latestDevices = [], positions = [], events = []) => {
       const deviceMap = new Map();
@@ -145,7 +134,6 @@ const MyGpsScreen = ({navigation}) => {
       return Array.from(deviceMap.values()).map(device => {
         device.position = device.position || [];
         device.events = device.events || [];
-        // console.log(123456775576974, device);
         return device;
       });
     },
@@ -164,17 +152,8 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
-  const renderGpsItem = useMemo(
-    () =>
-      ({item}) =>
-        (
-          <GpsItem
-            item={item}
-            icon={true}
-            navigation={navigation}
-            isDisable={!wsConnected}
-          />
-        ),
+  const renderGpsItem = useCallback(
+    ({item}) => <GpsItem item={item} icon={true} navigation={navigation} />,
     [navigation, wsConnected],
   );
 
@@ -201,44 +180,20 @@ const MyGpsScreen = ({navigation}) => {
             <ActivityIndicator size="large" color={backgroundColorNew} />
           </View>
         ) : gpsDeviceData === null ? (
-          <View style={styles.notFoundView}>
-            <Image
-              source={require('../../../assets/noGps.png')}
-              resizeMode="contain"
-              style={styles.splashImage}
-            />
-            <Text style={styles.notFoundText}>No GPS available!</Text>
-          </View>
+          <View />
         ) : (
           <FlatList
             data={mergedDeviceData}
-            initialNumToRender={6}
+            initialNumToRender={4}
+            maxToRenderPerBatch={5}
+            windowSize={5}
             showsVerticalScrollIndicator={false}
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              <View style={styles.homeView}>
-                <View style={styles.notFoundView}>
-                  <Image
-                    source={require('../../../assets/noGps.png')}
-                    resizeMode="contain"
-                    style={styles.splashImage(250, 250)}
-                  />
-                  <Text style={styles.notFoundText}>No GPS available!</Text>
-                  <Text style={styles.subText}>
-                    Get a GPS Plan for your vehicle
-                  </Text>
-                </View>
-                <View style={styles.getNowView}>
-                  <Text style={styles.offerText}>Buy and save up to 50%</Text>
-                  <InnerButton
-                    navigation={() => navigation.navigate('BuyGPS')}
-                    title={'Get Now'}
-                    enabledStyle={styles.btnStyle}
-                    textStyle={styles.btnText}
-                  />
-                </View>
-              </View>
+              gpsDeviceData.length === 0 ? (
+                <EmptyListComponent navigation={navigation} />
+              ) : null
             }
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -273,7 +228,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 60,
     padding: 10,
-    // borderWidth: 1,
   },
   loadingStyle: {
     flex: 1,
@@ -304,20 +258,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   homeView: {
-    // borderWidth: 1,
     flex: 1,
     marginVertical: 60,
     justifyContent: 'center',
   },
   notFoundView: {
-    // borderWidth: 1,
     flex: 0.75,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderWidth: 1,
   },
   getNowView: {
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     flex: 0.25,

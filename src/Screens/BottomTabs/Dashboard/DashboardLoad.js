@@ -17,7 +17,6 @@ import {
   fetchTokenRequest,
   initDashboard,
   myPostLoadFailure,
-  // websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
@@ -45,12 +44,13 @@ const DashboardLoad = ({navigation}) => {
     findLoadData,
     findLoadLoading,
     findLoadStatus,
-    wsConnected,
     gpsTokenData,
   } = useSelector(state => {
     console.log('My Lorry/Load', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const handleNavigate = useRef(false);
   useEffect(() => {

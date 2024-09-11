@@ -25,6 +25,8 @@ import AnimatedText from '../../Components/AnimatedText';
 import Button from '../../Components/Button';
 import Slider from '@react-native-community/slider';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
+import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
+import InactiveLocation from '../../../assets/SVG/svg/InactiveLocation';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -39,7 +41,8 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const Geofencing = ({navigation, route}) => {
-  const {deviceId, lat, long} = route.params;
+  const {deviceId, lat, long, name} = route.params;
+  console.log('Geofencing route ----------', route);
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -58,11 +61,7 @@ const Geofencing = ({navigation, route}) => {
   const [sliderValue, setSliderValue] = useState(0.5);
 
   const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
-    useSelector(state => state.data);
-
-  const device = wsDevices.find(d => d.id === deviceId);
-  const positions = wsPositions.filter(p => p.deviceId === deviceId);
-  const events = wsEvents.filter(e => e.deviceId === deviceId);
+    useSelector(state => state.wsData);
 
   useEffect(() => {
     if (wsConnected) {
@@ -85,7 +84,7 @@ const Geofencing = ({navigation, route}) => {
           latitude: position.latitude,
           longitude: position.longitude,
           duration: 1000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         })
         .start();
     }
@@ -122,7 +121,7 @@ const Geofencing = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        <View style={styles.mapHeader}>
+        {/* <View style={styles.mapHeader}>
           {device?.name && (
             <>
               <Text style={styles.fetchedAddressText}>{device?.name}</Text>
@@ -143,7 +142,7 @@ const Geofencing = ({navigation, route}) => {
               />
             )}
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.mapView}>
           {loading ? (
             <View style={styles.loaderContainer}>
@@ -155,32 +154,23 @@ const Geofencing = ({navigation, route}) => {
               style={StyleSheet.absoluteFillObject}
               mapType="standard"
               initialRegion={{
-                latitude: lat || livePositions[0]?.latitude || 0,
-                longitude: long || livePositions[0]?.longitude || 0,
+                latitude: lat || 0,
+                longitude: long || 0,
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
               }}>
-              {positions[0]?.attributes?.motion && (
-                <Polyline
-                  coordinates={livePositions}
-                  strokeColor="#000"
-                  strokeWidth={6}
-                />
-              )}
               {livePositions.length > 0 && (
                 <>
-                  <Marker.Animated
-                    coordinate={animatedMarkerPosition}
-                    rotation={
-                      livePositions[livePositions.length - 1].course || 0
-                    }>
-                    <TruckNavigationIcon width={50} height={50} />
+                  <Marker.Animated coordinate={animatedMarkerPosition}>
+                    {/* <ActiveLocation size={40} course={50} /> */}
+                    <InactiveLocation size={40} course={50} />
                   </Marker.Animated>
                   <Circle
                     center={livePositions[livePositions.length - 1]}
                     radius={sliderValue * 5000} // Radius in meters
                     fillColor="rgba(135,206,250,0.3)" // Light blue fill color with transparency
                     strokeColor={backgroundColorNew}
+                    // strokeDasharray={[5, 5]} // Dotted line with equal dash and gap lengths
                     strokeWidth={1}
                   />
                 </>

@@ -8,6 +8,7 @@ import {
 const useFullAddress = positions => {
   const [address, setAddress] = useState('Show Address');
   const dispatch = useDispatch();
+  // console.log(99999, positions);
 
   const {fullAddressLoading, fullAddressData} = useSelector(
     state => state.data,
@@ -15,7 +16,8 @@ const useFullAddress = positions => {
 
   useEffect(() => {
     if (fullAddressData && !fullAddressLoading) {
-      setAddress(fullAddressData.display_name);
+      setAddress(fullAddressData);
+      // setAddress(fullAddressData.display_name);
     }
   }, [fullAddressData, fullAddressLoading]);
 
@@ -28,13 +30,14 @@ const useFullAddress = positions => {
   const fetchAddress = useCallback(() => {
     if (positions && positions.length > 0) {
       const {latitude, longitude} = positions[positions.length - 1];
+      // console.log(777777, latitude, longitude);
       dispatch(fetchAddressRequest(latitude, longitude));
     } else {
       console.log('No positions available');
     }
   }, [dispatch, positions]);
 
-  //   console.log(1111111, address.display_name);
+  // console.log(1111111, address);
   return {address, fetchAddress, fullAddressLoading};
 };
 

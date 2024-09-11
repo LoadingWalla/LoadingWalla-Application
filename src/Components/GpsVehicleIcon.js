@@ -4,21 +4,22 @@ import PickUpIcon from '../../assets/SVG/svg/PickUpIcon';
 import BikeGpsIcon from '../../assets/SVG/svg/BikeGpsIcon';
 import BusGpsIcon from '../../assets/SVG/svg/BusGpsIcon';
 import CarGpsIcon from '../../assets/SVG/svg/CarGpsIcon';
+import TruckGpsIcon from '../../assets/SVG/svg/TruckGpsIcon';
 
-const VehicleIcon = ({category, size = 50, color = '#000'}) => {
-  switch (category.toLowerCase()) {
+const VehicleIcon = ({category, size = 50}) => {
+  switch (category?.toLowerCase()) {
     case 'truck':
-      return <CarGpsIcon width={size} height={size} fill={color} />;
+      return <TruckGpsIcon width={size} height={size} />;
     case 'car':
-      return <CarGpsIcon width={size} height={size} fill={color} />;
+      return <CarGpsIcon width={size} height={size} />;
     case 'bus':
-      return <BusGpsIcon width={size} height={size} fill={color} />;
-    case 'bike':
-      return <BikeGpsIcon width={size} height={size} fill={color} />;
+      return <BusGpsIcon width={size} height={size} />;
+    case 'motorcycle':
+      return <BikeGpsIcon width={size} height={size} />;
     case 'pickup':
-      return <PickUpIcon width={size} height={size} fill={color} />;
+      return <PickUpIcon width={size} height={size} />;
     default:
-      return <DefaultGpsIcon width={size} height={size} fill={color} />;
+      return <DefaultGpsIcon width={size} height={size} />;
   }
 };
 

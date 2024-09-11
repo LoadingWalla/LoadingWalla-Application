@@ -1,4 +1,6 @@
+import React from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   ScrollView,
   StyleSheet,
@@ -6,76 +8,109 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
-import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {fetchGpsNotificationsRequest} from '../../Store/Actions/Actions';
+import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
+import GpsSettingItem from '../../Components/GpsSettingItem';
+import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 
-const renderItem = ({call, item}) => {
-  // console.log(44444444, item);
-  return (
-    <View style={styles.headerbox}>
-      <View style={styles.textView}>
-        <View style={styles.speedBox}>
-          <Text style={styles.headerText}>{item?.type}</Text>
-          {/* <Text style={styles.headerTextValue}>70KMPH</Text> */}
-        </View>
-        {/* <View style={styles.timeDateBox}>
-          <Text style={styles.mediumTextStyle}>June 10, 2024</Text>
-          <View style={styles.verticalLine} />
-          <Text style={styles.mediumTextStyle}>12:30 PM - 01:00 PM</Text>
-        </View> */}
+const NotificationItem = React.memo(({call, item}) => (
+  <View style={styles.headerBox}>
+    <View style={styles.textView}>
+      <View style={styles.speedBox}>
+        <Text style={styles.headerText}>{item?.type}</Text>
       </View>
-      {call ? (
-        <View style={styles.callBox}>
-          <TouchableOpacity style={styles.iconBox}>
-            <PhoneCall size={20} color={backgroundColorNew} />
-          </TouchableOpacity>
-          <Text style={styles.mediumTextStyle}>Call Owner</Text>
-        </View>
-      ) : null}
     </View>
-  );
-};
+    {call && (
+      <View style={styles.callBox}>
+        <TouchableOpacity style={styles.iconBox}>
+          <PhoneCall size={20} color={backgroundColorNew} />
+        </TouchableOpacity>
+        <Text style={styles.mediumTextStyle}>Call Owner</Text>
+      </View>
+    )}
+  </View>
+));
 
-const GpsAlert = () => {
+const SettingsSection = React.memo(() => (
+  <ScrollView
+    showsVerticalScrollIndicator={false}
+    style={styles.settingsContainer}>
+    <View style={styles.settingsRow}>
+      <GpsSettingItem
+        detailInput={false}
+        title={'Ignition (ON /OFF)'}
+        storageKey="ignition"
+      />
+      <GpsSettingItem
+        detailInput={false}
+        title={'Geofence'}
+        storageKey="geofence"
+      />
+    </View>
+    <View style={styles.settingsRow}>
+      <GpsSettingItem
+        detailInput={false}
+        title={'Overspeeding Alerts'}
+        storageKey="overspeeding"
+      />
+      <GpsSettingItem
+        detailInput={false}
+        title={'Device moving'}
+        storageKey="deviceMoving"
+      />
+    </View>
+  </ScrollView>
+));
+
+const GpsAlert = ({navigation, route}) => {
+  const {deviceId} = route.params;
+  console.log(77777777, route);
+
   const dispatch = useDispatch();
-  const {
-    gpsTokenData,
-    gpsNotificationLoading,
-    gpsNotificationError,
-    gpsNotificationData,
-  } = useSelector(state => {
-    console.log('Gps Alerts', state.data);
-    return state.data;
-  });
+
+  const {gpsTokenData, gpsNotificationLoading, gpsNotificationData} =
+    useSelector(state => state.data);
 
   useFocusEffect(
     React.useCallback(() => {
-      // console.log(4444, gpsTokenData?.email, gpsTokenData?.password);
-      dispatch(
-        fetchGpsNotificationsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-        ),
-      );
-      // Optional cleanup function
-      return () => {
-        // Any cleanup actions
-      };
-    }, [dispatch]), // Dependencies
+      if (gpsTokenData?.email && gpsTokenData?.password) {
+        dispatch(
+          fetchGpsNotificationsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+          ),
+        );
+      }
+    }, [dispatch, gpsTokenData?.email, gpsTokenData?.password]),
   );
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={gpsNotificationData}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-      />
+      <SettingsSection />
+      <View style={styles.notificationContainer}>
+        <Text style={styles.notificationHeader}>GPS notification</Text>
+        {gpsNotificationLoading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={backgroundColorNew} />
+          </View>
+        ) : (
+          <FlatList
+            data={gpsNotificationData}
+            renderItem={({item}) => <NotificationItem item={item} call />}
+            keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={
+              gpsNotificationData?.length === 0 && (
+                <View style={styles.noDataContainer}>
+                  <Text style={styles.noDataText}>No Alerts</Text>
+                </View>
+              )
+            }
+          />
+        )}
+      </View>
     </View>
   );
 };
@@ -83,8 +118,35 @@ const GpsAlert = () => {
 export default GpsAlert;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 10},
-  headerbox: {
+  container: {
+    flex: 1,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDataText: {
+    fontSize: 16,
+    color: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-Medium',
+  },
+  notificationContainer: {
+    flex: 4,
+    backgroundColor: '#ffffff',
+    padding: 20,
+    elevation: 2,
+  },
+  notificationHeader: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+  },
+  headerBox: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#FFFFFF',
@@ -94,12 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 5,
   },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 10,
-    height: '80%',
-  },
   mediumTextStyle: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Medium',
@@ -107,35 +163,18 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 16,
-    // paddingVertical: 5,
     fontFamily: 'PlusJakartaSans-Bold',
-  },
-  headerTextValue: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: backgroundColorNew,
   },
   textView: {
-    // borderWidth: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    // alignItems: 'center',
   },
   speedBox: {
-    //   borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-  },
-  timeDateBox: {
-    //   borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginVertical: 5,
   },
   callBox: {
-    // borderWidth: 1,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
@@ -146,5 +185,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f7f7',
     elevation: 2,
     marginVertical: 5,
+  },
+  settingsContainer: {
+    flex: 1,
+    padding: 10,
+    paddingBottom: 50,
+    backgroundColor: '#ffffff',
+    marginBottom: 10,
+    elevation: 2,
+    // borderWidth: 1,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

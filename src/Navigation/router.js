@@ -4,7 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Alert, Animated, BackHandler, Dimensions, View} from 'react-native';
+import {Animated, BackHandler, Dimensions} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -22,9 +22,7 @@ import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
 import {
   backgroundColorNew,
-  GradientColor1,
   GradientColor2,
-  GradientColor3,
   tabIndicatorColor,
 } from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
@@ -43,7 +41,7 @@ import FindLoadResult from '../Screens/BottomTabs/Dashboard/FindLoadResult';
 import RCVerification from '../Screens/RC/RCVerification';
 import StatusChangeModal from '../Screens/Modals/StatusChangeModal';
 import Requests from '../Screens/Requests/Requests';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import ViewDetail from '../Screens/Details/ViewDetail';
 import PostLoads from '../Screens/Home/PostLoads';
 import AddLorry from '../Screens/Home/AddLorry';
@@ -81,7 +79,6 @@ import PaymentGPS from '../Screens/GPS/PaymentGPS';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
-import TabBar from './BottomTabComponent/TabBar';
 import GPSHomePage from '../Screens/GPS/GPSHomePage';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
@@ -89,6 +86,8 @@ import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 import Geofencing from '../Screens/GPS/Geofencing';
 import HeaderMenuButton from '../Components/HeaderMenuButton';
 import GpsRelay from '../Screens/GPS/GpsRelay';
+import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
+import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -805,6 +804,7 @@ const Navigation = ({language}) => {
           title: t(Constants.SELECT_LANGUAGE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -845,6 +845,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || t(Constants.LEGAL_POLICIES),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={() => ({
@@ -868,6 +869,7 @@ const Navigation = ({language}) => {
           title: t(Constants.VERIFY_NUMBER_TITLE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={() => ({
@@ -960,6 +962,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -996,6 +999,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1019,6 +1023,7 @@ const Navigation = ({language}) => {
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1041,6 +1046,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1064,6 +1070,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1103,6 +1110,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1125,6 +1133,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerBackground: () => (
             <LinearGradient
@@ -1158,6 +1167,7 @@ const Navigation = ({language}) => {
           title: t(Constants.HELP_GUIDE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1180,6 +1190,7 @@ const Navigation = ({language}) => {
           title: t(Constants.WALLET),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1220,6 +1231,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_right',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1243,6 +1255,7 @@ const Navigation = ({language}) => {
           headerShadowVisible: false,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1265,6 +1278,7 @@ const Navigation = ({language}) => {
           title: t(Constants.KYC),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1287,6 +1301,7 @@ const Navigation = ({language}) => {
           title: t(Constants.RC_VERIFICATION),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1315,6 +1330,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1338,6 +1354,7 @@ const Navigation = ({language}) => {
           title: t(Constants.SAVED_ADDRESS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1361,6 +1378,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1444,6 +1462,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1466,6 +1485,7 @@ const Navigation = ({language}) => {
           title: t(Constants.DOCUMENT_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1528,6 +1548,7 @@ const Navigation = ({language}) => {
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -1551,6 +1572,7 @@ const Navigation = ({language}) => {
           title: 'Complete Booking',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1573,6 +1595,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || null,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         })}
         listeners={({navigation, route}) => ({
@@ -1590,31 +1613,33 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        component={TrackingTruck}
+        // component={TrackingTruck}
+        component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Tracking truck',
+          title: route.params.name || 'Tracking truck',
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
-            // fontSize: 20,
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
-            <HeaderMenuButton
+            // <HeaderMenuButton
+            //   navigation={navigation}
+            //   latitude={route?.params?.lat}
+            //   longitude={route?.params?.long}
+            //   deviceId={route?.params?.deviceId}
+            //   name={route?.params?.name}
+            // />
+            <HeaderHelpButton
+              shareIcon={true}
               navigation={navigation}
               latitude={route.params.lat}
               longitude={route.params.long}
-              deviceId={route.params.deviceId}
             />
           ),
-          // <HeaderHelpButton
-          //      shareIcon={false}
-          //      navigation={navigation}
-          //      // latitude={route.params.lat}
-          //      // longitude={route.params.long}
-          //    />
         })}
         listeners={({navigation, route}) => ({
           // Onpress Update....
@@ -1638,6 +1663,7 @@ const Navigation = ({language}) => {
           animation: 'slide_from_bottom',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1664,6 +1690,7 @@ const Navigation = ({language}) => {
           title: 'Alerts',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1690,6 +1717,7 @@ const Navigation = ({language}) => {
           title: 'History',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1716,6 +1744,7 @@ const Navigation = ({language}) => {
           title: route.params?.headerTitle || null,
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1742,6 +1771,7 @@ const Navigation = ({language}) => {
           title: 'Purchase GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1788,6 +1818,7 @@ const Navigation = ({language}) => {
           title: 'Purchase GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1814,6 +1845,7 @@ const Navigation = ({language}) => {
           title: 'Provide delivery details',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           // headerRight: () => (
@@ -1834,12 +1866,14 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="PlayJourney"
         component={PlayJourney}
+        // component={PlayJourneyNew}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Play Journey',
+          title: route?.params?.name || 'Play Journey',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1866,6 +1900,7 @@ const Navigation = ({language}) => {
           title: 'Stops',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1892,6 +1927,7 @@ const Navigation = ({language}) => {
           title: 'Quick filters',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1918,6 +1954,7 @@ const Navigation = ({language}) => {
           title: 'Owned GPS',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerShadowVisible: false,
           headerRight: () => (
@@ -1984,6 +2021,7 @@ const Navigation = ({language}) => {
           title: t(Constants.ORDERS_PAYMENT),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
         }}
         listeners={({navigation, route}) => ({
@@ -2004,9 +2042,10 @@ const Navigation = ({language}) => {
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Geofencing',
+          title: route?.params?.name || 'Geofencing',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
           },
           headerRight: () => (
             <HeaderHelpButton

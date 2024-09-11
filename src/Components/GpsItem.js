@@ -1,7 +1,6 @@
-import React, {useState, memo} from 'react';
+import React, {useState, memo, useMemo, useCallback} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
-import SettingIcon from '../../assets/SVG/svg/SettingIcon';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
@@ -10,15 +9,27 @@ import AlertBox from './AlertBox';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
-import LocationShadowIcon from '../../assets/SVG/svg/LocationShadowIcon';
 import VehicleIcon from './GpsVehicleIcon';
+import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 
-const GpsItem = ({navigation, item, isDisable}) => {
+const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
-  // console.log(4444, item);
+  // console.log(444444, 'GpsItem---->', item);
 
-  const {position = [], status, name, disabled, id, lastUpdate} = item;
-  const attributes = position[0]?.attributes || {};
+  const {
+    position = [],
+    status,
+    name,
+    disabled,
+    id,
+    lastUpdate,
+    address,
+    distance,
+    relay,
+    category = 'default',
+  } = item;
+
+  const attributes = useMemo(() => position[0]?.attributes || {}, [position]);
   const {
     ignition,
     motion,
@@ -30,27 +41,16 @@ const GpsItem = ({navigation, item, isDisable}) => {
     charge,
   } = attributes;
 
-  const isNavigationDisabled =
-    disabled || position.length === 0 || !position[0]?.latitude;
+  const isNavigationDisabled = useMemo(() => disabled, [disabled]);
 
-  const showAlert = message => AlertBox(message);
+  const showAlert = useCallback(message => AlertBox(message), []);
 
-  const handlePress = index =>
-    setActiveIndex(activeIndex === index ? null : index);
+  const handlePress = useCallback(
+    index => setActiveIndex(activeIndex === index ? null : index),
+    [activeIndex],
+  );
 
-  const renderStatus = () => {
-    if (status === 'online') {
-      return <Text style={styles.ignitionText(true)}>Active</Text>;
-    }
-    if (status === 'offline') {
-      return <Text style={styles.ignitionText(false)}>Inactive</Text>;
-    }
-    return (
-      <Text style={styles.lastUpdateText}>{moment(lastUpdate).fromNow()}</Text>
-    );
-  };
-
-  const handleNavigation = () => {
+  const handleNavigation = useCallback(() => {
     if (isNavigationDisabled) {
       showAlert(
         disabled
@@ -60,108 +60,129 @@ const GpsItem = ({navigation, item, isDisable}) => {
     } else {
       navigation.navigate('trackingtruck', {
         deviceId: id,
+        name,
         lat: position[0]?.latitude,
         long: position[0]?.longitude,
         item,
       });
     }
-  };
+  }, [
+    isNavigationDisabled,
+    disabled,
+    id,
+    name,
+    position,
+    navigation,
+    showAlert,
+  ]);
+
+  const renderStatus = useMemo(() => {
+    if (status === 'online') {
+      return <Text style={styles.ignitionText(true)}>GPS Active</Text>;
+    }
+    if (status === 'offline') {
+      return <Text style={styles.ignitionText(false)}>GPS Inactive</Text>;
+    }
+    return (
+      <Text style={styles.lastUpdateText}>{moment(lastUpdate).fromNow()}</Text>
+    );
+  }, [status, lastUpdate]);
+
+  const ignitionStatus = useMemo(
+    () => (ignition || motion ? 'on' : 'off'),
+    [ignition, motion],
+  );
+  const speedText = useMemo(
+    () => Math.floor((position[0]?.speed || 0) * 1.852),
+    [position],
+  );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.itemContainer}>
-        <View style={styles.imgContainer}>
-          <View style={styles.imgBox}>
-            <VehicleIcon
-              category={item.category || 'default'}
-              size={50}
-              color="#000"
-            />
+    <View style={styles.cardContainer}>
+      <TouchableOpacity style={styles.container} onPress={handleNavigation}>
+        <View style={styles.itemContainer}>
+          <View style={styles.imgContainer}>
+            <View style={styles.imgBox}>
+              <VehicleIcon category={category} size={50} color="#000" />
+            </View>
+          </View>
+          <View style={styles.textContainer}>
+            <View style={styles.textViewContainer}>
+              <View style={styles.rowContainer}>
+                <Text style={styles.highlightText}>{name}</Text>
+                <Text style={[styles.ignitionText(motion), styles.motionText]}>
+                  {motion ? '(Running)' : '(Stopped)'}
+                </Text>
+              </View>
+
+              <View style={styles.ignBox}>
+                {renderStatus}
+                <View style={styles.verticalLine} />
+                <View style={styles.row}>
+                  <Text style={styles.distanceText}>Ignition</Text>
+                  <Text
+                    style={[
+                      styles.ignitionText(ignition || motion),
+                      styles.ignitionStatus,
+                    ]}>
+                    {ignitionStatus.toUpperCase()}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.iconBox}>
+              <View style={styles.iconRow}>
+                <BatteryIcon
+                  size={15}
+                  color={batteryLevel > 60 ? 'green' : 'red'}
+                  charge={charge}
+                  batteryLevel={batteryLevel}
+                />
+                {network !== null && <NetworkIcon color={'green'} size={14} />}
+              </View>
+              <View style={styles.hiddenIconRow}>
+                {relay && <RelayIcon size={14} color={'green'} />}
+                {alarm && (
+                  <ToggleIconText
+                    IconComponent={AlertIcon}
+                    text={alarm}
+                    iconSize={15}
+                    color={backgroundColorNew}
+                    index={2}
+                    activeIndex={activeIndex}
+                    activeText={true}
+                    onPress={() => handlePress(2)}
+                  />
+                )}
+                {fuel && <FuelIcon size={15} color="#727272" />}
+                {geofence && <GeoFencingIcon size={15} />}
+              </View>
+            </View>
+          </View>
+          <View style={styles.distanceBox}>
+            <Text style={styles.speedText(motion)}>{speedText}</Text>
+            <Text style={styles.distanceText}>KM/H</Text>
           </View>
         </View>
-        <TouchableOpacity
-          disabled={isDisable}
-          onPress={handleNavigation}
-          style={styles.textContainer}>
-          <Text style={styles.highlightText}>{name}</Text>
-          <View style={styles.ignBox}>
-            {renderStatus()}
-            <View style={styles.verticalLine} />
-            <View style={styles.row}>
-              <Text style={styles.distanceText}>Ignition</Text>
-              <Text
-                style={[
-                  styles.ignitionText(ignition || motion),
-                  {marginLeft: 5, textTransform: 'uppercase'},
-                ]}>
-                {ignition || motion ? 'on' : 'off'}
-              </Text>
+        <View style={styles.additionalInfoContainer}>
+          <View style={styles.expiryDate}>
+            <View style={styles.addressContainer}>
+              <Text style={styles.addressText}>{address}</Text>
             </View>
           </View>
-          <View style={styles.iconBox}>
-            <View style={styles.iconRow}>
-              <BatteryIcon
-                size={15}
-                color={batteryLevel > 60 ? 'green' : 'red' || '#727272'}
-                charge={charge}
-                batteryLevel={batteryLevel}
-              />
-              {network !== null && <NetworkIcon color={'green'} size={14} />}
-            </View>
-            <View style={styles.iconRow}>
-              {alarm && (
-                <ToggleIconText
-                  IconComponent={AlertIcon}
-                  text={alarm}
-                  iconSize={15}
-                  color={backgroundColorNew}
-                  index={2}
-                  activeIndex={activeIndex}
-                  activeText={false}
-                  onPress={() => handlePress(2)}
-                />
-              )}
-              {fuel && <FuelIcon size={15} color="#727272" />}
-              {geofence && <GeoFencingIcon size={15} />}
-            </View>
-          </View>
-        </TouchableOpacity>
-        <View style={styles.distanceBox}>
-          <Text style={styles.highlightText}>{`${(item.distance / 1000).toFixed(
-            2,
-          )} KM`}</Text>
-          <Text style={styles.distanceText}>Today Distance</Text>
-          <Text style={[styles.ignitionText(motion), {textAlign: 'left'}]}>
-            {motion ? 'Running' : 'Stopped'}
+        </View>
+      </TouchableOpacity>
+      <View style={styles.footerContainer}>
+        <Text style={styles.footerText}>
+          {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')}
+        </Text>
+        <View style={styles.verticalLine} />
+        <View style={styles.footerDistanceContainer}>
+          <Text style={styles.footerText}>Today Distance:</Text>
+          <Text style={styles.footerDistanceText}>
+            {(distance / 1000).toFixed(2)} KM
           </Text>
         </View>
-      </View>
-      <View style={styles.additionalInfoContainer}>
-        <View style={styles.expiryDate}>
-          <View style={styles.addressContainer}>
-            <LocationShadowIcon size={15} color="#3BA700" />
-            <Text style={styles.addressText(false)}>{item.address}</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.center}
-            disabled={isDisable}
-            onPress={() => {
-              if (isNavigationDisabled) {
-                showAlert(
-                  disabled
-                    ? 'Service unavailable! Your Plan has been Expired.'
-                    : 'Wait! GPS Network Error.',
-                );
-              } else {
-                navigation.navigate('GpsSetting', {deviceId: id});
-              }
-            }}>
-            <SettingIcon size={15} color={backgroundColorNew} />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.lastUpdate}>
-          {moment(item?.lastUpdate).format('hh:mm A DD MMM YYYY')}
-        </Text>
       </View>
     </View>
   );
@@ -170,11 +191,17 @@ const GpsItem = ({navigation, item, isDisable}) => {
 export default memo(GpsItem);
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    marginBottom: 20,
+    backgroundColor: '#FFE5DE',
+    borderRadius: 8,
+  },
   container: {
     backgroundColor: '#ffffff',
-    borderRadius: 8,
-    marginBottom: 20,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
     elevation: 2,
+    // borderWidth: 1,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -199,25 +226,39 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 8,
   },
+  textViewContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   highlightText: {
     color: titleColor,
-    fontFamily: 'PlusJakartaSans-ExtraBold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
     textAlign: 'left',
     textTransform: 'uppercase',
-    marginBottom: 2,
   },
+  speedText: color => ({
+    color: color ? '#3BA700' : '#FF0000',
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 2,
+  }),
   distanceBox: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 6,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#EFEFEF',
+    maxWidth: 50,
+    maxHeight: 50,
+    padding: 10,
   },
   distanceText: {
     color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 10,
-    textAlign: 'right',
+    textAlign: 'center',
   },
   iconBox: {
     flexDirection: 'row',
@@ -228,26 +269,36 @@ const styles = StyleSheet.create({
   },
   verticalLine: {
     backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 5,
+    width: 1,
+    marginHorizontal: 10,
     marginTop: 2,
     height: '80%',
   },
   ignBox: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 2,
   },
   ignitionText: status => ({
     color: status ? 'green' : 'red',
-    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 10,
   }),
-  addressText: color => ({
-    color: color ? backgroundColorNew : PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-BoldItalic',
-    fontSize: 10,
+  motionText: {
+    textAlign: 'left',
     marginLeft: 10,
-  }),
+  },
+  ignitionStatus: {
+    marginLeft: 5,
+    textTransform: 'uppercase',
+  },
+  addressText: {
+    color: PrivacyPolicy,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
   lastUpdateText: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Regular',
@@ -264,28 +315,52 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     minWidth: 40,
-    marginRight: 8,
+    marginRight: 5,
+  },
+  hiddenIconRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    minWidth: 40,
+    marginLeft: 10,
   },
   addressContainer: {
     maxWidth: '90%',
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  center: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   additionalInfoContainer: {
-    backgroundColor: '#F7F7F7',
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 8,
+    // borderRadius: 8,
     flexDirection: 'column',
+    // borderWidth: 1,
   },
-  lastUpdate: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 8,
-    paddingLeft: 25,
+  footerContainer: {
+    flexDirection: 'row',
+    paddingVertical: 7,
+    paddingHorizontal: 10,
+    justifyContent: 'space-around',
+  },
+  footerText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+  },
+  footerDistanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  footerDistanceText: {
+    textAlign: 'left',
+    marginLeft: 5,
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 4,
   },
 });
