@@ -29,15 +29,8 @@ const TrackingTruckNew = ({navigation, route}) => {
       console.log('Tracking Truck -------------->>>>>', state.data);
       return state.data;
     });
-  const {
-    wsMessages,
-    wsConnected,
-    wsDevices,
-    wsPositions,
-    wsEvents,
-    wsMessages22,
-  } = useSelector(state => {
-    console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
+  const {wsMessages22} = useSelector(state => {
+    // console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
     return state.wsData;
   });
 
@@ -47,26 +40,17 @@ const TrackingTruckNew = ({navigation, route}) => {
     if (gpsTokenData && deviceId) {
       const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
-      console.log(
-        111111,
-        gpsTokenData?.email,
-        gpsTokenData?.password,
-        deviceId,
-        defaultFrom,
-        defaultTo,
-      );
-
-      // dispatch(
-      //   fetchCombinedGpsDataRequest(
-      //     gpsTokenData?.email,
-      //     gpsTokenData?.password,
-      //     deviceId,
-      //     defaultFrom,
-      //     defaultTo,
-      //   ),
+      // console.log(
+      //   111111,
+      //   gpsTokenData?.email,
+      //   gpsTokenData?.password,
+      //   deviceId,
+      //   defaultFrom,
+      //   defaultTo,
       // );
+
       dispatch(
-        fetchRouteRequest(
+        fetchCombinedGpsDataRequest(
           gpsTokenData?.email,
           gpsTokenData?.password,
           deviceId,
@@ -74,6 +58,15 @@ const TrackingTruckNew = ({navigation, route}) => {
           defaultTo,
         ),
       );
+      // dispatch(
+      //   fetchRouteRequest(
+      //     gpsTokenData?.email,
+      //     gpsTokenData?.password,
+      //     deviceId,
+      //     defaultFrom,
+      //     defaultTo,
+      //   ),
+      // );
     }
   }, [dispatch, gpsTokenData, deviceId]);
 
@@ -94,14 +87,17 @@ const TrackingTruckNew = ({navigation, route}) => {
     }, []),
   );
 
-  // const [filteredPositions, setFilteredPositions] = useState([]);
-  // useEffect(() => {
-  //   const positions = getFilteredPositions(wsMessages22, deviceId);
-  //   setFilteredPositions(positions);
-  // }, [wsMessages22, deviceId]);
   const filteredPositions = useMemo(() => {
     return getFilteredPositions(wsMessages22, deviceId);
   }, [wsMessages22, deviceId]);
+
+  const gpsDataAvailable = useMemo(
+    () => gpsCombinedData?.[0] || {},
+    [gpsCombinedData],
+  );
+  const routeData = gpsDataAvailable.route || [];
+  const eventData = gpsDataAvailable.events || [];
+  const stopsData = gpsDataAvailable.positions || [];
 
   return (
     <View style={styles.container}>
@@ -114,8 +110,10 @@ const TrackingTruckNew = ({navigation, route}) => {
           item={item}
           positions={filteredPositions}
           navigation={navigation}
-          routeData={gpsRoutesData}
-          // routeData={gpsCombinedData}
+          // routeData={gpsRoutesData}
+          routeData={routeData}
+          eventData={eventData}
+          stopsData={stopsData}
         />
       </View>
 

@@ -22,7 +22,15 @@ const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MapComponent = React.memo(
-  ({initialRegion, item, positions, navigation, routeData}) => {
+  ({
+    initialRegion,
+    item,
+    positions,
+    navigation,
+    routeData,
+    eventData,
+    stopsData,
+  }) => {
     console.log(
       11111,
       'MapComponent--->',
@@ -30,6 +38,8 @@ const MapComponent = React.memo(
       item,
       positions,
       routeData,
+      eventData,
+      stopsData,
     );
 
     const [mapType, setMapType] = useState('standard');
@@ -103,19 +113,21 @@ const MapComponent = React.memo(
       }
     }, [positions, previousPosition, dispatch]);
 
-    // Combine positions and routeData
-    // console.log(333333, routeData);
-    const combinedRouteData = useMemo(() => {
-      const routeDataCoords = routeData.map(({latitude, longitude}) => ({
+    // Transform routeData from [[longitude, latitude], [longitude, latitude]]
+    const transformedRouteData = useMemo(() => {
+      return routeData.map(([longitude, latitude]) => ({
         latitude,
         longitude,
       }));
+    }, [routeData]);
+    // Combine transformed routeData and positions
+    const combinedRouteData = useMemo(() => {
       const positionCoords = positions.map(({latitude, longitude}) => ({
         latitude,
         longitude,
       }));
-      return [...routeDataCoords, ...positionCoords];
-    }, [routeData, positions]);
+      return [...transformedRouteData, ...positionCoords];
+    }, [transformedRouteData, positions]);
 
     const renderMarkers = useMemo(() => {
       if (positions.length === 0 || !positions[0]) {
@@ -348,3 +360,34 @@ const styles = StyleSheet.create({
     color: '#434343',
   },
 });
+
+// import {View, Text} from 'react-native';
+// import React from 'react';
+
+// const MapComponent = ({
+//   initialRegion,
+//   item,
+//   positions,
+//   navigation,
+//   routeData,
+//   eventData,
+//   stopsData,
+// }) => {
+//   console.log(
+//     11111,
+//     'MapComponent--->',
+//     // initialRegion,
+//     // item,
+//     // positions,
+//     routeData,
+//     eventData,
+//     stopsData,
+//   );
+//   return (
+//     <View>
+//       <Text>MapComponent</Text>
+//     </View>
+//   );
+// };
+
+// export default MapComponent;
