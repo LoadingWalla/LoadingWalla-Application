@@ -1453,7 +1453,7 @@ export function* fetchGpsRelayData({deviceId}) {
 // full address
 export function* fetchFullAddress({lat, lan, customId}) {
   try {
-    console.log(999999, lat, lan, customId);
+    // console.log(999999, lat, lan, customId);
     const data = yield googleApi().get(
       `geocode/json?latlng=${lat},${lan}&customParam=${customId}`,
     );
@@ -1463,7 +1463,7 @@ export function* fetchFullAddress({lat, lan, customId}) {
     //     customParam: customId,
     //   },
     // });
-    // console.log('Gps Address--------------', data);
+    console.log(888888, 'Gps Address--------------', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchAddressSuccess({...data?.data, customId}));

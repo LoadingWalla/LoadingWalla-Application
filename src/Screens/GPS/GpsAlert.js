@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-SemiBold',
+    textTransform: 'capitalize',
   },
   timeText: {
     fontSize: 8,

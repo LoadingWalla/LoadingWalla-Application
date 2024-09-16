@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, {useRef, useEffect, useState, useMemo, useCallback} from 'react';
 import {
   View,
@@ -9,13 +10,12 @@ import {
 } from 'react-native';
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchAddressRequest} from '../../Store/Actions/Actions';
-import moment from 'moment';
-import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import {backgroundColorNew} from '../../Color/color';
-import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
-import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
+import {fetchAddressRequest} from '../Store/Actions/Actions';
+import ActiveLocation from '../../assets/SVG/svg/ActiveLocation';
+import PlayIcon from '../../assets/SVG/svg/PlayIcon';
+import {backgroundColorNew} from '../Color/color';
+import AlertsIcon from '../../assets/SVG/svg/AlertsIcon';
+import StopsIcon from '../../assets/SVG/svg/StopsIcon';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -32,8 +32,6 @@ const MapComponent = React.memo(
     eventData,
     stopsData,
   }) => {
-    console.log(44444, stopsData);
-
     const [mapType, setMapType] = useState('standard');
     const [combinedRouteData, setCombinedRouteData] = useState([]);
     const mapRef = useRef();
@@ -213,8 +211,8 @@ const MapComponent = React.memo(
           <Image
             source={
               mapType === 'standard'
-                ? require('../../../assets/satellite-view.png')
-                : require('../../../assets/satellites.png')
+                ? require('../../assets/satellite-view.png')
+                : require('../../assets/satellites.png')
             }
             style={styles.imageStyle}
           />

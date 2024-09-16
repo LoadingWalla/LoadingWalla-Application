@@ -220,6 +220,14 @@ const initialState = {
   gpsCombinedloading: false,
   gpsCombinedData: [],
   gpsCombinedError: null,
+  // Add Parking
+  addParkingLoading: false,
+  addParkingData: null,
+  addParkingError: null,
+  // Remove Parking
+  removeParkingLoading: false,
+  removeParkingData: null,
+  removeParkingError: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1576,6 +1584,42 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         setGpsRelayloading: false,
         setGpsRelayStatus: payload?.status,
+      });
+
+    // Add Parking
+    case actionTypes.ADD_PARKING_REQUEST:
+      return {
+        ...state,
+        addParkingLoading: true,
+        addParkingError: null,
+      };
+    case actionTypes.ADD_PARKING_SUCCESS:
+      return updateState(state, {
+        addParkingLoading: false,
+        addParkingData: payload?.data,
+      });
+    case actionTypes.ADD_PARKING_FAILURE:
+      return updateState(state, {
+        addParkingLoading: false,
+        addParkingError: payload?.data,
+      });
+
+    // Remove Parking
+    case actionTypes.REMOVE_PARKING_REQUEST:
+      return {
+        ...state,
+        removeParkingLoading: true,
+        removeParkingError: null,
+      };
+    case actionTypes.REMOVE_PARKING_SUCCESS:
+      return updateState(state, {
+        removeParkingLoading: false,
+        removeParkingData: payload?.data,
+      });
+    case actionTypes.REMOVE_PARKING_FAILURE:
+      return updateState(state, {
+        removeParkingLoading: false,
+        removeParkingError: payload?.data,
       });
 
     // Clear Store on logout

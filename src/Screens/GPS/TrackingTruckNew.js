@@ -12,8 +12,8 @@ import {
 } from '../../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
-import MapComponent from './MapComponent';
-import BottomSwipeUpContainer from './BottomSwipeUpContainer';
+import MapComponent from '../../Components/MapComponent';
+import BottomSwipeUpContainer from '../../Components/BottomSwipeUpContainer';
 
 const getFilteredPositions = (wsMessages22, deviceId) => {
   return wsMessages22.positions.filter(

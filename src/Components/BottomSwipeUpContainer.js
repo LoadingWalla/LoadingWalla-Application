@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, {useRef, useState, useMemo, useCallback} from 'react';
 import {
   Animated,
@@ -10,20 +11,19 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import AlertIcon from '../../../assets/SVG/AlertIcon';
-import IconWithNameBelow from '../../Components/IconWithNameBelow';
-import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
-import {GradientColor2, seperator, titleColor} from '../../Color/color';
 import Switch from 'toggle-switch-react-native';
-import RelayIcon from '../../../assets/SVG/svg/RelayIcon';
-import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
-import moment from 'moment';
-import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
-import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
+import IconWithNameBelow from './IconWithNameBelow';
+import {GradientColor2, seperator, titleColor} from '../Color/color';
+import NavigationIcon from '../../assets/SVG/svg/NavigationIcon';
+import LocationHistory from '../../assets/SVG/svg/LocationHistory';
+import RelayIcon from '../../assets/SVG/svg/RelayIcon';
+import TheftIcon from '../../assets/SVG/svg/TheftIcon';
+import FuelPumpIcon from '../../assets/SVG/svg/FuelPumpIcon';
+import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
+import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
+import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
+import AlertIcon from '../../assets/SVG/AlertIcon';
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -87,7 +87,6 @@ const getIconColor = (type, item, positions) => {
 
 const getIconTitle = (type, item, positions) => {
   const position = positions[0];
-  // console.log(888888888, item, position);
   switch (type) {
     case 'Battery':
       return position?.attributes?.batteryLevel
@@ -205,8 +204,6 @@ const BottomSwipeUpContainer = React.memo(
       [isExpanded, animatedHeight],
     );
 
-    // console.log(1111111, item, positions);
-
     const toggleSwitch = useCallback(() => {
       setSwitchOn(prevState => !prevState);
     }, []);
@@ -222,7 +219,6 @@ const BottomSwipeUpContainer = React.memo(
     };
 
     const onHistoryPress = () => {
-      console.log('History Pressed');
       navigation.navigate('LocationHistory', {
         deviceId: item?.id,
         name: item?.name,

@@ -5,6 +5,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Text,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -21,6 +22,7 @@ import {
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import EmptyListComponent from '../../Components/EmptyListComponent';
+import SearchBox from '../../Components/SearchBox';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -45,6 +47,7 @@ const MyGpsScreen = ({navigation}) => {
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [showGpsPurchase, setShowGpsPurchase] = useState(true);
 
   // Fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -151,6 +154,20 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
+  // Handle search
+  const handleSearch = text => {
+    const filtered = mergedDeviceData.filter(device =>
+      device.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    // Apply filtering to the list
+    setMergedDeviceData(filtered);
+  };
+
+  // Handle toggle of search box
+  const handleToggleSearch = isExpanded => {
+    setShowGpsPurchase(!isExpanded);
+  };
+
   const renderGpsItem = useCallback(
     ({item}) => <GpsItem item={item} icon={true} navigation={navigation} />,
     [navigation, wsConnected],
@@ -174,6 +191,7 @@ const MyGpsScreen = ({navigation}) => {
         />
       </View>
       <View style={styles.contentContainer}>
+        <SearchBox onSearch={handleSearch} onToggle={handleToggleSearch} />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
             <ActivityIndicator size="large" color={backgroundColorNew} />

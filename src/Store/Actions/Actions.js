@@ -1395,3 +1395,35 @@ export const clearCombinedGpsData = () => ({
 export const clearStore = () => ({
   type: actionTypes.CLEAR_STORE,
 });
+
+// Add Parking
+export const addParkingRequest = payload => ({
+  type: actionTypes.ADD_PARKING_REQUEST,
+  payload,
+});
+
+export const addParkingSuccess = payload => ({
+  type: actionTypes.ADD_PARKING_SUCCESS,
+  payload,
+});
+
+export const addParkingFailure = payload => ({
+  type: actionTypes.ADD_PARKING_FAILURE,
+  payload,
+});
+
+// Remove Parking
+export const removeParkingRequest = payload => ({
+  type: actionTypes.REMOVE_PARKING_REQUEST,
+  payload,
+});
+
+export const removeParkingSuccess = payload => ({
+  type: actionTypes.REMOVE_PARKING_SUCCESS,
+  payload,
+});
+
+export const removeParkingFailure = payload => ({
+  type: actionTypes.REMOVE_PARKING_FAILURE,
+  payload,
+});
