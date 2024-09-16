@@ -25,7 +25,6 @@ import EmptyListComponent from '../../Components/EmptyListComponent';
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
-
   const {
     gpsTokenData,
     gpsDeviceLoading,
@@ -191,7 +190,7 @@ const MyGpsScreen = ({navigation}) => {
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              gpsDeviceData.length === 0 ? (
+              gpsDeviceData?.length === 0 ? (
                 <EmptyListComponent navigation={navigation} />
               ) : null
             }

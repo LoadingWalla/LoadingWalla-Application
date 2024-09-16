@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  clearCombinedGpsData,
   clearGpsDeviceData,
   fetchAddressFailure,
   fetchCombinedGpsDataRequest,
@@ -22,7 +23,7 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
 
 const TrackingTruckNew = ({navigation, route}) => {
   const {item, name, lat, long, deviceId} = route.params;
-  console.log(11111, 'TrackingTruck Params ------>', route);
+  // console.log(11111, 'TrackingTruck Params ------>', route);
 
   const {gpsTokenData, gpsRelayData, gpsRoutesData, gpsCombinedData} =
     useSelector(state => {
@@ -40,14 +41,7 @@ const TrackingTruckNew = ({navigation, route}) => {
     if (gpsTokenData && deviceId) {
       const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
-      // console.log(
-      //   111111,
-      //   gpsTokenData?.email,
-      //   gpsTokenData?.password,
-      //   deviceId,
-      //   defaultFrom,
-      //   defaultTo,
-      // );
+      console.log(100000, '------------>>>>', deviceId, defaultFrom, defaultTo);
 
       dispatch(
         fetchCombinedGpsDataRequest(
@@ -83,6 +77,7 @@ const TrackingTruckNew = ({navigation, route}) => {
         dispatch(fetchAddressFailure());
         dispatch(clearGpsDeviceData());
         dispatch(gpsRelayFailure());
+        // dispatch(clearCombinedGpsData());
       };
     }, []),
   );
