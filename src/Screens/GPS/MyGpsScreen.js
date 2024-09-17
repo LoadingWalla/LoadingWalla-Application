@@ -1,11 +1,10 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
   FlatList,
   ActivityIndicator,
   RefreshControl,
-  Text,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
@@ -34,20 +33,21 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('My Gps Screen---', state.data);
+    // console.log('My Gps Screen---', state.data);
     return state.data;
   });
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
     state => {
-      console.log('WEBSOCKET My Gps Screen---', state.wsData);
+      // console.log('WEBSOCKET My Gps Screen---', state.wsData);
       return state.wsData;
     },
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [showGpsPurchase, setShowGpsPurchase] = useState(true);
+  const [searchText, setSearchText] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
 
   // Fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -154,18 +154,45 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
+  // Filter data using useMemo to avoid unnecessary re-renders
+  const filteredDeviceData = useMemo(() => {
+    let filtered = mergedDeviceData;
+
+    // Apply search filter
+    if (searchText) {
+      filtered = filtered.filter(device =>
+        device.name.toLowerCase().includes(searchText.toLowerCase()),
+      );
+    }
+
+    // Apply status filter
+    if (filterStatus !== 'All') {
+      filtered = filtered.filter(device =>
+        filterStatus === 'Active'
+          ? device.status === 'online'
+          : device.status === 'offline',
+      );
+    }
+
+    return filtered;
+  }, [mergedDeviceData, searchText, filterStatus]);
+
+  // Handle filter change
+  const handleFilterChange = value => {
+    setFilterStatus(value);
+  };
+
   // Handle search
   const handleSearch = text => {
-    const filtered = mergedDeviceData.filter(device =>
-      device.name.toLowerCase().includes(text.toLowerCase()),
-    );
-    // Apply filtering to the list
-    setMergedDeviceData(filtered);
+    setSearchText(text);
   };
 
   // Handle toggle of search box
   const handleToggleSearch = isExpanded => {
-    setShowGpsPurchase(!isExpanded);
+    if (!isExpanded) {
+      setSearchText('');
+      setFilterStatus('All');
+    }
   };
 
   const renderGpsItem = useCallback(
@@ -191,7 +218,11 @@ const MyGpsScreen = ({navigation}) => {
         />
       </View>
       <View style={styles.contentContainer}>
-        <SearchBox onSearch={handleSearch} onToggle={handleToggleSearch} />
+        <SearchBox
+          onSearch={handleSearch}
+          onToggle={handleToggleSearch}
+          onFilterChange={handleFilterChange}
+        />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
             <ActivityIndicator size="large" color={backgroundColorNew} />
@@ -200,7 +231,7 @@ const MyGpsScreen = ({navigation}) => {
           <View />
         ) : (
           <FlatList
-            data={mergedDeviceData}
+            data={filteredDeviceData}
             initialNumToRender={4}
             maxToRenderPerBatch={5}
             windowSize={5}
@@ -208,7 +239,7 @@ const MyGpsScreen = ({navigation}) => {
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              gpsDeviceData?.length === 0 ? (
+              filteredDeviceData.length === 0 ? (
                 <EmptyListComponent navigation={navigation} />
               ) : null
             }

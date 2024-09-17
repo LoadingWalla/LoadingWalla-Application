@@ -11,6 +11,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
+import {GradientColor1} from '../Color/color';
 
 const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -19,20 +20,17 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
   const animation = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
 
-  // Toggle the search bar
   const toggleSearch = () => {
     const newState = !isExpanded;
     setIsExpanded(newState);
     if (onToggle) {
-      onToggle(newState); // Notify parent about the toggle state
+      onToggle(newState);
     }
     if (!newState) {
-      // Dismiss the keyboard when collapsing the search bar
       Keyboard.dismiss();
     }
   };
 
-  // Animate the search bar and focus the input when expanding
   useEffect(() => {
     Animated.timing(animation, {
       toValue: isExpanded ? 1 : 0,
@@ -41,14 +39,12 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
     }).start();
 
     if (isExpanded) {
-      // Focus input when expanded
       setTimeout(() => {
         inputRef.current?.focus();
       }, 300);
     }
   }, [isExpanded, animation]);
 
-  // Interpolations for width and opacity
   const inputWidth = animation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
@@ -62,7 +58,6 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
     outputRange: [0, 0.2, 1],
   });
 
-  // Handle search text change
   const handleSearchTextChange = text => {
     setSearchText(text);
     if (onSearch) {
@@ -70,7 +65,6 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
     }
   };
 
-  // Handle filter change
   const handleFilterChange = value => {
     setFilterOption(value);
     if (onFilterChange) {
@@ -90,6 +84,7 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
                 onValueChange={itemValue => handleFilterChange(itemValue)}
                 style={styles.picker}
                 dropdownIconColor="#000"
+                dropdownIconRippleColor={GradientColor1}
                 mode="dropdown">
                 <Picker.Item label="All" value="All" />
                 <Picker.Item label="Active" value="Active" />
@@ -97,7 +92,7 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
               </Picker>
             </View>
             <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
-              <SearchIcon size={25} color="#000" />
+              <SearchIcon size={20} color="#000" />
             </TouchableOpacity>
           </View>
         </View>
@@ -110,7 +105,7 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
           placeholder="Search..."
           value={searchText}
           onChangeText={handleSearchTextChange}
-          autoFocus={isExpanded} // Auto focus
+          autoFocus={isExpanded}
         />
         <TouchableOpacity onPress={toggleSearch}>
           <Close size={25} color="#000" />
@@ -140,29 +135,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 5,
     overflow: 'hidden',
-    height: 30, // Set the height here
-    justifyContent: 'center', // Center the picker vertically
+    height: 30,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   picker: {
     width: 150,
-    height: 30, // Adjust this height if needed
-    // marginTop: 0, // Optional: Adjust to align the picker text vertically
+    height: 30,
+    backgroundColor: '#E9E9E9',
   },
   searchIcon: {
     marginLeft: 15,
+    backgroundColor: '#E9E9E9',
+    borderRadius: 5,
+    padding: 5,
   },
   searchBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 5,
     paddingHorizontal: 10,
+    backgroundColor: '#E9E9E9',
   },
   input: {
     flex: 1,
