@@ -164,12 +164,8 @@ const GpsItem = ({navigation, item}) => {
             <Text style={styles.distanceText}>KM/H</Text>
           </View>
         </View>
-        <View style={styles.additionalInfoContainer}>
-          <View style={styles.expiryDate}>
-            <View style={styles.addressContainer}>
-              <Text style={styles.addressText}>{address}</Text>
-            </View>
-          </View>
+        <View style={styles.addressContainer}>
+          <Text style={styles.addressText}>{address}</Text>
         </View>
       </TouchableOpacity>
       <View style={styles.footerContainer}>
@@ -304,10 +300,6 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Regular',
     fontSize: 12,
   },
-  expiryDate: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   row: {
     flexDirection: 'row',
   },
@@ -324,15 +316,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   addressContainer: {
-    maxWidth: '90%',
+    maxWidth: '100%',
     flexDirection: 'row',
     alignItems: 'flex-start',
-  },
-  additionalInfoContainer: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    // borderRadius: 8,
-    flexDirection: 'column',
+    padding: 5,
     // borderWidth: 1,
   },
   footerContainer: {

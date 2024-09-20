@@ -11,7 +11,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
-import {GradientColor1} from '../Color/color';
+import {GradientColor1, titleColor} from '../Color/color';
 
 const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -83,8 +83,9 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
                 selectedValue={filterOption}
                 onValueChange={itemValue => handleFilterChange(itemValue)}
                 style={styles.picker}
-                dropdownIconColor="#000"
+                dropdownIconColor="#000000"
                 dropdownIconRippleColor={GradientColor1}
+                itemStyle={styles.pickerItem}
                 mode="dropdown">
                 <Picker.Item label="All" value="All" />
                 <Picker.Item label="Active" value="Active" />
@@ -102,7 +103,7 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
         <TextInput
           ref={inputRef}
           style={styles.input}
-          placeholder="Search..."
+          placeholder="Search truck number: eg., AB00CD1122"
           value={searchText}
           onChangeText={handleSearchTextChange}
           autoFocus={isExpanded}
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
   },
   gpsPurchaseText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'PlusJakartaSans-Bold',
   },
   rightContainer: {
     flexDirection: 'row',
@@ -167,6 +168,11 @@ const styles = StyleSheet.create({
   iconContainer: {
     position: 'absolute',
     right: 10,
+  },
+  pickerItem: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 14,
+    color: titleColor,
   },
 });
 

@@ -1152,22 +1152,22 @@ export function* fetchGpsSummary({
   daily,
 }) {
   try {
-    console.log(
-      33333,
-      'Gps Summary',
-      username,
-      password,
-      deviceId,
-      from,
-      to,
-      daily,
-    );
+    // console.log(
+    //   33333,
+    //   'Gps Summary',
+    //   username,
+    //   password,
+    //   deviceId,
+    //   from,
+    //   to,
+    //   daily,
+    // );
     const data = yield gpsApi.get(
       `reports/summary?from=${from}&to=${to}&daily=${daily}&deviceId=${deviceId}`,
       username,
       password,
     );
-    console.log('Gps Summary', data);
+    // console.log('Gps Summary', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchSummaryReportSuccess(data?.data));
@@ -1203,13 +1203,13 @@ export function* fetchGpsNotifications({username, password}) {
 // gps replay
 export function* fetchGpsReplay({username, password, deviceId, from, to}) {
   try {
-    console.log(999999, 'replaydata', username, password, deviceId, from, to);
+    // console.log(999999, 'replaydata', username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `positions?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
       password,
     );
-    console.log('Gps Replay', data);
+    // console.log('Gps Replay', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchPositionsSuccess(data?.data));
@@ -1305,7 +1305,7 @@ export function* fetchGpsCombinedData({
       username,
       password,
     );
-    console.log(1111, 'GPS Combined Data -------->', data);
+    // console.log(1111, 'GPS Combined Data -------->', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchCombinedGpsDataSuccess(data?.data));
@@ -1377,7 +1377,7 @@ export function* placeGpsOrderSaga({
     body.append('state', state);
     body.append('landmark', landmark);
     body.append('pincode', pinCode);
-    console.log(9999999, body);
+    // console.log(9999999, body);
     const data = yield multiPartApi.post('gps-order', body);
     console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
@@ -1494,6 +1494,83 @@ export function* fetchFullAddress({lat, lan, customId}) {
 //     // console.log('error', error);
 //   }
 // }
+
+// Add Parking
+export function* addGpsParking({name, area, deviceId}) {
+  try {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('area', area);
+    formData.append('device_id', deviceId);
+
+    const data = yield multiPartApi.post('gps/add-parking', formData);
+    console.log(1111, 'Add Parking ----->', data);
+
+    if (data?.data?.status === 200) {
+      yield put(actions.addParkingSuccess(data?.data));
+    } else {
+      yield put(actions.addParkingFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.addParkingFailure(error.message));
+    console.log('error', error);
+  }
+}
+
+// Remove Parking
+export function* removeGpsParking({deviceId}) {
+  try {
+    const body = {deviceId};
+    console.log(4444, body);
+    const data = yield API.post('gps/remove-parking', body);
+    console.log(1111, 'Remove Parking ----->', data);
+
+    if (data?.status === 200) {
+      yield put(actions.removeParkingSuccess(data?.data));
+    } else {
+      yield put(actions.removeParkingFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.removeParkingFailure(error.message));
+    console.log('error', error);
+  }
+}
+
+// Add Geofence
+export function* addGpsGeozone({name, area, deviceId}) {
+  try {
+    const body = {name, area, deviceId};
+    console.log(4444, body);
+    const data = yield API.post('gps/add-geofence', body);
+    console.log(1111, 'Add GeoZone ----->', data);
+
+    if (data?.data?.status === 200) {
+      yield put(actions.addGeofenceSuccess(data?.data));
+    } else {
+      yield put(actions.addGeofenceFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.addGeofenceFailure(error.message));
+    console.log('error', error);
+  }
+}
+
+// Get Geofence
+export function* fetchGeofence({deviceId}) {
+  try {
+    const data = yield API.get(`gps/get-geofence/${deviceId}`);
+    console.log(1111, 'Get Geofence ----->', data);
+
+    if (data?.data?.status === 200) {
+      yield put(actions.getGeofenceSuccess(data?.data));
+    } else {
+      yield put(actions.getGeofenceFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.getGeofenceFailure(error.message));
+    console.log('error', error);
+  }
+}
 
 // Back Button Handler
 // export function* watchBackButton() {

@@ -70,9 +70,13 @@ const TrackingTruckNew = ({navigation, route}) => {
     }, [fetchRoutes]),
   );
 
+  useEffect(() => {
+    dispatch(gpsRelayRequest(deviceId));
+  }, [dispatch]);
+
   useFocusEffect(
     useCallback(() => {
-      dispatch(gpsRelayRequest(deviceId));
+      // dispatch(gpsRelayRequest(deviceId));
       return () => {
         dispatch(fetchAddressFailure());
         dispatch(clearGpsDeviceData());

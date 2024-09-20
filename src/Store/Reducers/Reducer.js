@@ -228,6 +228,14 @@ const initialState = {
   removeParkingLoading: false,
   removeParkingData: null,
   removeParkingError: null,
+  // Geofence get
+  geofenceLoading: false,
+  geofenceData: [],
+  geofenceError: null,
+  // Geofence add
+  addGeofenceLoading: true,
+  addGeofenceError: null,
+  addGeofenceData: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -1620,6 +1628,42 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         removeParkingLoading: false,
         removeParkingError: payload?.data,
+      });
+
+    // Get Geofence
+    case actionTypes.GET_GEOFENCE_REQUEST:
+      return {
+        ...state,
+        geofenceLoading: true,
+        geofenceError: null,
+      };
+    case actionTypes.GET_GEOFENCE_SUCCESS:
+      return updateState(state, {
+        geofenceLoading: false,
+        geofenceData: payload?.data,
+      });
+    case actionTypes.GET_GEOFENCE_FAILURE:
+      return updateState(state, {
+        geofenceLoading: true,
+        geofenceError: payload?.data,
+      });
+
+    // Add Geofence
+    case actionTypes.ADD_GEOFENCE_REQUEST:
+      return {
+        ...state,
+        addGeofenceLoading: true,
+        addGeofenceError: null,
+      };
+    case actionTypes.ADD_GEOFENCE_SUCCESS:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceData: payload?.data,
+      });
+    case actionTypes.ADD_GEOFENCE_FAILURE:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceErrorData: payload?.data,
       });
 
     // Clear Store on logout

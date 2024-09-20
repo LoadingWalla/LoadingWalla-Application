@@ -32,9 +32,7 @@ export default EmptyListComponent;
 const styles = StyleSheet.create({
   homeView: {
     flex: 1,
-    // marginVertical: 60,
     justifyContent: 'center',
-    // borderWidth: 1,
   },
   notFoundView: {
     flex: 0.75,

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, {useRef, useState, useMemo, useCallback} from 'react';
+import React, {useRef, useState, useMemo, useCallback, useEffect} from 'react';
 import {
   Animated,
   PanResponder,
@@ -24,6 +24,11 @@ import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+import {useDispatch} from 'react-redux';
+import {
+  addParkingRequest,
+  removeParkingRequest,
+} from '../Store/Actions/Actions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -158,8 +163,10 @@ const ICONS = (item, positions) =>
 const BottomSwipeUpContainer = React.memo(
   ({navigation, latitude, longitude, item, positions, gpsRelayData}) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [switchOn, setSwitchOn] = useState(false);
+    const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
+    // console.log(444, item);
+    const dispatch = useDispatch();
 
     const panResponder = useMemo(
       () =>
@@ -204,9 +211,21 @@ const BottomSwipeUpContainer = React.memo(
       [isExpanded, animatedHeight],
     );
 
+    useEffect(() => {
+      setSwitchOn(gpsRelayData?.parking === 1);
+    }, [gpsRelayData]);
+
     const toggleSwitch = useCallback(() => {
+      if (switchOn) {
+        dispatch(removeParkingRequest(item?.id));
+      } else {
+        const lati = positions[0]?.latitude || item.position[0]?.latitude;
+        const long = positions[0]?.longitude || item.position[0]?.longitude;
+        const circleData = `CIRCLE (${lati} ${long}, 50)`;
+        dispatch(addParkingRequest('parking_added', circleData, item?.id));
+      }
       setSwitchOn(prevState => !prevState);
-    }, []);
+    }, [dispatch, item?.id, switchOn]);
 
     const onNavigatePress = () => {
       const destination = positions[positions.length - 1] || item?.position[0];
@@ -295,7 +314,7 @@ const BottomSwipeUpContainer = React.memo(
         <View style={styles.parkingAlarm}>
           <Text style={styles.parkingText}>Parking Alarm</Text>
           <Switch
-            isOn={switchOn}
+            isOn={!!switchOn}
             onColor={GradientColor2}
             offColor={seperator}
             size="small"
