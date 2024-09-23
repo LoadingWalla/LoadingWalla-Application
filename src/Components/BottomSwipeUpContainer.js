@@ -1,5 +1,12 @@
 import moment from 'moment';
-import React, {useRef, useState, useMemo, useCallback, useEffect} from 'react';
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  Children,
+} from 'react';
 import {
   Animated,
   PanResponder,
@@ -104,7 +111,7 @@ const getIconTitle = (type, item, positions) => {
         );
         const networkStrengthColor =
           signalStrength > 70
-            ? 'Strong'
+            ? 'Network'
             : signalStrength > 30
             ? 'Weak'
             : 'Poor';
@@ -161,12 +168,20 @@ const ICONS = (item, positions) =>
   }, [item, positions]);
 
 const BottomSwipeUpContainer = React.memo(
-  ({navigation, latitude, longitude, item, positions, gpsRelayData}) => {
+  ({
+    navigation,
+    latitude,
+    longitude,
+    item,
+    positions,
+    gpsRelayData,
+    children,
+  }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
-    // console.log(444, item);
     const dispatch = useDispatch();
+    console.log(444, item);
 
     const panResponder = useMemo(
       () =>
@@ -321,6 +336,22 @@ const BottomSwipeUpContainer = React.memo(
             onToggle={toggleSwitch}
           />
         </View>
+        {/* {children && (
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'transparent',
+              zIndex: 10,
+              height: SCREEN_HEIGHT / 4,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            {children}
+          </View>
+        )} */}
       </Animated.View>
     );
   },
@@ -409,11 +440,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#FFF7F5',
+    flex: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 3,
     borderWidth: 1,
     borderColor: '#F7F7F7',
+    zIndex: 1,
   },
   swipeIndicator: {
     width: 40,

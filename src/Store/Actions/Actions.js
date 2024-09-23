@@ -1162,6 +1162,10 @@ export const fetchGpsStopsFailure = error => ({
   payload: error,
 });
 
+export const clearGpsStopsData = () => ({
+  type: actionTypes.CLEAR_GPS_STOPS_DATA,
+});
+
 // GPS Trips
 export const fetchGpsTripsRequest = (
   username,

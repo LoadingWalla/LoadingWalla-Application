@@ -1417,6 +1417,12 @@ const reducer = (state = initialState, action) => {
         gpsStopsLoading: false,
         gpsStopsError: payload,
       });
+    case actionTypes.CLEAR_GPS_STOPS_DATA:
+      return updateState(state, {
+        gpsStopsLoading: false,
+        gpsStopsError: null,
+        gpsStopsData: [],
+      });
 
     // GPS Trips
     case actionTypes.FETCH_GPS_TRIPS_REQUEST:

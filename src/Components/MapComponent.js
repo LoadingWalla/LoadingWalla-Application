@@ -178,7 +178,7 @@ const MapComponent = React.memo(
             {transformedRouteData.length > 0 && (
               <Polyline
                 coordinates={transformedRouteData}
-                strokeColor="red"
+                strokeColor="blue"
                 strokeWidth={3}
               />
             )}
@@ -193,7 +193,7 @@ const MapComponent = React.memo(
             {renderMarkers}
           </>
           {/* Stops data on map which come in combined */}
-          {/* {stopsData?.map((stop, index) => (
+          {stopsData?.map((stop, index) => (
             <Marker
               key={`stop-${index}`}
               coordinate={{
@@ -202,7 +202,7 @@ const MapComponent = React.memo(
               }}>
               <StopsIcon size={40} number={index + 1} />
             </Marker>
-          ))} */}
+          ))}
         </MapView>
 
         <TouchableOpacity

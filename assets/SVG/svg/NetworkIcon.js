@@ -12,7 +12,7 @@ function NetworkIcon({size, color}) {
       <Path d="M0 0h24v24H0z" fill="none" />
 
       {/* 3-bar (strong signal) */}
-      <Path d="M2 22h20V2z" fill={color} />
+      <Path d="M0 24h24V0z" fill={color} />
 
       {/* 2-bar (medium signal) */}
       <Path d="M14 10L2 22h12z" fill={color} />

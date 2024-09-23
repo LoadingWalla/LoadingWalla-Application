@@ -1502,12 +1502,10 @@ export function* addGpsParking({name, area, deviceId}) {
     formData.append('name', name);
     formData.append('area', area);
     formData.append('device_id', deviceId);
-
     const data = yield multiPartApi.post('gps/add-parking', formData);
-    console.log(1111, 'Add Parking ----->', data);
-
+    // console.log(1111, 'Add Parking ----->', data);
     if (data?.data?.status === 200) {
-      yield put(actions.addParkingSuccess(data?.data));
+      yield put(actions.addParkingSuccess(data));
     } else {
       yield put(actions.addParkingFailure(data?.status));
     }
@@ -1520,13 +1518,12 @@ export function* addGpsParking({name, area, deviceId}) {
 // Remove Parking
 export function* removeGpsParking({deviceId}) {
   try {
-    const body = {deviceId};
-    console.log(4444, body);
-    const data = yield API.post('gps/remove-parking', body);
-    console.log(1111, 'Remove Parking ----->', data);
-
+    const formData = new FormData();
+    formData.append('device_id', deviceId);
+    const data = yield multiPartApi.post('gps/remove-parking', formData);
+    // console.log(1111, 'Remove Parking ----->', data);
     if (data?.status === 200) {
-      yield put(actions.removeParkingSuccess(data?.data));
+      yield put(actions.removeParkingSuccess(data));
     } else {
       yield put(actions.removeParkingFailure(data?.status));
     }
@@ -1543,7 +1540,6 @@ export function* addGpsGeozone({name, area, deviceId}) {
     console.log(4444, body);
     const data = yield API.post('gps/add-geofence', body);
     console.log(1111, 'Add GeoZone ----->', data);
-
     if (data?.data?.status === 200) {
       yield put(actions.addGeofenceSuccess(data?.data));
     } else {

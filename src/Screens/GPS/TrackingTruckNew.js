@@ -1,11 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   clearCombinedGpsData,
   clearGpsDeviceData,
+  clearGpsStopsData,
   fetchAddressFailure,
   fetchCombinedGpsDataRequest,
+  fetchGpsStopsRequest,
   fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
@@ -14,6 +16,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
 import MapComponent from '../../Components/MapComponent';
 import BottomSwipeUpContainer from '../../Components/BottomSwipeUpContainer';
+import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
+import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 
 const getFilteredPositions = (wsMessages22, deviceId) => {
   return wsMessages22.positions.filter(
@@ -25,11 +29,16 @@ const TrackingTruckNew = ({navigation, route}) => {
   const {item, name, lat, long, deviceId} = route.params;
   // console.log(11111, 'TrackingTruck Params ------>', route);
 
-  const {gpsTokenData, gpsRelayData, gpsRoutesData, gpsCombinedData} =
-    useSelector(state => {
-      console.log('Tracking Truck -------------->>>>>', state.data);
-      return state.data;
-    });
+  const {
+    gpsTokenData,
+    gpsRelayData,
+    gpsRoutesData,
+    gpsCombinedData,
+    gpsStopsData,
+  } = useSelector(state => {
+    // console.log('Tracking Truck -------------->>>>>', state.data);
+    return state.data;
+  });
   const {wsMessages22} = useSelector(state => {
     // console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
     return state.wsData;
@@ -41,7 +50,7 @@ const TrackingTruckNew = ({navigation, route}) => {
     if (gpsTokenData && deviceId) {
       const defaultFrom = moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo = moment().utcOffset(330).endOf('day').toISOString();
-      console.log(100000, '------------>>>>', deviceId, defaultFrom, defaultTo);
+      // console.log(100000, '------------>>>>', deviceId, defaultFrom, defaultTo);
 
       dispatch(
         fetchCombinedGpsDataRequest(
@@ -52,15 +61,15 @@ const TrackingTruckNew = ({navigation, route}) => {
           defaultTo,
         ),
       );
-      // dispatch(
-      //   fetchRouteRequest(
-      //     gpsTokenData?.email,
-      //     gpsTokenData?.password,
-      //     deviceId,
-      //     defaultFrom,
-      //     defaultTo,
-      //   ),
-      // );
+      dispatch(
+        fetchGpsStopsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
+        ),
+      );
     }
   }, [dispatch, gpsTokenData, deviceId]);
 
@@ -81,6 +90,7 @@ const TrackingTruckNew = ({navigation, route}) => {
         dispatch(fetchAddressFailure());
         dispatch(clearGpsDeviceData());
         dispatch(gpsRelayFailure());
+        dispatch(clearGpsStopsData());
         // dispatch(clearCombinedGpsData());
       };
     }, []),
@@ -112,7 +122,7 @@ const TrackingTruckNew = ({navigation, route}) => {
           // routeData={gpsRoutesData}
           routeData={routeData}
           eventData={eventData}
-          stopsData={stopsData}
+          stopsData={gpsStopsData}
         />
       </View>
 
@@ -127,6 +137,25 @@ const TrackingTruckNew = ({navigation, route}) => {
           <GpsIcon2 size={20} />
         </TouchableOpacity>
       </View> */}
+      {/* <BottomSwipeUpContainer
+        navigation={navigation}
+        latitude={lat}
+        longitude={long}
+        item={item}
+        positions={filteredPositions}
+        gpsRelayData={gpsRelayData}>
+        <View style={styles.overlayContainer}>
+          <TouchableOpacity
+            style={styles.alertButton}
+            onPress={() => navigation.navigate('GpsAlert')}>
+            <AlertsIcon size={20} />
+            <Text style={styles.alertButtonText}>Alerts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.gpsButton} onPress={() => {}}>
+            <GpsIcon2 size={20} />
+          </TouchableOpacity>
+        </View>
+      </BottomSwipeUpContainer> */}
       <BottomSwipeUpContainer
         navigation={navigation}
         latitude={lat}
@@ -146,10 +175,10 @@ const styles = StyleSheet.create({
   mapContainer: {flex: 1},
   overlayContainer: {
     position: 'absolute',
-    top: 50, // Adjust this value depending on where you want the children to appear
+    top: 50,
     left: 0,
     right: 0,
-    zIndex: 2, // Ensure this is on top
+    zIndex: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

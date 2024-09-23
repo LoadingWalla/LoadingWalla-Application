@@ -15,7 +15,6 @@ import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   // console.log(444444, 'GpsItem---->', item);
-
   const {
     position = [],
     status,
@@ -81,7 +80,12 @@ const GpsItem = ({navigation, item}) => {
       return <Text style={styles.ignitionText(true)}>GPS Active</Text>;
     }
     if (status === 'offline') {
-      return <Text style={styles.ignitionText(false)}>GPS Inactive</Text>;
+      // return <Text style={styles.ignitionText(false)}>GPS Inactive</Text>;
+      return (
+        <Text style={styles.ignitionText(false)}>
+          {moment(lastUpdate).fromNow()}
+        </Text>
+      );
     }
     return (
       <Text style={styles.lastUpdateText}>{moment(lastUpdate).fromNow()}</Text>
@@ -96,6 +100,7 @@ const GpsItem = ({navigation, item}) => {
     () => Math.floor((position[0]?.speed || 0) * 1.852),
     [position],
   );
+  const iconColor = status === 'offline' ? 'red' : 'green';
 
   return (
     <View style={styles.cardContainer}>
@@ -134,11 +139,13 @@ const GpsItem = ({navigation, item}) => {
               <View style={styles.iconRow}>
                 <BatteryIcon
                   size={15}
-                  color={batteryLevel > 60 ? 'green' : 'red'}
+                  color={batteryLevel > 60 ? iconColor : 'red'}
                   charge={charge}
                   batteryLevel={batteryLevel}
                 />
-                {network !== null && <NetworkIcon color={'green'} size={14} />}
+                {network !== null && (
+                  <NetworkIcon color={iconColor} size={14} />
+                )}
               </View>
               <View style={styles.hiddenIconRow}>
                 {relay && <RelayIcon size={14} color={'green'} />}
@@ -279,6 +286,7 @@ const styles = StyleSheet.create({
     color: status ? 'green' : 'red',
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 10,
+    // textTransform: 'uppercase',
   }),
   motionText: {
     textAlign: 'left',
@@ -296,9 +304,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   lastUpdateText: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Regular',
-    fontSize: 12,
+    color: 'red',
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 10,
   },
   row: {
     flexDirection: 'row',
