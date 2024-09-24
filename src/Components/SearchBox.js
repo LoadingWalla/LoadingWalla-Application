@@ -11,9 +11,9 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
-import {GradientColor1, titleColor} from '../Color/color';
+import {backgroundColorNew, GradientColor1, titleColor} from '../Color/color';
 
-const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
+const SearchBox = ({onSearch, onToggle, onFilterChange, deviceCounts}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filterOption, setFilterOption] = useState('All');
@@ -75,27 +75,76 @@ const SearchBox = ({onSearch, onToggle, onFilterChange}) => {
   return (
     <View style={styles.container}>
       {!isExpanded && (
+        // <View style={styles.defaultContainer}>
+        //   <Text style={styles.gpsPurchaseText}>GPS Purchase</Text>
+        //   <View style={styles.rightContainer}>
+        //     <View style={styles.pickerContainer}>
+        //       <Picker
+        //         selectedValue={filterOption}
+        //         onValueChange={itemValue => handleFilterChange(itemValue)}
+        //         style={styles.picker}
+        //         dropdownIconColor="#000000"
+        //         dropdownIconRippleColor={GradientColor1}
+        //         itemStyle={styles.pickerItem}
+        //         mode="dropdown">
+        //         <Picker.Item label="All" value="All" />
+        //         <Picker.Item label="Active" value="Active" />
+        //         <Picker.Item label="Inactive" value="Inactive" />
+        //       </Picker>
+        //     </View>
+        //     <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
+        //       <SearchIcon size={20} color="#000" />
+        //     </TouchableOpacity>
+        //   </View>
+        // </View>
         <View style={styles.defaultContainer}>
-          <Text style={styles.gpsPurchaseText}>GPS Purchase</Text>
-          <View style={styles.rightContainer}>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={filterOption}
-                onValueChange={itemValue => handleFilterChange(itemValue)}
-                style={styles.picker}
-                dropdownIconColor="#000000"
-                dropdownIconRippleColor={GradientColor1}
-                itemStyle={styles.pickerItem}
-                mode="dropdown">
-                <Picker.Item label="All" value="All" />
-                <Picker.Item label="Active" value="Active" />
-                <Picker.Item label="Inactive" value="Inactive" />
-              </Picker>
-            </View>
-            <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
-              <SearchIcon size={20} color="#000" />
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                filterOption === 'All' && styles.activeButton,
+              ]}
+              onPress={() => handleFilterChange('All')}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  filterOption === 'All' && styles.activeButtonText,
+                ]}>
+                All ({deviceCounts.all || 0})
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                filterOption === 'Active' && styles.activeButton,
+              ]}
+              onPress={() => handleFilterChange('Active')}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  filterOption === 'Active' && styles.activeButtonText,
+                ]}>
+                Active ({deviceCounts.active || 0})
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.button,
+                filterOption === 'Inactive' && styles.activeButton,
+              ]}
+              onPress={() => handleFilterChange('Inactive')}>
+              <Text
+                style={[
+                  styles.buttonText,
+                  filterOption === 'Inactive' && styles.activeButtonText,
+                ]}>
+                Inactive ({deviceCounts.inactive || 0})
+              </Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
+            <SearchIcon size={20} color="#000" />
+          </TouchableOpacity>
         </View>
       )}
       <Animated.View
@@ -173,6 +222,32 @@ const styles = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 14,
     color: titleColor,
+  },
+
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // borderWidth: 1,
+  },
+  button: {
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    backgroundColor: '#E9E9E9',
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  activeButton: {
+    backgroundColor: backgroundColorNew,
+  },
+  buttonText: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    color: titleColor,
+  },
+  activeButtonText: {
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    color: '#FFFFFF',
   },
 });
 

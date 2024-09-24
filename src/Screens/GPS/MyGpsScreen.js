@@ -154,6 +154,17 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
+  const deviceCounts = useMemo(() => {
+    const all = mergedDeviceData.length;
+    const active = mergedDeviceData.filter(
+      device => device.status === 'online',
+    ).length;
+    const inactive = mergedDeviceData.filter(
+      device => device.status === 'offline',
+    ).length;
+    return {all, active, inactive};
+  }, [mergedDeviceData]);
+
   // Filter data using useMemo to avoid unnecessary re-renders
   const filteredDeviceData = useMemo(() => {
     let filtered = mergedDeviceData;
@@ -222,6 +233,7 @@ const MyGpsScreen = ({navigation}) => {
           onSearch={handleSearch}
           onToggle={handleToggleSearch}
           onFilterChange={handleFilterChange}
+          deviceCounts={deviceCounts}
         />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
