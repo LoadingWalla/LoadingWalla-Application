@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, memo} from 'react';
 import {
   View,
   Text,
@@ -7,29 +7,25 @@ import {
   Animated,
   StyleSheet,
   Keyboard,
+  ScrollView,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
-import {backgroundColorNew, GradientColor1, titleColor} from '../Color/color';
+import {GradientColor1, titleColor} from '../Color/color';
+import RefreshIcon from '../../assets/SVG/svg/RefreshIcon';
 
-const SearchBox = ({onSearch, onToggle, onFilterChange, deviceCounts}) => {
+const SearchBox = ({
+  onSearch,
+  onToggle,
+  onFilterChange,
+  deviceCounts,
+  onRefresh,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filterOption, setFilterOption] = useState('All');
   const animation = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
-
-  const toggleSearch = () => {
-    const newState = !isExpanded;
-    setIsExpanded(newState);
-    if (onToggle) {
-      onToggle(newState);
-    }
-    if (!newState) {
-      Keyboard.dismiss();
-    }
-  };
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -39,128 +35,105 @@ const SearchBox = ({onSearch, onToggle, onFilterChange, deviceCounts}) => {
     }).start();
 
     if (isExpanded) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 300);
+      const timer = setTimeout(() => inputRef.current?.focus(), 300);
+      return () => clearTimeout(timer);
     }
-  }, [isExpanded, animation]);
+  }, [isExpanded]);
+
+  const toggleSearch = () => {
+    setIsExpanded(prev => !prev);
+    onToggle && onToggle(!isExpanded);
+    if (isExpanded) {
+      Keyboard.dismiss();
+    }
+  };
+
+  const handleSearchTextChange = text => {
+    setSearchText(text);
+    onSearch && onSearch(text);
+  };
+
+  const handleFilterChange = value => {
+    setFilterOption(value);
+    onFilterChange && onFilterChange(value);
+  };
 
   const inputWidth = animation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0%', '100%'],
-  });
-  const iconOpacity = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
   });
   const inputOpacity = animation.interpolate({
     inputRange: [0, 0.8, 1],
     outputRange: [0, 0.2, 1],
   });
 
-  const handleSearchTextChange = text => {
-    setSearchText(text);
-    if (onSearch) {
-      onSearch(text);
-    }
-  };
-
-  const handleFilterChange = value => {
-    setFilterOption(value);
-    if (onFilterChange) {
-      onFilterChange(value);
-    }
-  };
+  const FilterButton = ({label, value, count}) => (
+    <TouchableOpacity
+      style={[styles.button, filterOption === value && styles.activeButton]}
+      onPress={() => handleFilterChange(value)}>
+      <Text
+        style={[
+          styles.buttonText,
+          filterOption === value && styles.activeButtonText,
+        ]}>
+        {label} ({count || 0})
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
       {!isExpanded && (
-        // <View style={styles.defaultContainer}>
-        //   <Text style={styles.gpsPurchaseText}>GPS Purchase</Text>
-        //   <View style={styles.rightContainer}>
-        //     <View style={styles.pickerContainer}>
-        //       <Picker
-        //         selectedValue={filterOption}
-        //         onValueChange={itemValue => handleFilterChange(itemValue)}
-        //         style={styles.picker}
-        //         dropdownIconColor="#000000"
-        //         dropdownIconRippleColor={GradientColor1}
-        //         itemStyle={styles.pickerItem}
-        //         mode="dropdown">
-        //         <Picker.Item label="All" value="All" />
-        //         <Picker.Item label="Active" value="Active" />
-        //         <Picker.Item label="Inactive" value="Inactive" />
-        //       </Picker>
-        //     </View>
-        //     <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
-        //       <SearchIcon size={20} color="#000" />
-        //     </TouchableOpacity>
-        //   </View>
-        // </View>
         <View style={styles.defaultContainer}>
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                filterOption === 'All' && styles.activeButton,
-              ]}
-              onPress={() => handleFilterChange('All')}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  filterOption === 'All' && styles.activeButtonText,
-                ]}>
-                All ({deviceCounts.all || 0})
-              </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.buttonsContainer}>
+              <FilterButton label="All" value="All" count={deviceCounts.all} />
+              <FilterButton
+                label="Active"
+                value="Active"
+                count={deviceCounts.active}
+              />
+              <FilterButton
+                label="Inactive"
+                value="Inactive"
+                count={deviceCounts.inactive}
+              />
+              <FilterButton
+                label="Running"
+                value="Running"
+                count={deviceCounts.running}
+              />
+            </View>
+          </ScrollView>
+          <View style={styles.refreshBtnBox}>
+            <TouchableOpacity onPress={onRefresh} style={styles.refreshIcon}>
+              <RefreshIcon size={18} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                filterOption === 'Active' && styles.activeButton,
-              ]}
-              onPress={() => handleFilterChange('Active')}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  filterOption === 'Active' && styles.activeButtonText,
-                ]}>
-                Active ({deviceCounts.active || 0})
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.button,
-                filterOption === 'Inactive' && styles.activeButton,
-              ]}
-              onPress={() => handleFilterChange('Inactive')}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  filterOption === 'Inactive' && styles.activeButtonText,
-                ]}>
-                Inactive ({deviceCounts.inactive || 0})
-              </Text>
+            <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
+              <SearchIcon size={20} color="#000" />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={toggleSearch} style={styles.searchIcon}>
-            <SearchIcon size={20} color="#000" />
-          </TouchableOpacity>
         </View>
       )}
-      <Animated.View
-        style={[styles.searchBox, {width: inputWidth, opacity: inputOpacity}]}>
-        <TextInput
-          ref={inputRef}
-          style={styles.input}
-          placeholder="Search truck number: eg., AB00CD1122"
-          value={searchText}
-          onChangeText={handleSearchTextChange}
-          autoFocus={isExpanded}
-        />
-        <TouchableOpacity onPress={toggleSearch}>
-          <Close size={25} color="#000" />
-        </TouchableOpacity>
-      </Animated.View>
+      {isExpanded && (
+        <Animated.View
+          style={[
+            styles.searchBox,
+            {width: inputWidth, opacity: inputOpacity},
+          ]}>
+          <TextInput
+            ref={inputRef}
+            style={styles.input}
+            placeholder="Search truck number: eg., AB00CD1122"
+            value={searchText}
+            onChangeText={handleSearchTextChange}
+            autoFocus={isExpanded}
+          />
+          <TouchableOpacity onPress={toggleSearch}>
+            <Close size={25} color="#000" />
+          </TouchableOpacity>
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -176,28 +149,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  gpsPurchaseText: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  rightContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  pickerContainer: {
-    borderRadius: 5,
-    overflow: 'hidden',
-    height: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  picker: {
-    width: 150,
-    height: 30,
-    backgroundColor: '#E9E9E9',
-  },
   searchIcon: {
-    marginLeft: 15,
+    marginLeft: 10,
+    backgroundColor: '#E9E9E9',
+    borderRadius: 5,
+    padding: 5,
+  },
+  refreshIcon: {
     backgroundColor: '#E9E9E9',
     borderRadius: 5,
     padding: 5,
@@ -208,36 +166,33 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     backgroundColor: '#E9E9E9',
+    // borderWidth: 1,
   },
   input: {
     flex: 1,
-    padding: 5,
+    padding: 3,
     color: '#000',
   },
-  iconContainer: {
-    position: 'absolute',
-    right: 10,
-  },
-  pickerItem: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 14,
-    color: titleColor,
-  },
-
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     // borderWidth: 1,
   },
+  refreshBtnBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // borderWidth: 1,
+    marginLeft: 5,
+  },
   button: {
-    paddingVertical: 5,
+    paddingVertical: 6,
     paddingHorizontal: 15,
     backgroundColor: '#E9E9E9',
     borderRadius: 5,
     marginRight: 10,
   },
   activeButton: {
-    backgroundColor: backgroundColorNew,
+    backgroundColor: GradientColor1,
   },
   buttonText: {
     fontSize: 12,
@@ -251,4 +206,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchBox;
+export default memo(SearchBox);

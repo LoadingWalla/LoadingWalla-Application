@@ -162,10 +162,13 @@ const MyGpsScreen = ({navigation}) => {
     const inactive = mergedDeviceData.filter(
       device => device.status === 'offline',
     ).length;
-    return {all, active, inactive};
+    const running = mergedDeviceData.filter(
+      device => device.position[0]?.attributes?.motion === true,
+    ).length;
+    // console.log(44444444, all, active, inactive, running);
+    return {all, active, inactive, running};
   }, [mergedDeviceData]);
 
-  // Filter data using useMemo to avoid unnecessary re-renders
   const filteredDeviceData = useMemo(() => {
     let filtered = mergedDeviceData;
 
@@ -175,16 +178,19 @@ const MyGpsScreen = ({navigation}) => {
         device.name.toLowerCase().includes(searchText.toLowerCase()),
       );
     }
-
     // Apply status filter
     if (filterStatus !== 'All') {
-      filtered = filtered.filter(device =>
-        filterStatus === 'Active'
-          ? device.status === 'online'
-          : device.status === 'offline',
-      );
+      if (filterStatus === 'Active') {
+        filtered = filtered.filter(device => device.status === 'online');
+      } else if (filterStatus === 'Inactive') {
+        filtered = filtered.filter(device => device.status === 'offline');
+      } else if (filterStatus === 'Running') {
+        filtered = filtered.filter(
+          device => device.position[0]?.attributes?.motion === true,
+        );
+      }
     }
-
+    // console.log(444444444, filtered);
     return filtered;
   }, [mergedDeviceData, searchText, filterStatus]);
 
@@ -234,6 +240,7 @@ const MyGpsScreen = ({navigation}) => {
           onToggle={handleToggleSearch}
           onFilterChange={handleFilterChange}
           deviceCounts={deviceCounts}
+          onRefresh={onRefresh}
         />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
