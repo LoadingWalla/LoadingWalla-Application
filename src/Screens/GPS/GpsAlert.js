@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -8,31 +8,39 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
-import {fetchGpsNotificationsRequest} from '../../Store/Actions/Actions';
+import {useSelector} from 'react-redux';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
+import moment from 'moment';
 
-const NotificationItem = React.memo(({call, item}) => (
-  <View style={styles.headerBox}>
-    <View style={styles.textView}>
+// Memoized NotificationItem component
+const NotificationItem = React.memo(({call, item}) => {
+  const {type, attributes, eventTime} = item;
+  const message = type === 'alarm' ? attributes?.alarm : type;
+  const timeAgo = moment(eventTime).utcOffset('+05:30').fromNow();
+
+  return (
+    <View style={styles.headerBox}>
+      {/* <View style={styles.textView}> */}
       <View style={styles.speedBox}>
-        <Text style={styles.headerText}>{item?.type}</Text>
+        <Text style={styles.headerText}>{message}</Text>
+        <Text style={styles.timeText}>{timeAgo}</Text>
       </View>
+      {/* </View> */}
+      {call && (
+        <View style={styles.callBox}>
+          <TouchableOpacity style={styles.iconBox}>
+            <PhoneCall size={20} color={backgroundColorNew} />
+          </TouchableOpacity>
+          <Text style={styles.mediumTextStyle}>Call Owner</Text>
+        </View>
+      )}
     </View>
-    {call && (
-      <View style={styles.callBox}>
-        <TouchableOpacity style={styles.iconBox}>
-          <PhoneCall size={20} color={backgroundColorNew} />
-        </TouchableOpacity>
-        <Text style={styles.mediumTextStyle}>Call Owner</Text>
-      </View>
-    )}
-  </View>
-));
+  );
+});
 
+// Memoized SettingsSection component
 const SettingsSection = React.memo(() => (
   <ScrollView
     showsVerticalScrollIndicator={false}
@@ -64,27 +72,19 @@ const SettingsSection = React.memo(() => (
   </ScrollView>
 ));
 
-const GpsAlert = ({navigation, route}) => {
-  const {deviceId} = route.params;
-  console.log(77777777, route);
+const GpsAlert = ({route}) => {
+  const {eventData} = route.params;
 
-  const dispatch = useDispatch();
+  const {gpsNotificationLoading} = useSelector(state => state.data);
 
-  const {gpsTokenData, gpsNotificationLoading, gpsNotificationData} =
-    useSelector(state => state.data);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (gpsTokenData?.email && gpsTokenData?.password) {
-        dispatch(
-          fetchGpsNotificationsRequest(
-            gpsTokenData?.email,
-            gpsTokenData?.password,
-          ),
-        );
-      }
-    }, [dispatch, gpsTokenData?.email, gpsTokenData?.password]),
+  // Memoized renderItem function for FlatList
+  const renderItem = useCallback(
+    ({item}) => <NotificationItem item={item} call={false} />,
+    [],
   );
+
+  // Reverse the eventData array to show from last to first
+  const reversedData = [...eventData].reverse();
 
   return (
     <View style={styles.container}>
@@ -97,12 +97,12 @@ const GpsAlert = ({navigation, route}) => {
           </View>
         ) : (
           <FlatList
-            data={gpsNotificationData}
-            renderItem={({item}) => <NotificationItem item={item} call />}
-            keyExtractor={(item, index) => index.toString()}
+            data={reversedData} // Reversed data for displaying last to first
+            renderItem={renderItem}
+            keyExtractor={item => item.id.toString()} // Use item.id for a unique key
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={
-              gpsNotificationData?.length === 0 && (
+              !eventData?.length && (
                 <View style={styles.noDataContainer}>
                   <Text style={styles.noDataText}>No Alerts</Text>
                 </View>
@@ -150,11 +150,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     backgroundColor: '#FFFFFF',
-    elevation: 2,
+    // elevation: 2,
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 5,
+    margin: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: '#00000029',
   },
   mediumTextStyle: {
     color: PrivacyPolicy,
@@ -162,17 +164,24 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   headerText: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    textTransform: 'capitalize',
+  },
+  timeText: {
+    fontSize: 8,
+    fontFamily: 'PlusJakartaSans-Medium',
   },
   textView: {
     flexDirection: 'column',
     justifyContent: 'center',
+    // borderEndWidth: 1,
   },
   speedBox: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 1,
   },
   callBox: {
     flexDirection: 'column',
@@ -193,7 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     marginBottom: 10,
     elevation: 2,
-    // borderWidth: 1,
   },
   settingsRow: {
     flexDirection: 'row',

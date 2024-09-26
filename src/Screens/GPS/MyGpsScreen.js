@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -21,11 +21,11 @@ import {
 import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import EmptyListComponent from '../../Components/EmptyListComponent';
+import SearchBox from '../../Components/SearchBox';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
-
   const {
     gpsTokenData,
     gpsDeviceLoading,
@@ -33,19 +33,21 @@ const MyGpsScreen = ({navigation}) => {
     DashboardUser,
     dashboardLoading,
   } = useSelector(state => {
-    console.log('My Gps Screen---', state.data);
+    // console.log('My Gps Screen---', state.data);
     return state.data;
   });
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
     state => {
-      console.log('WEBSOCKET My Gps Screen---', state.wsData);
+      // console.log('WEBSOCKET My Gps Screen---', state.wsData);
       return state.wsData;
     },
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [filterStatus, setFilterStatus] = useState('All');
 
   // Fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -152,6 +154,64 @@ const MyGpsScreen = ({navigation}) => {
     }
   }, [gpsDeviceData, wsDevices, wsPositions, wsEvents, mergeDeviceData]);
 
+  const deviceCounts = useMemo(() => {
+    const all = mergedDeviceData.length;
+    const active = mergedDeviceData.filter(
+      device => device.status === 'online',
+    ).length;
+    const inactive = mergedDeviceData.filter(
+      device => device.status === 'offline',
+    ).length;
+    const running = mergedDeviceData.filter(
+      device => device.position[0]?.attributes?.motion === true,
+    ).length;
+    // console.log(44444444, all, active, inactive, running);
+    return {all, active, inactive, running};
+  }, [mergedDeviceData]);
+
+  const filteredDeviceData = useMemo(() => {
+    let filtered = mergedDeviceData;
+
+    // Apply search filter
+    if (searchText) {
+      filtered = filtered.filter(device =>
+        device.name.toLowerCase().includes(searchText.toLowerCase()),
+      );
+    }
+    // Apply status filter
+    if (filterStatus !== 'All') {
+      if (filterStatus === 'Active') {
+        filtered = filtered.filter(device => device.status === 'online');
+      } else if (filterStatus === 'Inactive') {
+        filtered = filtered.filter(device => device.status === 'offline');
+      } else if (filterStatus === 'Running') {
+        filtered = filtered.filter(
+          device => device.position[0]?.attributes?.motion === true,
+        );
+      }
+    }
+    // console.log(444444444, filtered);
+    return filtered;
+  }, [mergedDeviceData, searchText, filterStatus]);
+
+  // Handle filter change
+  const handleFilterChange = value => {
+    setFilterStatus(value);
+  };
+
+  // Handle search
+  const handleSearch = text => {
+    setSearchText(text);
+  };
+
+  // Handle toggle of search box
+  const handleToggleSearch = isExpanded => {
+    if (!isExpanded) {
+      setSearchText('');
+      setFilterStatus('All');
+    }
+  };
+
   const renderGpsItem = useCallback(
     ({item}) => <GpsItem item={item} icon={true} navigation={navigation} />,
     [navigation, wsConnected],
@@ -175,6 +235,13 @@ const MyGpsScreen = ({navigation}) => {
         />
       </View>
       <View style={styles.contentContainer}>
+        <SearchBox
+          onSearch={handleSearch}
+          onToggle={handleToggleSearch}
+          onFilterChange={handleFilterChange}
+          deviceCounts={deviceCounts}
+          onRefresh={onRefresh}
+        />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
             <ActivityIndicator size="large" color={backgroundColorNew} />
@@ -183,7 +250,7 @@ const MyGpsScreen = ({navigation}) => {
           <View />
         ) : (
           <FlatList
-            data={mergedDeviceData}
+            data={filteredDeviceData}
             initialNumToRender={4}
             maxToRenderPerBatch={5}
             windowSize={5}
@@ -191,7 +258,7 @@ const MyGpsScreen = ({navigation}) => {
             renderItem={renderGpsItem}
             keyExtractor={item => item.id.toString()}
             ListEmptyComponent={
-              gpsDeviceData.length === 0 ? (
+              filteredDeviceData.length === 0 ? (
                 <EmptyListComponent navigation={navigation} />
               ) : null
             }

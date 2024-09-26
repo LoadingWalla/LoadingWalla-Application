@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, {useRef, useEffect, useState, useMemo, useCallback} from 'react';
 import {
   View,
@@ -9,12 +10,12 @@ import {
 } from 'react-native';
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchAddressRequest} from '../../Store/Actions/Actions';
-import moment from 'moment';
-import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import {backgroundColorNew} from '../../Color/color';
-import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
+import {fetchAddressRequest} from '../Store/Actions/Actions';
+import ActiveLocation from '../../assets/SVG/svg/ActiveLocation';
+import PlayIcon from '../../assets/SVG/svg/PlayIcon';
+import {backgroundColorNew} from '../Color/color';
+import AlertsIcon from '../../assets/SVG/svg/AlertsIcon';
+import StopsIcon from '../../assets/SVG/svg/StopsIcon';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -22,18 +23,17 @@ const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const MapComponent = React.memo(
-  ({initialRegion, item, positions, navigation, routeData}) => {
-    console.log(
-      11111,
-      'MapComponent--->',
-      initialRegion,
-      item,
-      positions,
-      routeData,
-    );
-
+  ({
+    initialRegion,
+    item,
+    positions,
+    navigation,
+    routeData,
+    eventData,
+    stopsData,
+  }) => {
     const [mapType, setMapType] = useState('standard');
-    const [previousPosition, setPreviousPosition] = useState(null);
+    const [combinedRouteData, setCombinedRouteData] = useState([]);
     const mapRef = useRef();
     const markerRef = useRef();
     const dispatch = useDispatch();
@@ -61,24 +61,36 @@ const MapComponent = React.memo(
       );
     }, []);
 
+    // Transform routeData from [[longitude, latitude], [longitude, latitude]]
+    const transformedRouteData = useMemo(() => {
+      return routeData.map(([longitude, latitude]) => ({
+        latitude,
+        longitude,
+      }));
+    }, [routeData]);
+
+    // Update combinedRouteData when positions change
     useEffect(() => {
       if (positions.length > 0) {
         const lastPosition = positions[0];
+        const latestCombinedRoute = [...combinedRouteData];
+
+        // Only append the new position if it's not already the last point
+        const lastRoutePoint =
+          latestCombinedRoute[latestCombinedRoute.length - 1];
 
         if (
-          !previousPosition ||
-          previousPosition.latitude !== lastPosition.latitude ||
-          previousPosition.longitude !== lastPosition.longitude
+          !lastRoutePoint ||
+          (lastRoutePoint.latitude !== lastPosition.latitude &&
+            lastRoutePoint.longitude !== lastPosition.longitude)
         ) {
-          setPreviousPosition(lastPosition);
-
-          dispatch(
-            fetchAddressRequest(
-              lastPosition.latitude,
-              lastPosition.longitude,
-              lastPosition.id,
-            ),
-          );
+          setCombinedRouteData(prevData => [
+            ...prevData,
+            {
+              latitude: lastPosition.latitude,
+              longitude: lastPosition.longitude,
+            },
+          ]);
 
           // Animate the map to the new position
           mapRef.current?.animateToRegion(
@@ -99,23 +111,18 @@ const MapComponent = React.memo(
             },
             1000,
           );
+
+          // Fetch address for the latest position
+          dispatch(
+            fetchAddressRequest(
+              lastPosition.latitude,
+              lastPosition.longitude,
+              lastPosition.id,
+            ),
+          );
         }
       }
-    }, [positions, previousPosition, dispatch]);
-
-    // Combine positions and routeData
-    // console.log(333333, routeData);
-    const combinedRouteData = useMemo(() => {
-      const routeDataCoords = routeData.map(({latitude, longitude}) => ({
-        latitude,
-        longitude,
-      }));
-      const positionCoords = positions.map(({latitude, longitude}) => ({
-        latitude,
-        longitude,
-      }));
-      return [...routeDataCoords, ...positionCoords];
-    }, [routeData, positions]);
+    }, [positions, dispatch, combinedRouteData]);
 
     const renderMarkers = useMemo(() => {
       if (positions.length === 0 || !positions[0]) {
@@ -167,13 +174,35 @@ const MapComponent = React.memo(
           initialRegion={initialMapRegion}
           onLayout={handleMapLayout}>
           <>
+            {/* Render the historical routeData */}
+            {transformedRouteData.length > 0 && (
+              <Polyline
+                coordinates={transformedRouteData}
+                strokeColor="blue"
+                strokeWidth={3}
+              />
+            )}
+            {/* Render the real-time combined route */}
+            {combinedRouteData.length > 0 && (
+              <Polyline
+                coordinates={combinedRouteData}
+                strokeColor="blue"
+                strokeWidth={3}
+              />
+            )}
             {renderMarkers}
-            <Polyline
-              coordinates={combinedRouteData}
-              strokeColor="blue"
-              strokeWidth={3}
-            />
           </>
+          {/* Stops data on map which come in combined */}
+          {stopsData?.map((stop, index) => (
+            <Marker
+              key={`stop-${index}`}
+              coordinate={{
+                latitude: stop.latitude,
+                longitude: stop.longitude,
+              }}>
+              <StopsIcon size={40} number={index + 1} />
+            </Marker>
+          ))}
         </MapView>
 
         <TouchableOpacity
@@ -182,8 +211,8 @@ const MapComponent = React.memo(
           <Image
             source={
               mapType === 'standard'
-                ? require('../../../assets/satellite-view.png')
-                : require('../../../assets/satellites.png')
+                ? require('../../assets/satellite-view.png')
+                : require('../../assets/satellites.png')
             }
             style={styles.imageStyle}
           />
@@ -191,13 +220,11 @@ const MapComponent = React.memo(
 
         <TouchableOpacity
           style={styles.alertButton}
-          onPress={() => navigation.navigate('GpsAlert', {deviceId: item?.id})}>
+          onPress={() =>
+            navigation.navigate('GpsAlert', {deviceId: item?.id, eventData})
+          }>
           <AlertsIcon size={25} />
         </TouchableOpacity>
-
-        {/* <TouchableOpacity style={styles.gpsButton} onPress={() => {}}>
-        <GpsIcon2 size={25} />
-      </TouchableOpacity> */}
 
         <View style={styles.speedDistanceBox}>
           <View style={styles.infoBox}>

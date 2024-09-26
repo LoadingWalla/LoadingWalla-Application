@@ -32,7 +32,7 @@ const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
           style={styles.iconStyle}
           color={backgroundColorNew}
         />
-        <Text style={styles.btnText}>Help?</Text>
+        <Text style={styles.btnText}>Help</Text>
       </TouchableOpacity>
     </View>
   );

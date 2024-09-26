@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
 const IconWithNameBelow = ({
@@ -10,7 +10,7 @@ const IconWithNameBelow = ({
   color,
 }) => (
   <View style={styles.iconView}>
-    <View style={{borderWidth: 0, minWidth: 20}}>
+    <View style={styles.iconBox}>
       <IconComponent size={iconSize} color={color} />
     </View>
     <Text style={styles.iconText}>
@@ -37,4 +37,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'PlusJakartaSans-SemiBold',
   },
+  iconBox: {borderWidth: 0, minWidth: 20},
 });

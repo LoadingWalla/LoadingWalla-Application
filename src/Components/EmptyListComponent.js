@@ -9,7 +9,7 @@ const EmptyListComponent = ({navigation}) => {
         <Image
           source={require('../../assets/noGps.png')}
           resizeMode="contain"
-          style={styles.splashImage(250, 250)}
+          style={styles.splashImage(200, 200)}
         />
         <Text style={styles.notFoundText}>No GPS available!</Text>
         <Text style={styles.subText}>Get a GPS Plan for your vehicle</Text>
@@ -32,7 +32,6 @@ export default EmptyListComponent;
 const styles = StyleSheet.create({
   homeView: {
     flex: 1,
-    marginVertical: 60,
     justifyContent: 'center',
   },
   notFoundView: {
@@ -43,7 +42,7 @@ const styles = StyleSheet.create({
   notFoundText: {
     color: '#707070',
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 28,
+    fontSize: 24,
   },
   subText: {
     color: '#707070',
@@ -58,7 +57,7 @@ const styles = StyleSheet.create({
   },
   offerText: {
     fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 14,
+    fontSize: 12,
     color: '#3BA700',
     textAlign: 'center',
     paddingVertical: 10,

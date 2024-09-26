@@ -1162,6 +1162,10 @@ export const fetchGpsStopsFailure = error => ({
   payload: error,
 });
 
+export const clearGpsStopsData = () => ({
+  type: actionTypes.CLEAR_GPS_STOPS_DATA,
+});
+
 // GPS Trips
 export const fetchGpsTripsRequest = (
   username,
@@ -1297,7 +1301,7 @@ export const fetchAddressFailure = payload => ({
 
 // Gps relay
 export const gpsRelayRequest = deviceId => {
-  console.log(66666666, deviceId);
+  // console.log(66666666, deviceId);
   return {
     type: actionTypes.GPS_RELAY_REQUEST,
     deviceId,
@@ -1394,4 +1398,71 @@ export const clearCombinedGpsData = () => ({
 // Clear store on logout
 export const clearStore = () => ({
   type: actionTypes.CLEAR_STORE,
+});
+
+// Add Parking
+export const addParkingRequest = (name, area, deviceId) => ({
+  type: actionTypes.ADD_PARKING_REQUEST,
+  name,
+  area,
+  deviceId,
+});
+
+export const addParkingSuccess = payload => ({
+  type: actionTypes.ADD_PARKING_SUCCESS,
+  payload,
+});
+
+export const addParkingFailure = payload => ({
+  type: actionTypes.ADD_PARKING_FAILURE,
+  payload,
+});
+
+// Remove Parking
+export const removeParkingRequest = deviceId => ({
+  type: actionTypes.REMOVE_PARKING_REQUEST,
+  deviceId,
+});
+
+export const removeParkingSuccess = payload => ({
+  type: actionTypes.REMOVE_PARKING_SUCCESS,
+  payload,
+});
+
+export const removeParkingFailure = payload => ({
+  type: actionTypes.REMOVE_PARKING_FAILURE,
+  payload,
+});
+
+// Get Geofence Actions
+export const getGeofenceRequest = () => ({
+  type: actionTypes.GET_GEOFENCE_REQUEST,
+});
+
+export const getGeofenceSuccess = payload => ({
+  type: actionTypes.GET_GEOFENCE_SUCCESS,
+  payload,
+});
+
+export const getGeofenceFailure = payload => ({
+  type: actionTypes.GET_GEOFENCE_FAILURE,
+  payload,
+});
+
+// Add Geofence Actions
+export const addGeofenceRequest = (name, area, deviceId) => ({
+  type: actionTypes.ADD_GEOFENCE_REQUEST,
+  name,
+  area,
+  deviceId,
+});
+
+export const addGeofenceSuccess = payload => ({
+  type: actionTypes.ADD_GEOFENCE_SUCCESS,
+  payload,
+});
+
+export const addGeofenceFailure = payload => ({
+  type: actionTypes.ADD_GEOFENCE_FAILURE,
+  payload,
 });

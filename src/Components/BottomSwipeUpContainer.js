@@ -1,4 +1,12 @@
-import React, {useRef, useState, useMemo, useCallback} from 'react';
+import moment from 'moment';
+import React, {
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  Children,
+} from 'react';
 import {
   Animated,
   PanResponder,
@@ -10,20 +18,24 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import BatteryIcon from '../../../assets/SVG/svg/BatteryIcon';
-import NetworkIcon from '../../../assets/SVG/svg/NetworkIcon';
-import KeyIcon from '../../../assets/SVG/svg/KeyIcon';
-import GeoFencingIcon from '../../../assets/SVG/svg/GeoFencingIcon';
-import AlertIcon from '../../../assets/SVG/AlertIcon';
-import IconWithNameBelow from '../../Components/IconWithNameBelow';
-import NavigationIcon from '../../../assets/SVG/svg/NavigationIcon';
-import {GradientColor2, seperator, titleColor} from '../../Color/color';
 import Switch from 'toggle-switch-react-native';
-import RelayIcon from '../../../assets/SVG/svg/RelayIcon';
-import TheftIcon from '../../../assets/SVG/svg/TheftIcon';
-import moment from 'moment';
-import LocationHistory from '../../../assets/SVG/svg/LocationHistory';
-import FuelPumpIcon from '../../../assets/SVG/svg/FuelPumpIcon';
+import IconWithNameBelow from './IconWithNameBelow';
+import {GradientColor2, seperator, titleColor} from '../Color/color';
+import NavigationIcon from '../../assets/SVG/svg/NavigationIcon';
+import LocationHistory from '../../assets/SVG/svg/LocationHistory';
+import RelayIcon from '../../assets/SVG/svg/RelayIcon';
+import TheftIcon from '../../assets/SVG/svg/TheftIcon';
+import FuelPumpIcon from '../../assets/SVG/svg/FuelPumpIcon';
+import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
+import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
+import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
+import AlertIcon from '../../assets/SVG/AlertIcon';
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+import {useDispatch} from 'react-redux';
+import {
+  addParkingRequest,
+  removeParkingRequest,
+} from '../Store/Actions/Actions';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -87,7 +99,6 @@ const getIconColor = (type, item, positions) => {
 
 const getIconTitle = (type, item, positions) => {
   const position = positions[0];
-  // console.log(888888888, item, position);
   switch (type) {
     case 'Battery':
       return position?.attributes?.batteryLevel
@@ -100,7 +111,7 @@ const getIconTitle = (type, item, positions) => {
         );
         const networkStrengthColor =
           signalStrength > 70
-            ? 'Strong'
+            ? 'Network'
             : signalStrength > 30
             ? 'Weak'
             : 'Poor';
@@ -157,10 +168,20 @@ const ICONS = (item, positions) =>
   }, [item, positions]);
 
 const BottomSwipeUpContainer = React.memo(
-  ({navigation, latitude, longitude, item, positions, gpsRelayData}) => {
+  ({
+    navigation,
+    latitude,
+    longitude,
+    item,
+    positions,
+    gpsRelayData,
+    children,
+  }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [switchOn, setSwitchOn] = useState(false);
+    const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
+    const dispatch = useDispatch();
+    console.log(444, item);
 
     const panResponder = useMemo(
       () =>
@@ -205,11 +226,21 @@ const BottomSwipeUpContainer = React.memo(
       [isExpanded, animatedHeight],
     );
 
-    // console.log(1111111, item, positions);
+    useEffect(() => {
+      setSwitchOn(gpsRelayData?.parking === 1);
+    }, [gpsRelayData]);
 
     const toggleSwitch = useCallback(() => {
+      if (switchOn) {
+        dispatch(removeParkingRequest(item?.id));
+      } else {
+        const lati = positions[0]?.latitude || item.position[0]?.latitude;
+        const long = positions[0]?.longitude || item.position[0]?.longitude;
+        const circleData = `CIRCLE (${lati} ${long}, 50)`;
+        dispatch(addParkingRequest('parking_added', circleData, item?.id));
+      }
       setSwitchOn(prevState => !prevState);
-    }, []);
+    }, [dispatch, item?.id, switchOn]);
 
     const onNavigatePress = () => {
       const destination = positions[positions.length - 1] || item?.position[0];
@@ -222,7 +253,6 @@ const BottomSwipeUpContainer = React.memo(
     };
 
     const onHistoryPress = () => {
-      console.log('History Pressed');
       navigation.navigate('LocationHistory', {
         deviceId: item?.id,
         name: item?.name,
@@ -299,13 +329,29 @@ const BottomSwipeUpContainer = React.memo(
         <View style={styles.parkingAlarm}>
           <Text style={styles.parkingText}>Parking Alarm</Text>
           <Switch
-            isOn={switchOn}
+            isOn={!!switchOn}
             onColor={GradientColor2}
             offColor={seperator}
             size="small"
             onToggle={toggleSwitch}
           />
         </View>
+        {/* {children && (
+          <View
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'transparent',
+              zIndex: 10,
+              height: SCREEN_HEIGHT / 4,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            {children}
+          </View>
+        )} */}
       </Animated.View>
     );
   },
@@ -394,11 +440,13 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#FFF7F5',
+    flex: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 3,
     borderWidth: 1,
     borderColor: '#F7F7F7',
+    zIndex: 1,
   },
   swipeIndicator: {
     width: 40,

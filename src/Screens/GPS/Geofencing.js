@@ -6,27 +6,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  backgroundColorNew,
-  PrivacyPolicy,
-  textColor,
-  titleColor,
-} from '../../Color/color';
-import MapView, {
-  AnimatedRegion,
-  Marker,
-  Polyline,
-  Circle,
-} from 'react-native-maps';
+import {backgroundColorNew, PrivacyPolicy, textColor} from '../../Color/color';
+import MapView, {AnimatedRegion, Marker, Circle} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
-import useAddress from '../../hooks/useAddress';
-import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-import AnimatedText from '../../Components/AnimatedText';
-import Button from '../../Components/Button';
 import Slider from '@react-native-community/slider';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import InactiveLocation from '../../../assets/SVG/svg/InactiveLocation';
+import Button from '../../Components/Button';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -41,27 +27,16 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const Geofencing = ({navigation, route}) => {
-  const {deviceId, lat, long, name} = route.params;
-  console.log('Geofencing route ----------', route);
+  const {deviceId, lat, long} = route.params;
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
-  const animatedMarkerPosition = useRef(
-    new AnimatedRegion({
-      latitude: lat || 0,
-      longitude: long || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
-  ).current;
 
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [addressFetched, setAddressFetched] = useState(false);
   const [sliderValue, setSliderValue] = useState(0.5);
 
-  const {wsMessages, wsConnected, wsDevices, wsPositions, wsEvents} =
-    useSelector(state => state.wsData);
+  const {wsMessages, wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
     if (wsConnected) {
@@ -77,25 +52,31 @@ const Geofencing = ({navigation, route}) => {
     }
   }, [wsMessages, wsConnected]);
 
-  const updateMarkerPosition = position => {
-    if (mapRef.current) {
-      animatedMarkerPosition
-        .timing({
-          latitude: position.latitude,
-          longitude: position.longitude,
-          duration: 1000,
-          useNativeDriver: true,
+  const animatedMarkerPosition = useRef(
+    livePositions.length > 0
+      ? new AnimatedRegion({
+          latitude: livePositions[0].latitude,
+          longitude: livePositions[0].longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
         })
-        .start();
-    }
-  };
+      : new AnimatedRegion({
+          latitude: lat || 0,
+          longitude: long || 0,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }),
+  ).current;
 
-  const {address, fetchAddress, gpsAddressLoading} = useAddress(livePositions);
-
-  const handleFetchAddress = () => {
-    setAddressFetched(false);
-    fetchAddress();
-    setAddressFetched(true);
+  const updateMarkerPosition = position => {
+    animatedMarkerPosition
+      .timing({
+        latitude: position.latitude,
+        longitude: position.longitude,
+        duration: 1000,
+        useNativeDriver: false,
+      })
+      .start();
   };
 
   const handleSliderChange = value => {
@@ -121,28 +102,6 @@ const Geofencing = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        {/* <View style={styles.mapHeader}>
-          {device?.name && (
-            <>
-              <Text style={styles.fetchedAddressText}>{device?.name}</Text>
-              <View style={styles.verticalLine} />
-            </>
-          )}
-          <TouchableOpacity onPress={handleFetchAddress}>
-            {gpsAddressLoading ? (
-              <ActivityIndicator size="small" color={backgroundColorNew} />
-            ) : (
-              <AnimatedText
-                text={address}
-                style={[
-                  styles.addressText,
-                  addressFetched && styles.fetchedAddressText,
-                ]}
-                showAnimation={true}
-              />
-            )}
-          </TouchableOpacity>
-        </View> */}
         <View style={styles.mapView}>
           {loading ? (
             <View style={styles.loaderContainer}>
@@ -153,24 +112,31 @@ const Geofencing = ({navigation, route}) => {
               ref={mapRef}
               style={StyleSheet.absoluteFillObject}
               mapType="standard"
-              initialRegion={{
-                latitude: lat || 0,
-                longitude: long || 0,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}>
+              initialRegion={
+                livePositions.length > 0
+                  ? {
+                      latitude: livePositions[0].latitude,
+                      longitude: livePositions[0].longitude,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }
+                  : {
+                      latitude: lat || 0,
+                      longitude: long || 0,
+                      latitudeDelta: 0.0922,
+                      longitudeDelta: 0.0421,
+                    }
+              }>
               {livePositions.length > 0 && (
                 <>
                   <Marker.Animated coordinate={animatedMarkerPosition}>
-                    {/* <ActiveLocation size={40} course={50} /> */}
-                    <InactiveLocation size={40} course={50} />
+                    <ActiveLocation size={40} course={50} />
                   </Marker.Animated>
                   <Circle
                     center={livePositions[livePositions.length - 1]}
-                    radius={sliderValue * 5000} // Radius in meters
-                    fillColor="rgba(135,206,250,0.3)" // Light blue fill color with transparency
+                    radius={sliderValue * 5000}
+                    fillColor="rgba(135,206,250,0.3)"
                     strokeColor={backgroundColorNew}
-                    // strokeDasharray={[5, 5]} // Dotted line with equal dash and gap lengths
                     strokeWidth={1}
                   />
                 </>
@@ -185,6 +151,7 @@ const Geofencing = ({navigation, route}) => {
           </TouchableOpacity>
         </View>
       </View>
+
       <View style={styles.bottomContainer}>
         <View
           style={{backgroundColor: '#EBEBEB', borderRadius: 8, padding: 10}}>
@@ -209,6 +176,7 @@ const Geofencing = ({navigation, route}) => {
             </Text>
           </View>
         </View>
+
         <Button
           title="Save"
           onPress={handleSave}
@@ -224,21 +192,7 @@ export default Geofencing;
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 10,
-    height: '100%',
-  },
   mapContainer: {flex: 1},
-  mapHeader: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginHorizontal: 10,
-  },
   mapView: {flex: 1, width: '100%', height: '100%'},
   bottomContainer: {
     flexDirection: 'column',
@@ -258,21 +212,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  addressText: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
-    color: backgroundColorNew,
-    textDecorationLine: 'underline',
-  },
-  fetchedAddressText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    textTransform: 'uppercase',
-    textDecorationLine: 'none',
-    fontSize: 14,
-    minWidth: 60,
-    textAlign: 'center',
   },
   btnStyle: {
     flexDirection: 'row',

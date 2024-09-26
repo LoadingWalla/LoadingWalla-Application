@@ -24,8 +24,8 @@ import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import MapViewDirections from 'react-native-maps-directions';
-import MapComponent from './MapComponent';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import MapComponent from '../../Components/MapComponent';
 
 export default function PlayJourneyNew({navigation, route}) {
   const {deviceId, from, to} = route.params;
