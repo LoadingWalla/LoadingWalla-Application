@@ -3,10 +3,7 @@ import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import Swiper from 'react-native-swiper';
 import * as Constants from '../../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  initDashboard,
-  websocketDisconnect,
-} from '../../../Store/Actions/Actions';
+import {fetchTokenRequest, initDashboard} from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useFocusEffect} from '@react-navigation/native';
 import style from './style';
@@ -19,6 +16,7 @@ import SearchFilter from '../../../Components/SearchFilter';
 import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 const {width} = Dimensions.get('window');
 
@@ -45,13 +43,17 @@ const Dashboard = ({navigation}) => {
     locationData,
     dashboardLoading,
     loadTruckLoading,
-    wsConnected,
+    gpsTokenData,
   } = useSelector(state => {
     // console.log('Dashboard Truck', state.data);
     return state.data;
   });
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
     const backAction = () => {
       BackHandler.exitApp();
       return true;
@@ -70,7 +72,7 @@ const Dashboard = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initDashboard());
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   const navigateToSeach = val => {

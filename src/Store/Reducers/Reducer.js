@@ -153,13 +153,10 @@ const initialState = {
   gpsTokenLoading: false,
   gpsTokenData: null,
   gpsTokenStatus: null,
-  // websocket
-  wsMessages: [],
-  wsConnected: false,
-  wsError: null,
-  wsDevices: [],
-  wsEvents: [],
-  wsPositions: [],
+  // gpsdevicedata
+  gpsDeviceLoading: false,
+  gpsDeviceData: null,
+  gpsDeviceStatus: null,
   // gps address
   gpsAddressLoading: false,
   gpsAddressData: null,
@@ -167,7 +164,7 @@ const initialState = {
   // gps summary
   gpsSummaryLoading: false,
   gpsSummaryError: null,
-  gpsSummaryData: null,
+  gpsSummaryData: [],
   // gps notification
   gpsNotificationLoading: false,
   gpsNotificationError: null,
@@ -175,15 +172,19 @@ const initialState = {
   // gps replay
   gpsReplayLoading: false,
   gpsReplayError: null,
-  gpsReplayData: null,
+  gpsReplayData: [],
+  // gps routes
+  gpsRoutesLoading: false,
+  gpsRoutesError: null,
+  gpsRoutesData: [],
   // gps stops
   gpsStopsLoading: false,
   gpsStopsError: null,
-  gpsStopsData: null,
+  gpsStopsData: [],
   // gps trips
   gpsTripsLoading: false,
   gpsTripsError: null,
-  gpsTripsData: null,
+  gpsTripsData: [],
   // gps plans
   gpsPlansData: [],
   rechargePlansData: [],
@@ -204,8 +205,37 @@ const initialState = {
   singleGpsDeviceError: null,
   // full address
   fullAddressLoading: false,
-  fullAddressData: [],
+  fullAddressData: null,
   fullAddressStatus: null,
+  fullAddressCustomId: null,
+  // gps relay
+  gpsRelayloading: false,
+  gpsRelayData: null,
+  gpsRelayStatus: null,
+  // set gps relay
+  setGpsRelayloading: false,
+  setGpsRelayData: null,
+  setGpsRelayStatus: null,
+  // GPS combined data
+  gpsCombinedloading: false,
+  gpsCombinedData: [],
+  gpsCombinedError: null,
+  // Add Parking
+  addParkingLoading: false,
+  addParkingData: null,
+  addParkingError: null,
+  // Remove Parking
+  removeParkingLoading: false,
+  removeParkingData: null,
+  removeParkingError: null,
+  // Geofence get
+  geofenceLoading: false,
+  geofenceData: [],
+  geofenceError: null,
+  // Geofence add
+  addGeofenceLoading: true,
+  addGeofenceError: null,
+  addGeofenceData: [],
 };
 
 const reducer = (state = initialState, action) => {
@@ -1233,23 +1263,23 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsDeviceLoading: true,
-        gpsDeviceData: null,
         gpsDeviceStatus: null,
+        gpsDeviceData: null,
       };
     case actionTypes.FETCH_GPS_DEVICES_SUCCESS:
       return updateState(state, {
         gpsDeviceLoading: false,
         gpsDeviceData: payload?.data?.devices,
-        // gpsDeviceData: payload,
-        // wsDevices: payload,
-        wsDevices: payload?.data?.devices,
         gpsDeviceStatus: payload?.status,
       });
     case actionTypes.FETCH_GPS_DEVICES_FAILURE:
       return updateState(state, {
         gpsDeviceLoading: false,
-        gpsDeviceData: null,
         gpsDeviceStatus: null,
+      });
+    case actionTypes.CLEAR_GPS_DEVICES_DATA:
+      return updateState(state, {
+        gpsDeviceData: null,
       });
 
     // Single GPS device cases
@@ -1270,27 +1300,6 @@ const reducer = (state = initialState, action) => {
         singleGpsDeviceLoading: false,
         singleGpsDevice: null,
       });
-
-    // Gps Websocket Connect
-    case actionTypes.WEBSOCKET_CONNECT:
-      return {...state, wsConnected: true};
-    case actionTypes.WEBSOCKET_DISCONNECT:
-      return updateState(state, {wsConnected: false, wsError: null});
-    case actionTypes.WEBSOCKET_MESSAGE:
-      return updateState(state, {
-        wsMessages: [...state.wsMessages, payload],
-        wsConnected: true,
-      });
-    case actionTypes.WEBSOCKET_ERROR:
-      return updateState(state, {wsError: payload, wsConnected: false});
-    case actionTypes.WEBSOCKET_CLOSED:
-      return updateState(state, {wsConnected: false});
-    case actionTypes.UPDATE_DEVICES:
-      return updateState(state, {wsDevices: payload, wsConnected: true});
-    case actionTypes.UPDATE_POSITIONS:
-      return updateState(state, {wsPositions: payload, wsConnected: true});
-    case actionTypes.UPDATE_EVENTS:
-      return updateState(state, {wsEvents: payload, wsConnected: true});
 
     // GPS Address
     case actionTypes.FETCH_GPS_ADDRESS_REQUEST:
@@ -1327,7 +1336,11 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsSummaryLoading: false,
         gpsSummaryError: payload,
-        gpsSummaryData: null,
+      });
+    case actionTypes.CLEAR_SUMMARY_REPORT_DATA:
+      return updateState(state, {
+        gpsSummaryError: null,
+        gpsSummaryData: [],
       });
 
     // GPS Notification
@@ -1336,6 +1349,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         gpsNotificationLoading: true,
         gpsNotificationError: null,
+        gpsNotificationData: null,
       };
     case actionTypes.FETCH_GPS_NOTIFICATIONS_SUCCESS:
       return updateState(state, {
@@ -1346,7 +1360,6 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsNotificationLoading: false,
         gpsNotificationError: payload,
-        gpsNotificationData: null,
       });
 
     // GPS Replay
@@ -1355,7 +1368,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         gpsReplayLoading: true,
         gpsReplayError: null,
-        gpsReplayData: null,
+        gpsReplayData: [],
       };
     case actionTypes.FETCH_POSITIONS_SUCCESS:
       return updateState(state, {
@@ -1366,7 +1379,25 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsReplayLoading: false,
         gpsReplayError: payload,
-        gpsReplayData: null,
+      });
+
+    // GPS Routes
+    case actionTypes.FETCH_ROUTES_REQUEST:
+      return {
+        ...state,
+        gpsRoutesLoading: true,
+        gpsRoutesError: null,
+        gpsRoutesData: [],
+      };
+    case actionTypes.FETCH_ROUTES_SUCCESS:
+      return updateState(state, {
+        gpsRoutesLoading: false,
+        gpsRoutesData: payload,
+      });
+    case actionTypes.FETCH_ROUTES_FAILURE:
+      return updateState(state, {
+        gpsRoutesLoading: false,
+        gpsRoutesError: payload,
       });
 
     // GPS Stops
@@ -1374,8 +1405,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsStopsLoading: true,
-        gpsStopsError: null,
-        gpsStopsData: null,
       };
     case actionTypes.FETCH_GPS_STOPS_SUCCESS:
       return updateState(state, {
@@ -1387,7 +1416,12 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsStopsLoading: false,
         gpsStopsError: payload,
-        gpsStopsData: null,
+      });
+    case actionTypes.CLEAR_GPS_STOPS_DATA:
+      return updateState(state, {
+        gpsStopsLoading: false,
+        gpsStopsError: null,
+        gpsStopsData: [],
       });
 
     // GPS Trips
@@ -1395,21 +1429,48 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         gpsTripsLoading: true,
-        gpsTripsError: null,
         gpsTripsData: null,
       };
     case actionTypes.FETCH_GPS_TRIPS_SUCCESS:
       return updateState(state, {
         gpsTripsLoading: false,
-        gpsTripsError: null,
         gpsTripsData: payload,
       });
     case actionTypes.FETCH_GPS_TRIPS_FAILURE:
       return updateState(state, {
         gpsTripsLoading: false,
         gpsTripsError: payload,
-        gpsTripsData: null,
+        gpsTripsData: [],
       });
+    case actionTypes.CLEAR_GPS_TRIPS_DATA:
+      return updateState(state, {
+        gpsTripsData: [],
+        gpsTripsError: null,
+      });
+
+    // GPS Combined Data
+    case actionTypes.FETCH_COMBINED_GPS_DATA_REQUEST:
+      return {
+        ...state,
+        gpsCombinedloading: true,
+        gpsCombinedError: null,
+      };
+    case actionTypes.FETCH_COMBINED_GPS_DATA_SUCCESS:
+      return updateState(state, {
+        gpsCombinedloading: false,
+        gpsCombinedData: payload,
+      });
+    case actionTypes.FETCH_COMBINED_GPS_DATA_FAILURE:
+      return updateState(state, {
+        gpsCombinedloading: false,
+        gpsCombinedError: payload,
+      });
+    case actionTypes.CLEAR_COMBINED_GPS_DATA:
+      return {
+        gpsCombinedloading: false,
+        gpsCombinedData: [],
+        gpsCombinedError: null,
+      };
 
     // GPS Plans
     case actionTypes.FETCH_GPS_PLANS_REQUEST:
@@ -1484,21 +1545,136 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         fullAddressLoading: true,
-        fullAddressData: [],
+        fullAddressData: null,
         fullAddressStatus: null,
       };
     case actionTypes.FETCH_FULLADDRESS_SUCCESS:
       return updateState(state, {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
-        fullAddressData: payload,
+        // fullAddressData: payload, // openmap
+        fullAddressCustomId: payload.customId,
+        fullAddressData: payload.results[0].formatted_address, // google
       });
     case actionTypes.FETCH_FULLADDRESS_FAILURE:
       return updateState(state, {
         fullAddressLoading: false,
         fullAddressStatus: payload?.status,
-        fullAddressData: [],
+        fullAddressData: null,
       });
+
+    // Gps Relay
+    case actionTypes.GPS_RELAY_REQUEST:
+      return {
+        ...state,
+        gpsRelayloading: true,
+        gpsRelayStatus: null,
+      };
+    case actionTypes.GPS_RELAY_SUCCESS:
+      return updateState(state, {
+        gpsRelayloading: false,
+        gpsRelayData: payload?.data,
+        gpsRelayStatus: payload?.status,
+      });
+    case actionTypes.GPS_RELAY_FAILURE:
+      return updateState(state, {
+        gpsRelayloading: false,
+        gpsRelayStatus: payload?.status,
+      });
+    // set gps relay
+    case actionTypes.SET_GPS_RELAY_REQUEST:
+      return {
+        ...state,
+        setGpsRelayloading: true,
+        setGpsRelayStatus: null,
+      };
+    case actionTypes.SET_GPS_RELAY_SUCCESS:
+      return updateState(state, {
+        setGpsRelayloading: false,
+        setGpsRelayData: payload?.data,
+        setGpsRelayStatus: payload?.status,
+      });
+    case actionTypes.SET_GPS_RELAY_FAILURE:
+      return updateState(state, {
+        setGpsRelayloading: false,
+        setGpsRelayStatus: payload?.status,
+      });
+
+    // Add Parking
+    case actionTypes.ADD_PARKING_REQUEST:
+      return {
+        ...state,
+        addParkingLoading: true,
+        addParkingError: null,
+      };
+    case actionTypes.ADD_PARKING_SUCCESS:
+      return updateState(state, {
+        addParkingLoading: false,
+        addParkingData: payload?.data,
+      });
+    case actionTypes.ADD_PARKING_FAILURE:
+      return updateState(state, {
+        addParkingLoading: false,
+        addParkingError: payload?.data,
+      });
+
+    // Remove Parking
+    case actionTypes.REMOVE_PARKING_REQUEST:
+      return {
+        ...state,
+        removeParkingLoading: true,
+        removeParkingError: null,
+      };
+    case actionTypes.REMOVE_PARKING_SUCCESS:
+      return updateState(state, {
+        removeParkingLoading: false,
+        removeParkingData: payload?.data,
+      });
+    case actionTypes.REMOVE_PARKING_FAILURE:
+      return updateState(state, {
+        removeParkingLoading: false,
+        removeParkingError: payload?.data,
+      });
+
+    // Get Geofence
+    case actionTypes.GET_GEOFENCE_REQUEST:
+      return {
+        ...state,
+        geofenceLoading: true,
+        geofenceError: null,
+      };
+    case actionTypes.GET_GEOFENCE_SUCCESS:
+      return updateState(state, {
+        geofenceLoading: false,
+        geofenceData: payload?.data,
+      });
+    case actionTypes.GET_GEOFENCE_FAILURE:
+      return updateState(state, {
+        geofenceLoading: true,
+        geofenceError: payload?.data,
+      });
+
+    // Add Geofence
+    case actionTypes.ADD_GEOFENCE_REQUEST:
+      return {
+        ...state,
+        addGeofenceLoading: true,
+        addGeofenceError: null,
+      };
+    case actionTypes.ADD_GEOFENCE_SUCCESS:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceData: payload?.data,
+      });
+    case actionTypes.ADD_GEOFENCE_FAILURE:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceErrorData: payload?.data,
+      });
+
+    // Clear Store on logout
+    case actionTypes.CLEAR_STORE:
+      return initialState;
 
     // default state
     default:

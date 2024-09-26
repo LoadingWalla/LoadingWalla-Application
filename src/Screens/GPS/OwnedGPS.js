@@ -16,13 +16,12 @@ import {
 import Button from '../../Components/Button';
 import CopyIcon from '../../../assets/SVG/svg/CopyIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
-import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   websocketConnect,
   websocketDisconnect,
-} from '../../Store/Actions/Actions';
+} from '../../Store/Actions/WebSocketActions';
 
 const truck = {
   id: '1',

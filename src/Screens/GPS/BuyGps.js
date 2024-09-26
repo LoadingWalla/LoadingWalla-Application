@@ -12,11 +12,11 @@ import {backgroundColorNew, titleColor} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
+import {fetchGpsPlansRequest} from '../../Store/Actions/Actions';
 import {
-  fetchGpsPlansRequest,
   websocketConnect,
   websocketDisconnect,
-} from '../../Store/Actions/Actions';
+} from '../../Store/Actions/WebSocketActions';
 
 const Plan = ({text}) => {
   return (

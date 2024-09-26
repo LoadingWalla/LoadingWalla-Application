@@ -14,10 +14,11 @@ import {GradientColor2} from '../../../Color/color';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  fetchTokenRequest,
   initDashboard,
   myPostLoadFailure,
-  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
@@ -43,11 +44,13 @@ const DashboardLoad = ({navigation}) => {
     findLoadData,
     findLoadLoading,
     findLoadStatus,
-    wsConnected,
+    gpsTokenData,
   } = useSelector(state => {
-    // console.log("My Lorry/Load", state.data);
+    console.log('My Lorry/Load', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const handleNavigate = useRef(false);
   useEffect(() => {
@@ -64,13 +67,28 @@ const DashboardLoad = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
+  useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       if (wsConnected) {
         dispatch(websocketDisconnect());
       }
       dispatch(initDashboard());
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   useEffect(() => {

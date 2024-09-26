@@ -9,13 +9,10 @@ import {
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  websocketConnect,
-  websocketDisconnect,
-} from '../../Store/Actions/Actions';
 import Button from '../../Components/Button';
 import PlusIcon from '../../../assets/SVG/svg/PlusIcon';
 import MinusIcon from '../../../assets/SVG/svg/MinusIcon';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 const SelectGpsType = ({navigation, route}) => {
   const dispatch = useDispatch();

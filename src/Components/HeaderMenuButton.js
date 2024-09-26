@@ -10,7 +10,13 @@ import {
 import MenuThreeDot from '../../assets/SVG/svg/MenuThreeDot';
 import Share from 'react-native-share';
 
-const HeaderMenuButton = ({navigation, latitude, longitude, deviceId}) => {
+const HeaderMenuButton = ({
+  navigation,
+  latitude,
+  longitude,
+  deviceId,
+  name,
+}) => {
   // console.log(333333, latitude, longitude, deviceId);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,11 +52,11 @@ const HeaderMenuButton = ({navigation, latitude, longitude, deviceId}) => {
             <TouchableOpacity style={styles.menuItem} onPress={handleShare}>
               <Text style={styles.menuText}>Share</Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.menuItem}
               onPress={() => navigation.navigate('GpsSetting', {deviceId})}>
               <Text style={styles.menuText}>Setting</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={styles.menuItem}
               onPress={() =>
@@ -58,6 +64,7 @@ const HeaderMenuButton = ({navigation, latitude, longitude, deviceId}) => {
                   deviceId,
                   lat: latitude,
                   long: longitude,
+                  name: name,
                 })
               }>
               <Text style={styles.menuText}>Geofencing</Text>

@@ -42,6 +42,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    // borderWidth: 1,
+    marginLeft: 10,
   },
   hiddenText: color => ({
     marginLeft: 5,
@@ -49,6 +51,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-SemiBold',
     color: color,
+    textTransform: 'lowercase',
   }),
 });
 

@@ -17,14 +17,15 @@ import {
   acceptRejectFailure,
   initAcceptReject,
   initBooking,
-  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
+
 import BookingItem from '../../../Components/Bookingitem';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import {backgroundColorNew} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 const Booking = ({navigation}) => {
   const dispatch = useDispatch();
@@ -40,11 +41,12 @@ const Booking = ({navigation}) => {
     accept_rejectStatus,
     DashboardUser,
     dashboardLoading,
-    wsConnected,
   } = useSelector(state => {
     // console.log('My Bookings', state.data);
     return state.data;
   });
+
+  const {wsConnected} = useSelector(state => state.wsData);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -58,7 +60,7 @@ const Booking = ({navigation}) => {
         dispatch(websocketDisconnect());
       }
       dispatch(initBooking(2));
-    }, [dispatch]),
+    }, [dispatch, wsConnected]),
   );
 
   const bookingStatus = (bookingId, status, isCancel) => {

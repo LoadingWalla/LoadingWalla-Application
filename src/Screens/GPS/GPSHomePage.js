@@ -1,36 +1,32 @@
 import React, {useEffect} from 'react';
-import {
-  View,
-  BackHandler,
-  StyleSheet,
-  Text,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {View, BackHandler, StyleSheet, Text, Image} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
-import {initDashboard, websocketDisconnect} from '../../Store/Actions/Actions';
+import {fetchTokenRequest, initDashboard} from '../../Store/Actions/Actions';
 import DashboardHeader from '../../Components/DashboardHeader';
 import {textColor, titleColor, white} from '../../Color/color';
 import InnerButton from '../../Components/InnerButton';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 
 const GPSHomePage = ({navigation}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
 
-  const {DashboardUser, dashboardLoading} = useSelector(state => {
-    // console.log('GPSHomePage Truck', state.data);
+  const {DashboardUser, dashboardLoading, gpsTokenData} = useSelector(state => {
     return state.data;
   });
+  const {wsConnected} = useSelector(state => state.wsData);
 
   useEffect(() => {
+    if (gpsTokenData === null) {
+      dispatch(fetchTokenRequest());
+    }
     const backAction = () => {
       BackHandler.exitApp();
       return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
@@ -38,10 +34,15 @@ const GPSHomePage = ({navigation}) => {
     return () => backHandler.remove();
   }, []);
 
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected]);
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(initDashboard());
-      dispatch(websocketDisconnect());
     }, [dispatch]),
   );
 

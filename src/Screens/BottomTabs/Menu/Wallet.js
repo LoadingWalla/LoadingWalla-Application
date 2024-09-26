@@ -174,12 +174,12 @@ const Wallet = ({navigation}) => {
       <View style={styles.repeatView}>
         <View>
           <Text style={styles.paymentText}>
-            ₹ {item.amount} Payment successful
+            ₹ {item?.amount} Payment successful
           </Text>
-          <Text style={styles.dateText}>{item.date}</Text>
+          <Text style={styles.dateText}>{item?.date}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => setAmount(5000)}
+          onPress={() => setAmount(item?.amount)}
           style={styles.requestButtonContainer}>
           <Text style={styles.gradientButtonText}>Repeat</Text>
         </TouchableOpacity>
@@ -247,23 +247,33 @@ const Wallet = ({navigation}) => {
     </View>
   );
 
+  // const DeductionsRoute = () => (
+  //   <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+  //     {transcationData?.length === 0 ? (
+  //       <NotFound
+  //         imageName="noBookings"
+  //         title={'No Transcation Found'}
+  //         height={150}
+  //         width={300}
+  //       />
+  //     ) : (
+  //       <FlatList
+  //         data={transcationData}
+  //         keyExtractor={item => item.id}
+  //         renderItem={deductionRenderItem}
+  //         showsVerticalScrollIndicator={false}
+  //       />
+  //     )}
+  //   </View>
+  // );
   const DeductionsRoute = () => (
     <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
-      {transcationData?.length === 0 ? (
-        <NotFound
-          imageName="noBookings"
-          title={'No Transcation Found'}
-          height={150}
-          width={300}
-        />
-      ) : (
-        <FlatList
-          data={transcationData}
-          keyExtractor={item => item.id}
-          renderItem={rechargeRenderItem}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      <NotFound
+        imageName="noBookings"
+        title={'No Transcation Found'}
+        height={150}
+        width={300}
+      />
     </View>
   );
 

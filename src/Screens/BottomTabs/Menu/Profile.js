@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,9 +20,9 @@ import {useFocusEffect} from '@react-navigation/native';
 import Toast from 'react-native-simple-toast';
 import DeviceInfo from 'react-native-device-info';
 import {
+  clearStore,
   initLogout,
   initProfile,
-  websocketDisconnect,
 } from '../../../Store/Actions/Actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -55,9 +55,9 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
-// import InAppReview from 'react-native-in-app-review';
 import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
@@ -69,22 +69,24 @@ const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {
-    UserVerifyPercentage,
-    profileLoading,
-    profileSetupData,
-    Userdata,
-    wsConnected,
-  } = useSelector(state => {
-    // console.log('profile Data', state.data);
-    return state.data;
+  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
+    useSelector(state => {
+      // console.log('profile Data', state.data);
+      return state.data;
+    });
+  const {wsConnected} = useSelector(state => {
+    console.log('WEBSOCKET profile ----', state.wsData);
+    return state.wsData;
   });
+
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected]);
 
   useFocusEffect(
     React.useCallback(() => {
-      if (wsConnected) {
-        dispatch(websocketDisconnect());
-      }
       dispatch(initProfile());
     }, [dispatch, profileSetupData]),
   );
@@ -130,6 +132,7 @@ const Profile = ({navigation, route}) => {
               dispatch(initLogout());
               await AsyncStorage.removeItem('UserType');
               await AsyncStorage.removeItem('auth-token');
+              dispatch(clearStore());
 
               navigation.reset({
                 index: 0,
@@ -262,25 +265,25 @@ const Profile = ({navigation, route}) => {
             style={{flex: 1, marginBottom: 60}}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            {Userdata?.user_type !== 3 && (
-              <View style={style.percentageBarView}>
-                <PercentageBar
-                  navigation={navigation}
-                  percentage={UserVerifyPercentage || 0}
-                  verify={Userdata?.verify}
-                  style={style}
-                />
-                <TouchableOpacity
-                  style={style.buttonContainer}
-                  onPress={() => navigation.navigate('Wallet')}>
-                  <WalletIcon size={25} color={'#F0C200'} />
-                  <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                  <View style={style.rightArrowView}>
-                    <RightArrow size={20} color={GradientColor1} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+            {/* {Userdata?.user_type !== 3 && ( */}
+            <View style={style.percentageBarView}>
+              <PercentageBar
+                navigation={navigation}
+                percentage={UserVerifyPercentage || 0}
+                verify={Userdata?.verify}
+                style={style}
+              />
+              <TouchableOpacity
+                style={style.buttonContainer}
+                onPress={() => navigation.navigate('Wallet')}>
+                <WalletIcon size={25} color={'#F0C200'} />
+                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
+                <View style={style.rightArrowView}>
+                  <RightArrow size={20} color={GradientColor1} />
+                </View>
+              </TouchableOpacity>
+            </View>
+            {/* )} */}
 
             <View style={style.section}>
               <View style={style.sectionHeader}>

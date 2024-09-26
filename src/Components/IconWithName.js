@@ -1,12 +1,25 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 
-const IconWithName = ({title, IconComponent, iconSize, onPress}) => (
+const IconWithName = ({
+  title,
+  dynamicTitle,
+  dynamicTitleColor,
+  IconComponent,
+  iconSize,
+  onPress,
+  color,
+}) => (
   <TouchableOpacity style={styles.iconView} onPress={onPress}>
     <View style={{borderWidth: 0, minWidth: 20}}>
-      <IconComponent size={iconSize} />
+      <IconComponent size={iconSize} color={color} />
     </View>
-    <Text style={styles.iconText}>{title}</Text>
+    <Text style={styles.iconText}>
+      {title}
+      <Text style={[styles.dynamicText, {color: dynamicTitleColor}]}>
+        {dynamicTitle}
+      </Text>
+    </Text>
   </TouchableOpacity>
 );
 

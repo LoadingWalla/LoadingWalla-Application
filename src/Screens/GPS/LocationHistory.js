@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -7,242 +7,393 @@ import {
   View,
   ActivityIndicator,
 } from 'react-native';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
+  clearGpsTripsData,
+  clearSummaryReportData,
+  fetchAddressRequest,
   fetchGpsTripsRequest,
   fetchSummaryReportRequest,
-  websocketDisconnect,
+  fetchTokenRequest,
 } from '../../Store/Actions/Actions';
-import {formatDate} from '../../Utils/dateUtils';
-import useAddress from '../../hooks/useAddress';
 import moment from 'moment';
-import {TabView, SceneMap} from 'react-native-tab-view';
-import RenderTabBar from '../Requests/RenderTabBar';
+import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
+import CalendarIcon from '../../../assets/SVG/CalendarIcon';
+import RightArrow from '../../../assets/SVG/svg/RightArrow';
+import {backgroundColorNew, titleColor} from '../../Color/color';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import {convertToCSV} from '../../Utils/CSVutils';
+import RNFS from 'react-native-fs';
+import Share from 'react-native-share';
 
-const SummaryList = ({data, renderItem, loading}) =>
-  loading ? (
-    <ActivityIndicator
-      size="large"
-      color={backgroundColorNew}
-      style={styles.loader}
-    />
-  ) : (
-    <FlatList
-      data={data}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-      ListHeaderComponent={
-        <View style={styles.tableHeader}>
-          <Text style={styles.headerText}>Start Date</Text>
-          <Text style={styles.headerText}>Distance</Text>
-          <Text style={styles.headerText}>Avg. Speed</Text>
-          <Text style={styles.headerText}>Max. Speed</Text>
-        </View>
-      }
-      ListEmptyComponent={
-        <View style={styles.noDataView}>
-          <Text style={styles.noDataText}>No Data Found</Text>
-        </View>
-      }
-      style={styles.tableContainer}
-    />
-  );
+const convertMillisToTime = millis => {
+  const hours = Math.floor(millis / (1000 * 60 * 60));
+  const minutes = Math.floor((millis % (1000 * 60 * 60)) / (1000 * 60));
+  return `${hours}h ${minutes}m`;
+};
 
-const LocationHistory = ({navigation, route}) => {
-  const {deviceId, name, from, to} = route.params;
-  const dispatch = useDispatch();
-
-  const {
-    gpsSummaryLoading,
-    gpsSummaryError,
-    gpsSummaryData,
-    gpsTokenData,
-    wsPositions,
-    gpsTripsLoading,
-    gpsTripsError,
-    gpsTripsData,
-  } = useSelector(state => state.data);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const defaultFrom = from || moment().utc().startOf('day').toISOString();
-      const defaultTo = to || moment().utc().endOf('day').toISOString();
-
-      // Disconnect WebSocket first
-      dispatch(websocketDisconnect());
-
-      // Fetch summary report
-      dispatch(
-        fetchSummaryReportRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-          true,
-        ),
-      );
-
-      // Fetch GPS trips
-      dispatch(
-        fetchGpsTripsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-          true,
-        ),
-      );
-
-      // Optional cleanup function
-      return () => {
-        // Any cleanup actions
-      };
-    }, [gpsTokenData, deviceId, from, to, dispatch]),
-  );
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const defaultFrom = from || moment().utc().startOf('day').toISOString();
-  //     const defaultTo = to || moment().utc().endOf('day').toISOString();
-  //     dispatch(
-  //       fetchSummaryReportRequest(
-  //         gpsTokenData.email,
-  //         gpsTokenData.password,
-  //         deviceId,
-  //         defaultFrom,
-  //         defaultTo,
-  //         true,
-  //       ),
-  //     );
-  //     dispatch(
-  //       fetchGpsTripsRequest(
-  //         gpsTokenData.email,
-  //         gpsTokenData.password,
-  //         deviceId,
-  //         defaultFrom,
-  //         defaultTo,
-  //         true,
-  //       ),
-  //     );
-  //     return () => {
-  //       // Any cleanup actions
-  //     };
-  //   }, [gpsTokenData, deviceId, from, to, dispatch]),
-  // );
-
-  // const {address, fetchAddress} = useAddress(wsPositions);
-
-  const renderItem = ({item}) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.rowText}>{formatDate(item?.startTime)}</Text>
-      <Text style={styles.rowText}>{`${(item?.distance / 1000).toFixed(
-        2,
-      )} KM`}</Text>
-      <Text style={styles.rowText}>{`${(item?.averageSpeed * 1.852).toFixed(
-        2,
-      )} km/h`}</Text>
-      <Text style={styles.rowText}>{`${(item?.maxSpeed * 1.852).toFixed(
-        2,
-      )} km/h`}</Text>
+const TripItem = React.memo(({item, onShowAddress}) => {
+  console.log(8888888888, item);
+  return (
+    <View style={styles.tripItemContainer}>
+      <View style={styles.statusIndicatorContainer}>
+        <View style={styles.greenIndicator} />
+        <View style={styles.line} />
+        <View style={styles.redIndicator} />
+      </View>
+      <View style={styles.tripDetailsContainer}>
+        <TripDetail
+          address={item?.startAddress}
+          time={item?.startTime}
+          lat={item?.startLat}
+          lng={item?.startLon}
+          itemId={item.startPositionId}
+          onShowAddress={onShowAddress}
+        />
+        <TripStats
+          distance={item?.distance}
+          averageSpeed={item?.averageSpeed}
+          duration={item?.duration}
+        />
+        <TripDetail
+          address={item?.endAddress}
+          time={item?.endTime}
+          lat={item?.endLat}
+          lng={item?.endLon}
+          itemId={item.endPositionId}
+          onShowAddress={onShowAddress}
+        />
+      </View>
     </View>
   );
+});
 
-  const FirstRoute = () => (
-    <SummaryList
-      data={gpsTripsData}
-      renderItem={renderItem}
-      loading={gpsTripsLoading}
-    />
+const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
+  const {fullAddressData, fullAddressCustomId} = useSelector(
+    state => state.data,
   );
-
-  const SecondRoute = () => (
-    <SummaryList
-      data={gpsSummaryData}
-      renderItem={renderItem}
-      loading={gpsSummaryLoading}
-    />
-  );
-
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    {key: 'first', title: 'Trips'},
-    {key: 'second', title: 'Summary'},
-  ]);
 
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.headerBox}>
-        <View style={styles.stopBox}>
-          <Text style={styles.stopText}>Total distance</Text>
-          <Text style={styles.stopCount}>
-            {wsPositions[0]?.attributes?.totalDistance
-              ? `${(wsPositions[0]?.attributes?.totalDistance / 1000).toFixed(
-                  2,
-                )} KM`
-              : '0 KM'}
-          </Text>
-        </View>
-        <View style={styles.stopBox}>
-          <Text style={styles.stopText}>Vechile Name/Number</Text>
-          <Text style={styles.stopCount}>{name}</Text>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.calendarIconBox}
-            onPress={() =>
-              navigation.navigate('quickfilters', {
-                deviceId,
-                name,
-                navigationPath: 'LocationHistory',
-              })
-            }>
-            <CalendarIcon size={35} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* <View
-        style={{
-          paddingTop: 20,
-          padding: 10,
-          borderRadius: 3,
-          backgroundColor: '#FFF1ED',
-          marginTop: -20,
-          margin: 10,
-        }}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-          <Text style={styles.stopText}>{name}</Text>
-          <View style={styles.verticalLine2} />
-          <TouchableOpacity onPress={fetchAddress}>
-            <Text style={{color: 'blue', textDecorationLine: 'underline'}}>
-              {address}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View> */}
-      <TabView
-        navigationState={{index, routes}}
-        renderScene={SceneMap({
-          first: FirstRoute,
-          second: SecondRoute,
-          // third: ThirdRoute,
-        })}
-        onIndexChange={setIndex}
-        renderTabBar={RenderTabBar}
-        style={{marginTop: -10}}
-      />
+    <View style={styles.detailContainer}>
+      {address || (fullAddressCustomId === itemId && fullAddressData) ? (
+        <Text style={styles.addressText}>{address || fullAddressData}</Text>
+      ) : (
+        <ShowFullAddress
+          lat={lat}
+          lng={lng}
+          itemId={itemId}
+          onShowAddress={onShowAddress}
+        />
+      )}
+      <Text style={styles.timeText}>
+        {moment(time).utcOffset('+05:30').format('DD/MM/YYYY hh:mm A')}
+      </Text>
     </View>
   );
 };
 
+const ShowFullAddress = ({lat, lng, itemId, onShowAddress}) => {
+  return (
+    <TouchableOpacity
+      style={styles.showAddressContainer}
+      onPress={() => onShowAddress(itemId, lat, lng)}>
+      <Text style={styles.showAddressText}>Show full address</Text>
+      <RightArrow size={15} color={'#EF4D23'} />
+    </TouchableOpacity>
+  );
+};
+
+const TripStats = ({distance, averageSpeed, duration}) => (
+  <View style={styles.tripStatsContainer}>
+    <StatBox
+      value={`${(distance / 1000).toFixed(2)} KM`}
+      label="Total Distance"
+    />
+    <VerticalLine />
+    <StatBox
+      value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
+      label="Avg. Speed"
+    />
+    <VerticalLine />
+    <StatBox value={convertMillisToTime(duration)} label="Duration" />
+  </View>
+);
+
+const StatBox = ({value, label}) => (
+  <View style={styles.statBox}>
+    <Text style={styles.statValue}>{value}</Text>
+    <Text style={styles.statLabel}>{label}</Text>
+  </View>
+);
+
+const VerticalLine = () => <View style={styles.verticalLine} />;
+
+const LocationHistory = ({navigation, route}) => {
+  const {deviceId, name, from, to} = route?.params;
+  // console.log(777777, route);
+  const dispatch = useDispatch();
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  const {
+    gpsTripsLoading,
+    gpsTripsData,
+    gpsTokenData,
+    gpsSummaryData,
+    gpsTripsError,
+    gpsSummaryError,
+  } = useSelector(state => state.data);
+
+  const {wsConnected} = useSelector(state => state.wsData);
+
+  const handleDownload = async () => {
+    if (gpsTripsData && gpsTripsData.length > 0) {
+      const csvData = convertToCSV(gpsTripsData);
+
+      const path = `${RNFS.DocumentDirectoryPath}/gps_replay_data.csv`;
+
+      // Write the file to the device
+      await RNFS.writeFile(path, csvData, 'utf8')
+        .then(() => {
+          // Share the file
+          Share.open({
+            url: `file://${path}`,
+            type: 'text/csv',
+            filename: 'gps_replay_data',
+            showAppsToView: true,
+          })
+            .then(res => console.log('File shared:', res))
+            .catch(err => console.error('Error sharing file:', err));
+        })
+        .catch(err => {
+          console.error('Error writing file:', err);
+        });
+    } else {
+      // alert('No data available to download.');
+    }
+  };
+
+  useEffect(() => {
+    if (gpsTokenData) {
+      setTimeout(() => setInitialLoading(false), 1000);
+    }
+  }, [gpsTokenData]);
+
+  useEffect(() => {
+    if (wsConnected) {
+      dispatch(websocketDisconnect());
+    }
+  }, [wsConnected, dispatch]);
+
+  useEffect(() => {
+    if (!gpsTokenData) {
+      dispatch(fetchTokenRequest());
+    }
+  }, [gpsTokenData, dispatch]);
+
+  const handleShowAddress = (itemId, lat, lng) => {
+    dispatch(fetchAddressRequest(lat, lng, itemId));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (gpsTokenData) {
+        dispatch(
+          fetchSummaryReportRequest(
+            gpsTokenData.email,
+            gpsTokenData.password,
+            deviceId,
+            encodeURIComponent(from),
+            encodeURIComponent(to),
+            false,
+          ),
+        );
+        dispatch(
+          fetchGpsTripsRequest(
+            gpsTokenData.email,
+            gpsTokenData.password,
+            deviceId,
+            from,
+            to,
+          ),
+        );
+      }
+
+      return () => {
+        dispatch(clearGpsTripsData());
+        dispatch(clearSummaryReportData());
+      };
+    }, [dispatch, deviceId, from, to, gpsTokenData]),
+  );
+
+  const handleRetry = () => {
+    if (gpsTokenData) {
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+          false,
+        ),
+      );
+      dispatch(
+        fetchGpsTripsRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+        ),
+      );
+    }
+  };
+
+  const renderItem = useCallback(
+    ({item}) => <TripItem item={item} onShowAddress={handleShowAddress} />,
+    [],
+  );
+
+  const calculateAverageSpeed = () => {
+    if (gpsTripsData && gpsTripsData.length > 0) {
+      const totalSpeed = gpsTripsData.reduce(
+        (acc, trip) => acc + (trip.averageSpeed || 0),
+        0,
+      );
+      return (totalSpeed / gpsTripsData.length).toFixed(2);
+    }
+    return '0.00';
+  };
+
+  const shouldCalculateAverageSpeed =
+    gpsSummaryData &&
+    gpsSummaryData.length > 0 &&
+    (gpsSummaryData[0]?.averageSpeed === 0 ||
+      gpsSummaryData[0]?.averageSpeed === 'NaN');
+
+  const averageSpeed = !shouldCalculateAverageSpeed
+    ? (gpsSummaryData[0]?.averageSpeed * 1.852).toFixed(2)
+    : calculateAverageSpeed();
+
+  if (initialLoading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color={backgroundColorNew} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.headerBox}>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.timeText}>Trip summary</Text>
+          <Text style={styles.timeText}>
+            Vehicle number: <Text style={styles.vehicleNumberText}>{name}</Text>
+          </Text>
+        </View>
+        <View style={styles.summaryContainer}>
+          <StopBox
+            label="Total distance"
+            value={
+              gpsSummaryData && gpsSummaryData.length > 0
+                ? `${(gpsSummaryData[0]?.distance / 1000).toFixed(2)} KM`
+                : '0.00 KM'
+            }
+          />
+          <StopBox label="Avg. Speed" value={`${averageSpeed} KM/H`} />
+          <View style={styles.iconButtonsContainer}>
+            <TouchableOpacity
+              style={styles.downloadIconBox}
+              onPress={handleDownload}>
+              <DownloadIcon size={20} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.calendarIconBox}
+              onPress={() =>
+                navigation.navigate('quickfilters', {
+                  deviceId,
+                  name,
+                  navigationPath: 'LocationHistory',
+                })
+              }>
+              <CalendarIcon size={20} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      {gpsTripsError || gpsSummaryError ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>
+            Failed to fetch data. Please try again.
+          </Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : gpsTripsLoading ? (
+        <ActivityIndicator
+          size="large"
+          color={backgroundColorNew}
+          style={styles.loader}
+        />
+      ) : (
+        <FlatList
+          data={gpsTripsData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.noDataText}>No Trips</Text>
+            </View>
+          }
+          style={styles.tableContainer}
+        />
+      )}
+    </View>
+  );
+};
+
+const StopBox = ({label, value}) => (
+  <View style={styles.stopBox}>
+    <Text style={styles.stopText}>{label}</Text>
+    <Text style={styles.stopCount}>{value}</Text>
+  </View>
+);
+
 export default LocationHistory;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerBox: {
+    backgroundColor: '#FFE9E3',
+    borderRadius: 8,
+    margin: 10,
+  },
+  headerTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  timeText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 10,
+    color: '#454545',
+  },
+  vehicleNumberText: {
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    color: titleColor,
+  },
+  summaryContainer: {
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -250,7 +401,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     zIndex: 10,
-    margin: 10,
   },
   stopBox: {
     paddingHorizontal: 5,
@@ -262,66 +412,124 @@ const styles = StyleSheet.create({
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
-    textAlign: 'center',
   },
   stopCount: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 18,
+    fontSize: 14,
     textAlign: 'left',
-    marginTop: -5,
     textTransform: 'uppercase',
+    marginTop: -2,
+  },
+  iconButtonsContainer: {
+    flexDirection: 'row',
+  },
+  downloadIconBox: {
+    padding: 10,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#f7f7f7',
+    elevation: 2,
+    marginRight: 10,
   },
   calendarIconBox: {
     padding: 10,
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor: '#f7f7f7',
     elevation: 2,
   },
-  verticalLine2: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
+  tripItemContainer: {
+    flex: 1,
+    padding: 10,
     marginHorizontal: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#ffffff',
+    elevation: 2,
+  },
+  statusIndicatorContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 17,
+    marginTop: 10,
+  },
+  greenIndicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#3BA700',
+  },
+  redIndicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#FF0000',
+    borderRadius: 5,
+  },
+  line: {
+    flex: 1,
+    width: 1.5,
+    backgroundColor: '#AFAFAF',
+    marginHorizontal: 5,
+  },
+  tripDetailsContainer: {
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  detailContainer: {
+    padding: 5,
+  },
+  addressText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: titleColor,
+  },
+  showAddressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  showAddressText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: '#EF4D23',
+    textDecorationLine: 'underline',
+  },
+  tripStatsContainer: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
+  statBox: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statValue: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: titleColor,
+  },
+  statLabel: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 10,
+    color: titleColor,
+  },
+  verticalLine: {
+    backgroundColor: '#AFAFAF',
+    width: 1,
+    marginHorizontal: 5,
     height: '100%',
   },
   tableContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
     paddingVertical: 10,
-    // borderWidth: 1,
     marginBottom: 10,
-  },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    paddingBottom: 10,
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-  },
-  headerText: {
-    fontSize: 14,
-    color: titleColor,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    minWidth: 90,
-  },
-  rowText: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    color: titleColor,
-    textAlign: 'center',
-    minWidth: 90,
   },
   loader: {
     flex: 1,
@@ -329,10 +537,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noDataView: {
-    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 50,
   },
-  noDataText: {},
+  noDataText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+    color: titleColor,
+  },
+  errorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  errorText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+    color: '#FF0000',
+    marginBottom: 10,
+  },
+  retryButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: backgroundColorNew,
+  },
+  retryButtonText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
 });

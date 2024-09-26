@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Platform,
-  Image,
-} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,13 +7,7 @@ import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
 // import {Picker} from '@react-native-picker/picker';
-import {
-  GradientColor2,
-  GradientColor4,
-  PrivacyPolicy,
-  backgroundColorNew,
-  pageBackground,
-} from '../../Color/color';
+import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
 import {Dimensions} from 'react-native';
 import Button from '../../Components/Button';

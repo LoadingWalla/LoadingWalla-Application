@@ -115,9 +115,8 @@ export default StyleSheet.create({
   },
   buttonText: {
     color: titleColor,
-    fontWeight: '700',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    fontFamily: 'PlusJakartaSans-ExtraBold',
     marginLeft: 10,
   },
   buttonView: {
