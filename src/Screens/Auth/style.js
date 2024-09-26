@@ -3,12 +3,10 @@ import {
   PrivacyPolicy,
   textColor,
   GradientColor2,
-  GradientColor3,
   pageBackground,
   inputColor,
   titleColor,
   back_color,
-  loadingwalla,
   backgroundColorNew,
 } from '../../Color/color';
 
