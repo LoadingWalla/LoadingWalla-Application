@@ -298,7 +298,7 @@ const TrackingTruck = ({navigation, route}) => {
             />
             <ToggleIconText
               IconComponent={GeoFencingIcon}
-              text="GeoFencing"
+              text="Geozone"
               iconSize={18}
               color={'#727272'}
               index={3}

@@ -1,12 +1,5 @@
 import moment from 'moment';
-import React, {
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  Children,
-} from 'react';
+import React, {useRef, useState, useMemo, useCallback, useEffect} from 'react';
 import {
   Animated,
   PanResponder,
@@ -262,7 +255,7 @@ const BottomSwipeUpContainer = React.memo(
     };
 
     const onGeozonePress = () => {
-      navigation.navigate('geofencing', {
+      navigation.navigate('AddGeozone', {
         deviceId: item?.id,
         lat: positions[0]?.latitude || item.position[0]?.latitude,
         lon: positions[0]?.longitude || item.position[0]?.longitude,

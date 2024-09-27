@@ -1,18 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  lazy,
-  Suspense,
-} from 'react';
-import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  Text,
-} from 'react-native';
+import React, {useEffect, useState, useCallback, useMemo} from 'react';
+import {View, FlatList, ActivityIndicator, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import Snackbar from 'react-native-snackbar';
@@ -26,13 +13,10 @@ import {
 } from '../../Store/Actions/Actions';
 import {backgroundColorNew} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-
-const DashboardHeader = lazy(() => import('../../Components/DashboardHeader'));
-const GpsItem = lazy(() => import('../../Components/GpsItem'));
-const SearchBox = lazy(() => import('../../Components/SearchBox'));
-const EmptyListComponent = lazy(() =>
-  import('../../Components/EmptyListComponent'),
-);
+import GpsItem from '../../Components/GpsItem';
+import DashboardHeader from '../../Components/DashboardHeader';
+import SearchBox from '../../Components/SearchBox';
+import EmptyListComponent from '../../Components/EmptyListComponent';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -223,33 +207,29 @@ const MyGpsScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Suspense fallback={<Text>Loading phone input...</Text>}>
-        <View style={styles.dashboardHeaderView}>
-          <DashboardHeader
-            img={DashboardUser?.profile_img}
-            navigatiopnWallet={() => navigation.navigate('Wallet')}
-            notification={() => navigation.navigate('Notification')}
-            isDashboard={true}
-            title={DashboardUser?.name}
-            gotoProfile={() => navigation.navigate(t(Constants.MENU))}
-            navigate={() => navigation?.navigate('Contactus')}
-            loading={dashboardLoading}
-            wallet={DashboardUser?.wallet}
-            verify={DashboardUser?.verify}
-            t={t}
-          />
-        </View>
-      </Suspense>
+      <View style={styles.dashboardHeaderView}>
+        <DashboardHeader
+          img={DashboardUser?.profile_img}
+          navigatiopnWallet={() => navigation.navigate('Wallet')}
+          notification={() => navigation.navigate('Notification')}
+          isDashboard={true}
+          title={DashboardUser?.name}
+          gotoProfile={() => navigation.navigate(t(Constants.MENU))}
+          navigate={() => navigation?.navigate('Contactus')}
+          loading={dashboardLoading}
+          wallet={DashboardUser?.wallet}
+          verify={DashboardUser?.verify}
+          t={t}
+        />
+      </View>
       <View style={styles.contentContainer}>
-        <Suspense fallback={<Text>Loading phone input...</Text>}>
-          <SearchBox
-            onSearch={handleSearch}
-            onToggle={handleToggleSearch}
-            onFilterChange={handleFilterChange}
-            deviceCounts={deviceCounts}
-            onRefresh={onRefresh}
-          />
-        </Suspense>
+        <SearchBox
+          onSearch={handleSearch}
+          onToggle={handleToggleSearch}
+          onFilterChange={handleFilterChange}
+          deviceCounts={deviceCounts}
+          onRefresh={onRefresh}
+        />
         {gpsDeviceLoading ? (
           <View style={styles.loadingStyle}>
             <ActivityIndicator size="large" color={backgroundColorNew} />
