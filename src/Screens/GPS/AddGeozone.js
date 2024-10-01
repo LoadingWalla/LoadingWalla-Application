@@ -14,6 +14,11 @@ import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import Button from '../../Components/Button';
 import {backgroundColorNew, PrivacyPolicy, textColor} from '../../Color/color';
+import {
+  addGeofenceRequest,
+  clearGeofenceAddedData,
+} from '../../Store/Actions/Actions';
+import AlertBox from '../../Components/AlertBox';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -28,7 +33,8 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const AddGeozone = ({navigation, route}) => {
-  const {deviceId, lat, long} = route.params;
+  const {deviceId, lat, lon} = route.params;
+
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const [livePositions, setLivePositions] = useState([]);
@@ -37,6 +43,7 @@ const AddGeozone = ({navigation, route}) => {
   const [geozoneName, setGeozoneName] = useState('');
 
   const {wsMessages, wsConnected} = useSelector(state => state.wsData);
+  const {addGeofenceStatus} = useSelector(state => state.data);
 
   useEffect(() => {
     if (wsConnected) {
@@ -56,7 +63,7 @@ const AddGeozone = ({navigation, route}) => {
     new AnimatedRegion({
       latitude: livePositions.length > 0 ? livePositions[0].latitude : lat || 0,
       longitude:
-        livePositions.length > 0 ? livePositions[0].longitude : long || 0,
+        livePositions.length > 0 ? livePositions[0].longitude : lon || 0,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     }),
@@ -74,11 +81,29 @@ const AddGeozone = ({navigation, route}) => {
   };
 
   const handleSave = () => {
-    console.log(
-      `Geofence radius saved: ${(sliderValue * 5000) / 1000} kilometers`,
+    dispatch(
+      addGeofenceRequest(
+        `CIRCLE (${lat} ${lon}, ${sliderValue * 5000})`,
+        deviceId,
+        geozoneName,
+      ),
     );
-    console.log(`Geozone name: ${geozoneName}`);
   };
+
+  useEffect(() => {
+    if (addGeofenceStatus !== null) {
+      if (addGeofenceStatus === 200) {
+        AlertBox('Geofence Added Successfully!');
+        navigation.navigate('geozones', {deviceId, lat, lon});
+        setGeozoneName('');
+        setSliderValue(0.5);
+        dispatch(clearGeofenceAddedData());
+      } else {
+        AlertBox('Error in Adding Geofencing.');
+        dispatch(clearGeofenceAddedData());
+      }
+    }
+  }, [addGeofenceStatus]);
 
   const animateToDevicePosition = () => {
     if (livePositions.length > 0 && mapRef.current) {
@@ -109,7 +134,7 @@ const AddGeozone = ({navigation, route}) => {
               longitude:
                 livePositions.length > 0
                   ? livePositions[0].longitude
-                  : long || 0,
+                  : lon || 0,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}>

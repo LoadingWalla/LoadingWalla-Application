@@ -1536,9 +1536,11 @@ export function* removeGpsParking({deviceId}) {
 // Add Geofence
 export function* addGpsGeozone({name, area, deviceId}) {
   try {
-    const body = {name, area, deviceId};
-    console.log(4444, body);
-    const data = yield API.post('gps/add-geofence', body);
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('area', area);
+    formData.append('device_id', deviceId);
+    const data = yield multiPartApi.post('gps/add-geofence', formData);
     console.log(1111, 'Add GeoZone ----->', data);
     if (data?.data?.status === 200) {
       yield put(actions.addGeofenceSuccess(data?.data));

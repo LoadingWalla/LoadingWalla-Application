@@ -1450,12 +1450,16 @@ export const getGeofenceFailure = payload => ({
 });
 
 // Add Geofence Actions
-export const addGeofenceRequest = (name, area, deviceId) => ({
-  type: actionTypes.ADD_GEOFENCE_REQUEST,
-  name,
-  area,
-  deviceId,
-});
+export const addGeofenceRequest = (area, deviceId, name) => {
+  console.log(55555555555, area, deviceId, name);
+
+  return {
+    type: actionTypes.ADD_GEOFENCE_REQUEST,
+    name,
+    area,
+    deviceId,
+  };
+};
 
 export const addGeofenceSuccess = payload => ({
   type: actionTypes.ADD_GEOFENCE_SUCCESS,
@@ -1464,5 +1468,10 @@ export const addGeofenceSuccess = payload => ({
 
 export const addGeofenceFailure = payload => ({
   type: actionTypes.ADD_GEOFENCE_FAILURE,
+  payload,
+});
+
+export const clearGeofenceAddedData = payload => ({
+  type: actionTypes.CLEAR_GEOFENCE_DATA,
   payload,
 });

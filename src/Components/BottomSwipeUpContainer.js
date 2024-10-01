@@ -174,7 +174,7 @@ const BottomSwipeUpContainer = React.memo(
     const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
     const dispatch = useDispatch();
-    console.log(444, item);
+    // console.log(444, item);
 
     const panResponder = useMemo(
       () =>
