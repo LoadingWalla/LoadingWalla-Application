@@ -1,10 +1,15 @@
 import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  backgroundColorNew,
+  GradientColor2,
+  tabIndicatorColor,
+} from '../Color/color';
+import {Animated, BackHandler, Dimensions} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Animated, BackHandler, Dimensions} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -20,11 +25,6 @@ import BookingActiveIcon from '../../assets/SVG/svg/BookingActiveIcon';
 import BookingIcon from '../../assets/SVG/svg/BookingIcon';
 import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
-import {
-  backgroundColorNew,
-  GradientColor2,
-  tabIndicatorColor,
-} from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
 import Booking from '../Screens/BottomTabs/Bookings/Booking';
