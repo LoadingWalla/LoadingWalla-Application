@@ -19,6 +19,7 @@ import {
   clearGeofenceAddedData,
 } from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
+import styles from './style'
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -127,7 +128,7 @@ const AddGeozone = ({navigation, route}) => {
         ) : (
           <MapView
             ref={mapRef}
-            style={StyleSheet.absoluteFillObject}
+            style={styles.geozoneAbsFillObj} 
             initialRegion={{
               latitude:
                 livePositions.length > 0 ? livePositions[0].latitude : lat || 0,
@@ -197,7 +198,7 @@ const AddGeozone = ({navigation, route}) => {
           title="Save"
           onPress={handleSave}
           textStyle={styles.btnText}
-          style={styles.btnStyle}
+          style={styles.addGeozoneBtnStyle}
         />
       </View>
     </View>
@@ -206,93 +207,94 @@ const AddGeozone = ({navigation, route}) => {
 
 export default AddGeozone;
 
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  mapContainer: {flex: 1},
-  loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  gpsButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 35,
-    height: 35,
-    borderRadius: 25,
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    position: 'absolute',
-    bottom: 150,
-    right: 10,
-  },
-  bottomContainer: {
-    backgroundColor: '#FFF7F5',
-    position: 'absolute',
-    bottom: 0,
-    padding: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: '100%',
-    elevation: 3,
-    borderColor: '#F7F7F7',
-    borderWidth: 1,
-  },
-  geozoneContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    paddingVertical: 10,
-    borderColor: '#00000029',
-    borderWidth: 1,
-  },
-  geozoneText: {
-    marginHorizontal: 15,
-    fontSize: 10,
-    fontFamily: 'PlusJakartaSans-Regular',
-  },
-  sliderContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  slider: {width: '75%'},
-  textvalue: {
-    width: '20%',
-    textAlign: 'center',
-    borderRadius: 3,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-    borderWidth: 0.3,
-    paddingVertical: 5,
-    marginRight: 5,
-    backgroundColor: '#FFFFFF',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 15,
-  },
-  inputLabel: {
-    marginRight: 15,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Regular',
-  },
-  textInput: {
-    borderBottomWidth: 1,
-    flex: 1,
-    paddingVertical: 0,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  btnStyle: {
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    marginTop: 20,
-    width: '100%',
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {flex: 1},
+//   mapContainer: {flex: 1},
+//   loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+//   gpsButton: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     width: 35,
+//     height: 35,
+//     borderRadius: 25,
+//     backgroundColor: '#FFFFFF',
+//     elevation: 3,
+//     position: 'absolute',
+//     bottom: 150,
+//     right: 10,
+//   },
+//   bottomContainer: {
+//     backgroundColor: '#FFF7F5',
+//     position: 'absolute',
+//     bottom: 0,
+//     padding: 10,
+//     borderTopLeftRadius: 10,
+//     borderTopRightRadius: 10,
+//     width: '100%',
+//     elevation: 3,
+//     borderColor: '#F7F7F7',
+//     borderWidth: 1,
+//   },
+//   geozoneContainer: {
+//     backgroundColor: '#FFFFFF',
+//     borderRadius: 10,
+//     paddingVertical: 10,
+//     borderColor: '#00000029',
+//     borderWidth: 1,
+//   },
+//   geozoneText: {
+//     marginHorizontal: 15,
+//     fontSize: 10,
+//     fontFamily: 'PlusJakartaSans-Regular',
+//   },
+//   sliderContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     flex: 1,
+//   },
+//   slider: {width: '75%'},
+//   textvalue: {
+//     width: '20%',
+//     textAlign: 'center',
+//     borderRadius: 3,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//     borderWidth: 0.3,
+//     paddingVertical: 5,
+//     marginRight: 5,
+//     backgroundColor: '#FFFFFF',
+//   },
+//   inputContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     marginHorizontal: 15,
+//   },
+//   inputLabel: {
+//     marginRight: 15,
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Regular',
+//   },
+//   textInput: {
+//     borderBottomWidth: 1,
+//     flex: 1,
+//     paddingVertical: 0,
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   btnStyle: {
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginBottom: 10,
+//     marginTop: 20,
+//     width: '100%',
+//   },
+//   btnText: {
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+// });

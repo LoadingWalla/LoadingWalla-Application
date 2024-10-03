@@ -10,6 +10,7 @@ import {
   placeGpsOrderFailure,
   placeGpsOrderRequest,
 } from '../../Store/Actions/Actions';
+import styles from './style'
 
 const DeliveryDetails = ({navigation, route}) => {
   const {gpsCount, pricePerDevice, plan_id} = route.params;
@@ -203,8 +204,8 @@ const DeliveryDetails = ({navigation, route}) => {
         <Button
           title={'Continue'}
           onPress={handleContinue}
-          textStyle={styles.btnText}
-          style={styles.btnStyle}
+          textStyle={styles.deliveryDetailsBtnText}
+          style={styles.deliveryDetailsBtnStyle}
         />
       </ScrollView>
     </View>
@@ -213,44 +214,44 @@ const DeliveryDetails = ({navigation, route}) => {
 
 export default DeliveryDetails;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  inputContainer: {
-    marginTop: 16,
-  },
-  listContainer: {
-    flex: 1,
-    borderWidth: 0,
-    marginHorizontal: 10,
-    backgroundColor: '#ffffff',
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    elevation: 2,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-  label: {
-    fontSize: 15,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  btnStyle: {
-    flexDirection: 'row',
-    borderRadius: 6,
-    paddingHorizontal: 25,
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 30,
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 16,
+//     backgroundColor: '#fff',
+//   },
+//   inputContainer: {
+//     marginTop: 16,
+//   },
+//   listContainer: {
+//     flex: 1,
+//     borderWidth: 0,
+//     marginHorizontal: 10,
+//     backgroundColor: '#ffffff',
+//     paddingVertical: 15,
+//     paddingHorizontal: 10,
+//     elevation: 2,
+//     borderTopLeftRadius: 8,
+//     borderTopRightRadius: 8,
+//   },
+//   label: {
+//     fontSize: 15,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   btnStyle: {
+//     flexDirection: 'row',
+//     borderRadius: 6,
+//     paddingHorizontal: 25,
+//     paddingVertical: 10,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginBottom: 30,
+//   },
+//   btnText: {
+//     color: textColor,
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+// });
