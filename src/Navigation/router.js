@@ -1,10 +1,15 @@
 import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  backgroundColorNew,
+  GradientColor2,
+  tabIndicatorColor,
+} from '../Color/color';
+import {Animated, BackHandler, Dimensions} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Animated, BackHandler, Dimensions} from 'react-native';
 import Language from '../Screens/Language/Language';
 import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
@@ -20,11 +25,6 @@ import BookingActiveIcon from '../../assets/SVG/svg/BookingActiveIcon';
 import BookingIcon from '../../assets/SVG/svg/BookingIcon';
 import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
 import HomeIcon from '../../assets/SVG/svg/HomeIcon';
-import {
-  backgroundColorNew,
-  GradientColor2,
-  tabIndicatorColor,
-} from '../Color/color';
 import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
 import Booking from '../Screens/BottomTabs/Bookings/Booking';
@@ -83,11 +83,12 @@ import GPSHomePage from '../Screens/GPS/GPSHomePage';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
-import Geofencing from '../Screens/GPS/Geofencing';
 import HeaderMenuButton from '../Components/HeaderMenuButton';
 import GpsRelay from '../Screens/GPS/GpsRelay';
 import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
 import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
+import AddGeozone from '../Screens/GPS/AddGeozone';
+import Geozones from '../Screens/GPS/Geozones';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -2037,12 +2038,43 @@ const Navigation = ({language}) => {
       />
 
       <Stack.Screen
-        name="geofencing"
-        component={Geofencing}
+        name="AddGeozone"
+        component={AddGeozone}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: route?.params?.name || 'Geofencing',
+          title: route?.params?.name || 'Add Geozone',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
+          },
+          headerRight: () => (
+            <HeaderHelpButton
+              shareIcon={false}
+              navigation={navigation}
+              // latitude={route.params.lat}
+              // longitude={route.params.long}
+            />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="geozones"
+        component={Geozones}
+        options={({navigation, route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: route?.params?.name || 'All Geozones',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

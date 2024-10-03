@@ -124,6 +124,7 @@ const PaymentGPS = ({navigation, route}) => {
       Toast.show(verifyPaymentData.message);
       navigation.navigate('purchasingStatus', {
         statusCode: verifyPaymentStatus,
+        navigation: 'GPS',
       });
     }
   }, [verifyPaymentData, verifyPaymentStatus, navigation]);
@@ -165,14 +166,18 @@ const PaymentGPS = ({navigation, route}) => {
             ),
           );
         } else {
-          // AlertBox('Transaction not successful');
-          navigation.navigate('purchasingStatus', {statusCode: 400});
+          navigation.navigate('purchasingStatus', {
+            statusCode: 400,
+            navigation: 'GPS',
+          });
         }
       })
       .catch(() => {
         dispatch(createOrderFailure());
-        // AlertBox('Transaction not successful');
-        navigation.navigate('purchasingStatus', {statusCode: 400});
+        navigation.navigate('purchasingStatus', {
+          statusCode: 400,
+          navigation: 'GPS',
+        });
       });
   };
 

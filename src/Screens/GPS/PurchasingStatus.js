@@ -33,7 +33,7 @@ const PurchasingStatus = ({navigation, route}) => {
         </View>
         <Button
           title={'Done'}
-          onPress={() => navigation.navigate('GPS')}
+          onPress={() => navigation.navigate(route.params.navigation)}
           textStyle={styles.btnText}
           style={styles.btnStyle}
         />

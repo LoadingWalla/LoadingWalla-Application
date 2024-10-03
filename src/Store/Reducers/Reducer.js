@@ -235,6 +235,7 @@ const initialState = {
   // Geofence add
   addGeofenceLoading: true,
   addGeofenceError: null,
+  addGeofenceStatus: null,
   addGeofenceData: [],
 };
 
@@ -1660,16 +1661,25 @@ const reducer = (state = initialState, action) => {
         ...state,
         addGeofenceLoading: true,
         addGeofenceError: null,
+        addGeofenceStatus: null,
       };
     case actionTypes.ADD_GEOFENCE_SUCCESS:
       return updateState(state, {
         addGeofenceLoading: false,
-        addGeofenceData: payload?.data,
+        addGeofenceData: payload,
+        addGeofenceStatus: payload?.status,
       });
     case actionTypes.ADD_GEOFENCE_FAILURE:
       return updateState(state, {
         addGeofenceLoading: false,
         addGeofenceErrorData: payload?.data,
+        addGeofenceStatus: payload?.status,
+      });
+    case actionTypes.CLEAR_GEOFENCE_DATA:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceStatus: null,
+        addGeofenceData: null,
       });
 
     // Clear Store on logout
