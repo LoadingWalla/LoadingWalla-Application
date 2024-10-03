@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "react-devtools": "react-devtools"
+    "react-devtools": "react-devtools",
+    "dev": "react-native start --experimental-debugger"
   },
   "dependencies": {
     "@notifee/react-native": "^7.8.2",
