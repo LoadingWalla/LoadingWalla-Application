@@ -260,6 +260,7 @@ const BottomSwipeUpContainer = React.memo(
         lat: positions[0]?.latitude || item.position[0]?.latitude,
         lon: positions[0]?.longitude || item.position[0]?.longitude,
         name: item?.name,
+        address: item?.address,
       });
     };
 

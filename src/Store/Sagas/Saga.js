@@ -1559,8 +1559,8 @@ export function* fetchGeofence({deviceId}) {
     const data = yield API.get(`gps/get-geofence/${deviceId}`);
     console.log(1111, 'Get Geofence ----->', data);
 
-    if (data?.data?.status === 200) {
-      yield put(actions.getGeofenceSuccess(data?.data));
+    if (data?.status === 200) {
+      yield put(actions.getGeofenceSuccess(data));
     } else {
       yield put(actions.getGeofenceFailure(data?.status));
     }

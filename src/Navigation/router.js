@@ -68,7 +68,6 @@ import HeaderHelpButton from '../Components/HeaderHelpButton';
 import GpsSetting from '../Screens/GPS/GpsSetting';
 import GpsAlert from '../Screens/GPS/GpsAlert';
 import LocationHistory from '../Screens/GPS/LocationHistory';
-import TrackingTruck from '../Screens/GPS/TrackingTruck';
 import FuelPump from '../Screens/GPS/FuelPump';
 import BuyGps from '../Screens/GPS/BuyGps';
 import PlayJourney from '../Screens/GPS/PlayJourney';
@@ -1614,7 +1613,6 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        // component={TrackingTruck}
         component={TrackingTruckNew}
         options={({navigation, route}) => ({
           headerShown: true,

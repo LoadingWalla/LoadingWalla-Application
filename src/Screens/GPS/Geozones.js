@@ -2,15 +2,27 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
-import MapView, {AnimatedRegion, Marker, Circle} from 'react-native-maps';
+import MapView, {
+  AnimatedRegion,
+  Marker,
+  Circle,
+  Polyline,
+} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import {backgroundColorNew, textColor} from '../../Color/color';
+import {backgroundColorNew, GradientColor1, textColor} from '../../Color/color';
+import {useFocusEffect} from '@react-navigation/native';
+import {getGeofenceRequest} from '../../Store/Actions/Actions';
+import DeleteIcon from '../../../assets/SVG/svg/DeleteIcon';
 
+// Helper function to get live positions
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
     .flatMap(message => message.positions || [])
@@ -23,17 +35,35 @@ const getLivePositions = (wsMessages, deviceId) => {
     }));
 };
 
+// Helper function to generate circle points for polyline
+const generateCirclePoints = (center, radius, numPoints = 60) => {
+  let circlePoints = [];
+  for (let i = 0; i < numPoints; i++) {
+    const angle = (i * 360) / numPoints;
+    const latitudeOffset = radius * Math.cos(angle * (Math.PI / 180));
+    const longitudeOffset = radius * Math.sin(angle * (Math.PI / 180));
+    circlePoints.push({
+      latitude: center.latitude + latitudeOffset / 111320,
+      longitude:
+        center.longitude +
+        longitudeOffset /
+          (111320 * Math.cos(center.latitude * (Math.PI / 180))),
+    });
+  }
+  return circlePoints;
+};
+
 const Geozones = ({navigation, route}) => {
   const {deviceId, lat, lon} = route.params;
-  console.log(666666, route);
-
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const [livePositions, setLivePositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeGeofence, setActiveGeofence] = useState(null); // State for active geofence
 
   const {wsMessages, wsConnected} = useSelector(state => state.wsData);
-  const {addGeofenceStatus} = useSelector(state => state.data);
+  const {addGeofenceStatus, geofenceData, geofenceLoading, geofenceError} =
+    useSelector(state => state.data);
 
   useEffect(() => {
     if (wsConnected) {
@@ -48,6 +78,12 @@ const Geozones = ({navigation, route}) => {
       setLoading(false);
     }
   }, [wsMessages, wsConnected]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getGeofenceRequest(deviceId));
+    }, [dispatch]),
+  );
 
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
@@ -82,6 +118,20 @@ const Geozones = ({navigation, route}) => {
     }
   };
 
+  const handleGeofencePress = geofence => {
+    setActiveGeofence(geofence.id); // Set the active geofence
+    mapRef.current.animateToRegion({
+      latitude: geofence.latitude,
+      longitude: geofence.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  };
+
+  const Separator = () => (
+    <View style={{height: 1, backgroundColor: '#F7F7F7', marginVertical: 5}} />
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
@@ -110,10 +160,23 @@ const Geozones = ({navigation, route}) => {
                 </Marker.Animated>
                 <Circle
                   center={livePositions[livePositions.length - 1]}
-                  radius={1000}
+                  radius={2000}
                   fillColor="rgba(135,206,250,0.3)"
+                  strokeColor="transparent"
+                  strokeWidth={0}
+                />
+                <Polyline
+                  coordinates={
+                    livePositions.length > 0
+                      ? generateCirclePoints(
+                          livePositions[livePositions.length - 1],
+                          2000,
+                        )
+                      : []
+                  }
                   strokeColor={backgroundColorNew}
-                  strokeWidth={1}
+                  strokeWidth={2}
+                  lineDashPattern={[2, 5]}
                 />
               </>
             )}
@@ -126,7 +189,37 @@ const Geozones = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.bottomContainer}></View>
+      {/* Scrollable Bottom Container */}
+      <View style={styles.bottomContainer}>
+        <ScrollView>
+          {geofenceData && geofenceData.length > 0 ? (
+            geofenceData.map((geofence, index) => (
+              <View key={geofence.id}>
+                <TouchableOpacity
+                  onPress={() => handleGeofencePress(geofence)}
+                  style={[
+                    styles.geofenceItem,
+                    {
+                      backgroundColor:
+                        activeGeofence === geofence.id ? '#FFF7F5' : '#FFFFFF',
+                    },
+                  ]}>
+                  <Text
+                    style={{fontFamily: 'PlusJakartaSans-Bold', fontSize: 12}}>
+                    {geofence.name}
+                  </Text>
+                  <TouchableOpacity style={{borderWidth: 0}}>
+                    <DeleteIcon size={20} color={backgroundColorNew} />
+                  </TouchableOpacity>
+                </TouchableOpacity>
+                {index < geofenceData.length - 1 && <Separator />}
+              </View>
+            ))
+          ) : (
+            <Text>No geofences available</Text>
+          )}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -150,76 +243,23 @@ const styles = StyleSheet.create({
     right: 10,
   },
   bottomContainer: {
-    backgroundColor: '#FFF7F5',
+    backgroundColor: '#FFFFFF',
     position: 'absolute',
     bottom: 0,
-    padding: 10,
+    width: '100%',
+    maxHeight: Dimensions.get('window').height / 2.2,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    width: '100%',
     elevation: 3,
     borderColor: '#F7F7F7',
     borderWidth: 1,
   },
-  geozoneContainer: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+  geofenceItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
     paddingVertical: 10,
-    borderColor: '#00000029',
-    borderWidth: 1,
-  },
-  geozoneText: {
-    marginHorizontal: 15,
-    fontSize: 10,
-    fontFamily: 'PlusJakartaSans-Regular',
-  },
-  sliderContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-  },
-  slider: {width: '75%'},
-  textvalue: {
-    width: '20%',
-    textAlign: 'center',
-    borderRadius: 3,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-    borderWidth: 0.3,
-    paddingVertical: 5,
-    marginRight: 5,
-    backgroundColor: '#FFFFFF',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 15,
-  },
-  inputLabel: {
-    marginRight: 15,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Regular',
-  },
-  textInput: {
-    borderBottomWidth: 1,
-    flex: 1,
-    paddingVertical: 0,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  btnStyle: {
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    marginTop: 20,
-    width: '100%',
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
+    borderRadius: 5,
   },
 });

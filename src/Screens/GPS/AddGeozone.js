@@ -19,6 +19,7 @@ import {
   clearGeofenceAddedData,
 } from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
+import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -33,7 +34,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const AddGeozone = ({navigation, route}) => {
-  const {deviceId, lat, lon} = route.params;
+  const {deviceId, lat, lon, address} = route.params;
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -159,6 +160,25 @@ const AddGeozone = ({navigation, route}) => {
           onPress={animateToDevicePosition}>
           <GpsIcon2 size={20} />
         </TouchableOpacity>
+
+        <View style={styles.speedDistanceBox}>
+          <View style={styles.infoColumn}>
+            <Text style={styles.boldText}>{address}</Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.btnContainer}
+            onPress={() =>
+              navigation.navigate('geozones', {deviceId, lat, lon})
+            }>
+            <Text style={styles.btnText2}>Geozones</Text>
+            <SettingIcon
+              size={15}
+              color={backgroundColorNew}
+              style={styles.iconStyle}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.bottomContainer}>
@@ -173,8 +193,8 @@ const AddGeozone = ({navigation, route}) => {
               onValueChange={setSliderValue}
               minimumTrackTintColor={backgroundColorNew}
               maximumTrackTintColor={PrivacyPolicy}
-              thumbTintColor={backgroundColorNew}
-              thumbImage={require('../../../assets/slider.png')}
+              thumbImage={require('../../../assets/slider1.png')}
+              // thumbTintColor={backgroundColorNew}
             />
             <Text style={styles.textvalue}>
               {((sliderValue * 5000) / 1000).toFixed(1)} KM
@@ -236,10 +256,10 @@ const styles = StyleSheet.create({
   },
   geozoneContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
+    borderRadius: 5,
     paddingVertical: 10,
     borderColor: '#00000029',
-    borderWidth: 1,
+    borderWidth: 0.3,
   },
   geozoneText: {
     marginHorizontal: 15,
@@ -294,5 +314,42 @@ const styles = StyleSheet.create({
     color: textColor,
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-Bold',
+  },
+  speedDistanceBox: {
+    position: 'absolute',
+    top: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
+    zIndex: 99,
+    borderRadius: 8,
+    width: '95%',
+    alignSelf: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  infoColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  boldText: {fontFamily: 'PlusJakartaSans-Regular', fontSize: 12},
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 20,
+    elevation: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  iconStyle: {marginLeft: 5},
+  btnText2: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    textAlign: 'center',
   },
 });

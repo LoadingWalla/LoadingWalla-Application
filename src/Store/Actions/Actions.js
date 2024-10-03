@@ -1435,8 +1435,9 @@ export const removeParkingFailure = payload => ({
 });
 
 // Get Geofence Actions
-export const getGeofenceRequest = () => ({
+export const getGeofenceRequest = deviceId => ({
   type: actionTypes.GET_GEOFENCE_REQUEST,
+  deviceId,
 });
 
 export const getGeofenceSuccess = payload => ({
@@ -1451,8 +1452,7 @@ export const getGeofenceFailure = payload => ({
 
 // Add Geofence Actions
 export const addGeofenceRequest = (area, deviceId, name) => {
-  console.log(55555555555, area, deviceId, name);
-
+  // console.log(55555555555, area, deviceId, name);
   return {
     type: actionTypes.ADD_GEOFENCE_REQUEST,
     name,
