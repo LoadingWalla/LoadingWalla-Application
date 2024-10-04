@@ -20,6 +20,7 @@ import {
 } from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
 import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -82,6 +83,10 @@ const AddGeozone = ({navigation, route}) => {
   };
 
   const handleSave = () => {
+    if (!geozoneName.trim()) {
+      AlertBox('Please enter a geozone name.');
+      return;
+    }
     dispatch(
       addGeofenceRequest(
         `CIRCLE (${lat} ${lon}, ${sliderValue * 5000})`,
@@ -142,7 +147,8 @@ const AddGeozone = ({navigation, route}) => {
             {livePositions.length > 0 && (
               <>
                 <Marker.Animated coordinate={animatedMarkerPosition}>
-                  <ActiveLocation size={40} course={50} />
+                  {/* <ActiveLocation size={40} course={50} /> */}
+                  <TruckNavigationIcon size={40} />
                 </Marker.Animated>
                 <Circle
                   center={livePositions[livePositions.length - 1]}
@@ -331,10 +337,17 @@ const styles = StyleSheet.create({
   infoColumn: {
     flex: 1,
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
     paddingHorizontal: 5,
+    // borderWidth: 1,
   },
-  boldText: {fontFamily: 'PlusJakartaSans-Regular', fontSize: 12},
+  boldText: {
+    fontFamily: 'PlusJakartaSans-Regular',
+    fontSize: 12,
+    // textAlign: 'center',
+    // borderWidth: 1,
+  },
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

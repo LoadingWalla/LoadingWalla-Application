@@ -1012,7 +1012,7 @@ export const clearGpsDeviceData = () => ({
 
 // single gps devices
 export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
-  console.log(999999, username, password, deviceId);
+  // console.log(999999, username, password, deviceId);
   return {
     type: actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST,
     username,
@@ -1280,7 +1280,7 @@ export const fetchGpsOrderDetailFailure = error => ({
 
 // Get full address
 export const fetchAddressRequest = (lat, lan, customId) => {
-  console.log(8888888888888, lat, lan, customId);
+  // console.log(8888888888888, lat, lan, customId);
   return {
     type: actionTypes.FETCH_FULLADDRESS_REQUEST,
     lat,
@@ -1447,6 +1447,11 @@ export const getGeofenceSuccess = payload => ({
 
 export const getGeofenceFailure = payload => ({
   type: actionTypes.GET_GEOFENCE_FAILURE,
+  payload,
+});
+
+export const clearAllGeofenceData = payload => ({
+  type: actionTypes.CLEAR_ALLGEOFENCE_DATA,
   payload,
 });
 

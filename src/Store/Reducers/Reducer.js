@@ -1654,6 +1654,11 @@ const reducer = (state = initialState, action) => {
         geofenceLoading: true,
         geofenceError: payload?.data,
       });
+    case actionTypes.CLEAR_ALLGEOFENCE_DATA:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        geofenceData: [],
+      });
 
     // Add Geofence
     case actionTypes.ADD_GEOFENCE_REQUEST:

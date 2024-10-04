@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -17,182 +17,176 @@ import MapView, {
 import {useDispatch, useSelector} from 'react-redux';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import {backgroundColorNew, GradientColor1, textColor} from '../../Color/color';
+import {backgroundColorNew, textColor} from '../../Color/color';
 import {useFocusEffect} from '@react-navigation/native';
 import {getGeofenceRequest} from '../../Store/Actions/Actions';
 import DeleteIcon from '../../../assets/SVG/svg/DeleteIcon';
+import NoGeozones from '../../../assets/SVG/svg/NoGeozones';
+import Button from '../../Components/Button';
 
-// Helper function to get live positions
-const getLivePositions = (wsMessages, deviceId) => {
-  return wsMessages
-    .flatMap(message => message.positions || [])
-    .filter(position => position.deviceId === deviceId)
-    .map(({deviceId, latitude, longitude, course}) => ({
-      deviceId,
-      latitude,
-      longitude,
-      course,
-    }));
-};
+const parseGeofenceArea = area => {
+  const areaParts = area.match(/CIRCLE \((.*)\)/);
+  if (areaParts && areaParts[1]) {
+    const [coordinates, radius] = areaParts[1].split(',');
+    const [latitude, longitude] = coordinates.trim().split(' ');
 
-// Helper function to generate circle points for polyline
-const generateCirclePoints = (center, radius, numPoints = 60) => {
-  let circlePoints = [];
-  for (let i = 0; i < numPoints; i++) {
-    const angle = (i * 360) / numPoints;
-    const latitudeOffset = radius * Math.cos(angle * (Math.PI / 180));
-    const longitudeOffset = radius * Math.sin(angle * (Math.PI / 180));
-    circlePoints.push({
-      latitude: center.latitude + latitudeOffset / 111320,
-      longitude:
-        center.longitude +
-        longitudeOffset /
-          (111320 * Math.cos(center.latitude * (Math.PI / 180))),
-    });
+    return {
+      latitude: parseFloat(latitude),
+      longitude: parseFloat(longitude),
+      radius: parseFloat(radius),
+    };
   }
-  return circlePoints;
+  return null;
 };
 
 const Geozones = ({navigation, route}) => {
-  const {deviceId, lat, lon} = route.params;
+  const {deviceId} = route.params;
   const dispatch = useDispatch();
   const mapRef = useRef(null);
-  const [livePositions, setLivePositions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [activeGeofence, setActiveGeofence] = useState(null); // State for active geofence
+  const [activeGeofence, setActiveGeofence] = useState(null);
+  const [initialRegionSet, setInitialRegionSet] = useState(false);
 
-  const {wsMessages, wsConnected} = useSelector(state => state.wsData);
-  const {addGeofenceStatus, geofenceData, geofenceLoading, geofenceError} =
-    useSelector(state => state.data);
-
-  useEffect(() => {
-    if (wsConnected) {
-      const position = getLivePositions(wsMessages, deviceId);
-      setLivePositions(position);
-
-      if (position.length > 0) {
-        setLoading(false);
-        updateMarkerPosition(position[position.length - 1]);
-      }
-    } else {
-      setLoading(false);
-    }
-  }, [wsMessages, wsConnected]);
+  const {geofenceData = [], geofenceLoading} = useSelector(state => {
+    console.log(55555, 'All Geozones', state);
+    return state.data;
+  });
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       dispatch(getGeofenceRequest(deviceId));
-    }, [dispatch]),
+      return () => {
+        // unsubscribe();
+      };
+    }, [dispatch, deviceId]),
   );
 
-  const animatedMarkerPosition = useRef(
-    new AnimatedRegion({
-      latitude: livePositions.length > 0 ? livePositions[0].latitude : lat || 0,
-      longitude:
-        livePositions.length > 0 ? livePositions[0].longitude : lon || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
-  ).current;
+  // Set the default geofence (geofenceData[0]) on the map when data is available
+  useEffect(() => {
+    if (geofenceData.length > 0 && !initialRegionSet && mapRef.current) {
+      const geofence = parseGeofenceArea(geofenceData[0]?.area);
+      if (geofence) {
+        setActiveGeofence(geofenceData[0].id);
+        mapRef.current.animateToRegion({
+          latitude: geofence.latitude,
+          longitude: geofence.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+        setInitialRegionSet(true);
+      }
+    }
+  }, [geofenceData, initialRegionSet]);
 
-  const updateMarkerPosition = position => {
-    animatedMarkerPosition
-      .timing({
-        latitude: position.latitude,
-        longitude: position.longitude,
-        duration: 1000,
-        useNativeDriver: false,
-      })
-      .start();
-  };
+  // Helper function to get live positions
+  const getLivePositions = useCallback((wsMessages, deviceId) => {
+    return wsMessages
+      .flatMap(message => message.positions || [])
+      .filter(position => position.deviceId === deviceId)
+      .map(({latitude, longitude}) => ({latitude, longitude}));
+  }, []);
 
-  const animateToDevicePosition = () => {
-    if (livePositions.length > 0 && mapRef.current) {
-      const latestPosition = livePositions[livePositions.length - 1];
+  // Helper function to generate circle points for polyline
+  const generateCirclePoints = useCallback((center, radius, numPoints = 60) => {
+    const circlePoints = [];
+    for (let i = 0; i < numPoints; i++) {
+      const angle = (i * 360) / numPoints;
+      const latitudeOffset = radius * Math.cos(angle * (Math.PI / 180));
+      const longitudeOffset = radius * Math.sin(angle * (Math.PI / 180));
+      circlePoints.push({
+        latitude: center.latitude + latitudeOffset / 111320,
+        longitude:
+          center.longitude +
+          longitudeOffset /
+            (111320 * Math.cos(center.latitude * (Math.PI / 180))),
+      });
+    }
+    return circlePoints;
+  }, []);
+
+  const handleGeofencePress = geofence => {
+    setActiveGeofence(geofence.id);
+    if (mapRef.current) {
       mapRef.current.animateToRegion({
-        latitude: latestPosition.latitude,
-        longitude: latestPosition.longitude,
+        latitude: geofence.latitude,
+        longitude: geofence.longitude,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
     }
   };
 
-  const handleGeofencePress = geofence => {
-    setActiveGeofence(geofence.id); // Set the active geofence
-    mapRef.current.animateToRegion({
-      latitude: geofence.latitude,
-      longitude: geofence.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-  };
-
-  const Separator = () => (
-    <View style={{height: 1, backgroundColor: '#F7F7F7', marginVertical: 5}} />
-  );
+  const Separator = () => <View style={styles.separator} />;
 
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        {loading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
-          </View>
+        {geofenceLoading ? (
+          <ActivityIndicator
+            style={styles.loader}
+            size="large"
+            color={backgroundColorNew}
+          />
         ) : (
           <MapView
             ref={mapRef}
             style={StyleSheet.absoluteFillObject}
             initialRegion={{
-              latitude:
-                livePositions.length > 0 ? livePositions[0].latitude : lat || 0,
-              longitude:
-                livePositions.length > 0
-                  ? livePositions[0].longitude
-                  : lon || 0,
+              latitude: 0,
+              longitude: 0,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}>
-            {livePositions.length > 0 && (
-              <>
-                <Marker.Animated coordinate={animatedMarkerPosition}>
-                  <ActiveLocation size={40} course={50} />
-                </Marker.Animated>
-                <Circle
-                  center={livePositions[livePositions.length - 1]}
-                  radius={2000}
-                  fillColor="rgba(135,206,250,0.3)"
-                  strokeColor="transparent"
-                  strokeWidth={0}
-                />
-                <Polyline
-                  coordinates={
-                    livePositions.length > 0
-                      ? generateCirclePoints(
-                          livePositions[livePositions.length - 1],
-                          2000,
-                        )
-                      : []
-                  }
-                  strokeColor={backgroundColorNew}
-                  strokeWidth={2}
-                  lineDashPattern={[2, 5]}
-                />
-              </>
-            )}
+            {geofenceData.length > 0 &&
+              geofenceData.map(geofence => {
+                const parsedGeofence = parseGeofenceArea(geofence.area);
+                if (parsedGeofence && geofence.id === activeGeofence) {
+                  return (
+                    <React.Fragment key={geofence.id}>
+                      <Marker.Animated
+                        coordinate={{
+                          latitude: parsedGeofence.latitude,
+                          longitude: parsedGeofence.longitude,
+                        }}>
+                        <ActiveLocation size={40} course={50} />
+                      </Marker.Animated>
+                      <Circle
+                        center={{
+                          latitude: parsedGeofence.latitude,
+                          longitude: parsedGeofence.longitude,
+                        }}
+                        radius={parsedGeofence.radius}
+                        fillColor="rgba(135,206,250,0.3)"
+                        strokeColor="transparent"
+                        strokeWidth={0}
+                      />
+                      <Polyline
+                        coordinates={generateCirclePoints(
+                          {
+                            latitude: parsedGeofence.latitude,
+                            longitude: parsedGeofence.longitude,
+                          },
+                          parsedGeofence.radius,
+                        )}
+                        strokeColor={backgroundColorNew}
+                        strokeWidth={2}
+                        lineDashPattern={[2, 5]}
+                      />
+                    </React.Fragment>
+                  );
+                }
+              })}
           </MapView>
         )}
         <TouchableOpacity
           style={styles.gpsButton}
-          onPress={animateToDevicePosition}>
+          onPress={() => handleGeofencePress(geofenceData[0])}>
           <GpsIcon2 size={20} />
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Bottom Container */}
       <View style={styles.bottomContainer}>
-        <ScrollView>
-          {geofenceData && geofenceData.length > 0 ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {geofenceData && geofenceData.length ? (
             geofenceData.map((geofence, index) => (
               <View key={geofence.id}>
                 <TouchableOpacity
@@ -204,19 +198,26 @@ const Geozones = ({navigation, route}) => {
                         activeGeofence === geofence.id ? '#FFF7F5' : '#FFFFFF',
                     },
                   ]}>
-                  <Text
-                    style={{fontFamily: 'PlusJakartaSans-Bold', fontSize: 12}}>
-                    {geofence.name}
-                  </Text>
-                  <TouchableOpacity style={{borderWidth: 0}}>
-                    <DeleteIcon size={20} color={backgroundColorNew} />
-                  </TouchableOpacity>
+                  <Text style={styles.geofenceText}>{geofence.name}</Text>
+                  <DeleteIcon size={20} color={backgroundColorNew} />
                 </TouchableOpacity>
                 {index < geofenceData.length - 1 && <Separator />}
               </View>
             ))
           ) : (
-            <Text>No geofences available</Text>
+            <View>
+              <View style={styles.noGeozonesContainer}>
+                <Text style={styles.oohText}>Ooh!</Text>
+                <Text style={styles.noGeozonesText}>No Geozones</Text>
+                <NoGeozones size={135} />
+              </View>
+              <Button
+                title="Create geozone"
+                onPress={() => navigation.goBack()}
+                textStyle={styles.btnText}
+                style={styles.btnStyle}
+              />
+            </View>
           )}
         </ScrollView>
       </View>
@@ -229,7 +230,7 @@ export default Geozones;
 const styles = StyleSheet.create({
   container: {flex: 1},
   mapContainer: {flex: 1},
-  loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  loader: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   gpsButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,6 +254,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderColor: '#F7F7F7',
     borderWidth: 1,
+    padding: 10,
   },
   geofenceItem: {
     flexDirection: 'row',
@@ -261,5 +263,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
+  },
+  separator: {height: 1, backgroundColor: '#F7F7F7', marginVertical: 5},
+  geofenceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+  },
+  noGeozonesContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  oohText: {
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    fontSize: 40,
+    color: backgroundColorNew,
+  },
+  noGeozonesText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 24,
+    marginBottom: 10,
+  },
+  btnStyle: {
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginTop: 20,
+    width: '100%',
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
   },
 });
