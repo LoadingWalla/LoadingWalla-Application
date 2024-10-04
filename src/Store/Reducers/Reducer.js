@@ -1692,18 +1692,18 @@ const reducer = (state = initialState, action) => {
       });
 
     // Remove Geofencing
-    case actionTypes.REMOVE_PARKING_REQUEST:
+    case actionTypes.REMOVE_GEOFENCE_REQUEST:
       return {
         ...state,
         removeGeozoneLoading: true,
         removeGeozoneError: null,
       };
-    case actionTypes.REMOVE_PARKING_SUCCESS:
+    case actionTypes.REMOVE_GEOFENCE_SUCCESS:
       return updateState(state, {
         removeGeozoneLoading: false,
         removeGeozoneData: payload?.data,
       });
-    case actionTypes.REMOVE_PARKING_FAILURE:
+    case actionTypes.REMOVE_GEOFENCE_FAILURE:
       return updateState(state, {
         removeGeozoneLoading: false,
         removeGeozoneError: payload?.data,

@@ -55,7 +55,10 @@ const Geozones = ({navigation, route}) => {
     removeGeozoneLoading,
     removeGeozoneError,
     removeGeozoneData,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log(44444, state);
+    return state.data;
+  });
 
   // Fetch geofences when the screen is focused
   useFocusEffect(
@@ -99,9 +102,21 @@ const Geozones = ({navigation, route}) => {
     [mapRef],
   );
 
-  const handleDelete = useCallback(() => {
-    dispatch(removeGeofenceRequest());
-  }, []);
+  const handleDelete = useCallback(
+    geofenceId => {
+      dispatch(removeGeofenceRequest(geofenceId));
+    },
+    [dispatch],
+  );
+
+  // Check for successful or failed deletion
+  useEffect(() => {
+    if (removeGeozoneData?.status === 200) {
+      AlertBox('Geozone deleted successfully!');
+    } else if (removeGeozoneError) {
+      AlertBox('Something went wrong!');
+    }
+  }, [removeGeozoneData, removeGeozoneError]);
 
   // Generate circle points for polyline
   const generateCirclePoints = useCallback((center, radius, numPoints = 60) => {
@@ -212,9 +227,17 @@ const Geozones = ({navigation, route}) => {
                       <Text style={styles.geofenceText}>{geofence.name}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={handleDelete}
+                      onPress={() => handleDelete(geofence.id)}
+                      disabled={removeGeozoneLoading}
                       style={styles.deleteTouch}>
-                      <DeleteIcon size={25} color={backgroundColorNew} />
+                      {removeGeozoneLoading ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={backgroundColorNew}
+                        />
+                      ) : (
+                        <DeleteIcon size={25} color={backgroundColorNew} />
+                      )}
                     </TouchableOpacity>
                   </View>
                   {index < geofenceData.length - 1 && <Separator />}
