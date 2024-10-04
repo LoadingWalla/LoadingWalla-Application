@@ -1567,6 +1567,24 @@ export function* fetchGeofence({deviceId}) {
   }
 }
 
+// Remove Geofence
+export function* deleteGpsGeozone({deviceId}) {
+  try {
+    const formData = new FormData();
+    formData.append('id', deviceId);
+    const data = yield multiPartApi.post('gps/add-geofence', formData);
+    console.log(1111, 'Delete GeoZone ----->', data);
+    if (data?.data?.status === 200) {
+      yield put(actions.addGeofenceSuccess(data?.data));
+    } else {
+      yield put(actions.addGeofenceFailure(data?.status));
+    }
+  } catch (error) {
+    yield put(actions.addGeofenceFailure(error.message));
+    console.log('error', error);
+  }
+}
+
 // Back Button Handler
 // export function* watchBackButton() {
 //   yield takeLatest('BACK_BUTTON_PRESS', handleBackButton);

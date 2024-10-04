@@ -8,21 +8,24 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import MapView, {
-  AnimatedRegion,
-  Marker,
-  Circle,
-  Polyline,
-} from 'react-native-maps';
+import MapView, {Marker, Circle, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import {backgroundColorNew, textColor} from '../../Color/color';
 import {useFocusEffect} from '@react-navigation/native';
-import {getGeofenceRequest} from '../../Store/Actions/Actions';
+import {
+  clearAllGeofenceData,
+  getGeofenceRequest,
+  removeGeofenceRequest,
+} from '../../Store/Actions/Actions';
 import DeleteIcon from '../../../assets/SVG/svg/DeleteIcon';
 import NoGeozones from '../../../assets/SVG/svg/NoGeozones';
 import Button from '../../Components/Button';
+import GeozoneShimmer from '../../Components/Shimmer/GeozoneShimmer';
+import AlertBox from '../../Components/AlertBox';
+
+const Separator = () => <View style={styles.separator} />;
 
 const parseGeofenceArea = area => {
   const areaParts = area.match(/CIRCLE \((.*)\)/);
@@ -46,21 +49,23 @@ const Geozones = ({navigation, route}) => {
   const [activeGeofence, setActiveGeofence] = useState(null);
   const [initialRegionSet, setInitialRegionSet] = useState(false);
 
-  const {geofenceData = [], geofenceLoading} = useSelector(state => {
-    console.log(55555, 'All Geozones', state);
-    return state.data;
-  });
+  const {
+    geofenceData = [],
+    geofenceLoading,
+    removeGeozoneLoading,
+    removeGeozoneError,
+    removeGeozoneData,
+  } = useSelector(state => state.data);
 
+  // Fetch geofences when the screen is focused
   useFocusEffect(
     useCallback(() => {
       dispatch(getGeofenceRequest(deviceId));
-      return () => {
-        // unsubscribe();
-      };
+      return () => dispatch(clearAllGeofenceData());
     }, [dispatch, deviceId]),
   );
 
-  // Set the default geofence (geofenceData[0]) on the map when data is available
+  // Set default geofenceData[0] on the map
   useEffect(() => {
     if (geofenceData.length > 0 && !initialRegionSet && mapRef.current) {
       const geofence = parseGeofenceArea(geofenceData[0]?.area);
@@ -77,15 +82,28 @@ const Geozones = ({navigation, route}) => {
     }
   }, [geofenceData, initialRegionSet]);
 
-  // Helper function to get live positions
-  const getLivePositions = useCallback((wsMessages, deviceId) => {
-    return wsMessages
-      .flatMap(message => message.positions || [])
-      .filter(position => position.deviceId === deviceId)
-      .map(({latitude, longitude}) => ({latitude, longitude}));
+  // Handle geofence selection
+  const handleGeofencePress = useCallback(
+    geofence => {
+      const parsedGeofence = parseGeofenceArea(geofence.area);
+      if (parsedGeofence) {
+        setActiveGeofence(geofence.id);
+        mapRef.current.animateToRegion({
+          latitude: parsedGeofence.latitude,
+          longitude: parsedGeofence.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        });
+      }
+    },
+    [mapRef],
+  );
+
+  const handleDelete = useCallback(() => {
+    dispatch(removeGeofenceRequest());
   }, []);
 
-  // Helper function to generate circle points for polyline
+  // Generate circle points for polyline
   const generateCirclePoints = useCallback((center, radius, numPoints = 60) => {
     const circlePoints = [];
     for (let i = 0; i < numPoints; i++) {
@@ -103,20 +121,6 @@ const Geozones = ({navigation, route}) => {
     return circlePoints;
   }, []);
 
-  const handleGeofencePress = geofence => {
-    setActiveGeofence(geofence.id);
-    if (mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: geofence.latitude,
-        longitude: geofence.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    }
-  };
-
-  const Separator = () => <View style={styles.separator} />;
-
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
@@ -131,10 +135,10 @@ const Geozones = ({navigation, route}) => {
             ref={mapRef}
             style={StyleSheet.absoluteFillObject}
             initialRegion={{
-              latitude: 0,
-              longitude: 0,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitude: 20.5937,
+              longitude: 78.9629,
+              latitudeDelta: 20,
+              longitudeDelta: 20,
             }}>
             {geofenceData.length > 0 &&
               geofenceData.map(geofence => {
@@ -142,13 +146,13 @@ const Geozones = ({navigation, route}) => {
                 if (parsedGeofence && geofence.id === activeGeofence) {
                   return (
                     <React.Fragment key={geofence.id}>
-                      <Marker.Animated
+                      <Marker
                         coordinate={{
                           latitude: parsedGeofence.latitude,
                           longitude: parsedGeofence.longitude,
                         }}>
                         <ActiveLocation size={40} course={50} />
-                      </Marker.Animated>
+                      </Marker>
                       <Circle
                         center={{
                           latitude: parsedGeofence.latitude,
@@ -185,41 +189,54 @@ const Geozones = ({navigation, route}) => {
       </View>
 
       <View style={styles.bottomContainer}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {geofenceData && geofenceData.length ? (
-            geofenceData.map((geofence, index) => (
-              <View key={geofence.id}>
-                <TouchableOpacity
-                  onPress={() => handleGeofencePress(geofence)}
-                  style={[
-                    styles.geofenceItem,
-                    {
-                      backgroundColor:
-                        activeGeofence === geofence.id ? '#FFF7F5' : '#FFFFFF',
-                    },
-                  ]}>
-                  <Text style={styles.geofenceText}>{geofence.name}</Text>
-                  <DeleteIcon size={20} color={backgroundColorNew} />
-                </TouchableOpacity>
-                {index < geofenceData.length - 1 && <Separator />}
+        {geofenceLoading ? (
+          <GeozoneShimmer />
+        ) : (
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {geofenceData.length > 0 ? (
+              geofenceData.map((geofence, index) => (
+                <View key={geofence.id}>
+                  <View
+                    style={[
+                      styles.geofenceItem,
+                      {
+                        backgroundColor:
+                          activeGeofence === geofence.id
+                            ? '#FFF7F5'
+                            : '#FFFFFF',
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      style={styles.geofenceTouch}
+                      onPress={() => handleGeofencePress(geofence)}>
+                      <Text style={styles.geofenceText}>{geofence.name}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleDelete}
+                      style={styles.deleteTouch}>
+                      <DeleteIcon size={25} color={backgroundColorNew} />
+                    </TouchableOpacity>
+                  </View>
+                  {index < geofenceData.length - 1 && <Separator />}
+                </View>
+              ))
+            ) : (
+              <View>
+                <View style={styles.noGeozonesContainer}>
+                  <Text style={styles.oohText}>Ooh!</Text>
+                  <Text style={styles.noGeozonesText}>No Geozones</Text>
+                  <NoGeozones size={135} />
+                </View>
+                <Button
+                  title="Create geozone"
+                  onPress={() => navigation.goBack()}
+                  textStyle={styles.btnText}
+                  style={styles.btnStyle}
+                />
               </View>
-            ))
-          ) : (
-            <View>
-              <View style={styles.noGeozonesContainer}>
-                <Text style={styles.oohText}>Ooh!</Text>
-                <Text style={styles.noGeozonesText}>No Geozones</Text>
-                <NoGeozones size={135} />
-              </View>
-              <Button
-                title="Create geozone"
-                onPress={() => navigation.goBack()}
-                textStyle={styles.btnText}
-                style={styles.btnStyle}
-              />
-            </View>
-          )}
-        </ScrollView>
+            )}
+          </ScrollView>
+        )}
       </View>
     </View>
   );
@@ -230,7 +247,7 @@ export default Geozones;
 const styles = StyleSheet.create({
   container: {flex: 1},
   mapContainer: {flex: 1},
-  loader: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  loader: {flex: 0.5, justifyContent: 'center', alignItems: 'center'},
   gpsButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -248,7 +265,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
-    maxHeight: Dimensions.get('window').height / 2.2,
+    maxHeight: Dimensions.get('window').height / 2.4,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     elevation: 3,
@@ -260,9 +277,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    borderRadius: 5,
+  },
+  geofenceTouch: {
+    flex: 0.9,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 5,
+  },
+  deleteTouch: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   separator: {height: 1, backgroundColor: '#F7F7F7', marginVertical: 5},
   geofenceText: {

@@ -1480,3 +1480,19 @@ export const clearGeofenceAddedData = payload => ({
   type: actionTypes.CLEAR_GEOFENCE_DATA,
   payload,
 });
+
+// Remove Geofence
+export const removeGeofenceRequest = deviceId => ({
+  type: actionTypes.REMOVE_GEOFENCE_REQUEST,
+  deviceId,
+});
+
+export const removeGeofenceSuccess = payload => ({
+  type: actionTypes.REMOVE_GEOFENCE_SUCCESS,
+  payload,
+});
+
+export const removeGeofenceFailure = payload => ({
+  type: actionTypes.REMOVE_GEOFENCE_FAILURE,
+  payload,
+});

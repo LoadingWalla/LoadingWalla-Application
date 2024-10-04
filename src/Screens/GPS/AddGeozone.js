@@ -172,18 +172,20 @@ const AddGeozone = ({navigation, route}) => {
             <Text style={styles.boldText}>{address}</Text>
           </View>
 
-          <TouchableOpacity
-            style={styles.btnContainer}
-            onPress={() =>
-              navigation.navigate('geozones', {deviceId, lat, lon})
-            }>
-            <Text style={styles.btnText2}>Geozones</Text>
-            <SettingIcon
-              size={15}
-              color={backgroundColorNew}
-              style={styles.iconStyle}
-            />
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={() =>
+                navigation.navigate('geozones', {deviceId, lat, lon})
+              }>
+              <Text style={styles.btnText2}>Geozones</Text>
+              <SettingIcon
+                size={15}
+                color={backgroundColorNew}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -343,7 +345,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
   boldText: {
-    fontFamily: 'PlusJakartaSans-Regular',
+    fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 12,
     // textAlign: 'center',
     // borderWidth: 1,
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 15,
-    paddingVertical: 5,
+    paddingVertical: 10,
     borderRadius: 20,
     elevation: 1,
     backgroundColor: '#F7F7F7',
@@ -363,6 +365,6 @@ const styles = StyleSheet.create({
     color: backgroundColorNew,
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
-    textAlign: 'center',
+    // textAlign: 'center',
   },
 });
