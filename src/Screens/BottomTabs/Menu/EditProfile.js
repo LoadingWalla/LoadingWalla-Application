@@ -34,6 +34,7 @@ import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
+import style from './style'
 
 const EditProfile = ({
   defaultValue,
@@ -194,36 +195,16 @@ const EditProfile = ({
         visible={isCameraOptions}
         onRequestClose={() => {}}>
         <View
-          style={{
-            backgroundColor: 'rgba(0,0,0, 0.9)',
-            flex: 1,
-          }}>
+          style={style.chooseOpnOutterView}>
           <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              padding: 10,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              width: '100%',
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              position: 'absolute',
-              bottom: 0,
-              marginTop: 200,
-            }}>
+            style={style.chooseOtnInnerView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+              style={style.allEditBtnView}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={style.cammeraView}>
                   <Cammera />
                   <Text style={style.CameraText}>Camera</Text>
                 </View>
@@ -231,7 +212,7 @@ const EditProfile = ({
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => choosePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={style.galleryView}>
                   <Gallery />
                   <Text style={style.CameraText}>Gallery</Text>
                 </View>
@@ -242,7 +223,7 @@ const EditProfile = ({
                 onPress={showAlert}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Image
-                    style={{height: 35, width: 40}}
+                    style={style.editRemoveImg}
                     source={require('../../../../assets/remove.png')}
                   />
                   <Text style={style.CameraText}>Remove</Text>
@@ -264,13 +245,9 @@ const EditProfile = ({
       {chooseOptions()}
       <TouchableOpacity
         activeOpacity={1}
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(0,0,0, 0.5)',
-          justifyContent: 'center',
-        }}>
+        style={style.editProfileModalStyle}>
         <View style={style.editModalView}>
-          <View style={{alignItems: 'flex-end'}}>
+          <View style={style.closeBtnView}>
             <TouchableOpacity onPress={() => dismissModal()}>
               <CloseCircle color={GradientColor2} size={30} />
             </TouchableOpacity>
@@ -308,7 +285,7 @@ const EditProfile = ({
               </View>
             </TouchableOpacity>
             <View style={style.paddingStyle}>
-              <Text style={style.label}>{t(Constants.NAME)}</Text>
+              <Text style={style.editProfileLabel}>{t(Constants.NAME)}</Text>
               <TextInputField
                 defaultValue={defaultValue?.name}
                 onChangeText={e => setname(e)}
@@ -323,15 +300,9 @@ const EditProfile = ({
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
               /> */}
-              <Text style={style.label}>{t(Constants.MOBILE_NUMBER)}</Text>
+              <Text style={style.editProfileLabel}>{t(Constants.MOBILE_NUMBER)}</Text>
               <Text
-                style={{
-                  backgroundColor: inputColor,
-                  marginTop: 12,
-                  borderRadius: 8,
-                  padding: 15,
-                  color: PrivacyPolicy,
-                }}>
+                style={style.mobileTxt}>
                 {defaultValue?.mobile}
               </Text>
             </View>
@@ -351,81 +322,81 @@ const EditProfile = ({
 
 export default EditProfile;
 
-const style = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonTitile: {
-    fontWeight: 'bold',
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 18,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  CameraText: {
-    fontSize: 15,
-    color: 'black',
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  editProfileTitle: {
-    fontWeight: '700',
-    color: titleColor,
-    fontSize: 20,
-    marginBottom: 10,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  editProfileContainer: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-    alignSelf: 'center',
-    justifyContent: 'center',
-  },
-  profileImgEdit: {
-    height: 25,
-    width: 25,
-    backgroundColor: GradientColor2,
-    borderRadius: 40,
-    position: 'absolute',
-    bottom: -5,
-    left: 30,
-    borderWidth: 1,
-    borderColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileImg: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-  },
-  paddingStyle: {
-    padding: 20,
-  },
-  editModalView: {
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    borderRadius: 8,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    marginTop: 60,
-  },
-});
+// const style = StyleSheet.create({
+//   button: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   buttonTitile: {
+//     fontWeight: 'bold',
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   label: {
+//     fontWeight: '700',
+//     fontSize: 18,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   CameraText: {
+//     fontSize: 15,
+//     color: 'black',
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Medium',
+//   },
+//   editProfileTitle: {
+//     fontWeight: '700',
+//     color: titleColor,
+//     fontSize: 20,
+//     marginBottom: 10,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   editProfileContainer: {
+//     height: 80,
+//     width: 80,
+//     borderRadius: 40,
+//     alignSelf: 'center',
+//     justifyContent: 'center',
+//   },
+//   profileImgEdit: {
+//     height: 25,
+//     width: 25,
+//     backgroundColor: GradientColor2,
+//     borderRadius: 40,
+//     position: 'absolute',
+//     bottom: -5,
+//     left: 30,
+//     borderWidth: 1,
+//     borderColor: 'white',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   profileImg: {
+//     height: 80,
+//     width: 80,
+//     borderRadius: 40,
+//   },
+//   paddingStyle: {
+//     padding: 20,
+//   },
+//   editModalView: {
+//     backgroundColor: '#FFFFFF',
+//     padding: 10,
+//     borderRadius: 8,
+//     margin: 10,
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2,
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5,
+//     marginTop: 60,
+//   },
+// });

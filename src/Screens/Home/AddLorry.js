@@ -39,6 +39,7 @@ import {
 } from '../../Store/Actions/Actions';
 import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
 import {useTranslation} from 'react-i18next';
+import styles from './style'
 
 const AddLorry = ({navigation, route}) => {
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -288,36 +289,15 @@ const AddLorry = ({navigation, route}) => {
         style
         onRequestClose={() => {}}>
         <View
-          style={{
-            backgroundColor: 'rgba(0,0,0, 0.4)',
-            flex: 1,
-          }}>
+          style={styles.seeMoreModalView1}>
           <View
-            style={{
-              width: '100%',
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            style={styles.seeMoreModalView2}>
             <View
-              style={{
-                backgroundColor: '#FFFFFF',
-                padding: 20,
-                borderRadius: 8,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                height: '55%',
-                shadowOpacity: 0.25,
-                shadowRadius: 4,
-                elevation: 5,
-              }}>
-              <Text style={styleSheet.label}>{'All Permits'}</Text>
+              style={styles.seeMoreModalView3}>
+              <Text style={styles.label}>{'All Permits'}</Text>
               <TruckItem
-                backgroundStyle={styleSheet.truckTypeItem}
-                unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+                backgroundStyle={styles.truckTypeItem}
+                unseleckBackground={styles.TyuckTypeUnSelectItem}
                 isDone={true}
                 checkIcon={false}
                 multiple={true}
@@ -334,8 +314,8 @@ const AddLorry = ({navigation, route}) => {
                   setSeeMore(false);
                 }}
                 title={'Done'}
-                textStyle={styleSheet.buttonTitile}
-                style={styleSheet.button}
+                textStyle={styles.buttonTitile}
+                style={styles.addLorryBtn}
               />
             </View>
           </View>
@@ -345,23 +325,19 @@ const AddLorry = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styleSheet.MainContainer}>
+    <SafeAreaView style={styles.MainContainer}>
       {lorryRequireLoading ? (
         <AddLorryShimmer />
       ) : (
         <ScrollView
-          style={{
-            padding: 15,
-            backgroundColor: 'white',
-            flex: 1,
-          }}
+          style={styles.addLorryScrollView}
           contentContainerStyle={{paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}>
           {seeMore()}
           {viewIndex === 0 ? (
             <View>
-              <Text style={styleSheet.label}>
+              <Text style={styles.label}>
                 {t(Constants.VEHICLE_NUMBER)}
               </Text>
               <TextInputField
@@ -373,36 +349,20 @@ const AddLorry = ({navigation, route}) => {
                   setVehicleNumber(input);
                 }}
               />
-              <Text style={styleSheet.label}>{t(Constants.TRUCK_TYPE)}</Text>
+              <Text style={styles.label}>{t(Constants.TRUCK_TYPE)}</Text>
               <TruckItem
                 click={e => setVehicle(e?.id)}
-                backgroundStyle={{
-                  padding: 20,
-                  borderRadius: 8,
-                  marginRight: 10,
-                  marginBottom: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  backgroundColor: '#f19e72',
-                }}
+                backgroundStyle={styles.truckItemBgStyle}
                 imageRequire={true}
                 horizontal={true}
                 checkIcon={true}
-                unseleckBackground={{
-                  padding: 20,
-                  backgroundColor: inputColor,
-                  borderRadius: 8,
-                  marginRight: 10,
-                  marginBottom: 10,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
+                unseleckBackground={styles.unseleckBackground}
                 renderItem={wheeldata}
               />
-              <Text style={styleSheet.label}>{t(Constants.BODY_TYPE)}</Text>
+              <Text style={styles.label}>{t(Constants.BODY_TYPE)}</Text>
               <TruckItem
-                backgroundStyle={styleSheet.truckTypeItem}
-                unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+                backgroundStyle={styles.truckTypeItem}
+                unseleckBackground={styles.TyuckTypeUnSelectItem}
                 horizontal={true}
                 checkIcon={false}
                 renderItem={truckTypeData}
@@ -410,23 +370,18 @@ const AddLorry = ({navigation, route}) => {
               />
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styleSheet.label}>{t(Constants.PERMIT)}</Text>
+                <Text style={styles.label}>{t(Constants.PERMIT)}</Text>
                 <TouchableOpacity onPress={() => setSeeMore(true)}>
                   <Text
-                    style={{
-                      color: GradientColor2,
-                      fontWeight: '500',
-                      fontSize: 15,
-                      fontFamily: 'PlusJakartaSans-Medium',
-                    }}>
+                    style={styles.seeMoreTxt}>
                     {t(Constants.SEE_MORE)}
                   </Text>
                 </TouchableOpacity>
               </View>
 
               <TruckItem
-                backgroundStyle={styleSheet.truckTypeItem}
-                unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+                backgroundStyle={styles.truckTypeItem}
+                unseleckBackground={styles.TyuckTypeUnSelectItem}
                 horizontal={true}
                 checkIcon={false}
                 multiple={true}
@@ -435,7 +390,7 @@ const AddLorry = ({navigation, route}) => {
               />
 
               {/* <View>
-                <Text style={styleSheet.label}>{'GPS Tracker*'}</Text>
+                <Text style={styles.label}>{'GPS Tracker*'}</Text>
                 <View style={{marginTop: 15, marginLeft: 15}}>
                   <RadioButton
                     label="Get GPS Tracker Now"
@@ -452,24 +407,21 @@ const AddLorry = ({navigation, route}) => {
 
               <Button
                 loading={loading}
-                touchStyle={styleSheet.touchStyle}
+                touchStyle={styles.addLorryTouchStyle}
                 onPress={() => {
                   addLorry();
                 }}
                 title={t(Constants.SAVE_PROCEED)}
-                textStyle={styleSheet.buttonTitile}
-                style={styleSheet.button}
+                textStyle={styles.buttonTitile}
+                style={styles.addLorryBtn}
               />
             </View>
           ) : (
-            <View style={{marginTop: 30, padding: 20}}>
+            <View style={styles.addLorryView1}>
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
+                style={styles.addLorryView2}>
                 <Text
-                  style={{fontSize: 18, fontWeight: '700', color: '#352422'}}>
+                  style={styles.activeTxt}>
                   {t(Constants.ACTIVE)}
                 </Text>
                 <Switch
@@ -499,49 +451,20 @@ const AddLorry = ({navigation, route}) => {
                 onPress={() => saveChanges()}
                 title={t(Constants.SAVE)}
                 loading={statusChangeLoading}
-                textStyle={{
-                  color: textColor,
-                  fontWeight: '700',
-                  fontSize: 16,
-                  fontFamily: 'PlusJakartaSans-Bold',
-                }}
-                style={{
-                  flexDirection: 'row',
-                  borderRadius: 8,
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: 20,
-                }}
+                textStyle={styles.searchLoadTextStyle}
+                style={styles.searchLoadStyle}
               />
               <Text
-                style={{
-                  marginLeft: 30,
-                  marginRight: 30,
-                  fontWeight: '400',
-                  fontSize: 15,
-                  textAlign: 'center',
-                  marginBottom: 15,
-                  color: titleColor,
-                }}>
+                style={styles.noteTxt}>
                 {t(Constants.NOTE)}
               </Text>
               <View
-                style={{
-                  alignItems: 'center',
-                  marginVertical: 20,
-                }}>
+                style={styles.skipTxtView}>
                 <TouchableOpacity
                   onPress={() => navigation.goBack()}
-                  style={{
-                    borderColor: PrivacyPolicy,
-                  }}>
+                  style={styles.skipTxtBdColor}>
                   <Text
-                    style={{
-                      color: PrivacyPolicy,
-                      fontFamily: 'PlusJakartaSans-SemiBold',
-                      textDecorationLine: 'underline',
-                    }}>
+                    style={styles.skipTxt}>
                     {t(Constants.SKIP)}
                   </Text>
                 </TouchableOpacity>
@@ -556,56 +479,56 @@ const AddLorry = ({navigation, route}) => {
 
 export default AddLorry;
 
-const styleSheet = StyleSheet.create({
-  MainContainer: {
-    backgroundColor: white,
-    flex: 1,
-  },
-  button: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  touchStyle: {
-    marginLeft: 30,
-    marginRight: 30,
-    marginTop: 30,
-  },
-  buttonTitile: {
-    fontWeight: 'bold',
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  truckTypeItem: {
-    // width: 60,
-    height: 45,
-    paddingHorizontal: 10,
-    minWidth: 45,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f19e72',
-  },
-  TyuckTypeUnSelectItem: {
-    height: 45,
-    paddingHorizontal: 10,
-    minWidth: 45,
-    marginRight: 10,
-    marginBottom: 10,
-    backgroundColor: inputColor,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 18,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-});
+// const styles = StyleSheet.create({
+//   MainContainer: {
+//     backgroundColor: white,
+//     flex: 1,
+//   },
+//   button: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   touchStyle: {
+//     marginLeft: 30,
+//     marginRight: 30,
+//     marginTop: 30,
+//   },
+//   buttonTitile: {
+//     fontWeight: 'bold',
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   truckTypeItem: {
+//     // width: 60,
+//     height: 45,
+//     paddingHorizontal: 10,
+//     minWidth: 45,
+//     marginRight: 10,
+//     marginBottom: 10,
+//     borderRadius: 8,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: '#f19e72',
+//   },
+//   TyuckTypeUnSelectItem: {
+//     height: 45,
+//     paddingHorizontal: 10,
+//     minWidth: 45,
+//     marginRight: 10,
+//     marginBottom: 10,
+//     backgroundColor: inputColor,
+//     borderRadius: 8,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   label: {
+//     fontWeight: '700',
+//     fontSize: 18,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+// });

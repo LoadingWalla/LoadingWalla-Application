@@ -15,7 +15,7 @@ const LoadPostSuccessfull = ({navigation}) => {
       />
       <View>
         <Text style={styles.label}>{Constants.POST_LOOK}</Text>
-        <View style={{marginTop: 18}}>
+        <View style={styles.postItemView}>
           <PostItem />
         </View>
         <View style={[styles.rowDirection]}>

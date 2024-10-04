@@ -138,7 +138,7 @@ const Dashboard = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 60}}>
+    <View style={style.dashboardContainer}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -168,7 +168,7 @@ const Dashboard = ({navigation}) => {
               <View>
                 {DashboardBanner?.length > 0 && (
                   <Swiper
-                    style={{height: width / 2}}
+                    style={style.dashboardSwiper(width)}
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
@@ -202,7 +202,7 @@ const Dashboard = ({navigation}) => {
                   closeIconClick={() => closeIconClick('to')}
                   placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
-                <View style={{marginTop: 30}}>
+                <View style={style.truckTypeView}>
                   <Text style={style.locationTitle}>
                     {t(Constants.TRUCK_TYPE)}
                   </Text>

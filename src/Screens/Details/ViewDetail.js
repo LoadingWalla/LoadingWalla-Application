@@ -23,6 +23,7 @@ import {
 } from '../../Store/Actions/Actions';
 import ExitFullScreen from '../../../assets/SVG/svg/ExitFullScreen';
 import FullScreenIcon from '../../../assets/SVG/svg/FullScreenIcon';
+import styles from './style'
 const blueDot = require('../../../assets/dot.png');
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
@@ -168,7 +169,7 @@ const ViewDetail = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.viewDetailContainer}>
       <View style={{flex: isFullScreen ? 1 : 0.5}}>
         <View style={styles.backButton}>
           <CommonToolbar goBack={() => navigation.goBack()} isBack={true} />
@@ -340,76 +341,76 @@ const ViewDetail = ({navigation, route}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#bce2c5',
-  },
-  map: {
-    flex: 1,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: 'transparent',
-    zIndex: 1,
-  },
-  fullScreenButton: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    backgroundColor: '#FFFFFF',
-    zIndex: 1,
-    elevation: 2,
-    padding: 10,
-    borderRadius: 30,
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  textStyle: {
-    color: '#352422',
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  centered: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  errorText: {
-    textAlign: 'center',
-    color: 'red',
-  },
-  modalTopLine: {
-    height: 5,
-    backgroundColor: '#E2E2E2',
-    width: '30%',
-    position: 'absolute',
-    borderRadius: 50,
-    top: 0,
-    alignSelf: 'center',
-    marginVertical: 10,
-  },
-  findButtonContainer: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-  },
-  findButtonText: {
-    fontSize: 14,
-    color: white,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#bce2c5',
+//   },
+//   map: {
+//     flex: 1,
+//   },
+//   backButton: {
+//     position: 'absolute',
+//     top: 10,
+//     left: 10,
+//     backgroundColor: 'transparent',
+//     zIndex: 1,
+//   },
+//   fullScreenButton: {
+//     position: 'absolute',
+//     bottom: 10,
+//     right: 10,
+//     backgroundColor: '#FFFFFF',
+//     zIndex: 1,
+//     elevation: 2,
+//     padding: 10,
+//     borderRadius: 30,
+//   },
+//   buttonContainer: {
+//     position: 'absolute',
+//     bottom: 0,
+//     left: 0,
+//     right: 0,
+//   },
+//   textStyle: {
+//     color: '#352422',
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+//   centered: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   errorText: {
+//     textAlign: 'center',
+//     color: 'red',
+//   },
+//   modalTopLine: {
+//     height: 5,
+//     backgroundColor: '#E2E2E2',
+//     width: '30%',
+//     position: 'absolute',
+//     borderRadius: 50,
+//     top: 0,
+//     alignSelf: 'center',
+//     marginVertical: 10,
+//   },
+//   findButtonContainer: {
+//     flexDirection: 'row',
+//     borderRadius: 10,
+//     alignItems: 'center',
+//     alignSelf: 'center',
+//     justifyContent: 'center',
+//     paddingVertical: 15,
+//     paddingHorizontal: 20,
+//   },
+//   findButtonText: {
+//     fontSize: 14,
+//     color: white,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+// });
 
 export default ViewDetail;

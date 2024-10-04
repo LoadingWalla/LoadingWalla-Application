@@ -38,7 +38,7 @@ const Status = ({navigation, route}) => {
           onPress={() => navigation.navigate('My Truck')}>
           <CloseCircle size={25} />
         </TouchableOpacity>
-        <View style={styles.container}>
+        <View style={styles.statusContainer}>
           {/* <Image
             source={require('../../../assets/GIFs/success.gif')}
             resizeMode="contain"
@@ -79,11 +79,11 @@ const Status = ({navigation, route}) => {
                     source={{
                       uri: 'https://loadingwalla.com/public/truck_tyre/6%20Tyre.png',
                     }}
-                    style={styles.image}
+                    style={styles.statusImage}
                   />
                 </View>
                 <View style={styles.details}>
-                  <View style={styles.header}>
+                  <View style={styles.statusHeader}>
                     <Text style={styles.truckNumber}>
                       {mySingleTruckData?.vehicle_number}
                     </Text>
@@ -116,7 +116,7 @@ const Status = ({navigation, route}) => {
                 </Text>
               )}
               <TouchableOpacity
-                style={styles.buttonstyle(mySingleTruckData?.status)}
+                style={styles.statusButtonstyle(mySingleTruckData?.status)}
                 disabled={mySingleTruckData?.status === 0}
                 onPress={() => {
                   navigation.navigate('FindLoads', {
@@ -124,17 +124,17 @@ const Status = ({navigation, route}) => {
                     userType: userType,
                   });
                 }}>
-                <Text style={styles.buttonTextStyle}>Search Load</Text>
+                <Text style={styles.statusButtonTextStyle}>Search Load</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <TouchableOpacity
-            style={styles.buttonContainer}
+            style={styles.statusButtonContainer}
             onPress={() => {
               navigation.navigate('AddLorry');
             }}>
-            <Text style={styles.buttonText}>Add Truck</Text>
+            <Text style={styles.statusButtonText}>Add Truck</Text>
           </TouchableOpacity>
         </View>
       </View>

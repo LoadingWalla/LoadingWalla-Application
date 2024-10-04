@@ -22,6 +22,7 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/WebSocketActions';
+import styles from './style'
 
 const truck = {
   id: '1',
@@ -120,7 +121,7 @@ const OwnedGPS = ({navigation, route}) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.gpsTrackContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.itemBox}>
           <View style={styles.imageBox}>
@@ -134,7 +135,7 @@ const OwnedGPS = ({navigation, route}) => {
           <View style={styles.textBox}>
             <View style={styles.textContainer}>
               <Text style={styles.modelText}>{deviceData?.name}</Text>
-              <Text style={styles.planText}>{truck.planType}</Text>
+              <Text style={styles.ownedGpsPlanText}>{truck.planType}</Text>
             </View>
             <View style={styles.dateBox}>
               <View style={styles.dateChild}>
@@ -157,7 +158,7 @@ const OwnedGPS = ({navigation, route}) => {
       <View style={styles.getNowBox}>
         <View>
           <Text style={styles.modelText}>Extend the GPS Plan?</Text>
-          <Text style={styles.discountText}>Extend and save up to 40%</Text>
+          <Text style={styles.ownedGpsDiscountText}>Extend and save up to 40%</Text>
         </View>
         <TouchableOpacity
           style={styles.getNowButton}
@@ -184,7 +185,7 @@ const OwnedGPS = ({navigation, route}) => {
         title={'Track this truck'}
         onPress={handleNavigationPress}
         textStyle={styles.btnText}
-        style={styles.btnStyle}
+        style={styles.ownedGpsBtnStyle}
       />
     </View>
   );
@@ -192,219 +193,219 @@ const OwnedGPS = ({navigation, route}) => {
 
 export default OwnedGPS;
 
-const styles = StyleSheet.create({
-  container: {padding: 10, flex: 1},
-  headerContainer: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    marginBottom: 10,
-    elevation: 2,
-  },
-  imageBox: {
-    paddingBottom: 30,
-    width: '25%',
-  },
-  image: {
-    width: 60,
-    height: 50,
-    marginRight: 10,
-    backgroundColor: '#f7f7f7',
-    borderRadius: 6,
-  },
-  itemBox: {
-    flexDirection: 'row',
-    padding: 10,
-  },
-  textContainer: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 5,
-  },
-  modelText: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 16,
-    textTransform: 'capitalize',
-  },
-  bottomText: {
-    color: '#000000',
-    fontFamily: 'PlusJakartaSans-MediumItalic',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  discountText: {
-    color: '#3BA700',
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12,
-    textAlign: 'left',
-  },
-  planText: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderRadius: 20,
-    backgroundColor: '#EFFFE6',
-    color: '#108B00',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  dateValue: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  bottomBox: {
-    backgroundColor: '#F7F7F7',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 5,
-  },
-  textBox: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    width: '75%',
-    alignItems: 'flex-start',
-  },
-  dateBox: {
-    width: '100%',
-    flex: 1,
-    justifyContent: 'center',
-  },
-  dateChild: {flexDirection: 'row', marginTop: 5, alignItems: 'center'},
-  dateHeaderText: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 14,
-  },
-  getNowBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    elevation: 2,
-  },
-  getNowButton: {
-    backgroundColor: '#3BA700',
-    paddingHorizontal: 25,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  getNowButtonText: {
-    color: '#FFFFFF',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-  },
-  historyBox: {
-    marginVertical: 10,
-    flex: 1,
-    justifyContent: 'center',
-    // borderWidth: 1,
-  },
-  paymentDetailBox: {
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    marginBottom: 10,
-    elevation: 3,
-  },
-  paymentHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#FFF3F0',
-    padding: 10,
-    borderTopStartRadius: 8,
-    borderTopEndRadius: 8,
-  },
-  paymentDetailText: {
-    fontSize: 14,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  transactionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  transactionText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Medium',
-    marginRight: 5,
-  },
-  paymentRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-  },
-  amountContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  amountValue: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  taxText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Medium',
-    marginLeft: 5,
-  },
-  orderContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderColor: '#ccc',
-  },
-  orderDateContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    padding: 10,
-  },
-  orderDateText: {
-    fontSize: 14,
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  downloadButton: {
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: '#ffffff',
-  },
-  btnStyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  flatlistStyle: {
-    marginTop: 10,
-  },
-  noGpsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderWidth: 1,
-  },
-  noGpsText: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: backgroundColorNew,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {padding: 10, flex: 1},
+//   headerContainer: {
+//     backgroundColor: '#ffffff',
+//     borderRadius: 8,
+//     marginBottom: 10,
+//     elevation: 2,
+//   },
+//   imageBox: {
+//     paddingBottom: 30,
+//     width: '25%',
+//   },
+//   image: {
+//     width: 60,
+//     height: 50,
+//     marginRight: 10,
+//     backgroundColor: '#f7f7f7',
+//     borderRadius: 6,
+//   },
+//   itemBox: {
+//     flexDirection: 'row',
+//     padding: 10,
+//   },
+//   textContainer: {
+//     justifyContent: 'space-between',
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     width: '100%',
+//     marginBottom: 5,
+//   },
+//   modelText: {
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 16,
+//     textTransform: 'capitalize',
+//   },
+//   bottomText: {
+//     color: '#000000',
+//     fontFamily: 'PlusJakartaSans-MediumItalic',
+//     fontSize: 12,
+//     textAlign: 'center',
+//   },
+//   discountText: {
+//     color: '#3BA700',
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 12,
+//     textAlign: 'left',
+//   },
+//   planText: {
+//     paddingHorizontal: 15,
+//     paddingVertical: 5,
+//     borderRadius: 20,
+//     backgroundColor: '#EFFFE6',
+//     color: '#108B00',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//     textAlign: 'center',
+//   },
+//   dateValue: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//     textAlign: 'center',
+//   },
+//   bottomBox: {
+//     backgroundColor: '#F7F7F7',
+//     paddingHorizontal: 10,
+//     paddingVertical: 5,
+//     borderRadius: 8,
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     marginTop: 5,
+//   },
+//   textBox: {
+//     flexDirection: 'column',
+//     justifyContent: 'space-between',
+//     width: '75%',
+//     alignItems: 'flex-start',
+//   },
+//   dateBox: {
+//     width: '100%',
+//     flex: 1,
+//     justifyContent: 'center',
+//   },
+//   dateChild: {flexDirection: 'row', marginTop: 5, alignItems: 'center'},
+//   dateHeaderText: {
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 14,
+//   },
+//   getNowBox: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     paddingVertical: 10,
+//     paddingHorizontal: 15,
+//     backgroundColor: '#ffffff',
+//     borderRadius: 8,
+//     elevation: 2,
+//   },
+//   getNowButton: {
+//     backgroundColor: '#3BA700',
+//     paddingHorizontal: 25,
+//     paddingVertical: 10,
+//     borderRadius: 8,
+//   },
+//   getNowButtonText: {
+//     color: '#FFFFFF',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//   },
+//   historyBox: {
+//     marginVertical: 10,
+//     flex: 1,
+//     justifyContent: 'center',
+//     // borderWidth: 1,
+//   },
+//   paymentDetailBox: {
+//     backgroundColor: '#ffffff',
+//     borderRadius: 8,
+//     marginBottom: 10,
+//     elevation: 3,
+//   },
+//   paymentHeader: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     backgroundColor: '#FFF3F0',
+//     padding: 10,
+//     borderTopStartRadius: 8,
+//     borderTopEndRadius: 8,
+//   },
+//   paymentDetailText: {
+//     fontSize: 14,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+//   transactionContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   transactionText: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     marginRight: 5,
+//   },
+//   paymentRow: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     padding: 10,
+//     borderBottomWidth: 1,
+//     borderColor: '#ccc',
+//   },
+//   amountContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//   },
+//   amountValue: {
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   taxText: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     marginLeft: 5,
+//   },
+//   orderContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     borderColor: '#ccc',
+//   },
+//   orderDateContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//     padding: 10,
+//   },
+//   orderDateText: {
+//     fontSize: 14,
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+//   downloadButton: {
+//     padding: 10,
+//     borderRadius: 8,
+//     backgroundColor: '#ffffff',
+//   },
+//   btnStyle: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   btnText: {
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   flatlistStyle: {
+//     marginTop: 10,
+//   },
+//   noGpsContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     // borderWidth: 1,
+//   },
+//   noGpsText: {
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     color: backgroundColorNew,
+//   },
+// });

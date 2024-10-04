@@ -38,6 +38,7 @@ import {
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../assets/SVG/svg/CameraIcon';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
+import styles from './style'
 
 const CompanyDetails = ({navigation, route}) => {
   const [selected, setSelected] = useState('');
@@ -92,17 +93,17 @@ const CompanyDetails = ({navigation, route}) => {
     <>
       {selected === data.id && (
         <CheckCircle
-          style={styleSheet.checkIconStyle}
+          style={styles.checkIconStyle}
           size={20}
           color="white"
         />
       )}
 
       <View>
-        <Image source={data.image} style={styleSheet.protypeimageStyle} />
+        <Image source={data.image} style={styles.protypeimageStyle} />
         <Text
           style={
-            selected === data.id ? styleSheet.gridText : styleSheet.gridGreyText
+            selected === data.id ? styles.gridText : styles.gridGreyText
           }>
           {data.owner}
         </Text>
@@ -120,11 +121,11 @@ const CompanyDetails = ({navigation, route}) => {
   const GridView = ({data, index, handleSelection}) => (
     <TouchableOpacity onPress={() => handleSelection(index)}>
       {selected === data.id ? (
-        <Background style={styleSheet.selectItem}>
+        <Background style={styles.selectItem}>
           {selectOwnerLorry(data)}
         </Background>
       ) : (
-        <View style={styleSheet.unSelectItem}>{selectOwnerLorry(data)}</View>
+        <View style={styles.unSelectItem}>{selectOwnerLorry(data)}</View>
       )}
     </TouchableOpacity>
   );
@@ -252,8 +253,8 @@ const CompanyDetails = ({navigation, route}) => {
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View style={styleSheet.chooseOptionBox}>
-          <View style={styleSheet.chooseOptionBoxView}>
+        <View style={styles.chooseOptionBox}>
+          <View style={styles.chooseOptionBoxView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle
                 color="#252B41"
@@ -261,11 +262,11 @@ const CompanyDetails = ({navigation, route}) => {
                 onPress={() => setCameraOptions(false)}
               />
             </TouchableOpacity>
-            <View style={styleSheet.imagePickerView}>
+            <View style={styles.imagePickerView}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Cammera />
-                  <Text style={styleSheet.CameraText}>Camera</Text>
+                  <Text style={styles.CameraText}>Camera</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -273,7 +274,7 @@ const CompanyDetails = ({navigation, route}) => {
                 onPress={() => choosePhoto()}>
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
                   <Gallery />
-                  <Text style={styleSheet.CameraText}>Gallery</Text>
+                  <Text style={styles.CameraText}>Gallery</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -284,17 +285,17 @@ const CompanyDetails = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={[styleSheet.MainContainer, {flex: 1}]}>
+    <SafeAreaView style={[styles.MainContainer, {flex: 1}]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}>
         <TouchableOpacity activeOpacity={0.6} onPress={() => onClickProfile()}>
-          <View style={styleSheet.signupBackground}>
+          <View style={styles.companyDetailsSignupBackground}>
             {chooseOptions()}
-            <Text style={styleSheet.WelcomeTruckTitle}>
+            <Text style={styles.WelcomeTruckTitle}>
               {Constants.TELL_US_ABOUT}
             </Text>
-            <View style={[styleSheet.profileImgContainer]}>
+            <View style={[styles.profileImgContainer]}>
               <Image
                 resizeMode="cover"
                 source={
@@ -304,13 +305,13 @@ const CompanyDetails = ({navigation, route}) => {
                       }
                     : require('../../../assets/placeholder.png')
                 }
-                style={styleSheet.profileImg}
+                style={styles.profileImg}
               />
               {/* <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => onClickProfile()}
               > */}
-              <View style={[styleSheet.profileImgEdit]}>
+              <View style={[styles.companyDetailsProfileImgEdit]}>
                 <CameraIcon size={15} color="white" />
               </View>
               {/* </TouchableOpacity> */}
@@ -318,13 +319,13 @@ const CompanyDetails = ({navigation, route}) => {
           </View>
         </TouchableOpacity>
         <View style={{marginBottom: 30}}>
-          <View style={styleSheet.paddingStyle}>
-            <Text style={styleSheet.label}>{Constants.NAME}</Text>
+          <View style={styles.companyDetailsPaddingStyle}>
+            <Text style={styles.label}>{Constants.NAME}</Text>
             <TextInputField
               isCloseIcon={false}
               onChangeText={handleNameChange}
             />
-            {/* <Text style={styleSheet.label}>{(Constants.ENTER_CITY_NAME)}</Text>
+            {/* <Text style={styles.label}>{(Constants.ENTER_CITY_NAME)}</Text>
             <TextInputField
               isCloseIcon={false}
               onChangeText={(e) => setCity(e)}
@@ -336,9 +337,9 @@ const CompanyDetails = ({navigation, route}) => {
               onSearchPress={() => navigateToSeach()}
               closeIconClick={() => closeIconClick()}
             /> */}
-            <Text style={styleSheet.label}>{Constants.iam}</Text>
+            <Text style={styles.label}>{Constants.iam}</Text>
             <FlatList
-              style={styleSheet.flatListStyle}
+              style={styles.flatListStyle}
               horizontal
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
@@ -356,9 +357,9 @@ const CompanyDetails = ({navigation, route}) => {
             loading={profileSetupLoading}
             onPress={() => profileSetup()}
             title={Constants.CONTINUE}
-            textStyle={styleSheet.buttonTitile}
-            style={styleSheet.button}
-            touchStyle={styleSheet.touchStyle}
+            textStyle={styles.buttonTitile}
+            style={styles.companyDetailsBtn}
+            touchStyle={styles.companyDetailsTouchStyle}
           />
         </View>
       </ScrollView>
@@ -368,149 +369,149 @@ const CompanyDetails = ({navigation, route}) => {
 
 export default CompanyDetails;
 
-const styleSheet = StyleSheet.create({
-  MainContainer: {
-    backgroundColor: white,
-    flex: 1,
-    // borderWidth: 1,
-  },
-  button: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  touchStyle: {
-    marginLeft: 20,
-    marginRight: 20,
-    marginTop: 20,
-  },
-  protypeimageStyle: {
-    width: 60,
-    height: 60,
-    alignSelf: 'center',
-    marginBottom: 5,
-  },
-  checkIconStyle: {position: 'absolute', top: 5, left: 5},
-  flatListStyle: {marginTop: 12, marginBottom: 20},
-  buttonTitile: {
-    fontWeight: 'bold',
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  selectItem: {
-    padding: 18,
-    margin: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  unSelectItem: {
-    padding: 18,
-    backgroundColor: inputColor,
-    borderRadius: 8,
-    margin: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 18,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  CameraText: {
-    fontSize: 15,
-    color: 'black',
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  signupBackground: {
-    padding: 10,
-    backgroundColor: pageBackground,
-    justifyContent: 'center',
-    marginTop: 10,
-    alignItems: 'center',
-    // borderWidth: 1,
-  },
-  WelcomeTruckTitle: {
-    fontWeight: '700',
-    color: 'black',
-    fontSize: 22,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  gridText: {
-    fontSize: 12,
-    color: 'white',
-    textAlign: 'center',
-    // marginTop: 5,
-    // paddingBottom: 5,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  gridGreyText: {
-    fontSize: 12,
-    color: titleColor,
-    // marginTop: 5,
-    // paddingBottom: 5,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  profileImgContainer: {
-    height: 80,
-    width: 80,
-    marginTop: 30,
-    borderRadius: 40,
-  },
-  profileImgEdit: {
-    height: 25,
-    width: 25,
-    // backgroundColor: GradientColor2,
-    backgroundColor: backgroundColorNew,
-    borderRadius: 40,
-    position: 'absolute',
-    bottom: -5,
-    left: 30,
-    borderWidth: 1,
-    borderColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profileImg: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-  },
-  paddingStyle: {
-    padding: 10,
-    // borderWidth: 1,
-  },
-  imagePickerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  chooseOptionBox: {
-    backgroundColor: 'rgba(0,0,0, 0.5)',
-    flex: 1,
-  },
-  chooseOptionBoxView: {
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    position: 'absolute',
-    bottom: 0,
-    marginTop: 200,
-  },
-});
+// const styles = StyleSheet.create({
+//   MainContainer: {
+//     backgroundColor: white,
+//     flex: 1,
+//     // borderWidth: 1,
+//   },
+//   button: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   touchStyle: {
+//     marginLeft: 20,
+//     marginRight: 20,
+//     marginTop: 20,
+//   },
+//   protypeimageStyle: {
+//     width: 60,
+//     height: 60,
+//     alignSelf: 'center',
+//     marginBottom: 5,
+//   },
+//   checkIconStyle: {position: 'absolute', top: 5, left: 5},
+//   flatListStyle: {marginTop: 12, marginBottom: 20},
+//   buttonTitile: {
+//     fontWeight: 'bold',
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   selectItem: {
+//     padding: 18,
+//     margin: 10,
+//     borderRadius: 8,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   unSelectItem: {
+//     padding: 18,
+//     backgroundColor: inputColor,
+//     borderRadius: 8,
+//     margin: 10,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   label: {
+//     fontWeight: '700',
+//     fontSize: 18,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   CameraText: {
+//     fontSize: 15,
+//     color: 'black',
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Medium',
+//   },
+//   signupBackground: {
+//     padding: 10,
+//     backgroundColor: pageBackground,
+//     justifyContent: 'center',
+//     marginTop: 10,
+//     alignItems: 'center',
+//     // borderWidth: 1,
+//   },
+//   WelcomeTruckTitle: {
+//     fontWeight: '700',
+//     color: 'black',
+//     fontSize: 22,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Medium',
+//   },
+//   gridText: {
+//     fontSize: 12,
+//     color: 'white',
+//     textAlign: 'center',
+//     // marginTop: 5,
+//     // paddingBottom: 5,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   gridGreyText: {
+//     fontSize: 12,
+//     color: titleColor,
+//     // marginTop: 5,
+//     // paddingBottom: 5,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+//   profileImgContainer: {
+//     height: 80,
+//     width: 80,
+//     marginTop: 30,
+//     borderRadius: 40,
+//   },
+//   profileImgEdit: {
+//     height: 25,
+//     width: 25,
+//     // backgroundColor: GradientColor2,
+//     backgroundColor: backgroundColorNew,
+//     borderRadius: 40,
+//     position: 'absolute',
+//     bottom: -5,
+//     left: 30,
+//     borderWidth: 1,
+//     borderColor: 'white',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   profileImg: {
+//     height: 80,
+//     width: 80,
+//     borderRadius: 40,
+//   },
+//   paddingStyle: {
+//     padding: 10,
+//     // borderWidth: 1,
+//   },
+//   imagePickerView: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-around',
+//   },
+//   chooseOptionBox: {
+//     backgroundColor: 'rgba(0,0,0, 0.5)',
+//     flex: 1,
+//   },
+//   chooseOptionBoxView: {
+//     backgroundColor: '#FFFFFF',
+//     padding: 10,
+//     borderTopLeftRadius: 20,
+//     borderTopRightRadius: 20,
+//     width: '100%',
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2,
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5,
+//     position: 'absolute',
+//     bottom: 0,
+//     marginTop: 200,
+//   },
+// });

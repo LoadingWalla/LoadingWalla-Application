@@ -195,7 +195,7 @@ const DashboardLoad = ({navigation}) => {
               <View>
                 {DashboardBanner?.length > 0 && (
                   <Swiper
-                    style={{height: width / 2}}
+                    style={style.dashboardSwiper(width)}
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
