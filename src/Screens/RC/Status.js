@@ -53,10 +53,7 @@ const Status = ({navigation, route}) => {
             autoPlayð
             loop
             resizeMode="contain"
-            style={{
-              height: 600,
-              width: 200,
-            }}
+            style={styles.lottieViewStyle}
           />
           <Text
             style={[

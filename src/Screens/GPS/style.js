@@ -3,8 +3,17 @@ import {backgroundColorNew, pageBackground, textColor, titleColor} from '../../C
 import {PrivacyPolicy} from '../../Color/color';
 
 export default StyleSheet.create({
+  continueBtnWidth: {width: '50%'},
+  numOfGps: {fontSize: 14, fontFamily: 'PlusJakartaSans-Bold'},
+  goToIconView: {transform: [{rotate: '-45deg'}]},
+  playJourneyTouchableOpacityStyle: {width: 40, height: 40},
   container: {
     flex: 1,
+  },
+  noGpsOrderTxt: {
+    color: '#707070',
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 24,
   },
   stopScreenContainer: {
     padding: 10,

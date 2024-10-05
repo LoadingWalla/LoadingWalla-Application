@@ -105,7 +105,7 @@ const BuyGps = ({navigation}) => {
   const renderRates = ({item}) => <Rates item={item} navigation={navigation} />;
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       {gpsPlansLoading ? (
         <View style={styles.loader}>
           <ActivityIndicator size="large" color={backgroundColorNew} />

@@ -495,7 +495,7 @@ export default function PlayJourney({navigation, route}) {
                         ? require('../../../assets/satellite-view.png')
                         : require('../../../assets/satellites.png')
                     }
-                    style={{width: 40, height: 40}}
+                    style={styles.playJourneyTouchableOpacityStyle}
                   />
                 </TouchableOpacity>
                 <View style={styles.extraButtonBox}>

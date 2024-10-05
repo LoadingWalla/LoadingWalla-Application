@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {
   GradientColor1,
-  GradientColor3,
+  GradientColor3, 
   PrivacyPolicy,
   textColor, 
   titleColor, 
@@ -9,6 +9,42 @@ import {
 } from '../../Color/color';
 
 export default StyleSheet.create({
+  setFlex: {flex: 1},
+  selectDocUploadView: {
+    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+  },
+  biltyViewStyle1: {padding: 20, flex: 1},
+  biltyViewStyle2: {flex: 0.2},
+  rowFlexDirection: {flexDirection: 'row'},
+  viewStyle1: {flexDirection: 'row', justifyContent: 'space-around'},
+  viewStyle2: {justifyContent: 'center', alignItems: 'center'},
+  completeBookingCardHolderView: {
+    padding: 10,
+    backgroundColor: '#FFFFFF',
+    elevation: 2,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  completeBookingChooseOptModal: {backgroundColor: 'rgba(0,0,0, 0.5)', flex: 1},
+  completeBookingView: {
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    position: 'absolute',
+    bottom: 0,
+    marginTop: 200,
+  },
   completeBookingCcontainer: {
     flex: 1,
     backgroundColor: '#FFFDFD',

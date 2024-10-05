@@ -49,6 +49,7 @@ export default StyleSheet.create({
     // borderWidth: 1,
   },
   tabView: {flex: 1, marginTop: 10},
+  requestKeyboardAvoidView: {flex: 1, backgroundColor: '#FFFDFD'},
   DashboardHeaderView: {
     position: 'absolute',
     top: 0,

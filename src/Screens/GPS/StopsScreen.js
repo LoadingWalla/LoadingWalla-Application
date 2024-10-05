@@ -32,7 +32,7 @@ const RenderItem = React.memo(({item, index}) => {
         <Text style={styles.headText}>{`${averageSpeed} KMPH`}</Text>
       </View>
       <View style={styles.whiteBox}>
-        <View style={{flex: 1}}>
+        <View style={styles.container}>
           <View style={styles.stopScreenRow}>
             <View style={styles.stopScreenRow}>
               <Text style={styles.headingText}>Max Speed: </Text>

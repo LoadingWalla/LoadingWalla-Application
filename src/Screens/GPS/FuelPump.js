@@ -62,7 +62,7 @@ const FuelPumpItem = ({item, distance}) => {
         <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
       <TouchableOpacity style={styles.iconContainer} onPress={handleNavigate}>
-        <View style={{transform: [{rotate: '-45deg'}]}}>
+        <View style={styles.goToIconView}>
           <GoToIcon size={25} />
         </View>
       </TouchableOpacity>

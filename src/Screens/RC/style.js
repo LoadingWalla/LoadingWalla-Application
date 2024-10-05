@@ -10,6 +10,10 @@ import {
 } from '../../Color/color';
 
 export default StyleSheet.create({
+  lottieViewStyle: {
+    height: 600,
+    width: 200,
+  },
   fullScreenContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

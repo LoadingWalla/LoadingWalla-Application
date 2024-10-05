@@ -48,7 +48,7 @@ const SelectGpsType = ({navigation, route}) => {
     <View style={styles.fullScreenContainer}>
       <View style={styles.overlay} />
       <View style={styles.selectGpsTypeScreenModalView}>
-        <View style={styles.header}>
+        <View style={styles.selectGpsTypeHeader}>
           <Text style={styles.headerTitle}>
             Amount of devices you want to buy?
           </Text>
@@ -60,7 +60,7 @@ const SelectGpsType = ({navigation, route}) => {
         </View>
         <View style={styles.centeredView}>
           <View style={styles.gpsCount}>
-            <Text style={{fontSize: 14, fontFamily: 'PlusJakartaSans-Bold'}}>
+            <Text style={styles.numOfGps}>
               How many GPS you want?
             </Text>
             <View style={styles.gpsSelectionView}>
@@ -93,7 +93,7 @@ const SelectGpsType = ({navigation, route}) => {
             <Text style={styles.totalAmountText}>Total Amount</Text>
             <Text style={styles.totalAmountValue}>₹ {totalPrice}/-</Text>
           </View>
-          <View style={{width: '50%'}}>
+          <View style={styles.continueBtnWidth}>
             <Button
               // loading={loading}
               onPress={() => {

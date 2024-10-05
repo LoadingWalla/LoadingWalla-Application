@@ -198,7 +198,7 @@ const PaymentGPS = ({navigation, route}) => {
           filteredPlanData?.discount * gpsCount
         } on this purchase`}
       />
-      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <View style={styles.scrollContainer}>
           <View style={styles.paymentContainer}>
             <View style={styles.paymentDetailView}>

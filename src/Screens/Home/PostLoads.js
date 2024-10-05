@@ -206,26 +206,11 @@ const PostLoads = ({navigation, route}) => {
             <Text style={styles.label}>{t(Constants.SELECT_TRUCK)}</Text>
             <TruckItem
               click={e => setTruckItem(e?.id)}
-              backgroundStyle={{
-                padding: 20,
-                marginRight: 10,
-                // marginBottom: 10,
-                borderRadius: 8,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              backgroundStyle={styles.truckItemBgStyle}
               imageRequire={true}
               horizontal={true}
               checkIcon={true}
-              unseleckBackground={{
-                padding: 20,
-                backgroundColor: inputColor,
-                borderRadius: 8,
-                marginRight: 10,
-                // marginBottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              unseleckBackground={styles.truckItemUnselectBgStyle}
               renderItem={DashboardData}
             />
           </View>

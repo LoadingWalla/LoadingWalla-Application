@@ -306,10 +306,7 @@ const AddLorry = ({navigation, route}) => {
               />
 
               <Button
-                touchStyle={{
-                  marginLeft: 30,
-                  marginRight: 30,
-                }}
+                touchStyle={styles.addLorryBtnTouchStyle}
                 onPress={() => {
                   setSeeMore(false);
                 }}

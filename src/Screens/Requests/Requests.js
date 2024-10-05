@@ -326,7 +326,7 @@ const Requests = ({route, navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1, backgroundColor: '#FFFDFD'}}>
+      style={styles.requestKeyboardAvoidView}>
       <FindLoadHeader
         title={t(Constants.MY_REQUEST)}
         goBack={() => navigation.goBack()}

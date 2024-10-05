@@ -5,7 +5,7 @@ import styles from './style'
 
 const OrdersPayment = () => {
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <View style={styles.notFoundView}>
         <Image
           source={require('../../../assets/noGps.png')}
@@ -13,11 +13,7 @@ const OrdersPayment = () => {
           style={styles.splashImage(300, 300)}
         />
         <Text
-          style={{
-            color: '#707070',
-            fontFamily: 'PlusJakartaSans-Bold',
-            fontSize: 24,
-          }}>
+          style={styles.noGpsOrderTxt}>
           No GPS Order or Payment
         </Text>
       </View>

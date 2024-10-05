@@ -153,30 +153,16 @@ const CompleteBooking = ({navigation, route}) => {
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View style={{backgroundColor: 'rgba(0,0,0, 0.5)', flex: 1}}>
+        <View style={styles.completeBookingChooseOptModal}>
           <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              padding: 10,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              width: '100%',
-              shadowColor: '#000',
-              shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              position: 'absolute',
-              bottom: 0,
-              marginTop: 200,
-            }}>
+            style={styles.completeBookingView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+              style={styles.viewStyle1}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.viewStyle2}>
                   <Cammera />
                   <Text>Camera</Text>
                 </View>
@@ -184,7 +170,7 @@ const CompleteBooking = ({navigation, route}) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => choosePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.viewStyle2}>
                   <Gallery />
                   <Text>Gallery</Text>
                 </View>
@@ -200,13 +186,7 @@ const CompleteBooking = ({navigation, route}) => {
     <View style={styles.completeBookingCcontainer}>
       {chooseOptions()}
       <View
-        style={{
-          padding: 10,
-          backgroundColor: '#FFFFFF',
-          elevation: 2,
-          borderBottomLeftRadius: 8,
-          borderBottomRightRadius: 8,
-        }}>
+        style={styles.completeBookingCardHolderView}>
         <CardHeader from={from} to={to} icon={icon} t={t} />
         <View style={styles.horizontalLine} />
         <View style={styles.rowdirection}>
@@ -221,15 +201,12 @@ const CompleteBooking = ({navigation, route}) => {
         </View>
         <View style={styles.horizontalLine} />
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flexDirection: 'row'}}>
+          style={styles.viewStyle1}>
+          <View style={styles.rowFlexDirection}>
             <Text style={styles.textStyle}>Weight</Text>
             <Text style={styles.textStyle}>{`: ${qty} Ton`}</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={styles.rowFlexDirection}>
             <Text style={styles.textStyle}>Type</Text>
             <Text style={styles.textStyle}>
               {`: ${userType === 2 ? vehicle_number : material_name}`}
@@ -239,23 +216,17 @@ const CompleteBooking = ({navigation, route}) => {
       </View>
       <View
         // contentContainerStyle={{padding: 20, borderWidth: 1, flex: 1}}
-        style={{padding: 20, flex: 1}}>
-        <View style={{flex: 0.2}}>
+        style={styles.biltyViewStyle1}>
+        <View style={styles.biltyViewStyle2}>
           <Text style={styles.header}>Upload BILTY/POD</Text>
           <Text style={styles.subheader}>
             Confirm your delivery by uploading your BILTY / POD from load owner
           </Text>
         </View>
 
-        <View style={{flex: 1}}>
+        <View style={styles.setFlex}>
           <View
-            style={{
-              elevation: 2,
-              backgroundColor: '#FFFFFF',
-              borderRadius: 8,
-              paddingHorizontal: 10,
-              paddingVertical: 20,
-            }}>
+            style={styles.selectDocUploadView}>
             <View style={styles.selectorContainer}>
               <Text style={styles.headerText}>Select document to Upload</Text>
               <View style={styles.radioButtonContainer}>
