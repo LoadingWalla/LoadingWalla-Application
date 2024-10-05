@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {backgroundColorNew, pageBackground, textColor, titleColor} from '../../Color/color';
 import {PrivacyPolicy} from '../../Color/color';
 
