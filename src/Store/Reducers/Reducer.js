@@ -1707,6 +1707,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         removeGeozoneLoading: false,
         removeGeozoneError: payload?.data,
+        removeGeozoneData: null,
       });
 
     // Clear Store on logout

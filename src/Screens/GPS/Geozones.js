@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -25,7 +25,7 @@ import Button from '../../Components/Button';
 import GeozoneShimmer from '../../Components/Shimmer/GeozoneShimmer';
 import AlertBox from '../../Components/AlertBox';
 
-const Separator = () => <View style={styles.separator} />;
+const Separator = React.memo(() => <View style={styles.separator} />);
 
 const parseGeofenceArea = area => {
   const areaParts = area.match(/CIRCLE \((.*)\)/);
@@ -48,17 +48,14 @@ const Geozones = ({navigation, route}) => {
   const mapRef = useRef(null);
   const [activeGeofence, setActiveGeofence] = useState(null);
   const [initialRegionSet, setInitialRegionSet] = useState(false);
+  const [deletingGeofenceId, setDeletingGeofenceId] = useState(null);
 
   const {
     geofenceData = [],
     geofenceLoading,
-    removeGeozoneLoading,
     removeGeozoneError,
     removeGeozoneData,
-  } = useSelector(state => {
-    console.log(44444, state);
-    return state.data;
-  });
+  } = useSelector(state => state.data);
 
   // Fetch geofences when the screen is focused
   useFocusEffect(
@@ -86,37 +83,38 @@ const Geozones = ({navigation, route}) => {
   }, [geofenceData, initialRegionSet]);
 
   // Handle geofence selection
-  const handleGeofencePress = useCallback(
-    geofence => {
-      const parsedGeofence = parseGeofenceArea(geofence.area);
-      if (parsedGeofence) {
-        setActiveGeofence(geofence.id);
-        mapRef.current.animateToRegion({
-          latitude: parsedGeofence.latitude,
-          longitude: parsedGeofence.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        });
-      }
-    },
-    [mapRef],
-  );
+  const handleGeofencePress = useCallback(geofence => {
+    const parsedGeofence = parseGeofenceArea(geofence.area);
+    if (parsedGeofence) {
+      setActiveGeofence(geofence.id);
+      mapRef.current.animateToRegion({
+        latitude: parsedGeofence.latitude,
+        longitude: parsedGeofence.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
+  }, []);
 
   const handleDelete = useCallback(
     geofenceId => {
+      setDeletingGeofenceId(geofenceId);
       dispatch(removeGeofenceRequest(geofenceId));
     },
     [dispatch],
   );
 
-  // Check for successful or failed deletion
+  // Check for successful or failed deletion and refresh the geofence list
   useEffect(() => {
     if (removeGeozoneData?.status === 200) {
       AlertBox('Geozone deleted successfully!');
+      setDeletingGeofenceId(null);
+      dispatch(getGeofenceRequest(deviceId));
     } else if (removeGeozoneError) {
       AlertBox('Something went wrong!');
+      setDeletingGeofenceId(null);
     }
-  }, [removeGeozoneData, removeGeozoneError]);
+  }, [removeGeozoneData, removeGeozoneError, dispatch, deviceId]);
 
   // Generate circle points for polyline
   const generateCirclePoints = useCallback((center, radius, numPoints = 60) => {
@@ -135,6 +133,56 @@ const Geozones = ({navigation, route}) => {
     }
     return circlePoints;
   }, []);
+
+  const renderGeozoneList = useMemo(() => {
+    if (geofenceData.length === 0) {
+      return (
+        <View>
+          <View style={styles.noGeozonesContainer}>
+            <Text style={styles.oohText}>Ooh!</Text>
+            <Text style={styles.noGeozonesText}>No Geozones</Text>
+            <NoGeozones size={135} />
+          </View>
+          <Button
+            title="Create geozone"
+            onPress={() => navigation.goBack()}
+            textStyle={styles.btnText}
+            style={styles.btnStyle}
+          />
+        </View>
+      );
+    }
+
+    return geofenceData.map((geofence, index) => (
+      <View key={geofence.id}>
+        <View
+          style={[
+            styles.geofenceItem,
+            {
+              backgroundColor:
+                activeGeofence === geofence.id ? '#FFF7F5' : '#FFFFFF',
+            },
+          ]}>
+          <TouchableOpacity
+            style={styles.geofenceTouch}
+            onPress={() => handleGeofencePress(geofence)}>
+            <Text style={styles.geofenceText}>{geofence.name}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleDelete(geofence.id)}
+            disabled={deletingGeofenceId === geofence.id}
+            style={styles.deleteTouch}>
+            {deletingGeofenceId === geofence.id ? (
+              <ActivityIndicator size="small" color={backgroundColorNew} />
+            ) : (
+              <DeleteIcon size={25} color={backgroundColorNew} />
+            )}
+          </TouchableOpacity>
+        </View>
+        {index < geofenceData.length - 1 && <Separator />}
+      </View>
+    ));
+  }, [geofenceData, activeGeofence, deletingGeofenceId, handleDelete]);
 
   return (
     <View style={styles.container}>
@@ -207,58 +255,7 @@ const Geozones = ({navigation, route}) => {
         {geofenceLoading ? (
           <GeozoneShimmer />
         ) : (
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {geofenceData.length > 0 ? (
-              geofenceData.map((geofence, index) => (
-                <View key={geofence.id}>
-                  <View
-                    style={[
-                      styles.geofenceItem,
-                      {
-                        backgroundColor:
-                          activeGeofence === geofence.id
-                            ? '#FFF7F5'
-                            : '#FFFFFF',
-                      },
-                    ]}>
-                    <TouchableOpacity
-                      style={styles.geofenceTouch}
-                      onPress={() => handleGeofencePress(geofence)}>
-                      <Text style={styles.geofenceText}>{geofence.name}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => handleDelete(geofence.id)}
-                      disabled={removeGeozoneLoading}
-                      style={styles.deleteTouch}>
-                      {removeGeozoneLoading ? (
-                        <ActivityIndicator
-                          size="small"
-                          color={backgroundColorNew}
-                        />
-                      ) : (
-                        <DeleteIcon size={25} color={backgroundColorNew} />
-                      )}
-                    </TouchableOpacity>
-                  </View>
-                  {index < geofenceData.length - 1 && <Separator />}
-                </View>
-              ))
-            ) : (
-              <View>
-                <View style={styles.noGeozonesContainer}>
-                  <Text style={styles.oohText}>Ooh!</Text>
-                  <Text style={styles.noGeozonesText}>No Geozones</Text>
-                  <NoGeozones size={135} />
-                </View>
-                <Button
-                  title="Create geozone"
-                  onPress={() => navigation.goBack()}
-                  textStyle={styles.btnText}
-                  style={styles.btnStyle}
-                />
-              </View>
-            )}
-          </ScrollView>
+          <ScrollView>{renderGeozoneList}</ScrollView>
         )}
       </View>
     </View>
