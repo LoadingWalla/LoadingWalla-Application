@@ -1,27 +1,22 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-} from 'react-native';
+import {View, FlatList, ActivityIndicator, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import * as Constants from '../../Constants/Constant';
-import DashboardHeader from '../../Components/DashboardHeader';
-import GpsItem from '../../Components/GpsItem';
+import styles from './style';
 import {
   fetchGpsDevicesRequest,
   fetchTokenRequest,
   initProfile,
 } from '../../Store/Actions/Actions';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-import EmptyListComponent from '../../Components/EmptyListComponent';
+import GpsItem from '../../Components/GpsItem';
+import DashboardHeader from '../../Components/DashboardHeader';
 import SearchBox from '../../Components/SearchBox';
+import EmptyListComponent from '../../Components/EmptyListComponent';
 
 const MyGpsScreen = ({navigation}) => {
   const {t} = useTranslation();
@@ -165,20 +160,17 @@ const MyGpsScreen = ({navigation}) => {
     const running = mergedDeviceData.filter(
       device => device.position[0]?.attributes?.motion === true,
     ).length;
-    // console.log(44444444, all, active, inactive, running);
     return {all, active, inactive, running};
   }, [mergedDeviceData]);
 
   const filteredDeviceData = useMemo(() => {
     let filtered = mergedDeviceData;
 
-    // Apply search filter
     if (searchText) {
       filtered = filtered.filter(device =>
         device.name.toLowerCase().includes(searchText.toLowerCase()),
       );
     }
-    // Apply status filter
     if (filterStatus !== 'All') {
       if (filterStatus === 'Active') {
         filtered = filtered.filter(device => device.status === 'online');
@@ -190,21 +182,17 @@ const MyGpsScreen = ({navigation}) => {
         );
       }
     }
-    // console.log(444444444, filtered);
     return filtered;
   }, [mergedDeviceData, searchText, filterStatus]);
 
-  // Handle filter change
   const handleFilterChange = value => {
     setFilterStatus(value);
   };
 
-  // Handle search
   const handleSearch = text => {
     setSearchText(text);
   };
 
-  // Handle toggle of search box
   const handleToggleSearch = isExpanded => {
     if (!isExpanded) {
       setSearchText('');
@@ -273,87 +261,3 @@ const MyGpsScreen = ({navigation}) => {
 };
 
 export default MyGpsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  dashboardHeaderView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    elevation: 5,
-    maxHeight: 60,
-    padding: 10,
-    backgroundColor: '#FFFFFF',
-    zIndex: 9999,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-  },
-  contentContainer: {
-    flex: 1,
-    marginVertical: 60,
-    padding: 10,
-  },
-  loadingStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  notFoundText: {
-    color: '#707070',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 28,
-  },
-
-  btnStyle: {
-    borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: '#3CA604',
-    borderColor: '#3CA604',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '50%',
-    alignSelf: 'center',
-  },
-  btnText: {
-    fontSize: 16,
-    color: textColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-  homeView: {
-    flex: 1,
-    marginVertical: 60,
-    justifyContent: 'center',
-  },
-  notFoundView: {
-    flex: 0.75,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  getNowView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 0.25,
-  },
-  offerText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 14,
-    color: '#3BA700',
-    textAlign: 'center',
-    paddingVertical: 10,
-  },
-  splashImage: (height, width) => ({
-    height: height,
-    width: width,
-  }),
-  subText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    marginTop: 15,
-  },
-});

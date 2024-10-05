@@ -80,7 +80,6 @@ const GpsItem = ({navigation, item}) => {
       return <Text style={styles.ignitionText(true)}>GPS Active</Text>;
     }
     if (status === 'offline') {
-      // return <Text style={styles.ignitionText(false)}>GPS Inactive</Text>;
       return (
         <Text style={styles.ignitionText(false)}>
           {moment(lastUpdate).fromNow()}

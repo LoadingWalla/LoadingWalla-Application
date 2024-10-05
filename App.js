@@ -9,12 +9,22 @@ import {PermissionsAndroid, Platform, StatusBar} from 'react-native';
 import {foregroundNotification} from './src/Utils/Notification_helper';
 import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
 import {navigationRef} from './src/Navigation/NavigationService';
+// import firestore from '@react-native-firebase/firestore';
 
 const App = () => {
   useEffect(() => {
     foregroundNotification();
     checkNotificationPermission();
   }, []);
+
+  // const getVersion = async () => {
+  //   const users = await firestore();
+  //   // const users = await firestore().collection('Users').get();
+  //   console.log(1234567890, users);
+  // };
+  // useEffect(() => {
+  //   getVersion();
+  // }, []);
 
   const checkNotificationPermission = async () => {
     if (Platform.OS === 'android') {

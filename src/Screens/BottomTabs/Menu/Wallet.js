@@ -81,11 +81,19 @@ const Wallet = ({navigation}) => {
         dispatch(walletFailure());
       }
       if (verifyPaymentStatus === 'success') {
-        Toast.show('Payment Successful');
+        // Toast.show('Payment Successful');
+        navigation.navigate('purchasingStatus', {
+          statusCode: 200,
+          navigation: 'Menu',
+        });
         dispatch(initWallet(amount));
       } else {
         console.log('Payment Verification Failed');
-        Toast.show('Payment Verification Failed');
+        // Toast.show('Payment Verification Failed');
+        navigation.navigate('purchasingStatus', {
+          statusCode: 400,
+          navigation: 'Menu',
+        });
       }
     }
   }, [dispatch, walletStatus, wallletData, verifyPaymentStatus]);
@@ -141,13 +149,21 @@ const Wallet = ({navigation}) => {
             ),
           );
         } else {
-          AlertBox('Transaction not successful');
+          // AlertBox('Transaction not successful');
+          navigation.navigate('purchasingStatus', {
+            statusCode: 400,
+            navigation: 'Menu',
+          });
         }
       })
       .catch(error => {
         // console.log('Payment Error:', error);
         dispatch(createOrderFailure());
-        AlertBox('Transaction not successful');
+        navigation.navigate('purchasingStatus', {
+          statusCode: 400,
+          navigation: 'Menu',
+        });
+        // AlertBox('Transaction not successful');
       });
   };
 

@@ -87,6 +87,7 @@ function* rootSaga() {
   yield takeLatest(actions.REMOVE_PARKING_REQUEST, saga.removeGpsParking);
   yield takeLatest(actions.GET_GEOFENCE_REQUEST, saga.fetchGeofence);
   yield takeLatest(actions.ADD_GEOFENCE_REQUEST, saga.addGpsGeozone);
+  yield takeLatest(actions.REMOVE_GEOFENCE_REQUEST, saga.deleteGpsGeozone);
   yield takeLatest(
     actions.FETCH_COMBINED_GPS_DATA_REQUEST,
     saga.fetchGpsCombinedData,

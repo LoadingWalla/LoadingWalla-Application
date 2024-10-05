@@ -115,6 +115,11 @@ const TripStats = ({distance, averageSpeed, duration}) => (
       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
       label="Avg. Speed"
     />
+    {/* <VerticalLine />
+    <StatBox
+      value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
+      label="Max Speed"
+    /> */}
     <VerticalLine />
     <StatBox value={convertMillisToTime(duration)} label="Duration" />
   </View>
@@ -124,6 +129,13 @@ const StatBox = ({value, label}) => (
   <View style={styles.statBox}>
     <Text style={styles.statValue}>{value}</Text>
     <Text style={styles.statLabel}>{label}</Text>
+  </View>
+);
+
+const StopBox = ({label, value}) => (
+  <View style={styles.stopBox}>
+    <Text style={styles.stopText}>{label}</Text>
+    <Text style={styles.stopCount}>{value}</Text>
   </View>
 );
 
@@ -323,6 +335,25 @@ const LocationHistory = ({navigation, route}) => {
           </View>
         </View>
       </View>
+      <View
+        style={{
+          // borderWidth: 1,
+          // backgroundColor: '#FFE9E3',
+          borderRadius: 8,
+          marginHorizontal: 10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          elevation: 2,
+          backgroundColor: '#FFFFFF',
+        }}>
+        <View style={{flex: 0.5, paddingVertical: 5}}>
+          <Text style={{textAlign: 'center'}}>History</Text>
+        </View>
+        <View style={{flex: 0.5, paddingVertical: 5}}>
+          <Text style={{textAlign: 'center'}}>Stops</Text>
+        </View>
+      </View>
       {gpsTripsError || gpsSummaryError ? (
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>
@@ -354,13 +385,6 @@ const LocationHistory = ({navigation, route}) => {
     </View>
   );
 };
-
-const StopBox = ({label, value}) => (
-  <View style={styles.stopBox}>
-    <Text style={styles.stopText}>{label}</Text>
-    <Text style={styles.stopCount}>{value}</Text>
-  </View>
-);
 
 export default LocationHistory;
 

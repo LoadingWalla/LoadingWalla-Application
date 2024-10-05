@@ -1,12 +1,13 @@
 import React from 'react';
 import {Path, Svg} from 'react-native-svg';
 
-const SettingIcon = ({size, color}) => {
+const SettingIcon = ({size, color, style}) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
+      style={style}
       viewBox="0 0 15.1 15.104">
       <Path
         id="Icon_ionic-ios-settings"
