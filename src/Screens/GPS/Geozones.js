@@ -17,6 +17,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {
   clearAllGeofenceData,
   getGeofenceRequest,
+  removeGeofenceFailure,
   removeGeofenceRequest,
 } from '../../Store/Actions/Actions';
 import DeleteIcon from '../../../assets/SVG/svg/DeleteIcon';
@@ -61,7 +62,8 @@ const Geozones = ({navigation, route}) => {
   useFocusEffect(
     useCallback(() => {
       dispatch(getGeofenceRequest(deviceId));
-      return () => dispatch(clearAllGeofenceData());
+      return () =>
+        dispatch(clearAllGeofenceData(), dispatch(removeGeofenceFailure()));
     }, [dispatch, deviceId]),
   );
 
