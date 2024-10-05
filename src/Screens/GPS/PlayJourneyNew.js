@@ -23,7 +23,6 @@ import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-import MapViewDirections from 'react-native-maps-directions';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import MapComponent from '../../Components/MapComponent';
 

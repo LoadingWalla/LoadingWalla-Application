@@ -19,7 +19,8 @@ import {
   clearGeofenceAddedData,
 } from '../../Store/Actions/Actions';
 import AlertBox from '../../Components/AlertBox';
-import styles from './style'
+import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -34,7 +35,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const AddGeozone = ({navigation, route}) => {
-  const {deviceId, lat, lon} = route.params;
+  const {deviceId, lat, lon, address} = route.params;
 
   const dispatch = useDispatch();
   const mapRef = useRef(null);
@@ -82,6 +83,10 @@ const AddGeozone = ({navigation, route}) => {
   };
 
   const handleSave = () => {
+    if (!geozoneName.trim()) {
+      AlertBox('Please enter a geozone name.');
+      return;
+    }
     dispatch(
       addGeofenceRequest(
         `CIRCLE (${lat} ${lon}, ${sliderValue * 5000})`,
@@ -142,7 +147,8 @@ const AddGeozone = ({navigation, route}) => {
             {livePositions.length > 0 && (
               <>
                 <Marker.Animated coordinate={animatedMarkerPosition}>
-                  <ActiveLocation size={40} course={50} />
+                  {/* <ActiveLocation size={40} course={50} /> */}
+                  <TruckNavigationIcon size={40} />
                 </Marker.Animated>
                 <Circle
                   center={livePositions[livePositions.length - 1]}
@@ -160,6 +166,27 @@ const AddGeozone = ({navigation, route}) => {
           onPress={animateToDevicePosition}>
           <GpsIcon2 size={20} />
         </TouchableOpacity>
+
+        <View style={styles.speedDistanceBox}>
+          <View style={styles.infoColumn}>
+            <Text style={styles.boldText}>{address}</Text>
+          </View>
+
+          <View>
+            <TouchableOpacity
+              style={styles.btnContainer}
+              onPress={() =>
+                navigation.navigate('geozones', {deviceId, lat, lon})
+              }>
+              <Text style={styles.btnText2}>Geozones</Text>
+              <SettingIcon
+                size={15}
+                color={backgroundColorNew}
+                style={styles.iconStyle}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       <View style={styles.bottomContainer}>
@@ -174,8 +201,8 @@ const AddGeozone = ({navigation, route}) => {
               onValueChange={setSliderValue}
               minimumTrackTintColor={backgroundColorNew}
               maximumTrackTintColor={PrivacyPolicy}
-              thumbTintColor={backgroundColorNew}
-              thumbImage={require('../../../assets/slider.png')}
+              thumbImage={require('../../../assets/slider1.png')}
+              // thumbTintColor={backgroundColorNew}
             />
             <Text style={styles.textvalue}>
               {((sliderValue * 5000) / 1000).toFixed(1)} KM
@@ -207,94 +234,137 @@ const AddGeozone = ({navigation, route}) => {
 
 export default AddGeozone;
 
-// const styles = StyleSheet.create({
-//   container: {flex: 1},
-//   mapContainer: {flex: 1},
-//   loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-//   gpsButton: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     width: 35,
-//     height: 35,
-//     borderRadius: 25,
-//     backgroundColor: '#FFFFFF',
-//     elevation: 3,
-//     position: 'absolute',
-//     bottom: 150,
-//     right: 10,
-//   },
-//   bottomContainer: {
-//     backgroundColor: '#FFF7F5',
-//     position: 'absolute',
-//     bottom: 0,
-//     padding: 10,
-//     borderTopLeftRadius: 10,
-//     borderTopRightRadius: 10,
-//     width: '100%',
-//     elevation: 3,
-//     borderColor: '#F7F7F7',
-//     borderWidth: 1,
-//   },
-//   geozoneContainer: {
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 10,
-//     paddingVertical: 10,
-//     borderColor: '#00000029',
-//     borderWidth: 1,
-//   },
-//   geozoneText: {
-//     marginHorizontal: 15,
-//     fontSize: 10,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   sliderContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     flex: 1,
-//   },
-//   slider: {width: '75%'},
-//   textvalue: {
-//     width: '20%',
-//     textAlign: 'center',
-//     borderRadius: 3,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 12,
-//     borderWidth: 0.3,
-//     paddingVertical: 5,
-//     marginRight: 5,
-//     backgroundColor: '#FFFFFF',
-//   },
-//   inputContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     marginHorizontal: 15,
-//   },
-//   inputLabel: {
-//     marginRight: 15,
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   textInput: {
-//     borderBottomWidth: 1,
-//     flex: 1,
-//     paddingVertical: 0,
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   btnStyle: {
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: 10,
-//     marginTop: 20,
-//     width: '100%',
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-// });
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  mapContainer: {flex: 1},
+  loaderContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  gpsButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 35,
+    height: 35,
+    borderRadius: 25,
+    backgroundColor: '#FFFFFF',
+    elevation: 3,
+    position: 'absolute',
+    bottom: 150,
+    right: 10,
+  },
+  bottomContainer: {
+    backgroundColor: '#FFF7F5',
+    position: 'absolute',
+    bottom: 0,
+    padding: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    width: '100%',
+    elevation: 3,
+    borderColor: '#F7F7F7',
+    borderWidth: 1,
+  },
+  geozoneContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 5,
+    paddingVertical: 10,
+    borderColor: '#00000029',
+    borderWidth: 0.3,
+  },
+  geozoneText: {
+    marginHorizontal: 15,
+    fontSize: 10,
+    fontFamily: 'PlusJakartaSans-Regular',
+  },
+  sliderContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1,
+  },
+  slider: {width: '75%'},
+  textvalue: {
+    width: '20%',
+    textAlign: 'center',
+    borderRadius: 3,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+    borderWidth: 0.3,
+    paddingVertical: 5,
+    marginRight: 5,
+    backgroundColor: '#FFFFFF',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 15,
+  },
+  inputLabel: {
+    marginRight: 15,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Regular',
+  },
+  textInput: {
+    borderBottomWidth: 1,
+    flex: 1,
+    paddingVertical: 0,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  btnStyle: {
+    borderRadius: 8,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    marginTop: 20,
+    width: '100%',
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  speedDistanceBox: {
+    position: 'absolute',
+    top: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
+    zIndex: 99,
+    borderRadius: 8,
+    width: '95%',
+    alignSelf: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  infoColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+    // borderWidth: 1,
+  },
+  boldText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 12,
+    // textAlign: 'center',
+    // borderWidth: 1,
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    elevation: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  iconStyle: {marginLeft: 5},
+  btnText2: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    // textAlign: 'center',
+  },
+});

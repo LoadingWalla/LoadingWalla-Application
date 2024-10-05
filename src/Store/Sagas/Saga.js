@@ -1249,7 +1249,7 @@ export function* fetchGpsRoute({username, password, deviceId, from, to}) {
 // gps stops
 export function* fetchGpsStops({username, password, deviceId, from, to}) {
   try {
-    console.log(999999, 'stops data', username, password, deviceId, from, to);
+    // console.log(999999, 'stops data', username, password, deviceId, from, to);
     const data = yield gpsApi.get(
       `reports/stops?deviceId=${deviceId}&from=${from}&to=${to}`,
       username,
@@ -1413,12 +1413,10 @@ export function* fetchGpsOrderDetail({id}) {
 // gps replay details
 export function* setGpsRelayData({deviceId, types}) {
   try {
-    console.log(4444, deviceId, types);
-
+    // console.log(4444, deviceId, types);
     // Make the API call
     const data = yield API.get(`gps/relay?device_id=${deviceId}&type=${types}`);
-    console.log('set Gps relay', data);
-
+    // console.log('set Gps relay', data);
     // Handle the response based on the status code
     if (data?.data?.status === 200) {
       yield put(actions.setGpsRelaySuccess(data?.data));
@@ -1433,7 +1431,7 @@ export function* setGpsRelayData({deviceId, types}) {
 
 export function* fetchGpsRelayData({deviceId}) {
   try {
-    console.log(4444, deviceId);
+    // console.log(4444, deviceId);
     // Make the API call
     const data = yield API.get(`gps/relay?device_id=${deviceId}`);
     console.log('Gps Plan', data);
@@ -1463,7 +1461,7 @@ export function* fetchFullAddress({lat, lan, customId}) {
     //     customParam: customId,
     //   },
     // });
-    console.log(888888, 'Gps Address--------------', data);
+    // console.log(888888, 'Gps Address--------------', data);
     if (data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchAddressSuccess({...data?.data, customId}));
@@ -1557,15 +1555,32 @@ export function* addGpsGeozone({name, area, deviceId}) {
 export function* fetchGeofence({deviceId}) {
   try {
     const data = yield API.get(`gps/get-geofence/${deviceId}`);
-    console.log(1111, 'Get Geofence ----->', data);
-
-    if (data?.data?.status === 200) {
-      yield put(actions.getGeofenceSuccess(data?.data));
+    // console.log(1111, 'Get Geofence ----->', data);
+    if (data?.status === 200) {
+      yield put(actions.getGeofenceSuccess(data));
     } else {
       yield put(actions.getGeofenceFailure(data?.status));
     }
   } catch (error) {
     yield put(actions.getGeofenceFailure(error.message));
+    console.log('error', error);
+  }
+}
+
+// Remove Geofence
+export function* deleteGpsGeozone({deviceId}) {
+  try {
+    const formData = new FormData();
+    formData.append('id', deviceId);
+    const data = yield multiPartApi.post('gps/remove-geofence', formData);
+    console.log(1111, 'Delete GeoZone ----->', data);
+    if (data?.status === 200) {
+      yield put(actions.removeGeofenceSuccess(data));
+    } else {
+      yield put(actions.removeGeofenceFailure(data));
+    }
+  } catch (error) {
+    yield put(actions.removeGeofenceFailure(error.message));
     console.log('error', error);
   }
 }
