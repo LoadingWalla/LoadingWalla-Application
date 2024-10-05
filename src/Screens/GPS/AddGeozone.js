@@ -133,7 +133,7 @@ const AddGeozone = ({navigation, route}) => {
         ) : (
           <MapView
             ref={mapRef}
-            style={StyleSheet.absoluteFillObject}
+            style={styles.geozoneAbsFillObj} 
             initialRegion={{
               latitude:
                 livePositions.length > 0 ? livePositions[0].latitude : lat || 0,
@@ -225,7 +225,7 @@ const AddGeozone = ({navigation, route}) => {
           title="Save"
           onPress={handleSave}
           textStyle={styles.btnText}
-          style={styles.btnStyle}
+          style={styles.addGeozoneBtnStyle}
         />
       </View>
     </View>

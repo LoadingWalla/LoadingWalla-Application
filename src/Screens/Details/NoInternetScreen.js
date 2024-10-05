@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import NoInternetIcon from '../../../assets/SVG/svg/NoInternetIcon';
+import styles from './style'
 
 const NoInternetScreen = () => {
   const [isConnected, setIsConnected] = useState(true);
@@ -18,7 +19,7 @@ const NoInternetScreen = () => {
   return (
     <>
       {!isConnected && (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.noInternetContainer}>
           <View style={styles.subContainer}>
             <NoInternetIcon size={30} />
             <View>
@@ -34,30 +35,30 @@ const NoInternetScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    backgroundColor: '#FFD7CC',
-  },
-  subContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    gap: 30,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    flexDirection: 'row',
-    width: '100%',
-  },
-  text: {color: '#000000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 18},
-  bottomText: {
-    opacity: 0.8,
-    marginTop: 3,
-    color: '#000000',
-    fontFamily: 'PlusJakartaSans-Regular',
-    fontSize: 16,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     position: 'absolute',
+//     bottom: 0,
+//     width: '100%',
+//     backgroundColor: '#FFD7CC',
+//   },
+//   subContainer: {
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//     gap: 30,
+//     paddingHorizontal: 20,
+//     paddingVertical: 15,
+//     flexDirection: 'row',
+//     width: '100%',
+//   },
+//   text: {color: '#000000', fontFamily: 'PlusJakartaSans-Bold', fontSize: 18},
+//   bottomText: {
+//     opacity: 0.8,
+//     marginTop: 3,
+//     color: '#000000',
+//     fontFamily: 'PlusJakartaSans-Regular',
+//     fontSize: 16,
+//   },
+// });
 
 export default NoInternetScreen;

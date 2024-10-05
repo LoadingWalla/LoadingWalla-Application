@@ -18,6 +18,7 @@ import {initQrCodeVerify, qrScanningFailure} from '../../Store/Actions/Actions';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import FlashOn from '../../../assets/SVG/svg/FlashOn';
 import FlashOff from '../../../assets/SVG/svg/FlashOff';
+import styles from './style'
 
 const QRscanner = ({route, navigation}) => {
   const {truck_id} = route.params;
@@ -74,7 +75,7 @@ const QRscanner = ({route, navigation}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.qrContainer}>
       {qrCodeLoading && (
         <View style={styles.modalBackground}>
           <ActivityIndicator animating={true} size="large" />
@@ -109,84 +110,84 @@ const QRscanner = ({route, navigation}) => {
 
 export default QRscanner;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  flashlightButton: {
-    position: 'absolute',
-    bottom: 50,
-    // backgroundColor: '#4d4d4d',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    borderRadius: 8,
-    padding: 10,
-    borderWidth: 2,
-    borderColor: PrivacyPolicy,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  focusBorder: {
-    position: 'absolute',
-    width: 300,
-    height: 300,
-    // borderWidth: 5,
-  },
-  cornerTopLeft: {
-    position: 'absolute',
-    // left: 20,
-    // top: 20,
-    width: 50,
-    height: 50,
-    borderTopWidth: 5,
-    borderLeftWidth: 5,
-    borderColor: '#FFFFFF',
-    borderTopLeftRadius: 20,
-  },
-  cornerTopRight: {
-    position: 'absolute',
-    right: 0,
-    // top: 20,
-    width: 50,
-    height: 50,
-    borderTopWidth: 5,
-    borderRightWidth: 5,
-    borderColor: '#FFFFFF',
-    borderTopRightRadius: 20,
-  },
-  cornerBottomLeft: {
-    position: 'absolute',
-    // left: 20,
-    bottom: 0,
-    width: 50,
-    height: 50,
-    borderBottomWidth: 5,
-    borderLeftWidth: 5,
-    borderColor: '#FFFFFF',
-    borderBottomLeftRadius: 20,
-  },
-  cornerBottomRight: {
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 50,
-    height: 50,
-    borderBottomWidth: 5,
-    borderRightWidth: 5,
-    borderColor: '#FFFFFF',
-    borderBottomRightRadius: 20,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   modalBackground: {
+//     position: 'absolute',
+//     top: 0,
+//     left: 0,
+//     right: 0,
+//     bottom: 0,
+//     backgroundColor: 'rgba(0,0,0,0.5)',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   flashlightButton: {
+//     position: 'absolute',
+//     bottom: 50,
+//     // backgroundColor: '#4d4d4d',
+//     backgroundColor: 'rgba(0,0,0,0.7)',
+//     borderRadius: 8,
+//     padding: 10,
+//     borderWidth: 2,
+//     borderColor: PrivacyPolicy,
+//   },
+//   buttonText: {
+//     fontSize: 16,
+//     color: '#000',
+//   },
+//   focusBorder: {
+//     position: 'absolute',
+//     width: 300,
+//     height: 300,
+//     // borderWidth: 5,
+//   },
+//   cornerTopLeft: {
+//     position: 'absolute',
+//     // left: 20,
+//     // top: 20,
+//     width: 50,
+//     height: 50,
+//     borderTopWidth: 5,
+//     borderLeftWidth: 5,
+//     borderColor: '#FFFFFF',
+//     borderTopLeftRadius: 20,
+//   },
+//   cornerTopRight: {
+//     position: 'absolute',
+//     right: 0,
+//     // top: 20,
+//     width: 50,
+//     height: 50,
+//     borderTopWidth: 5,
+//     borderRightWidth: 5,
+//     borderColor: '#FFFFFF',
+//     borderTopRightRadius: 20,
+//   },
+//   cornerBottomLeft: {
+//     position: 'absolute',
+//     // left: 20,
+//     bottom: 0,
+//     width: 50,
+//     height: 50,
+//     borderBottomWidth: 5,
+//     borderLeftWidth: 5,
+//     borderColor: '#FFFFFF',
+//     borderBottomLeftRadius: 20,
+//   },
+//   cornerBottomRight: {
+//     position: 'absolute',
+//     right: 0,
+//     bottom: 0,
+//     width: 50,
+//     height: 50,
+//     borderBottomWidth: 5,
+//     borderRightWidth: 5,
+//     borderColor: '#FFFFFF',
+//     borderBottomRightRadius: 20,
+//   },
+// });

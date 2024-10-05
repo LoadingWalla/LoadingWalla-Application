@@ -29,6 +29,7 @@ import {
 import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
 import Button from '../../Components/Button';
+import styles from './style'
 
 const CompleteBooking = ({navigation, route}) => {
   const {
@@ -196,7 +197,7 @@ const CompleteBooking = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.completeBookingCcontainer}>
       {chooseOptions()}
       <View
         style={{
@@ -318,148 +319,148 @@ const CompleteBooking = ({navigation, route}) => {
 
 export default CompleteBooking;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFDFD',
-  },
-  subheader: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 20,
-    fontFamily: 'PlusJakartaSans-Medium',
-    textAlign: 'center',
-  },
-  selectorContainer: {
-    // flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-    // borderWidth: 1,
-  },
-  header: {
-    flex: 1,
-    fontSize: 14,
-    color: titleColor,
-    marginBottom: 8,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-    paddingRight: 5,
-  },
-  headerText: {
-    flex: 1,
-    fontSize: 14,
-    color: titleColor,
-    marginBottom: 8,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'left',
-    paddingRight: 5,
-  },
-  radioButtonContainer: {
-    flex: 0.65,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // borderWidth: 1,
-    marginStart: 5,
-  },
-  documentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: GradientColor1,
-    borderStyle: 'dashed',
-    padding: 10,
-    // marginBottom: 20,
-    borderRadius: 10,
-  },
-  documentImage: {
-    width: 100,
-    height: 100,
-    marginBottom: 10,
-  },
-  filename: {
-    fontSize: 16,
-    color: 'black',
-  },
-  uploadButton: {
-    backgroundColor: 'red',
-    padding: 10,
-    alignItems: 'center',
-  },
-  uploadButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  termsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  termsText: {
-    fontSize: 20,
-    marginRight: 10,
-  },
-  termsLabel: {
-    fontSize: 16,
-  },
-  completeOrderButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    backgroundColor: GradientColor3,
-    paddingVertical: 15,
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  completeOrderButtonText: {
-    color: 'white',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 16,
-  },
-  findButtonContainer: {
-    borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: GradientColor3,
-    borderColor: GradientColor3,
-    width: 100,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  findButtonText: {
-    fontSize: 13,
-    color: white,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  centerItem: {
-    // alignItems: 'center',
-    justifyContent: 'center',
-    flex: 0.2,
-    // borderWidth: 1,
-    bottom: 0,
-  },
-  checkBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  checkBoxStyle: {marginRight: 10},
-  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
-  rowdirection: {flexDirection: 'row', alignItems: 'center'},
-  point: {
-    height: 8,
-    width: 8,
-    backgroundColor: PrivacyPolicy,
-    borderRadius: 4,
-    marginRight: 20,
-    marginLeft: 10,
-  },
-  smallImageHeaderTitle: {
-    fontSize: 15,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  textStyle: {
-    color: '#352422',
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FFFDFD',
+//   },
+//   subheader: {
+//     fontSize: 12,
+//     color: '#666',
+//     marginBottom: 20,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     textAlign: 'center',
+//   },
+//   selectorContainer: {
+//     // flex: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginBottom: 20,
+//     // borderWidth: 1,
+//   },
+//   header: {
+//     flex: 1,
+//     fontSize: 14,
+//     color: titleColor,
+//     marginBottom: 8,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//     paddingRight: 5,
+//   },
+//   headerText: {
+//     flex: 1,
+//     fontSize: 14,
+//     color: titleColor,
+//     marginBottom: 8,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'left',
+//     paddingRight: 5,
+//   },
+//   radioButtonContainer: {
+//     flex: 0.65,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     // borderWidth: 1,
+//     marginStart: 5,
+//   },
+//   documentContainer: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     borderWidth: 1,
+//     borderColor: GradientColor1,
+//     borderStyle: 'dashed',
+//     padding: 10,
+//     // marginBottom: 20,
+//     borderRadius: 10,
+//   },
+//   documentImage: {
+//     width: 100,
+//     height: 100,
+//     marginBottom: 10,
+//   },
+//   filename: {
+//     fontSize: 16,
+//     color: 'black',
+//   },
+//   uploadButton: {
+//     backgroundColor: 'red',
+//     padding: 10,
+//     alignItems: 'center',
+//   },
+//   uploadButtonText: {
+//     color: 'white',
+//     fontWeight: 'bold',
+//   },
+//   termsContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 20,
+//   },
+//   termsText: {
+//     fontSize: 20,
+//     marginRight: 10,
+//   },
+//   termsLabel: {
+//     fontSize: 16,
+//   },
+//   completeOrderButton: {
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     backgroundColor: GradientColor3,
+//     paddingVertical: 15,
+//     alignItems: 'center',
+//     borderRadius: 8,
+//   },
+//   completeOrderButtonText: {
+//     color: 'white',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 16,
+//   },
+//   findButtonContainer: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     backgroundColor: GradientColor3,
+//     borderColor: GradientColor3,
+//     width: 100,
+//     alignItems: 'center',
+//     alignSelf: 'center',
+//   },
+//   findButtonText: {
+//     fontSize: 13,
+//     color: white,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   centerItem: {
+//     // alignItems: 'center',
+//     justifyContent: 'center',
+//     flex: 0.2,
+//     // borderWidth: 1,
+//     bottom: 0,
+//   },
+//   checkBoxContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'flex-start',
+//   },
+//   checkBoxStyle: {marginRight: 10},
+//   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
+//   rowdirection: {flexDirection: 'row', alignItems: 'center'},
+//   point: {
+//     height: 8,
+//     width: 8,
+//     backgroundColor: PrivacyPolicy,
+//     borderRadius: 4,
+//     marginRight: 20,
+//     marginLeft: 10,
+//   },
+//   smallImageHeaderTitle: {
+//     fontSize: 15,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   textStyle: {
+//     color: '#352422',
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+// });

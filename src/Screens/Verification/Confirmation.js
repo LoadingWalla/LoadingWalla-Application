@@ -15,6 +15,7 @@ import {
 } from '../../Color/color';
 import Shield from '../../../assets/SVG/svg/Shield';
 import NotFound from '../../Components/NotFound';
+import styles from './style'
 
 const Confirmation = ({navigation, route}) => {
   // console.log(888, route);
@@ -76,7 +77,7 @@ const Confirmation = ({navigation, route}) => {
 
   return (
     <View style={styles.fullScreen}>
-      <View style={styles.container}>
+      <View style={styles.confContainer}>
         <View style={styles.gifView}>
           <Text style={styles.congratsText}>{message}</Text>
           <NotFound imageName={image} height={80} width={80} title={''} />
@@ -96,7 +97,7 @@ const Confirmation = ({navigation, route}) => {
                     style={styles.truckImage}
                   />
                   <View style={styles.truckDetails}>
-                    <View style={styles.header}>
+                    <View style={styles.confHeader}>
                       <Text style={styles.truckType}>
                         {selectedData.vehicle_number ||
                           selectedData.material_name}
@@ -105,7 +106,7 @@ const Confirmation = ({navigation, route}) => {
                         <Shield size={20} verified={selectedData.verified} />
                       )}
                     </View>
-                    <Text style={styles.textStyle}>
+                    <Text style={styles.confTextStyle}>
                       {selectedData.wheel ||
                         `₹ ${selectedData.price} / ${
                           selectedData.price_type === 2 ? 'Fixed' : 'Per Truck'
@@ -113,9 +114,9 @@ const Confirmation = ({navigation, route}) => {
                     </Text>
                   </View>
                 </View>
-                <View style={styles.horizontalLine} />
+                <View style={styles.confHorizontalLine} />
                 <View style={[styles.rowdirection, {justifyContent: 'center'}]}>
-                  <Text style={styles.textStyle}>
+                  <Text style={styles.confTextStyle}>
                     {/* {`${selectedData.truck_type} Body` ||
                       `${selectedData.qty} Ton`} */}
                     {userType === '1'
@@ -123,7 +124,7 @@ const Confirmation = ({navigation, route}) => {
                       : `${selectedData.truck_type} Body`}
                   </Text>
                   <View style={styles.verticalLine} />
-                  <Text style={styles.textStyle}>
+                  <Text style={styles.confTextStyle}>
                     {selectedData.truck_capacity ||
                       `${Math.ceil(selectedData.distance)} KM`}
                   </Text>
@@ -167,8 +168,8 @@ const Confirmation = ({navigation, route}) => {
               : 'Find More Loads'
           }
           touchStyle={styles.touchStyle}
-          textStyle={styles.buttonTextStyle}
-          style={styles.buttonstyle}
+          textStyle={styles.confButtonTextStyle}
+          style={styles.confButtonstyle}
         />
       </View>
     </View>
@@ -177,125 +178,125 @@ const Confirmation = ({navigation, route}) => {
 
 export default Confirmation;
 
-const styles = StyleSheet.create({
-  fullScreen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    padding: 25,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    width: '95%',
-    maxWidth: 500,
-  },
-  image: {
-    height: 150,
-    width: 150,
-  },
-  cardContainer: {
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: GradientColor1,
-    borderStyle: 'dotted',
-    padding: 10,
-    width: '100%',
-  },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-    backgroundColor: '#FFF5EA',
-    elevation: 1,
-  },
-  truckImage: {
-    width: 70,
-    height: 70,
-    resizeMode: 'contain',
-    marginHorizontal: 10,
-  },
-  truckDetails: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  truckType: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: titleColor,
-    marginRight: 5,
-  },
-  horizontalLine: {
-    backgroundColor: '#AFAFAF',
-    height: 1.5,
-    marginVertical: 5,
-  },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 15,
-    height: '100%',
-  },
-  rowdirection: {flexDirection: 'row', alignItems: 'center'},
-  textStaticStyle: {
-    color: titleColor,
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  textStyle: {
-    color: PrivacyPolicy,
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  touchStyle: {
-    marginTop: 20,
-    width: '50%',
-    alignSelf: 'center',
-  },
-  buttonstyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonTextStyle: {
-    color: textColor,
-    fontWeight: '700',
-    fontSize: 16,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
+// const styles = StyleSheet.create({
+//   fullScreen: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//   },
+//   container: {
+//     backgroundColor: '#fff',
+//     borderRadius: 5,
+//     padding: 25,
+//     alignItems: 'center',
+//     shadowColor: '#000',
+//     shadowOffset: {
+//       width: 0,
+//       height: 2,
+//     },
+//     shadowOpacity: 0.25,
+//     shadowRadius: 4,
+//     elevation: 5,
+//     width: '95%',
+//     maxWidth: 500,
+//   },
+//   image: {
+//     height: 150,
+//     width: 150,
+//   },
+//   cardContainer: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     borderColor: GradientColor1,
+//     borderStyle: 'dotted',
+//     padding: 10,
+//     width: '100%',
+//   },
+//   card: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     borderRadius: 5,
+//     backgroundColor: '#FFF5EA',
+//     elevation: 1,
+//   },
+//   truckImage: {
+//     width: 70,
+//     height: 70,
+//     resizeMode: 'contain',
+//     marginHorizontal: 10,
+//   },
+//   truckDetails: {
+//     marginLeft: 10,
+//     flex: 1,
+//   },
+//   truckType: {
+//     fontSize: 16,
+//     fontWeight: 'bold',
+//     color: titleColor,
+//     marginRight: 5,
+//   },
+//   horizontalLine: {
+//     backgroundColor: '#AFAFAF',
+//     height: 1.5,
+//     marginVertical: 5,
+//   },
+//   verticalLine: {
+//     backgroundColor: '#AFAFAF',
+//     width: 2,
+//     marginHorizontal: 15,
+//     height: '100%',
+//   },
+//   rowdirection: {flexDirection: 'row', alignItems: 'center'},
+//   textStaticStyle: {
+//     color: titleColor,
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     marginTop: 10,
+//     textAlign: 'center',
+//   },
+//   textStyle: {
+//     color: PrivacyPolicy,
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   touchStyle: {
+//     marginTop: 20,
+//     width: '50%',
+//     alignSelf: 'center',
+//   },
+//   buttonstyle: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     padding: 10,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   buttonTextStyle: {
+//     color: textColor,
+//     fontWeight: '700',
+//     fontSize: 16,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
 
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
 
-  gifView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    // justifyContent: 'center',
-    // borderWidth: 1,
-  },
-  congratsText: {
-    fontSize: 26,
-    marginBottom: 10,
-    fontWeight: '700',
-    fontFamily: 'PlusJakartaSans-Bold',
-    color: titleColor,
-  },
-});
+//   gifView: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     // justifyContent: 'center',
+//     // borderWidth: 1,
+//   },
+//   congratsText: {
+//     fontSize: 26,
+//     marginBottom: 10,
+//     fontWeight: '700',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     color: titleColor,
+//   },
+// });

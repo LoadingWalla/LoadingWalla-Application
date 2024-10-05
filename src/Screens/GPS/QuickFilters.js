@@ -13,6 +13,7 @@ import Button from '../../Components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import AlertBox from '../../Components/AlertBox';
+import styles from './style'
 
 const QuickFilters = ({navigation, route}) => {
   const {deviceId, name, navigationPath} = route.params;
@@ -167,7 +168,7 @@ const QuickFilters = ({navigation, route}) => {
     <KeyboardAvoidingView
       style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={styles.container}>
+      <View style={styles.quickFilterContainer}>
         {filters.map((filter, index) => (
           <TouchableOpacity
             key={index}
@@ -255,7 +256,7 @@ const QuickFilters = ({navigation, route}) => {
         title={'Save'}
         onPress={handleSave}
         textStyle={styles.btnText}
-        style={styles.btnStyle}
+        style={styles.quickFilterBtnStyle}
       />
       {showDatePicker.startDate && (
         <DateTimePicker
@@ -307,85 +308,85 @@ const QuickFilters = ({navigation, route}) => {
 
 export default QuickFilters;
 
-const styles = StyleSheet.create({
-  keyboardView: {
-    flex: 1,
-    backgroundColor: '#FDFDFD',
-  },
-  container: {
-    flex: 0.4,
-    flexDirection: 'row',
-    padding: 10,
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    margin: 5,
-    elevation: 3,
-  },
-  activeButton: {
-    backgroundColor: '#ff6347',
-  },
-  inactiveButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  buttonText: {
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  activeText: {
-    color: '#fff',
-  },
-  inactiveText: {
-    color: '#000',
-  },
-  customFilterContainer: {
-    flex: 0.7,
-    paddingHorizontal: 10,
-  },
-  customFilterText: {
-    fontSize: 16,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    padding: 10,
-  },
-  dateTimeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-  separatorText: {
-    fontSize: 14,
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  input: {
-    elevation: 3,
-    width: 150,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 30,
-    textAlign: 'center',
-    fontSize: 16,
-    paddingHorizontal: 20,
-    color: backgroundColorNew,
-  },
-  btnStyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 5,
-  },
-  btnText: {
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-});
+// const styles = StyleSheet.create({
+//   keyboardView: {
+//     flex: 1,
+//     backgroundColor: '#FDFDFD',
+//   },
+//   container: {
+//     flex: 0.4,
+//     flexDirection: 'row',
+//     padding: 10,
+//     flexWrap: 'wrap',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   button: {
+//     borderRadius: 20,
+//     paddingVertical: 10,
+//     paddingHorizontal: 20,
+//     margin: 5,
+//     elevation: 3,
+//   },
+//   activeButton: {
+//     backgroundColor: '#ff6347',
+//   },
+//   inactiveButton: {
+//     backgroundColor: '#fff',
+//     borderWidth: 1,
+//     borderColor: '#ddd',
+//   },
+//   buttonText: {
+//     fontSize: 14,
+//     textAlign: 'center',
+//   },
+//   activeText: {
+//     color: '#fff',
+//   },
+//   inactiveText: {
+//     color: '#000',
+//   },
+//   customFilterContainer: {
+//     flex: 0.7,
+//     paddingHorizontal: 10,
+//   },
+//   customFilterText: {
+//     fontSize: 16,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     padding: 10,
+//   },
+//   dateTimeContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-around',
+//     alignItems: 'center',
+//   },
+//   separatorText: {
+//     fontSize: 14,
+//     color: backgroundColorNew,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   input: {
+//     elevation: 3,
+//     width: 150,
+//     backgroundColor: '#FFFFFF',
+//     borderRadius: 30,
+//     textAlign: 'center',
+//     fontSize: 16,
+//     paddingHorizontal: 20,
+//     color: backgroundColorNew,
+//   },
+//   btnStyle: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     margin: 5,
+//   },
+//   btnText: {
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+// });

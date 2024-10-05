@@ -55,11 +55,8 @@ const Search = forwardRef(({navigation, route}, ref) => {
 
   return (
     <View
-      style={{
-        backgroundColor: pageBackground,
-        flex: 1,
-      }}>
-      <View style={{padding: 20}}>
+      style={style.searchContainer}>
+      <View style={style.searchPadding}>
         <View style={style.searchFilter}>
           <SearchIcon
             size={20}
@@ -78,11 +75,7 @@ const Search = forwardRef(({navigation, route}, ref) => {
           {!!value && (
             <TouchableOpacity
               onPress={() => !!value && clearItem()}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginRight: 10,
-              }}>
+              style={style.searchCloseBtn}>
               <CloseCircle size={20} color={GradientColor2} />
             </TouchableOpacity>
           )}

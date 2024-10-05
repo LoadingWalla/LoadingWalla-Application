@@ -12,7 +12,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
 import Toast from 'react-native-simple-toast';
-
+import styles from './style'
 import Background from '../../../Components/BackgroundGradient';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
@@ -141,9 +141,9 @@ const ContactUs = ({navigation}) => {
   };
 
   return (
-    <Background style={{flex: 1}}>
+    <Background style={styles.setFlex}>
       <GradientStatusBar />
-      <View style={stylesStatusbar.iconContainer}>
+      <View style={styles.iconContainer}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => linking('call')}>
           <PhoneCall size={30} color="white" />
         </TouchableOpacity>
@@ -156,31 +156,31 @@ const ContactUs = ({navigation}) => {
           <WhatsAppIcon size={30} color="white" />
         </TouchableOpacity>
       </View>
-      <View style={stylesStatusbar.formContainer}>
+      <View style={styles.formContainer}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={{paddingHorizontal: 20}}>
-          <Text style={stylesStatusbar.label}>{t(Constants.NAME)}</Text>
+          style={styles.contactUsScrollView}>
+          <Text style={styles.label}>{t(Constants.NAME)}</Text>
           <TextInputField
             value={name}
             hint={t(Constants.ENTER_NAME)}
             onChangeText={e => onChangeName(e)}
           />
-          <Text style={stylesStatusbar.label}>{t(Constants.E_MAIL)}</Text>
+          <Text style={styles.label}>{t(Constants.E_MAIL)}</Text>
           <TextInputField
             value={email}
             hint={t(Constants.E_MAIL)}
             onChangeText={e => onChangeEmail(e)}
           />
-          <Text style={stylesStatusbar.label}>{t(Constants.PHONE_NUMBER)}</Text>
+          <Text style={styles.label}>{t(Constants.PHONE_NUMBER)}</Text>
           <TextInputField
             value={phone}
             isPhone={true}
             hint={t(Constants.ENTER_MOBILE_NUMBER)}
             onChangeText={e => onChangePhone(e)}
           />
-          <Text style={stylesStatusbar.label}>{t(Constants.MESSAGE)}</Text>
+          <Text style={styles.label}>{t(Constants.MESSAGE)}</Text>
           <TextInputField
             value={message}
             isMultiLine={true}
@@ -191,8 +191,8 @@ const ContactUs = ({navigation}) => {
             onPress={() => sendMessage()}
             title={t(Constants.SEND_MESSAGE)}
             loading={contactusLoading}
-            textStyle={stylesStatusbar.textStyle}
-            style={stylesStatusbar.buttonStyle}
+            textStyle={styles.textStyle}
+            style={styles.contactUsButtonStyle}
           />
         </ScrollView>
       </View>
@@ -204,13 +204,13 @@ export default ContactUs;
 
 const GradientStatusBar = () => {
   return (
-    <View style={stylesStatusbar.statusBar}>
+    <View style={styles.statusBar}>
       <LinearGradient
         // colors={[GradientColor1, GradientColor2, GradientColor3]}
         colors={[backgroundColorNew, backgroundColorNew]}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        style={stylesStatusbar.gradient}
+        style={styles.gradient}
       />
       <StatusBar
         translucent
@@ -221,45 +221,45 @@ const GradientStatusBar = () => {
   );
 };
 
-const stylesStatusbar = StyleSheet.create({
-  statusBar: {
-    height: StatusBar.currentHeight,
-    width: '100%',
-  },
-  gradient: {
-    flex: 1,
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    marginVertical: 20,
-    justifyContent: 'space-evenly',
-  },
-  buttonStyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20,
-  },
-  textStyle: {
-    fontWeight: 'bold',
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Medium',
-  },
-  label: {
-    fontSize: 15,
-    color: titleColor,
-    marginTop: 20,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  formContainer: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    paddingTop: 20,
-  },
-});
+// const styles = StyleSheet.create({
+//   statusBar: {
+//     height: StatusBar.currentHeight,
+//     width: '100%',
+//   },
+//   gradient: {
+//     flex: 1,
+//   },
+//   iconContainer: {
+//     flexDirection: 'row',
+//     width: '100%',
+//     marginVertical: 20,
+//     justifyContent: 'space-evenly',
+//   },
+//   buttonStyle: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     height: 50,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     margin: 20,
+//   },
+//   textStyle: {
+//     fontWeight: 'bold',
+//     color: textColor,
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//   },
+//   label: {
+//     fontSize: 15,
+//     color: titleColor,
+//     marginTop: 20,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   formContainer: {
+//     flex: 1,
+//     backgroundColor: '#FFFFFF',
+//     borderTopLeftRadius: 25,
+//     borderTopRightRadius: 25,
+//     paddingTop: 20,
+//   },
+// });

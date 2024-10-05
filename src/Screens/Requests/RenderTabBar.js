@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {TabBar} from 'react-native-tab-view';
 import {GradientColor2, pageBackground, titleColor} from '../../Color/color';
+import styles from './style'
 
 const RenderTabBar = props => {
   return (
@@ -33,17 +34,17 @@ const RenderTabBar = props => {
 
 export default RenderTabBar;
 
-const styles = StyleSheet.create({
-  indicatorStyle: {
-    backgroundColor: GradientColor2,
-    height: 3,
-    borderRadius: 10,
-  },
-  tabBarStyle: {
-    backgroundColor: pageBackground,
-    borderColor: GradientColor2,
-    borderRadius: 7,
-    elevation: 2,
-    margin: 10,
-  },
-});
+// const styles = StyleSheet.create({
+//   indicatorStyle: {
+//     backgroundColor: GradientColor2,
+//     height: 3,
+//     borderRadius: 10,
+//   },
+//   tabBarStyle: {
+//     backgroundColor: pageBackground,
+//     borderColor: GradientColor2,
+//     borderRadius: 7,
+//     elevation: 2,
+//     margin: 10,
+//   },
+// });

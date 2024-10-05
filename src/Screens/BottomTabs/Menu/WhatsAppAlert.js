@@ -23,23 +23,12 @@ const WhatsAppAlert = ({navigation}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.whatsappContainer}>
       <View style={[styles.backgroundView, {backgroundColor: 'white'}]}>
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            paddingTop: 30,
-            backgroundColor: pageBackground,
-          }}>
+          style={styles.whatsappView}>
           <Text
-            style={{
-              fontSize: 18,
-              fontWeight: '700',
-              color: titleColor,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}>
+            style={styles.whatsappText}>
             {t(Constants.WHATSAPP_ALERT)}
           </Text>
           <Switch

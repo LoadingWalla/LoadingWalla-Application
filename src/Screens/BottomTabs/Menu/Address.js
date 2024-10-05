@@ -5,6 +5,7 @@ import {PrivacyPolicy, textColor, titleColor} from '../../../Color/color';
 import EditIcon from '../../../../assets/SVG/svg/EditIcon';
 import DeleteIcon from '../../../../assets/SVG/svg/DeleteIcon';
 import Button from '../../../Components/Button';
+import styles from './style'
 
 const data = [
   // {
@@ -76,94 +77,94 @@ const Address = ({navigation}) => {
 
 export default Address;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FDFDFD',
-  },
-  flatListContainer: {
-    padding: 10,
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    elevation: 2,
-    flexDirection: 'row',
-  },
-  addressContainer: {
-    flex: 1,
-    paddingStart: 10,
-  },
-  address: {
-    fontSize: 12,
-    color: titleColor,
-    marginTop: 4,
-    fontFamily: 'PlusJakartaSans-Medium',
-    lineHeight: 18,
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginTop: 10,
-  },
-  editText: {
-    fontSize: 12,
-    color: 'green',
-    marginLeft: 10,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  actionText: {
-    fontSize: 12,
-    color: 'red',
-    marginLeft: 5,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  touchStyle: {
-    marginVertical: 20,
-    width: '60%',
-    alignSelf: 'center',
-  },
-  buttonStyle: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    padding: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonTextStyle: {
-    color: textColor,
-    fontWeight: '700',
-    fontSize: 16,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  iconBox: {
-    borderRightWidth: 2,
-    paddingEnd: 5,
-    paddingTop: 10,
-    borderColor: '#707070',
-    justifyContent: 'flex-start',
-  },
-  actionBtns: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-    justifyContent: 'center',
-  },
-  noAddressContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noAddressText: {
-    fontSize: 16,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  flexContainer: {
-    flex: 1,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FDFDFD',
+//   },
+//   flatListContainer: {
+//     padding: 10,
+//   },
+//   card: {
+//     backgroundColor: 'white',
+//     borderRadius: 5,
+//     paddingVertical: 15,
+//     paddingHorizontal: 10,
+//     marginBottom: 10,
+//     elevation: 2,
+//     flexDirection: 'row',
+//   },
+//   addressContainer: {
+//     flex: 1,
+//     paddingStart: 10,
+//   },
+//   address: {
+//     fontSize: 12,
+//     color: titleColor,
+//     marginTop: 4,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     lineHeight: 18,
+//   },
+//   actions: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-end',
+//     marginTop: 10,
+//   },
+//   editText: {
+//     fontSize: 12,
+//     color: 'green',
+//     marginLeft: 10,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   actionText: {
+//     fontSize: 12,
+//     color: 'red',
+//     marginLeft: 5,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   touchStyle: {
+//     marginVertical: 20,
+//     width: '60%',
+//     alignSelf: 'center',
+//   },
+//   buttonStyle: {
+//     flexDirection: 'row',
+//     borderRadius: 8,
+//     padding: 14,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   buttonTextStyle: {
+//     color: textColor,
+//     fontWeight: '700',
+//     fontSize: 16,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   iconBox: {
+//     borderRightWidth: 2,
+//     paddingEnd: 5,
+//     paddingTop: 10,
+//     borderColor: '#707070',
+//     justifyContent: 'flex-start',
+//   },
+//   actionBtns: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginRight: 15,
+//     justifyContent: 'center',
+//   },
+//   noAddressContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   noAddressText: {
+//     fontSize: 16,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   flexContainer: {
+//     flex: 1,
+//   },
+// });

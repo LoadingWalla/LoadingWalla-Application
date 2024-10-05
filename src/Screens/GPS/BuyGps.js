@@ -17,6 +17,7 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/WebSocketActions';
+import styles from './style'
 
 const Plan = ({text}) => {
   return (
@@ -45,7 +46,7 @@ const Rates = ({item, navigation}) => {
       }
       style={styles.rateContainer}>
       <View style={styles.rateHeader}>
-        <View style={{borderWidth: 0, padding: 8}}>
+        <View style={styles.rateHeaderView}>
           <Text style={styles.planTitle}>{item.plan_name}</Text>
           <View style={styles.discountContainer}>
             <PercentageIcon size={15} color={'#0F8B00'} />
@@ -125,64 +126,64 @@ const BuyGps = ({navigation}) => {
 
 export default BuyGps;
 
-const styles = StyleSheet.create({
-  rateContainer: {
-    margin: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    elevation: 2,
-    paddingVertical: 15,
-    padding: 5,
-  },
-  rateHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  planTitle: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    color: titleColor,
-    textTransform: 'capitalize',
-  },
-  discountContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 5,
-  },
-  discountText: {
-    fontFamily: 'PlusJakartaSans-Light',
-    fontSize: 12,
-    color: '#0F8B00',
-    marginLeft: 5,
-  },
-  priceContainer: {
-    paddingVertical: 10,
-    backgroundColor: '#EFFFE6',
-    borderRadius: 6,
-    paddingHorizontal: 15,
-  },
-  oldPrice: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    textDecorationLine: 'line-through',
-  },
-  newPrice: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    color: '#0F8B00',
-  },
-  planContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  planText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 14,
-    textTransform: 'capitalize',
-  },
-  loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-});
+// const styles = StyleSheet.create({
+//   rateContainer: {
+//     margin: 10,
+//     backgroundColor: '#FFFFFF',
+//     borderRadius: 8,
+//     elevation: 2,
+//     paddingVertical: 15,
+//     padding: 5,
+//   },
+//   rateHeader: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginBottom: 15,
+//   },
+//   planTitle: {
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     color: titleColor,
+//     textTransform: 'capitalize',
+//   },
+//   discountContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 5,
+//   },
+//   discountText: {
+//     fontFamily: 'PlusJakartaSans-Light',
+//     fontSize: 12,
+//     color: '#0F8B00',
+//     marginLeft: 5,
+//   },
+//   priceContainer: {
+//     paddingVertical: 10,
+//     backgroundColor: '#EFFFE6',
+//     borderRadius: 6,
+//     paddingHorizontal: 15,
+//   },
+//   oldPrice: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//     textDecorationLine: 'line-through',
+//   },
+//   newPrice: {
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     color: '#0F8B00',
+//   },
+//   planContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//     marginVertical: 8,
+//   },
+//   planText: {
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 14,
+//     textTransform: 'capitalize',
+//   },
+//   loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+// });
