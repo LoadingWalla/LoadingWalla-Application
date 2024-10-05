@@ -318,7 +318,7 @@ const CompanyDetails = ({navigation, route}) => {
             </View>
           </View>
         </TouchableOpacity>
-        <View style={{marginBottom: 30}}>
+        <View style={styles.companyDetailsView}>
           <View style={styles.companyDetailsPaddingStyle}>
             <Text style={styles.label}>{Constants.NAME}</Text>
             <TextInputField

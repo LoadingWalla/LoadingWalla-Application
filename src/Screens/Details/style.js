@@ -10,6 +10,26 @@ import {
 } from '../../Color/color';
 
 export default StyleSheet.create({
+  viewDetailsOriginImg: {width: 20, height: 20},
+  setFlex: {flex: 1},
+  marginTopStyle: {marginTop: 15},
+  truckNumViewStyle: {flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'},
+  truckNumTxtStyle: {minWidth: 120, color: titleColor},
+  logDetailsTxt: {fontSize: 16, color: '#352422', fontWeight: 'bold'},
+  viewDetailScrollView1: {marginVertical: 10},
+  viewDetailScrollView2: {flexDirection: 'row', flexWrap: 'wrap'},
+  viewDetailScrollView3: {flexDirection: 'row', marginTop: 10},
+  viewDetailBtnStyle: {justifyContent: 'center', alignItems: 'center'},
+  isFullScreenView: {
+    flex: 0.5,
+    padding: 10,
+    paddingHorizontal: 20,
+    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  fromToText: {minWidth: 50, color: titleColor},
   notifContainer: {
     paddingHorizontal: 5,
     backgroundColor: '#FDFDFD',
@@ -442,6 +462,9 @@ export default StyleSheet.create({
   companyDetailsPaddingStyle: {
     padding: 10,
     // borderWidth: 1,
+  },
+  companyDetailsView: {
+    marginBottom: 30
   },
   modalView: {
     backgroundColor: '#FFFFFF',

@@ -221,7 +221,7 @@ const EditProfile = ({
                 activeOpacity={0.5}
                 disabled={isRemoveButtonDisabled}
                 onPress={showAlert}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={style.cammeraView}>
                   <Image
                     style={style.editRemoveImg}
                     source={require('../../../../assets/remove.png')}

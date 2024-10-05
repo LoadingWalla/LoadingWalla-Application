@@ -11,7 +11,7 @@ const Inconvenience = ({navigation}) => {
         <Image
           source={require('../../../assets/GIFs/Nothing.gif')}
           resizeMode="contain"
-          style={{flex: 1}}
+          style={styles.setFlex}
         />
         {/* <NotFound imageName="nothing" /> */}
         <InnerButton

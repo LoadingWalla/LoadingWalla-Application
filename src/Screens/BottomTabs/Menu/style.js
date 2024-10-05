@@ -10,6 +10,10 @@ import {
 } from '../../../Color/color';
 
 export default StyleSheet.create({
+  setFlex: {flex: 1},
+  contactUsScrollView: {paddingHorizontal: 20},
+  walletTextsView: {flexDirection: 'row', justifyContent: 'space-between'},
+  rechargeRouteView: {flex: 1, backgroundColor: '#fff', marginTop: 20},
   whatsappContainer: {flex: 1},
   whatsappView: {
     flexDirection: 'row',
@@ -231,6 +235,11 @@ export default StyleSheet.create({
     height: 80,
     width: 80,
     borderRadius: 40,
+  },
+  profileImgStyle: {
+    height: 85,
+    width: 85,
+    borderRadius: 50,
   },
   paddingStyle: {
     padding: 20,

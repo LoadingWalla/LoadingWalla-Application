@@ -209,7 +209,7 @@ const ViewDetail = ({navigation, route}) => {
                   optimizeWaypoints={true}
                 />
                 <Marker coordinate={origin} title="Origin">
-                  <Image source={blueDot} style={{width: 20, height: 20}} />
+                  <Image source={blueDot} style={styles.viewDetailsOriginImg} />
                 </Marker>
                 <Marker coordinate={destination} title="Destination" />
               </>
@@ -228,48 +228,40 @@ const ViewDetail = ({navigation, route}) => {
       </View>
       {!isFullScreen && (
         <View
-          style={{
-            flex: 0.5,
-            padding: 10,
-            paddingHorizontal: 20,
-            elevation: 2,
-            backgroundColor: '#FFFFFF',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-          }}>
+          style={styles.isFullScreenView}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
-            <View style={{marginVertical: 10}}>
-              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 50, color: titleColor}}>
+            <View style={styles.viewDetailScrollView1}>
+              <View style={styles.viewDetailScrollView2}>
+                <Text style={styles.fromToText}>
                   {Constants.FROM}
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {from}</Text>
                 </View>
               </View>
-              <View style={{flexDirection: 'row', marginTop: 10}}>
-                <Text style={{minWidth: 50, color: titleColor}}>
+              <View style={styles.viewDetailScrollView3}>
+                <Text style={styles.fromToText}>
                   {Constants.TO}
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {to}</Text>
                 </View>
               </View>
             </View>
 
-            <View style={{marginTop: 15}}>
+            <View style={styles.marginTopStyle}>
               <Text
-                style={{fontSize: 16, color: '#352422', fontWeight: 'bold'}}>
+                style={styles.logDetailsTxt}>
                 Logistics Details
               </Text>
               <View
-                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 120, color: titleColor}}>
+                style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
                   Truck Number
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {vehicle_number}</Text>
                 </View>
               </View>
@@ -277,11 +269,11 @@ const ViewDetail = ({navigation, route}) => {
 
             <View>
               <View
-                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 120, color: titleColor}}>
+                style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
                   Load Name
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {material_name}</Text>
                 </View>
               </View>
@@ -296,20 +288,20 @@ const ViewDetail = ({navigation, route}) => {
                 </View>
               </View> */}
               <View
-                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 120, color: titleColor}}>
+                style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
                   {Constants.QUANTITY}
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {qty} Ton</Text>
                 </View>
               </View>
               <View
-                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 120, color: titleColor}}>
+                style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
                   {Constants.PRICE}
                 </Text>
-                <View style={{flex: 1}}>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>
                     : ₹ {price}
                     {'/'}
@@ -318,15 +310,15 @@ const ViewDetail = ({navigation, route}) => {
                 </View>
               </View>
               <View
-                style={{flexDirection: 'row', marginTop: 10, flexWrap: 'wrap'}}>
-                <Text style={{minWidth: 120, color: titleColor}}>Distance</Text>
-                <View style={{flex: 1}}>
+                style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>Distance</Text>
+                <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {distance}</Text>
                 </View>
               </View>
             </View>
           </ScrollView>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={styles.viewDetailBtnStyle}>
             <Button
               loading={accept_rejectLoading}
               onPress={handlePressAction}

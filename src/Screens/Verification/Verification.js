@@ -75,7 +75,7 @@ const Verification = ({navigation, route}) => {
         <View style={styles.stepContainer}>
           <View style={styles.circleContainer}>
             <View style={styles.circle(item.status)} />
-            <Text style={{color: titleColor, fontSize: 18, marginLeft: 8}}>
+            <Text style={styles.itemTitleTxt}>
               {item.title}
             </Text>
           </View>

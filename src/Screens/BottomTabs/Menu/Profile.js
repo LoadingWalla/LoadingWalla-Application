@@ -199,12 +199,12 @@ const Profile = ({navigation, route}) => {
               }
               style={style.pressable}>
               <Image
-                style={{
-                  height: 85,
-                  width: 85,
-                  borderRadius: 50,
-                  marginRight: Userdata?.user_type === 3 ? 10 : 0,
-                }}
+                style={[
+                  style.profileImgStyle,
+                  {
+                    marginRight: Userdata?.user_type === 3 ? 10 : 0,
+                  }
+                ]}
                 source={
                   Userdata?.profile_img
                     ? {uri: Userdata?.profile_img}

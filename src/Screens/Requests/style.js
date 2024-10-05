@@ -10,6 +10,45 @@ import {
 } from '../../Color/color';
 
 export default StyleSheet.create({
+  indicatorStyle: {
+    backgroundColor: GradientColor2,
+    height: 3,
+    borderRadius: 10,
+  },
+  tabBarStyle: {
+    backgroundColor: pageBackground,
+    borderColor: GradientColor2,
+    borderRadius: 7,
+    elevation: 2,
+    margin: 10,
+  },
+  touchableOpacityStyles: {flex: 1, overflow: 'hidden'},
+  routeNameGray: {color: 'grey'},
+  routeNameBlack: {color: 'black'},
+  // MyTabBar
+  tabsContainer: {
+    flexDirection: 'row',
+    margin: 10,
+    backgroundColor: '#E2E2E2',
+    borderRadius: 8,
+    padding: 3,
+    // borderWidth: 1,
+  },
+  iconTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    gap: 8,
+    // borderWidth: 1,
+  },
+  tabBgColor: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    // borderWidth: 1,
+  },
+  tabView: {flex: 1, marginTop: 10},
   DashboardHeaderView: {
     position: 'absolute',
     top: 0,

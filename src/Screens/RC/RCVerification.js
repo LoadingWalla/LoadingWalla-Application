@@ -190,7 +190,7 @@ const RCVerification = ({navigation, route}) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       {chooseOptions()}
-      <View style={{flex: 1}}>
+      <View style={styles.setFlex}>
         <View style={stylesss.paramBox}>
           <Text style={styles.RCText}>{t(Constants.RCV_TRUCK)}</Text>
           <Text style={styles.label}>{RC}</Text>
@@ -202,28 +202,16 @@ const RCVerification = ({navigation, route}) => {
               <Text>Front Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('front')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  flex: 1,
-                }}>
+                style={styles.touchableOpacityStyle}>
                 {getRcLoading ? (
                   <ActivityIndicator
                     size="large"
                     color={GradientColor3}
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
+                    style={styles.activityIndicator}
                   />
                 ) : (
                   <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      resizeMode: 'contain',
-                    }}
+                    style={styles.image}
                     source={
                       rcFrontImage
                         ? {uri: rcFrontImage.uri}
@@ -234,37 +222,19 @@ const RCVerification = ({navigation, route}) => {
               </TouchableOpacity>
             </View>
             <View
-              style={{
-                backgroundColor: '#AFAFAF',
-                width: 1.5,
-                height: '100%',
-                marginHorizontal: 10,
-              }}
+              style={styles.cardDetailsView}
             />
             <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1,
-                marginTop: 5,
-              }}>
-              <Text style={{textAlign: 'center'}}>Back Side</Text>
+              style={styles.backTextView}>
+              <Text style={styles.backTextStyle}>Back Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('back')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  flex: 1,
-                }}>
+                style={styles.touchableOpacityStyle}>
                 {getRcLoading ? (
                   <ActivityIndicator
                     size="large"
                     color={GradientColor3}
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
+                    style={styles.activityIndicator}
                   />
                 ) : (
                   <Image
@@ -294,11 +264,7 @@ const RCVerification = ({navigation, route}) => {
 
       <TouchableOpacity
         onPress={() => navigation.navigate('QRScanner', {truck_id: truck_id})}
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        style={styles.activityIndicator}>
         <QRScanner size={200} />
       </TouchableOpacity>
 

@@ -119,7 +119,7 @@ const DeliveryDetails = ({navigation, route}) => {
   }, [gpsOrderStatus]);
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <PurchaseGpsHeader
         footertitle={`Total amount to be paid: ₹ ${gpsCount * pricePerDevice}`}
         icon={false}

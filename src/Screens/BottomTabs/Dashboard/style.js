@@ -14,6 +14,13 @@ export default StyleSheet.create({
   dashboardSwiper: width => ({
     height: width / 2
   }),
+  setFlex: {flex: 1},
+  dashboardLoadContainer: {
+    flex: 1, 
+    backgroundColor: '#FFFFFF', 
+    marginBottom: 60
+  },
+  activeDotStyle: {width: 15},
   contentShimmer: {flex: 1}, 
   searchContainer: {
     backgroundColor: pageBackground,

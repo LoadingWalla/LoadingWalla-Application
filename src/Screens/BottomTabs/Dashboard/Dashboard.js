@@ -172,7 +172,7 @@ const Dashboard = ({navigation}) => {
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
-                    activeDotStyle={{width: 15}}
+                    activeDotStyle={style.activeDotStyle}
                     autoplayTimeout={3}>
                     {DashboardBanner?.map((item, index) => {
                       return (

@@ -131,7 +131,7 @@ const Signup = ({navigation, route}) => {
               tintColors={{true: backgroundColorNew, false: backgroundColorNew}}
               style={styles.checkBoxStyle}
             />
-            <Text style={{color: PrivacyPolicy}}>
+            <Text style={styles.setPrivacyStyle}>
               {t(Constants.WHATSAPP_ALERT_CHECK)}
             </Text>
           </View>

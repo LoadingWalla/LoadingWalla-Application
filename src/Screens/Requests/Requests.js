@@ -347,7 +347,7 @@ const Requests = ({route, navigation}) => {
         qty={`${Owner?.qty} Ton`}
         verified={Owner?.verified}
       />
-      <View style={{flex: 1, marginTop: 10}}>
+      <View style={styles.tabView}>
         <TabView
           navigationState={{
             index,

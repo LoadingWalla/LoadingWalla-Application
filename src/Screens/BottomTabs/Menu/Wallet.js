@@ -245,7 +245,7 @@ const Wallet = ({navigation}) => {
   // );
 
   const RechargeRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+    <View style={styles.rechargeRouteView}>
       {transcationData?.length === 0 ? (
         <NotFound
           imageName="noBookings"
@@ -284,7 +284,7 @@ const Wallet = ({navigation}) => {
   //   </View>
   // );
   const DeductionsRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#fff', marginTop: 20}}>
+    <View style={styles.rechargeRouteView}>
       <NotFound
         imageName="noBookings"
         title={'No Transcation Found'}
@@ -297,7 +297,7 @@ const Wallet = ({navigation}) => {
   return (
     <View style={styles.walletContainer}>
       <View style={styles.box}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={styles.walletTextsView}>
           <View>
             <Text style={styles.texts}>{t(Constants.TOTAL_TOPUP_AMOUNT)}</Text>
             <Text style={styles.walletText}>

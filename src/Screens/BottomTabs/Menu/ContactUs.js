@@ -141,7 +141,7 @@ const ContactUs = ({navigation}) => {
   };
 
   return (
-    <Background style={{flex: 1}}>
+    <Background style={styles.setFlex}>
       <GradientStatusBar />
       <View style={styles.iconContainer}>
         <TouchableOpacity activeOpacity={0.5} onPress={() => linking('call')}>
@@ -160,7 +160,7 @@ const ContactUs = ({navigation}) => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={{paddingHorizontal: 20}}>
+          style={styles.contactUsScrollView}>
           <Text style={styles.label}>{t(Constants.NAME)}</Text>
           <TextInputField
             value={name}

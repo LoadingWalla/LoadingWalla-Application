@@ -18,6 +18,16 @@ export default StyleSheet.create({
     backgroundColor: '#FFFDFD', 
     marginBottom: 60
   },
+  goToPrevBookingTxt: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+  },
+  bookingContentContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   prevBookingContainer: {
     flex: 1,
     backgroundColor: '#FFFDFD',
