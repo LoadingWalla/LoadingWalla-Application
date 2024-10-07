@@ -20,6 +20,7 @@ import {
 import AnimatedText from '../../Components/AnimatedText';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
+import styles from './style'
 
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
