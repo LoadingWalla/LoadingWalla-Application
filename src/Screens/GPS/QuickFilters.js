@@ -18,15 +18,24 @@ import styles from './style'
 const QuickFilters = ({navigation, route}) => {
   const {deviceId, name, navigationPath} = route.params;
 
+  // const filters = [
+  //   'Yesterday',
+  //   'Today',
+  //   'This Week',
+  //   'Previous Week',
+  //   'This Month',
+  //   'Previous Month',
+  //   'Custom',
+  // ];
+
   const filters = [
     'Yesterday',
     'Today',
-    'This Week',
-    'Previous Week',
-    'This Month',
-    'Previous Month',
-    'Custom',
-  ];
+    'Last 3 Days',
+    'Last 7 Days',
+    'Last 1 Month',
+    'Last 3 Months',
+];
 
   const [activeFilter, setActiveFilter] = useState('Today');
   const [date, setDate] = useState(new Date());
@@ -59,55 +68,82 @@ const QuickFilters = ({navigation, route}) => {
   };
 
   const getDateRange = filter => {
+    // const rangeMap = {
+    //   Today: {
+    //     start: moment().utcOffset(330).startOf('day').toISOString(),
+    //     end: moment().utcOffset(330).endOf('day').toISOString(),
+    //   },
+    //   Yesterday: {
+    //     start: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'days')
+    //       .startOf('day')
+    //       .toISOString(),
+    //     end: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'days')
+    //       .endOf('day')
+    //       .toISOString(),
+    //   },
+    //   'This Week': {
+    //     start: moment().utcOffset(330).startOf('week').toISOString(),
+    //     end: moment().utcOffset(330).endOf('week').toISOString(),
+    //   },
+    //   'Previous Week': {
+    //     start: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'weeks')
+    //       .startOf('week')
+    //       .toISOString(),
+    //     end: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'weeks')
+    //       .endOf('week')
+    //       .toISOString(),
+    //   },
+    //   'This Month': {
+    //     start: moment().utcOffset(330).startOf('month').toISOString(),
+    //     end: moment().utcOffset(330).endOf('month').toISOString(),
+    //   },
+    //   'Previous Month': {
+    //     start: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'months')
+    //       .startOf('month')
+    //       .toISOString(),
+    //     end: moment()
+    //       .utcOffset(330)
+    //       .subtract(1, 'months')
+    //       .endOf('month')
+    //       .toISOString(),
+    //   },
+    // };
+
     const rangeMap = {
       Today: {
-        start: moment().utcOffset(330).startOf('day').toISOString(),
-        end: moment().utcOffset(330).endOf('day').toISOString(),
+          start: moment().utcOffset(330).startOf('day').toISOString(),
+          end: moment().utcOffset(330).endOf('day').toISOString(),
       },
       Yesterday: {
-        start: moment()
-          .utcOffset(330)
-          .subtract(1, 'days')
-          .startOf('day')
-          .toISOString(),
-        end: moment()
-          .utcOffset(330)
-          .subtract(1, 'days')
-          .endOf('day')
-          .toISOString(),
+          start: moment().utcOffset(330).subtract(1, 'days').startOf('day').toISOString(),
+          end: moment().utcOffset(330).subtract(1, 'days').endOf('day').toISOString(),
       },
-      'This Week': {
-        start: moment().utcOffset(330).startOf('week').toISOString(),
-        end: moment().utcOffset(330).endOf('week').toISOString(),
+      'Last 3 Days': {
+          start: moment().utcOffset(330).subtract(3, 'days').startOf('day').toISOString(),
+          end: moment().utcOffset(330).endOf('day').toISOString(),
       },
-      'Previous Week': {
-        start: moment()
-          .utcOffset(330)
-          .subtract(1, 'weeks')
-          .startOf('week')
-          .toISOString(),
-        end: moment()
-          .utcOffset(330)
-          .subtract(1, 'weeks')
-          .endOf('week')
-          .toISOString(),
+      'Last 7 Days': {
+          start: moment().utcOffset(330).subtract(7, 'days').startOf('day').toISOString(),
+          end: moment().utcOffset(330).endOf('day').toISOString(),
       },
-      'This Month': {
-        start: moment().utcOffset(330).startOf('month').toISOString(),
-        end: moment().utcOffset(330).endOf('month').toISOString(),
+      'Last 1 Month': {
+          start: moment().utcOffset(330).subtract(1, 'months').startOf('day').toISOString(),
+          end: moment().utcOffset(330).endOf('day').toISOString(),
       },
-      'Previous Month': {
-        start: moment()
-          .utcOffset(330)
-          .subtract(1, 'months')
-          .startOf('month')
-          .toISOString(),
-        end: moment()
-          .utcOffset(330)
-          .subtract(1, 'months')
-          .endOf('month')
-          .toISOString(),
-      },
+      'Last 3 Months': {
+          start: moment().utcOffset(330).subtract(3, 'months').startOf('day').toISOString(),
+          end: moment().utcOffset(330).endOf('day').toISOString(),
+      }
     };
 
     return rangeMap[filter] || {start: '', end: ''};
@@ -168,6 +204,11 @@ const QuickFilters = ({navigation, route}) => {
     <KeyboardAvoidingView
       style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View>
+        <Text style={{ margin: 5, fontWeight: 'bold', fontSize: 11 }}>
+          Show previous data by:
+        </Text>
+      </View>
       <View style={styles.quickFilterContainer}>
         {filters.map((filter, index) => (
           <TouchableOpacity
@@ -190,7 +231,7 @@ const QuickFilters = ({navigation, route}) => {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </View>      
       <View style={styles.customFilterContainer}>
         {activeFilter === 'Custom' && (
           <>

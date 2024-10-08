@@ -298,7 +298,7 @@ const LocationHistory = ({navigation, route}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}>   
       <View style={styles.locHistoryHeaderBox}>
         <View style={styles.headerTextContainer}>
           <Text style={styles.locHistoryTimeText}>Trip summary</Text>

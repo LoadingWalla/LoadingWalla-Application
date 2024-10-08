@@ -762,10 +762,11 @@ export default StyleSheet.create({
   },
   quickFilterContainer: {
     flex: 0.4,
+    // backgroundColor: '#FFE9E3',
     flexDirection: 'row',
     padding: 10,
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   button: {
@@ -774,6 +775,9 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     margin: 5,
     elevation: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30%', // Adjust based on the number of buttons in a row
   },
   activeButton: {
     backgroundColor: '#ff6347',
@@ -784,7 +788,7 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 11,
     textAlign: 'center',
   },
   activeText: {
