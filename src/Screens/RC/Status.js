@@ -12,6 +12,7 @@ import {initMyLorryById} from '../../Store/Actions/Actions';
 import Shield from '../../../assets/SVG/svg/Shield';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import LottieView from 'lottie-react-native';
+import styles from './style'
 
 const Status = ({navigation, route}) => {
   const {truck_id} = route.params;
@@ -38,7 +39,7 @@ const Status = ({navigation, route}) => {
           onPress={() => navigation.navigate('My Truck')}>
           <CloseCircle size={25} />
         </TouchableOpacity>
-        <View style={styles.container}>
+        <View style={styles.statusContainer}>
           {/* <Image
             source={require('../../../assets/GIFs/success.gif')}
             resizeMode="contain"
@@ -52,10 +53,7 @@ const Status = ({navigation, route}) => {
             autoPlayð
             loop
             resizeMode="contain"
-            style={{
-              height: 600,
-              width: 200,
-            }}
+            style={styles.lottieViewStyle}
           />
           <Text
             style={[
@@ -79,11 +77,11 @@ const Status = ({navigation, route}) => {
                     source={{
                       uri: 'https://loadingwalla.com/public/truck_tyre/6%20Tyre.png',
                     }}
-                    style={styles.image}
+                    style={styles.statusImage}
                   />
                 </View>
                 <View style={styles.details}>
-                  <View style={styles.header}>
+                  <View style={styles.statusHeader}>
                     <Text style={styles.truckNumber}>
                       {mySingleTruckData?.vehicle_number}
                     </Text>
@@ -116,7 +114,7 @@ const Status = ({navigation, route}) => {
                 </Text>
               )}
               <TouchableOpacity
-                style={styles.buttonstyle(mySingleTruckData?.status)}
+                style={styles.statusButtonstyle(mySingleTruckData?.status)}
                 disabled={mySingleTruckData?.status === 0}
                 onPress={() => {
                   navigation.navigate('FindLoads', {
@@ -124,17 +122,17 @@ const Status = ({navigation, route}) => {
                     userType: userType,
                   });
                 }}>
-                <Text style={styles.buttonTextStyle}>Search Load</Text>
+                <Text style={styles.statusButtonTextStyle}>Search Load</Text>
               </TouchableOpacity>
             </View>
           </View>
 
           <TouchableOpacity
-            style={styles.buttonContainer}
+            style={styles.statusButtonContainer}
             onPress={() => {
               navigation.navigate('AddLorry');
             }}>
-            <Text style={styles.buttonText}>Add Truck</Text>
+            <Text style={styles.statusButtonText}>Add Truck</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -142,195 +140,187 @@ const Status = ({navigation, route}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  fullScreenContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  closeButton: {
-    position: 'absolute',
-    right: 10,
-    top: 10,
-    zIndex: 10,
-    color: titleColor,
-  },
-  mainContainer: {
-    margin: '3%',
-    flex: 1,
-    borderRadius: 10,
-    backgroundColor: 'white',
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // padding: 30,
-    // backgroundColor: "#fff",
-    // borderRadius: 10,
-  },
-  congratsText: {
-    fontSize: 30,
-    marginBottom: 10,
-    marginTop: 20,
-    fontWeight: '700',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  verifyText: {
-    fontSize: 18,
-    color: titleColor,
-    marginBottom: 20,
-    fontWeight: '600',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  cardContainer: {
-    width: '100%',
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: GradientColor1,
-    borderStyle: 'dotted',
-    padding: 5,
-    marginBottom: 30,
-  },
-  info: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  searchLoadButton: {
-    backgroundColor: '#FFA500',
-    padding: 15,
-    width: '100%',
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  buttonContainer: {
-    borderWidth: 2,
-    borderColor: GradientColor3,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginTop: 10,
-    // marginBottom: 20,
-    width: '50%',
-    alignSelf: 'center',
-  },
-  buttonText: {
-    color: GradientColor3,
-    fontWeight: '700',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  buttonTextStyle: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  buttonstyle: status => ({
-    backgroundColor: status ? GradientColor3 : PrivacyPolicy,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    alignSelf: 'center',
-  }),
+// const styles = StyleSheet.create({
+//   fullScreenContainer: {
+//     flex: 1,
+//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+//   },
+//   closeButton: {
+//     position: 'absolute',
+//     right: 10,
+//     top: 10,
+//     zIndex: 10,
+//     color: titleColor,
+//   },
+//   mainContainer: {
+//     margin: '3%',
+//     flex: 1,
+//     borderRadius: 10,
+//     backgroundColor: 'white',
+//     padding: 10,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   congratsText: {
+//     fontSize: 30,
+//     marginBottom: 10,
+//     marginTop: 20,
+//     fontWeight: '700',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   verifyText: {
+//     fontSize: 18,
+//     color: titleColor,
+//     marginBottom: 20,
+//     fontWeight: '600',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   cardContainer: {
+//     width: '100%',
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     borderColor: GradientColor1,
+//     borderStyle: 'dotted',
+//     padding: 5,
+//     marginBottom: 30,
+//   },
+//   info: {
+//     marginTop: 10,
+//     alignItems: 'center',
+//   },
+//   searchLoadButton: {
+//     backgroundColor: '#FFA500',
+//     padding: 15,
+//     width: '100%',
+//     borderRadius: 5,
+//     alignItems: 'center',
+//     marginBottom: 10,
+//   },
+//   buttonContainer: {
+//     borderWidth: 2,
+//     borderColor: GradientColor3,
+//     padding: 10,
+//     borderRadius: 5,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     // marginTop: 10,
+//     // marginBottom: 20,
+//     width: '50%',
+//     alignSelf: 'center',
+//   },
+//   buttonText: {
+//     color: GradientColor3,
+//     fontWeight: '700',
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   buttonTextStyle: {
+//     color: '#fff',
+//     fontWeight: '700',
+//     fontSize: 16,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   buttonstyle: status => ({
+//     backgroundColor: status ? GradientColor3 : PrivacyPolicy,
+//     padding: 10,
+//     borderRadius: 5,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     width: '100%',
+//     alignSelf: 'center',
+//   }),
 
-  card: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    paddingBottom: 20,
-    alignItems: 'center',
-    elevation: 1,
-    // shadowColor: "#000",
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-  },
-  childCard: {
-    flexDirection: 'row',
-    backgroundColor: '#FFF5EA',
-    borderRadius: 5,
-    paddingVertical: 10,
-    alignItems: 'center',
-    // borderWidth: 1,
-  },
-  image: {
-    width: 80,
-    height: 60,
-    resizeMode: 'contain',
-  },
-  // image: {
-  //   width: 100,
-  //   height: 70,
-  //   resizeMode: 'contain',
-  // },
-  details: {
-    marginLeft: 20,
-    flex: 1,
-    justifyContent: 'center',
-    fontSize: 14,
-    color: '#555',
-    alignItems: 'flex-start',
-    // borderWidth: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  truckNumber: {
-    fontSize: 18,
-    marginRight: 10,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  truckType: {
-    fontSize: 16,
-    color: PrivacyPolicy,
-    fontWeight: '600',
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  specs: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    width: '90%',
-    // borderWidth: 1,
-  },
-  specsText: {
-    fontSize: 14,
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  horizontalLine: {
-    backgroundColor: '#ddd',
-    height: 1,
-    margin: 5,
-  },
-  verticalLine: {
-    backgroundColor: '#ddd',
-    width: 2,
-    marginHorizontal: 10,
-  },
-  text: {
-    marginVertical: 30,
-    marginHorizontal: 20,
-    textAlign: 'center',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 18,
-    color: PrivacyPolicy,
-  },
-  boldText: {
-    color: black,
-    fontWeight: '700',
-  },
-});
+//   card: {
+//     backgroundColor: '#fff',
+//     borderColor: '#ddd',
+//     borderWidth: 1,
+//     borderRadius: 5,
+//     padding: 10,
+//     paddingBottom: 20,
+//     alignItems: 'center',
+//     elevation: 1,
+//     // shadowColor: "#000",
+//     // shadowOffset: { width: 0, height: 1 },
+//     // shadowOpacity: 0.22,
+//     // shadowRadius: 2.22,
+//   },
+//   childCard: {
+//     flexDirection: 'row',
+//     backgroundColor: '#FFF5EA',
+//     borderRadius: 5,
+//     paddingVertical: 10,
+//     alignItems: 'center',
+//     // borderWidth: 1,
+//   },
+//   image: {
+//     width: 80,
+//     height: 60,
+//     resizeMode: 'contain',
+//   },
+//   // image: {
+//   //   width: 100,
+//   //   height: 70,
+//   //   resizeMode: 'contain',
+//   // },
+//   details: {
+//     marginLeft: 20,
+//     flex: 1,
+//     justifyContent: 'center',
+//     fontSize: 14,
+//     color: '#555',
+//     alignItems: 'flex-start',
+//     // borderWidth: 1,
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   truckNumber: {
+//     fontSize: 18,
+//     marginRight: 10,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   truckType: {
+//     fontSize: 16,
+//     color: PrivacyPolicy,
+//     fontWeight: '600',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   specs: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginTop: 5,
+//     width: '90%',
+//     // borderWidth: 1,
+//   },
+//   specsText: {
+//     fontSize: 14,
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   horizontalLine: {
+//     backgroundColor: '#ddd',
+//     height: 1,
+//     margin: 5,
+//   },
+//   verticalLine: {
+//     backgroundColor: '#ddd',
+//     width: 2,
+//     marginHorizontal: 10,
+//   },
+//   text: {
+//     marginVertical: 30,
+//     marginHorizontal: 20,
+//     textAlign: 'center',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 18,
+//     color: PrivacyPolicy,
+//   },
+//   boldText: {
+//     color: black,
+//     fontWeight: '700',
+//   },
+// });
 
 export default Status;

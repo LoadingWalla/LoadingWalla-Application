@@ -6,6 +6,7 @@ import CommonItem from '../../Components/CommonItem';
 import {initNotification} from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import styles from'./style'
 
 const Notification = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -29,18 +30,14 @@ const Notification = ({navigation, route}) => {
 
   return (
     <View
-      style={{
-        paddingHorizontal: 5,
-        backgroundColor: '#FDFDFD',
-        flex: 1,
-      }}>
+      style={styles.notifContainer}>
       {NotificationLoading ? (
         <NotificationShimmer />
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={{marginTop: 10}}
+          style={styles.notifFlatList}
           data={NotificationData}
           renderItem={({item, index}) => <CommonItem item={item} />}
         />

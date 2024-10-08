@@ -326,7 +326,7 @@ const Requests = ({route, navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1, backgroundColor: '#FFFDFD'}}>
+      style={styles.requestKeyboardAvoidView}>
       <FindLoadHeader
         title={t(Constants.MY_REQUEST)}
         goBack={() => navigation.goBack()}
@@ -347,7 +347,7 @@ const Requests = ({route, navigation}) => {
         qty={`${Owner?.qty} Ton`}
         verified={Owner?.verified}
       />
-      <View style={{flex: 1, marginTop: 10}}>
+      <View style={styles.tabView}>
         <TabView
           navigationState={{
             index,

@@ -26,6 +26,7 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {convertToCSV} from '../../Utils/CSVutils';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
+import styles from './style'
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -77,7 +78,7 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
   return (
     <View style={styles.detailContainer}>
       {address || (fullAddressCustomId === itemId && fullAddressData) ? (
-        <Text style={styles.addressText}>{address || fullAddressData}</Text>
+        <Text style={styles.locHistoryAddressText}>{address || fullAddressData}</Text>
       ) : (
         <ShowFullAddress
           lat={lat}
@@ -86,7 +87,7 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
           onShowAddress={onShowAddress}
         />
       )}
-      <Text style={styles.timeText}>
+      <Text style={styles.locHistoryTimeText}>
         {moment(time).utcOffset('+05:30').format('DD/MM/YYYY hh:mm A')}
       </Text>
     </View>
@@ -134,12 +135,12 @@ const StatBox = ({value, label}) => (
 
 const StopBox = ({label, value}) => (
   <View style={styles.stopBox}>
-    <Text style={styles.stopText}>{label}</Text>
-    <Text style={styles.stopCount}>{value}</Text>
+    <Text style={styles.locHistoryStopText}>{label}</Text>
+    <Text style={styles.locHistoryStopCount}>{value}</Text>
   </View>
 );
 
-const VerticalLine = () => <View style={styles.verticalLine} />;
+const VerticalLine = () => <View style={styles.locHistoryVerticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
   const {deviceId, name, from, to} = route?.params;
@@ -297,11 +298,11 @@ const LocationHistory = ({navigation, route}) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerBox}>
+    <View style={styles.container}>   
+      <View style={styles.locHistoryHeaderBox}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.timeText}>Trip summary</Text>
-          <Text style={styles.timeText}>
+          <Text style={styles.locHistoryTimeText}>Trip summary</Text>
+          <Text style={styles.locHistoryTimeText}>
             Vehicle number: <Text style={styles.vehicleNumberText}>{name}</Text>
           </Text>
         </View>
@@ -322,7 +323,7 @@ const LocationHistory = ({navigation, route}) => {
               <DownloadIcon size={20} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.calendarIconBox}
+              style={styles.locHistoryCalendarIconBox}
               onPress={() =>
                 navigation.navigate('quickfilters', {
                   deviceId,
@@ -355,8 +356,8 @@ const LocationHistory = ({navigation, route}) => {
         </View>
       </View>
       {gpsTripsError || gpsSummaryError ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
+        <View style={styles.locHistoryErrorContainer}>
+          <Text style={styles.locHistoryErrorText}>
             Failed to fetch data. Please try again.
           </Text>
           <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
@@ -367,7 +368,7 @@ const LocationHistory = ({navigation, route}) => {
         <ActivityIndicator
           size="large"
           color={backgroundColorNew}
-          style={styles.loader}
+          style={styles.locHistoryLoader}
         />
       ) : (
         <FlatList
@@ -376,7 +377,7 @@ const LocationHistory = ({navigation, route}) => {
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
             <View style={styles.noDataView}>
-              <Text style={styles.noDataText}>No Trips</Text>
+              <Text style={styles.locHistorynoDataText}>No Trips</Text>
             </View>
           }
           style={styles.tableContainer}
@@ -388,207 +389,207 @@ const LocationHistory = ({navigation, route}) => {
 
 export default LocationHistory;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerBox: {
-    backgroundColor: '#FFE9E3',
-    borderRadius: 8,
-    margin: 10,
-  },
-  headerTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  timeText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-    color: '#454545',
-  },
-  vehicleNumberText: {
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    color: titleColor,
-  },
-  summaryContainer: {
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 3,
-    zIndex: 10,
-  },
-  stopBox: {
-    paddingHorizontal: 5,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  stopText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-  },
-  stopCount: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'left',
-    textTransform: 'uppercase',
-    marginTop: -2,
-  },
-  iconButtonsContainer: {
-    flexDirection: 'row',
-  },
-  downloadIconBox: {
-    padding: 10,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-    marginRight: 10,
-  },
-  calendarIconBox: {
-    padding: 10,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-  },
-  tripItemContainer: {
-    flex: 1,
-    padding: 10,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
-    elevation: 2,
-  },
-  statusIndicatorContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: 17,
-    marginTop: 10,
-  },
-  greenIndicator: {
-    width: 10,
-    height: 10,
-    backgroundColor: '#3BA700',
-  },
-  redIndicator: {
-    width: 10,
-    height: 10,
-    backgroundColor: '#FF0000',
-    borderRadius: 5,
-  },
-  line: {
-    flex: 1,
-    width: 1.5,
-    backgroundColor: '#AFAFAF',
-    marginHorizontal: 5,
-  },
-  tripDetailsContainer: {
-    paddingHorizontal: 10,
-    flex: 1,
-  },
-  detailContainer: {
-    padding: 5,
-  },
-  addressText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: titleColor,
-  },
-  showAddressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  showAddressText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: '#EF4D23',
-    textDecorationLine: 'underline',
-  },
-  tripStatsContainer: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-  },
-  statBox: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statValue: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: titleColor,
-  },
-  statLabel: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-    color: titleColor,
-  },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 1,
-    marginHorizontal: 5,
-    height: '100%',
-  },
-  tableContainer: {
-    flex: 1,
-    paddingVertical: 10,
-    marginBottom: 10,
-  },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noDataView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  noDataText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 16,
-    color: titleColor,
-  },
-  errorContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  errorText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 16,
-    color: '#FF0000',
-    marginBottom: 10,
-  },
-  retryButton: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: backgroundColorNew,
-  },
-  retryButtonText: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    color: '#FFFFFF',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   loaderContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   headerBox: {
+//     backgroundColor: '#FFE9E3',
+//     borderRadius: 8,
+//     margin: 10,
+//   },
+//   headerTextContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     paddingHorizontal: 10,
+//     paddingVertical: 5,
+//   },
+//   timeText: {
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 10,
+//     color: '#454545',
+//   },
+//   vehicleNumberText: {
+//     fontFamily: 'PlusJakartaSans-ExtraBold',
+//     color: titleColor,
+//   },
+//   summaryContainer: {
+//     backgroundColor: '#FFFFFF',
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     padding: 10,
+//     borderRadius: 8,
+//     elevation: 3,
+//     zIndex: 10,
+//   },
+//   stopBox: {
+//     paddingHorizontal: 5,
+//     flexDirection: 'column',
+//     alignItems: 'flex-start',
+//     justifyContent: 'center',
+//   },
+//   stopText: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//   },
+//   stopCount: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     textAlign: 'left',
+//     textTransform: 'uppercase',
+//     marginTop: -2,
+//   },
+//   iconButtonsContainer: {
+//     flexDirection: 'row',
+//   },
+//   downloadIconBox: {
+//     padding: 10,
+//     width: 40,
+//     height: 40,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderRadius: 8,
+//     backgroundColor: '#f7f7f7',
+//     elevation: 2,
+//     marginRight: 10,
+//   },
+//   calendarIconBox: {
+//     padding: 10,
+//     width: 40,
+//     height: 40,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderRadius: 8,
+//     backgroundColor: '#f7f7f7',
+//     elevation: 2,
+//   },
+//   tripItemContainer: {
+//     flex: 1,
+//     padding: 10,
+//     marginHorizontal: 10,
+//     marginBottom: 10,
+//     borderRadius: 10,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     backgroundColor: '#ffffff',
+//     elevation: 2,
+//   },
+//   statusIndicatorContainer: {
+//     flexDirection: 'column',
+//     alignItems: 'center',
+//     marginBottom: 17,
+//     marginTop: 10,
+//   },
+//   greenIndicator: {
+//     width: 10,
+//     height: 10,
+//     backgroundColor: '#3BA700',
+//   },
+//   redIndicator: {
+//     width: 10,
+//     height: 10,
+//     backgroundColor: '#FF0000',
+//     borderRadius: 5,
+//   },
+//   line: {
+//     flex: 1,
+//     width: 1.5,
+//     backgroundColor: '#AFAFAF',
+//     marginHorizontal: 5,
+//   },
+//   tripDetailsContainer: {
+//     paddingHorizontal: 10,
+//     flex: 1,
+//   },
+//   detailContainer: {
+//     padding: 5,
+//   },
+//   addressText: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//     color: titleColor,
+//   },
+//   showAddressContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//   },
+//   showAddressText: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//     color: '#EF4D23',
+//     textDecorationLine: 'underline',
+//   },
+//   tripStatsContainer: {
+//     flexDirection: 'row',
+//     paddingVertical: 10,
+//   },
+//   statBox: {
+//     flex: 1,
+//     alignItems: 'center',
+//   },
+//   statValue: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//     color: titleColor,
+//   },
+//   statLabel: {
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 10,
+//     color: titleColor,
+//   },
+//   verticalLine: {
+//     backgroundColor: '#AFAFAF',
+//     width: 1,
+//     marginHorizontal: 5,
+//     height: '100%',
+//   },
+//   tableContainer: {
+//     flex: 1,
+//     paddingVertical: 10,
+//     marginBottom: 10,
+//   },
+//   loader: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   noDataView: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 50,
+//   },
+//   noDataText: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 16,
+//     color: titleColor,
+//   },
+//   errorContainer: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     marginTop: 50,
+//   },
+//   errorText: {
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 16,
+//     color: '#FF0000',
+//     marginBottom: 10,
+//   },
+//   retryButton: {
+//     padding: 10,
+//     borderRadius: 5,
+//     backgroundColor: backgroundColorNew,
+//   },
+//   retryButtonText: {
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     color: '#FFFFFF',
+//   },
+// });

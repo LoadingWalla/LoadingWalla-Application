@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchGpsStopsRequest} from '../../Store/Actions/Actions';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
+import styles from './style'
 
 const RenderItem = React.memo(({item, index}) => {
   // console.log(4444, item, index);
@@ -23,22 +24,22 @@ const RenderItem = React.memo(({item, index}) => {
           style={
             styles.headText
           }>{`${formattedDate} - ${formattedEndTime}`}</Text>
-        <View style={styles.verticalLine} />
+        <View style={styles.stopScreenVerticalLine} />
         <Text style={styles.headText}>{`${Math.ceil(
           distanceCovered,
         )} KM`}</Text>
-        <View style={styles.verticalLine} />
+        <View style={styles.stopScreenVerticalLine} />
         <Text style={styles.headText}>{`${averageSpeed} KMPH`}</Text>
       </View>
       <View style={styles.whiteBox}>
-        <View style={{flex: 1}}>
-          <View style={styles.row}>
-            <View style={styles.row}>
+        <View style={styles.container}>
+          <View style={styles.stopScreenRow}>
+            <View style={styles.stopScreenRow}>
               <Text style={styles.headingText}>Max Speed: </Text>
               <Text style={styles.headingText}>{`${maxSpeed} KMPH`}</Text>
             </View>
             <View style={styles.verticalLine2} />
-            <View style={styles.row}>
+            <View style={styles.stopScreenRow}>
               <Text style={styles.headingText}>Hold time: </Text>
               <Text style={styles.headingText}>{`${Math.ceil(
                 durationInHours,
@@ -72,60 +73,60 @@ const StopsScreen = ({navigation, route}) => {
 
 export default StopsScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  itemContainer: {
-    marginBottom: 15,
-  },
-  summaryBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
-    backgroundColor: backgroundColorNew,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  verticalLine: {
-    backgroundColor: '#FFFFFF',
-    width: 2,
-    marginHorizontal: 5,
-    height: '100%',
-  },
-  verticalLine2: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 5,
-    height: '100%',
-  },
-  headText: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  headingText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  headingValue: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12,
-    marginTop: 5,
-  },
-  whiteBox: {
-    flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
-    elevation: 3,
-    borderRadius: 5,
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     padding: 10,
+//   },
+//   itemContainer: {
+//     marginBottom: 15,
+//   },
+//   summaryBox: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-around',
+//     padding: 10,
+//     backgroundColor: backgroundColorNew,
+//     borderRadius: 5,
+//     marginBottom: 10,
+//   },
+//   verticalLine: {
+//     backgroundColor: '#FFFFFF',
+//     width: 2,
+//     marginHorizontal: 5,
+//     height: '100%',
+//   },
+//   verticalLine2: {
+//     backgroundColor: '#AFAFAF',
+//     width: 2,
+//     marginHorizontal: 5,
+//     height: '100%',
+//   },
+//   headText: {
+//     color: '#FFFFFF',
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   headingText: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     textAlign: 'center',
+//   },
+//   headingValue: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 12,
+//     marginTop: 5,
+//   },
+//   whiteBox: {
+//     flexDirection: 'row',
+//     backgroundColor: '#FFFFFF',
+//     elevation: 3,
+//     borderRadius: 5,
+//     paddingVertical: 15,
+//     paddingHorizontal: 10,
+//   },
+//   row: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+// });

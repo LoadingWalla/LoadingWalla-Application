@@ -215,6 +215,7 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   pinCodeText: {color: PrivacyPolicy},
+  setPrivacyStyle: {color: PrivacyPolicy},
   activePinCodeContainer: {
     backgroundColor: GradientColor2,
     color: pageBackground,

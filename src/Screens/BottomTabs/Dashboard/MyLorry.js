@@ -103,7 +103,7 @@ const MyLorry = ({navigation}) => {
   const renderContentOrShimmer = relevantData => {
     if (myLoadLoding || myLorryLoding) {
       return (
-        <View style={{flex: 1}}>
+        <View style={style.contentSimmer}>
           <MyLorryShimmer />
           <MyLorryShimmer />
           <MyLorryShimmer />
@@ -130,7 +130,7 @@ const MyLorry = ({navigation}) => {
     }
 
     return (
-      <View style={{flex: 1, paddingHorizontal: 5}}>
+      <View style={style.myLorryFlatList}>
         <FlatList
           keyExtractor={keyExtractor}
           data={relevantData}

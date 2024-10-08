@@ -9,6 +9,7 @@ import FindLoadHeader from '../../Components/FindLoadHeader';
 import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
 import NotFound from '../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import styles from './style'
 
 const FindLoads = ({navigation, route}) => {
   // console.log(22222, route.params);
@@ -56,11 +57,7 @@ const FindLoads = ({navigation, route}) => {
 
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: 'flex-start',
-        backgroundColor: '#FFFDFD',
-      }}>
+      style={styles.findLoadsContainer}>
       <FindLoadHeader
         title={`${t(Constants.RESULTS)} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length

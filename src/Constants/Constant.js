@@ -213,3 +213,40 @@ export const FRONT = 'Front Side';
 export const BACK = 'Back Side';
 export const ASKED_PRICE = 'Asked Price';
 export const REVALUED_PRICE = 'Revalued Price';
+
+// Devansh Code
+export const PERCENTAGE_DISCOUNT = '% discount on current plan';
+export const ERROR = 'Error:';
+export const PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING =
+  'Please fill all the fields before continuing.';
+export const ENTER_FULL_NAME = 'Enter Full Name';
+export const ENTER_ALT_PHONE_NUMBER = 'Enter Alternative Phone Number';
+export const ENTER_RC_NUMBER = 'Enter RC Numbers';
+export const DELIVERY_ADDRESS = 'Delivery address';
+export const ENTER_DELIVERY_ADDRESS = 'Enter Delivery Address';
+export const LANDMARK = 'Landmark';
+export const ENTER_YOUR_LANDMARK = 'Enter Landmark';
+export const CITY = 'City';
+export const ENTER_CITY = 'Enter City';
+export const STATE = 'State';
+export const ENTER_STATE = 'Enter State';
+export const PIN_CODE = 'Pin Code';
+export const ENTER_PIN_CODE = 'Enter Pin Code';
+export const ERROR_FETCHING_DATA = 'Error fetching data';
+export const ERROR_FETCHING_DISTANCE = 'Error fetching distances';
+export const ERROR_OPENING_GOOGLE_MAPS = 'Error opening Google Maps';
+export const DISTANCE_NOT_AVAILABLE = 'Distance not available';
+export const NO_GPS_AVAILABLE = 'No GPS available!';
+export const GET_GPS_FOR_YOUR_VEHICLE = 'Get a GPS Plan for your vehicle';
+export const BUY_AND_SAVE = 'Buy and save up to 50%';
+export const DEVICE_DATA_NOT_FOUND = 'Device data not found';
+export const NO_GPS_FOUND = 'No GPS found';
+export const SHOW_FULL_ADDRESS = 'Show full address';
+export const FAILED_TO_FETCH_DATA_TRY_AGAIN =
+  'Failed to fetch data. Please try again';
+export const NO_GPS_ORDER_OR_PAYMENT = 'No GPS Order or Payment';
+export const PAYMENT_DETAILS = 'Payment Details';
+export const AMOUNT_DEVICES_TO_BUY = 'Amount of devices you want to buy';
+export const HOW_MANY_GPS_YOU_WANT = 'How many GPS you want';
+export const PICKUP_DATES_AND_TIME = 'Pickup Dates and Times';
+export const GET_NOW = 'Get Now';

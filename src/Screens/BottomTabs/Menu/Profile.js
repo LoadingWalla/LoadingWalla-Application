@@ -102,7 +102,7 @@ const Profile = ({navigation, route}) => {
           </TouchableOpacity>
           <View style={style.imageContainer}>
             <Image
-              style={{height: hei / 2.5, width: wid}}
+              style={profileImg(hei, wid)}
               source={
                 Userdata?.profile_img
                   ? {uri: Userdata?.profile_img}
@@ -167,7 +167,7 @@ const Profile = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={style.profileContainer}>
       {profileLoading ? (
         <View>
           <ProfileShimmer />
@@ -199,12 +199,12 @@ const Profile = ({navigation, route}) => {
               }
               style={style.pressable}>
               <Image
-                style={{
-                  height: 85,
-                  width: 85,
-                  borderRadius: 50,
-                  marginRight: Userdata?.user_type === 3 ? 10 : 0,
-                }}
+                style={[
+                  style.profileImgStyle,
+                  {
+                    marginRight: Userdata?.user_type === 3 ? 10 : 0,
+                  }
+                ]}
                 source={
                   Userdata?.profile_img
                     ? {uri: Userdata?.profile_img}
@@ -214,7 +214,7 @@ const Profile = ({navigation, route}) => {
               />
             </Pressable>
             <View style={style.verticalLine} />
-            <View style={{flex: 1, marginLeft: 17, justifyContent: 'center'}}>
+            <View style={style.profileDetailsView}>
               <Text style={style.profileTitle}>{Userdata?.name}</Text>
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <Text style={style.subTitle}>
@@ -225,8 +225,8 @@ const Profile = ({navigation, route}) => {
                   : 'Truck Owner'}
               </Text>
               {Userdata?.user_type !== 3 && (
-                <View style={{flexDirection: 'row', marginTop: 7}}>
-                  <View style={{flexDirection: 'row'}}>
+                <View style={style.profileRateVerifyOutView}>
+                  <View style={style.profileRateVerifyInView}>
                     <TouchableOpacity>
                       <Shield size={20} verified={Userdata?.verify} />
                     </TouchableOpacity>
@@ -262,7 +262,7 @@ const Profile = ({navigation, route}) => {
             </View>
           </View>
           <ScrollView
-            style={{flex: 1, marginBottom: 60}}
+            style={style.profileScrollView}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             {/* {Userdata?.user_type !== 3 && ( */}

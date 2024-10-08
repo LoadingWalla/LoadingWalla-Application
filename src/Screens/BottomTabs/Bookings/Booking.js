@@ -131,11 +131,7 @@ const Booking = ({navigation}) => {
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            contentContainerStyle={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            contentContainerStyle={style.bookingContentContainer}>
             <NotFound
               imageName="noBookings"
               height={150}
@@ -151,11 +147,7 @@ const Booking = ({navigation}) => {
                 })
               }>
               <Text
-                style={{
-                  color: backgroundColorNew,
-                  fontFamily: 'PlusJakartaSans-SemiBold',
-                  fontSize: 16,
-                }}>
+                style={style.goToPrevBookingTxt}>
                 {t(Constants.GOTOPREVIOUSBOOKING)}
               </Text>
             </TouchableOpacity>

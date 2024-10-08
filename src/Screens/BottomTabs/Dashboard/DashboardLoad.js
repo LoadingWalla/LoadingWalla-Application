@@ -164,7 +164,7 @@ const DashboardLoad = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 60}}>
+    <View style={style.dashboardLoadContainer}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -195,7 +195,7 @@ const DashboardLoad = ({navigation}) => {
               <View>
                 {DashboardBanner?.length > 0 && (
                   <Swiper
-                    style={{height: width / 2}}
+                    style={style.dashboardSwiper(width)}
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
