@@ -1643,11 +1643,11 @@ export default StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#3CA604',
     borderColor: '#3CA604',
-    height: 50,
     alignItems: 'center',
-    justifyContent: 'center',
     width: '50%',
-    alignSelf: 'center',
+    // height: 50,
+    // justifyContent: 'center',
+    // alignSelf: 'center',
   },
   addGeozoneBtnStyle: {
     borderRadius: 8,
@@ -1712,6 +1712,8 @@ export default StyleSheet.create({
     color: textColor,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
+    // borderWidth: 1,
+    width: 200
   },
   homeView: {
     flex: 1,
@@ -1724,9 +1726,11 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   getNowView: {
+    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0.25,
+    flex: 0.2,
+
   },
   offerText: {
     fontFamily: 'PlusJakartaSans-Medium',

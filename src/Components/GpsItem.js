@@ -1,6 +1,7 @@
 import React, {useState, memo, useMemo, useCallback} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
+import {useTranslation} from 'react-i18next';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
@@ -11,9 +12,11 @@ import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import VehicleIcon from './GpsVehicleIcon';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
+import * as Constants from '../Constants/Constant';
 
 const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const {t} = useTranslation();
   // console.log(444444, 'GpsItem---->', item);
   const {
     position = [],
@@ -77,7 +80,7 @@ const GpsItem = ({navigation, item}) => {
 
   const renderStatus = useMemo(() => {
     if (status === 'online') {
-      return <Text style={styles.ignitionText(true)}>GPS Active</Text>;
+      return <Text style={styles.ignitionText(true)}>GPS {t(Constants.ACTIVE)}</Text>;
     }
     if (status === 'offline') {
       return (
@@ -180,7 +183,7 @@ const GpsItem = ({navigation, item}) => {
         </Text>
         <View style={styles.verticalLine} />
         <View style={styles.footerDistanceContainer}>
-          <Text style={styles.footerText}>Today Distance:</Text>
+          <Text style={styles.footerText}>{t(Constants.TODAY_DISTANCE)}:</Text>
           <Text style={styles.footerDistanceText}>
             {(distance / 1000).toFixed(2)} KM
           </Text>

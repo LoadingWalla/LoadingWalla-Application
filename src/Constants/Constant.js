@@ -19,7 +19,7 @@ export const SELECT_TRUCK = 'Select truck type';
 export const ENTER_CITY_NAME = 'City name';
 export const iam = 'I am';
 export const MATERIAL_NAME = 'Material name';
-
+export const GPS = 'GPS'
 export const SEND_OTP = 'Send OTP';
 export const TERMS_CONDITION_TITLE1 = 'By signing up, you accept our ';
 export const TERMS_CONDITION_TITLE2 = 'Terms of use';
@@ -131,8 +131,14 @@ export const TOPUP_WALLET = 'Topup Wallet';
 export const TOPUP = 'TopUp';
 export const PROCEED_TO_TOPUP = 'PROCEED TO TOPUP';
 export const ADD_NEW_LORRY = 'Add Truck +';
+export const ALL = 'All';
 export const ACTIVE = 'Active';
 export const INACTIVE = 'Inactive';
+export const RUNNING = 'Running';
+
+export const TODAY_DISTANCE = 'Today Distance'
+export const MY_GPS = 'MyGPS'
+
 export const NOTE =
   'Note: The status stays active for 24 hours, after that it becomes inactive.';
 export const E_MAIL = 'E-mail';

@@ -86,7 +86,7 @@ export default function MyGpsBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={'GPS'}
+          name={t(Constants.GPS)}
           component={GPSHomePage}
           options={{
             tabBarIcon: ({focused}) =>
@@ -98,7 +98,7 @@ export default function MyGpsBottomTabs() {
           }}
         />
         <Tab.Screen
-          name={'MyGPS'}
+          name={t(Constants.MY_GPS)}
           component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused}) =>
