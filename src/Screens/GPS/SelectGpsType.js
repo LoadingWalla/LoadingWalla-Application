@@ -13,9 +13,12 @@ import Button from '../../Components/Button';
 import PlusIcon from '../../../assets/SVG/svg/PlusIcon';
 import MinusIcon from '../../../assets/SVG/svg/MinusIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
 import styles from './style'
 
 const SelectGpsType = ({navigation, route}) => {
+  const {t} = useTranslation();
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData} = useSelector(state => state.data);
   const [gpsCount, setGpsCount] = useState(1);
@@ -50,7 +53,7 @@ const SelectGpsType = ({navigation, route}) => {
       <View style={styles.selectGpsTypeScreenModalView}>
         <View style={styles.selectGpsTypeHeader}>
           <Text style={styles.headerTitle}>
-            Amount of devices you want to buy?
+            {t(Constants.AMOUNT_DEVICES_TO_BUY)}  
           </Text>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
@@ -61,7 +64,7 @@ const SelectGpsType = ({navigation, route}) => {
         <View style={styles.centeredView}>
           <View style={styles.gpsCount}>
             <Text style={styles.numOfGps}>
-              How many GPS you want?
+              {t(Constants.NUM_OF_GPS)}
             </Text>
             <View style={styles.gpsSelectionView}>
               <TouchableOpacity
@@ -90,7 +93,7 @@ const SelectGpsType = ({navigation, route}) => {
         </View>
         <View style={styles.selectGpsTypeBottomBox}>
           <View style={styles.amountBox}>
-            <Text style={styles.totalAmountText}>Total Amount</Text>
+            <Text style={styles.totalAmountText}>{t(Constants.TOTAL_AMOUNT)}</Text>
             <Text style={styles.totalAmountValue}>₹ {totalPrice}/-</Text>
           </View>
           <View style={styles.continueBtnWidth}>
@@ -104,7 +107,7 @@ const SelectGpsType = ({navigation, route}) => {
                   plan_id,
                 });
               }}
-              title={'Continue'}
+              title={t(Constants.CONTINUE)}
               textStyle={styles.buttonTitile}
               style={styles.selectGpsTypeButton}
             />

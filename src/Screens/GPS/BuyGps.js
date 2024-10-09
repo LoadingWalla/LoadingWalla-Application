@@ -17,6 +17,8 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/WebSocketActions';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
 import styles from './style'
 
 const Plan = ({text}) => {
@@ -29,6 +31,7 @@ const Plan = ({text}) => {
 };
 
 const Rates = ({item, navigation}) => {
+  const {t} = useTranslation();
   const features = item.description.split('\n\n');
   const markedPrice =
     Math.ceil(item.gps_price * 1.18) +
@@ -51,7 +54,7 @@ const Rates = ({item, navigation}) => {
           <View style={styles.discountContainer}>
             <PercentageIcon size={15} color={'#0F8B00'} />
             <Text style={styles.discountText}>
-              {percentageDiscount}% discount on current plan
+              {percentageDiscount}{t(Constants.PERCENTAGE_DISCOUNT)}
             </Text>
           </View>
         </View>

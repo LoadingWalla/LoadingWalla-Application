@@ -1081,7 +1081,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Purchase GPS',
+          title: t(Constants.PURCHASE_GPS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1155,7 +1155,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Provide delivery details',
+          title: t(Constants.DELIVERY_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

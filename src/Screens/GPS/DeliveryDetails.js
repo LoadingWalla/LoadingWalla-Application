@@ -10,9 +10,12 @@ import {
   placeGpsOrderFailure,
   placeGpsOrderRequest,
 } from '../../Store/Actions/Actions';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
 import styles from './style'
 
 const DeliveryDetails = ({navigation, route}) => {
+  const {t} = useTranslation();
   const {gpsCount, pricePerDevice, plan_id} = route.params;
   // console.log(4444, route);
 
@@ -71,7 +74,7 @@ const DeliveryDetails = ({navigation, route}) => {
       Object.values(address).some(field => !field) ||
       rcNumbers.includes('')
     ) {
-      Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+      Toast.show(t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING), Toast.LONG);
       return;
     }
     dispatch(
@@ -121,7 +124,7 @@ const DeliveryDetails = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <PurchaseGpsHeader
-        footertitle={`Total amount to be paid: ₹ ${gpsCount * pricePerDevice}`}
+        footertitle={`${t(Constants.TOTAL_AMOUNT_PAID)}: ₹ ${gpsCount * pricePerDevice}`}
         icon={false}
         edit={true}
         planName={filteredPlanData?.plan_name}
@@ -132,77 +135,77 @@ const DeliveryDetails = ({navigation, route}) => {
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}>
         <View>
-          <Text style={styles.label}>Enter Full Name*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_FULL_NAME)}*</Text>
           <TextInputField
             value={fullName}
-            hint={'Enter Full Name'}
+            hint={t(Constants.ENTER_FULL_NAME)}
             onChangeText={setFullName}
           />
         </View>
         <View>
-          <Text style={styles.label}>Phone Number*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_ALT_PHONE_NUMBER)}*</Text>
           <TextInputField
             value={alternativePhoneNumber}
-            hint={'Enter Alternative Phone Number'}
+            hint={t(Constants.ENTER_ALT_PHONE_NUMBER)}
             onChangeText={setAlternativePhoneNumber}
             isPhone={true}
           />
         </View>
 
-        <Text style={styles.label}>Enter RC Numbers*</Text>
+        <Text style={styles.label}>{t(Constants.ENTER_RC_NUMBER)}*</Text>
         {Array.from({length: gpsCount}).map((_, index) => (
           <TextInputField
             key={index}
             value={rcNumbers[index]}
-            hint={`Enter RC number for GPS ${index + 1}`}
+            hint={`${t(Constants.RC_NUMBER_GPS)} ${index + 1}`}
             onChangeText={text => handleRcNumberChange(text, index)}
           />
         ))}
         <View>
-          <Text style={styles.label}>Delivery address*</Text>
+          <Text style={styles.label}>{t(Constants.DELIVERY_ADDRESS)}*</Text>
           <TextInputField
             // value={deliveryAddress}
             value={address.deliveryAddress}
-            hint={'Enter Delivery Address'}
+            hint={t(Constants.DELIVERY_ADDRESS)}
             // onChangeText={setDeliveryAddress}
             onChangeText={text => handleAddressChange('deliveryAddress', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>Landmark*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_YOUR_LANDMARK)}*</Text>
           <TextInputField
             value={address.landmark}
-            hint={'Enter Landmark'}
+            hint={t(Constants.ENTER_YOUR_LANDMARK)}
             onChangeText={text => handleAddressChange('landmark', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>City*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_CITY_NAME)}*</Text>
           <TextInputField
             value={address.city}
-            hint={'Enter City'}
+            hint={t(Constants.CITY_NAME)}
             onChangeText={text => handleAddressChange('city', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>State*</Text>
+          <Text style={styles.label}>{t(Constants.STATE)}*</Text>
           <TextInputField
             value={address.state}
-            hint={'Enter State'}
+            hint={t(Constants.ENTER_STATE)}
             onChangeText={text => handleAddressChange('state', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>Pin Code*</Text>
+          <Text style={styles.label}>{t(Constants.PIN_CODE)}*</Text>
           <TextInputField
             value={address.pinCode}
-            hint={'Enter Pin Code'}
+            hint={t(Constants.ENTER_PIN_CODE)}
             isPhone={true}
             onChangeText={text => handleAddressChange('pinCode', text)}
           />
         </View>
         <Button
-          title={'Continue'}
+          title={t(Constants.CONTINUE)}
           onPress={handleContinue}
           textStyle={styles.deliveryDetailsBtnText}
           style={styles.deliveryDetailsBtnStyle}

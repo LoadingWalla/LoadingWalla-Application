@@ -5,7 +5,9 @@ import {PrivacyPolicy, textColor, titleColor} from '../../../Color/color';
 import EditIcon from '../../../../assets/SVG/svg/EditIcon';
 import DeleteIcon from '../../../../assets/SVG/svg/DeleteIcon';
 import Button from '../../../Components/Button';
+import {useTranslation} from 'react-i18next';
 import styles from './style'
+import * as Constants from '../../../Constants/Constant';
 
 const data = [
   // {
@@ -22,6 +24,8 @@ const data = [
 ];
 
 const Address = ({navigation}) => {
+  const {t} = useTranslation();
+
   const renderItem = ({item}) => (
     <View style={styles.card}>
       <View style={styles.iconBox}>
@@ -61,11 +65,11 @@ const Address = ({navigation}) => {
         />
       ) : (
         <View style={styles.noAddressContainer}>
-          <Text style={styles.noAddressText}>No addresses found.</Text>
+          <Text style={styles.noAddressText}>{t(Constants.NO_ADDR_FOUND)}</Text>
         </View>
       )}
       <Button
-        title={'Add New Address'}
+        title={t(Constants.ADD_NEW_ADDR)}
         textStyle={styles.buttonTextStyle}
         style={styles.buttonStyle}
         touchStyle={styles.touchStyle}

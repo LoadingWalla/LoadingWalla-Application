@@ -1377,7 +1377,7 @@ export function* placeGpsOrderSaga({
     body.append('state', state);
     body.append('landmark', landmark);
     body.append('pincode', pinCode);
-    // console.log(9999999, body);
+    console.log(9999999, body);
     const data = yield multiPartApi.post('gps-order', body);
     console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {
