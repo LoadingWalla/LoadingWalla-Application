@@ -1,8 +1,7 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 import TextInputField from '../../Components/TextInputField';
-import {textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
@@ -13,6 +12,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
+import AlertBox from '../../Components/AlertBox';
 
 const DeliveryDetails = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -107,6 +107,8 @@ const DeliveryDetails = ({navigation, route}) => {
           totalAmount: gpsCount * pricePerDevice,
         });
         dispatch(placeGpsOrderFailure());
+      } else {
+        AlertBox('Internal Server Error.');
       }
     }
     return () => {
