@@ -1257,9 +1257,9 @@ export const placeGpsOrderSuccess = payload => ({
   payload,
 });
 
-export const placeGpsOrderFailure = error => ({
+export const placeGpsOrderFailure = payload => ({
   type: actionTypes.PLACE_GPS_ORDER_FAILURE,
-  payload: error,
+  payload,
 });
 
 // gps order details
