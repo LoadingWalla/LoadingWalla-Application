@@ -10,7 +10,7 @@ import {
   placeGpsOrderFailure,
   placeGpsOrderRequest,
 } from '../../Store/Actions/Actions';
-import styles from './style'
+import styles from './style';
 
 const DeliveryDetails = ({navigation, route}) => {
   const {gpsCount, pricePerDevice, plan_id} = route.params;

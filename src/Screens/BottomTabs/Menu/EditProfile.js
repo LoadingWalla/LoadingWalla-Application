@@ -34,7 +34,7 @@ import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
-import style from './style'
+import style from './style';
 
 const EditProfile = ({
   defaultValue,
@@ -194,15 +194,12 @@ const EditProfile = ({
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View
-          style={style.chooseOpnOutterView}>
-          <View
-            style={style.chooseOtnInnerView}>
+        <View style={style.chooseOpnOutterView}>
+          <View style={style.chooseOtnInnerView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View
-              style={style.allEditBtnView}>
+            <View style={style.allEditBtnView}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={style.cammeraView}>
                   <Cammera />
@@ -243,9 +240,7 @@ const EditProfile = ({
       transparent={true}
       visible={isEdit}>
       {chooseOptions()}
-      <TouchableOpacity
-        activeOpacity={1}
-        style={style.editProfileModalStyle}>
+      <TouchableOpacity activeOpacity={1} style={style.editProfileModalStyle}>
         <View style={style.editModalView}>
           <View style={style.closeBtnView}>
             <TouchableOpacity onPress={() => dismissModal()}>
@@ -277,7 +272,7 @@ const EditProfile = ({
                         }
                   }
                   resizeMode={'cover'}
-                  style={style.profileImg}
+                  style={style.editProfileImg}
                 />
                 <View style={style.profileImgEdit}>
                   <CameraIcon size={15} color="white" />
@@ -300,11 +295,10 @@ const EditProfile = ({
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
               /> */}
-              <Text style={style.editProfileLabel}>{t(Constants.MOBILE_NUMBER)}</Text>
-              <Text
-                style={style.mobileTxt}>
-                {defaultValue?.mobile}
+              <Text style={style.editProfileLabel}>
+                {t(Constants.MOBILE_NUMBER)}
               </Text>
+              <Text style={style.mobileTxt}>{defaultValue?.mobile}</Text>
             </View>
             <Button
               loading={profileSetupLoading}

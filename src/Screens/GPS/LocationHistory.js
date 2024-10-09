@@ -26,7 +26,7 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {convertToCSV} from '../../Utils/CSVutils';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
-import styles from './style'
+import styles from './style';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -78,7 +78,9 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
   return (
     <View style={styles.detailContainer}>
       {address || (fullAddressCustomId === itemId && fullAddressData) ? (
-        <Text style={styles.locHistoryAddressText}>{address || fullAddressData}</Text>
+        <Text style={styles.locHistoryAddressText}>
+          {address || fullAddressData}
+        </Text>
       ) : (
         <ShowFullAddress
           lat={lat}
@@ -298,7 +300,7 @@ const LocationHistory = ({navigation, route}) => {
   }
 
   return (
-    <View style={styles.container}>   
+    <View style={styles.container}>
       <View style={styles.locHistoryHeaderBox}>
         <View style={styles.headerTextContainer}>
           <Text style={styles.locHistoryTimeText}>Trip summary</Text>
@@ -336,7 +338,7 @@ const LocationHistory = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           // borderWidth: 1,
           // backgroundColor: '#FFE9E3',
@@ -354,7 +356,7 @@ const LocationHistory = ({navigation, route}) => {
         <View style={{flex: 0.5, paddingVertical: 5}}>
           <Text style={{textAlign: 'center'}}>Stops</Text>
         </View>
-      </View>
+      </View> */}
       {gpsTripsError || gpsSummaryError ? (
         <View style={styles.locHistoryErrorContainer}>
           <Text style={styles.locHistoryErrorText}>

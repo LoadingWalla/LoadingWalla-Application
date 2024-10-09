@@ -20,7 +20,7 @@ import {
 import AnimatedText from '../../Components/AnimatedText';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
-import styles from './style'
+import styles from './style';
 
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
@@ -293,7 +293,9 @@ const PaymentGPS = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.discountView}>
-              <Text style={styles.paymentGpsDiscountText}>Loading Walla discount</Text>
+              <Text style={styles.paymentGpsDiscountText}>
+                Loading Walla discount
+              </Text>
               <Text style={styles.paymentGpsDiscountText}>
                 ₹ {filteredPlanData?.discount * gpsCount}
               </Text>
@@ -305,8 +307,12 @@ const PaymentGPS = ({navigation, route}) => {
         <View style={styles.footerTextContainer}>
           <Text style={styles.amountText}>Amount to be paid</Text>
           <View style={styles.paymentGpsPriceContainer}>
-            <Text style={styles.markedPriceText}>₹ {markedPrice}</Text>
-            <Text style={styles.sellingPriceText}>₹ {sellingPrice}</Text>
+            <Text style={styles.markedPriceText}>
+              ₹ {markedPrice * gpsCount}
+            </Text>
+            <Text style={styles.sellingPriceText}>
+              ₹ {sellingPrice * gpsCount}
+            </Text>
           </View>
         </View>
         <Button

@@ -34,12 +34,18 @@ export default StyleSheet.create({
   },
   profileContainer: {flex: 1},
   profileImg: (hei, wid) => ({
-    height: hei / 2.5, width: wid
+    height: hei / 2.5,
+    width: wid,
   }),
+  editProfileImg: {
+    height: 80,
+    width: 80,
+    borderRadius: 40,
+  },
   profileDetailsView: {
-    flex: 1, 
-    marginLeft: 17, 
-    justifyContent: 'center'
+    flex: 1,
+    marginLeft: 17,
+    justifyContent: 'center',
   },
   profileRateVerifyOutView: {flexDirection: 'row', marginTop: 7},
   profileRateVerifyInView: {flexDirection: 'row'},
@@ -231,11 +237,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profileImg: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-  },
   profileImgStyle: {
     height: 85,
     width: 85,
@@ -297,7 +298,7 @@ export default StyleSheet.create({
     bottom: 0,
     marginTop: 200,
   },
-  editRemoveImg:{height: 35, width: 40},
+  editRemoveImg: {height: 35, width: 40},
   guideBackgroundView: {
     padding: 10,
     backgroundColor: '#FFFDFD',
@@ -363,9 +364,9 @@ export default StyleSheet.create({
     right: 5,
   },
   guideHorizontalLine: {
-    backgroundColor: '#AFAFAF', 
-    height: 1, 
-    marginBottom: 10
+    backgroundColor: '#AFAFAF',
+    height: 1,
+    marginBottom: 10,
   },
   searchContainer: {
     flexDirection: 'row',
