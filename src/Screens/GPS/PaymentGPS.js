@@ -15,6 +15,7 @@ import {
   createOrderFailure,
   fetchGpsOrderDetailRequest,
   initCreateOrder,
+  initProfile,
   initVerifyPaymentRequest,
 } from '../../Store/Actions/Actions';
 import AnimatedText from '../../Components/AnimatedText';
@@ -117,11 +118,11 @@ const PaymentGPS = ({navigation, route}) => {
     dispatch(fetchGpsOrderDetailRequest(gpsOrderId));
   }, [dispatch, gpsOrderId]);
 
-  // useEffect(() => {
-  //   if (Userdata === null) {
-  //     navigation.navigate('Menu');
-  //   }
-  // }, [Userdata, navigation]);
+  useEffect(() => {
+    if (Userdata === null) {
+      dispatch(initProfile());
+    }
+  }, [Userdata]);
 
   useEffect(() => {
     if (verifyPaymentData && verifyPaymentStatus) {
@@ -206,7 +207,9 @@ const PaymentGPS = ({navigation, route}) => {
         <View style={styles.scrollContainer}>
           <View style={styles.paymentContainer}>
             <View style={styles.paymentDetailView}>
-              <Text style={styles.paymentDetailText}>{t(Constants.PURCHASE_SUM)}</Text>
+              <Text style={styles.paymentDetailText}>
+                {t(Constants.PURCHASE_SUM)}
+              </Text>
               {/* <TouchableOpacity
                 style={styles.editButton}
                 // onPress={() => navigation.navigate('purchasingStatus')}
@@ -242,11 +245,15 @@ const PaymentGPS = ({navigation, route}) => {
         <View style={styles.scrollContainer}>
           <View style={styles.paymentContainer}>
             <View style={styles.paymentDetailView}>
-              <Text style={styles.paymentDetailText}>{t(Constants.PAYMENT_DETAILS)}</Text>
+              <Text style={styles.paymentDetailText}>
+                {t(Constants.PAYMENT_DETAILS)}
+              </Text>
             </View>
             <View style={styles.totalAmountContainer}>
               <View style={styles.totalAmountTextContainer}>
-                <Text style={styles.boldText}>{t(Constants.TOTAL_AMOUNT)} </Text>
+                <Text style={styles.boldText}>
+                  {t(Constants.TOTAL_AMOUNT)}{' '}
+                </Text>
                 <Text style={styles.paymentGpsTaxText}>(Inc. of taxes)</Text>
               </View>
               <Text style={styles.boldText}>₹ {markedPrice}</Text>
@@ -296,7 +303,9 @@ const PaymentGPS = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.discountView}>
-              <Text style={styles.paymentGpsDiscountText}>Loading Walla Discount</Text>
+              <Text style={styles.paymentGpsDiscountText}>
+                Loading Walla Discount
+              </Text>
               <Text style={styles.paymentGpsDiscountText}>
                 ₹ {filteredPlanData?.discount * gpsCount}
               </Text>
