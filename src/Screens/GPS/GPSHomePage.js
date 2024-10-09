@@ -73,18 +73,18 @@ const GPSHomePage = ({navigation}) => {
           />
           <Text
             style={styles.noGpsAvailTxt}>
-            No GPS available!
+            {t(Constants.NO_GPS_AVAILABLE)}
           </Text>
           <Text
             style={styles.getGpsPlanTxt}>
-            Get a GPS Plan for your vehicle
+            {t(Constants.GET_GPS_FOR_YOUR_VEHICLE)}
           </Text>
         </View>
         <View style={styles.getNowView}>
-          <Text style={styles.offerText}>Buy and save up to 50%</Text>
+          <Text style={styles.offerText}>{t(Constants.BUY_AND_SAVE)}</Text>
           <InnerButton
             navigation={() => navigation.navigate('BuyGPS')}
-            title={'Get Now'}
+            title={t(Constants.GET_NOW)}
             enabledStyle={styles.btnStyle}
             textStyle={styles.btnText}
           />

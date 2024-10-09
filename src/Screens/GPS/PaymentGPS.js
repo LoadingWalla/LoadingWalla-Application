@@ -20,7 +20,9 @@ import {
 import AnimatedText from '../../Components/AnimatedText';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
-import styles from './style';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
+import styles from './style'
 
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
@@ -54,6 +56,7 @@ const ReusableItem = React.memo(({title, value, isTax, isTaxValue}) => (
 
 const PaymentGPS = ({navigation, route}) => {
   const {plan_id, gpsCount, gpsOrderId, totalAmount} = route.params;
+  const {t} = useTranslation();
   // console.log(77777, 'paymentGPS', route);
 
   const {
@@ -195,15 +198,15 @@ const PaymentGPS = ({navigation, route}) => {
         edit={false}
         planName={filteredPlanData?.plan_name}
         planValidity={filteredPlanData?.validity}
-        footertitle={`YAY! You saved ₹ ${
+        footertitle={`${t(Constants.YAY_SAVED)} ₹ ${
           filteredPlanData?.discount * gpsCount
-        } on this purchase`}
+        } ${t(Constants.ON_PURCHASE)}`}
       />
       <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
         <View style={styles.scrollContainer}>
           <View style={styles.paymentContainer}>
             <View style={styles.paymentDetailView}>
-              <Text style={styles.paymentDetailText}>Purchase summary</Text>
+              <Text style={styles.paymentDetailText}>{t(Constants.PURCHASE_SUM)}</Text>
               {/* <TouchableOpacity
                 style={styles.editButton}
                 // onPress={() => navigation.navigate('purchasingStatus')}
@@ -219,19 +222,19 @@ const PaymentGPS = ({navigation, route}) => {
               </TouchableOpacity> */}
             </View>
             <ReusableSummaryItem
-              title={'Full name'}
+              title={t(Constants.FULL_NAME)}
               value={gpsOrderDetailsData?.name}
             />
             <ReusableSummaryItem
-              title={'Alternate Phone'}
+              title={t(Constants.ALT_PHONE_NUMBER)}
               value={gpsOrderDetailsData?.mobile}
             />
             <ReusableSummaryItem
-              title={'Full address'}
+              title={t(Constants.FULL_ADDR)}
               value={fullAddressArray}
             />
             <ReusableSummaryItem
-              title={'RC number #1'}
+              title={`${t(Constants.RC_NUMBER)} #1`}
               value={gpsOrderDetailsData?.rc_numbers}
             />
           </View>
@@ -239,11 +242,11 @@ const PaymentGPS = ({navigation, route}) => {
         <View style={styles.scrollContainer}>
           <View style={styles.paymentContainer}>
             <View style={styles.paymentDetailView}>
-              <Text style={styles.paymentDetailText}>Payment Details</Text>
+              <Text style={styles.paymentDetailText}>{t(Constants.PAYMENT_DETAILS)}</Text>
             </View>
             <View style={styles.totalAmountContainer}>
               <View style={styles.totalAmountTextContainer}>
-                <Text style={styles.boldText}>Total Amount </Text>
+                <Text style={styles.boldText}>{t(Constants.TOTAL_AMOUNT)} </Text>
                 <Text style={styles.paymentGpsTaxText}>(Inc. of taxes)</Text>
               </View>
               <Text style={styles.boldText}>₹ {markedPrice}</Text>
@@ -293,9 +296,7 @@ const PaymentGPS = ({navigation, route}) => {
               </View>
             </View>
             <View style={styles.discountView}>
-              <Text style={styles.paymentGpsDiscountText}>
-                Loading Walla discount
-              </Text>
+              <Text style={styles.paymentGpsDiscountText}>Loading Walla Discount</Text>
               <Text style={styles.paymentGpsDiscountText}>
                 ₹ {filteredPlanData?.discount * gpsCount}
               </Text>
@@ -305,7 +306,7 @@ const PaymentGPS = ({navigation, route}) => {
       </ScrollView>
       <View style={styles.footerContainer}>
         <View style={styles.footerTextContainer}>
-          <Text style={styles.amountText}>Amount to be paid</Text>
+          <Text style={styles.amountText}>{t(Constants.AMOUNT_PAID)}</Text>
           <View style={styles.paymentGpsPriceContainer}>
             <Text style={styles.markedPriceText}>
               ₹ {markedPrice * gpsCount}
@@ -316,7 +317,7 @@ const PaymentGPS = ({navigation, route}) => {
           </View>
         </View>
         <Button
-          title={'Pay Now'}
+          title={t(Constants.PAY_NOW)}
           textStyle={styles.paymentGpsBtnText}
           style={styles.paymentGpsBtnStyle}
           loading={orderLoading}

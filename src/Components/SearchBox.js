@@ -9,9 +9,11 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
+import * as Constants from '../Constants/Constant'
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
 import {GradientColor1, titleColor} from '../Color/color';
+import {useTranslation} from 'react-i18next';
 import RefreshIcon from '../../assets/SVG/svg/RefreshIcon';
 
 const SearchBox = ({
@@ -26,6 +28,7 @@ const SearchBox = ({
   const [filterOption, setFilterOption] = useState('All');
   const animation = useRef(new Animated.Value(0)).current;
   const inputRef = useRef(null);
+  const {t} = useTranslation();
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -87,19 +90,19 @@ const SearchBox = ({
         <View style={styles.defaultContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.buttonsContainer}>
-              <FilterButton label="All" value="All" count={deviceCounts.all} />
+              <FilterButton label={t(Constants.ALL)} value="All" count={deviceCounts.all} />
               <FilterButton
-                label="Active"
+                label={t(Constants.ACTIVE)}
                 value="Active"
                 count={deviceCounts.active}
               />
               <FilterButton
-                label="Inactive"
+                label={t(Constants.INACTIVE)}
                 value="Inactive"
                 count={deviceCounts.inactive}
               />
               <FilterButton
-                label="Running"
+                label={t(Constants.RUNNING)}
                 value="Running"
                 count={deviceCounts.running}
               />

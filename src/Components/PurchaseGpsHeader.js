@@ -3,6 +3,8 @@ import React from 'react';
 import {backgroundColorNew, titleColor} from '../Color/color';
 import EditIcon from '../../assets/SVG/svg/EditIcon';
 import PercentageIcon from '../../assets/SVG/svg/PercentageIcon';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../Constants/Constant';
 
 const PurchaseGpsHeader = ({
   icon,
@@ -12,6 +14,8 @@ const PurchaseGpsHeader = ({
   planName,
   planValidity,
 }) => {
+  const {t} = useTranslation();
+
   return (
     <View style={styles.container}>
       <View style={styles.mainBox}>
@@ -21,14 +25,14 @@ const PurchaseGpsHeader = ({
             {edit && (
               <TouchableOpacity style={styles.editButton} onPress={onPress}>
                 <EditIcon size={13} color={backgroundColorNew} />
-                <Text style={styles.editButtonText}>Edit</Text>
+                <Text style={styles.editButtonText}>{t(Constants.EDIT)}</Text>
               </TouchableOpacity>
             )}
           </View>
         </View>
         <View style={styles.mainBoxBottom}>
           <Text style={styles.mainBoxBottomText}>
-            This plan will be valid for {planValidity} days
+            {t(Constants.PLAN_VALID_DATE)} {planValidity} {t(Constants.DAYS)}
           </Text>
         </View>
       </View>

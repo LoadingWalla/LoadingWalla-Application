@@ -249,7 +249,7 @@ const Wallet = ({navigation}) => {
       {transcationData?.length === 0 ? (
         <NotFound
           imageName="noBookings"
-          title={'No Transcation Found'}
+          title={t(Constants.NO_TRANSCATION_FOUND)}
           height={150}
           width={300}
         />
@@ -287,7 +287,7 @@ const Wallet = ({navigation}) => {
     <View style={styles.rechargeRouteView}>
       <NotFound
         imageName="noBookings"
-        title={'No Transcation Found'}
+        title={t(Constants.NO_TRANSCATION_FOUND)}
         height={150}
         width={300}
       />

@@ -3,9 +3,12 @@ import React from 'react';
 import HeadPhoneIcon from '../../assets/SVG/svg/HeadPhoneIcon';
 import {backgroundColorNew} from '../Color/color';
 import ShareIcon from '../../assets/SVG/svg/ShareIcon';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../Constants/Constant';
 import Share from 'react-native-share';
 
 const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
+  const {t} = useTranslation();
   const handleShare = () => {
     const shareOptions = {
       title: 'Share Location',
@@ -32,7 +35,7 @@ const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
           style={styles.iconStyle}
           color={backgroundColorNew}
         />
-        <Text style={styles.btnText}>Help</Text>
+        <Text style={styles.btnText}>{t(Constants.HELP)}</Text>
       </TouchableOpacity>
     </View>
   );
