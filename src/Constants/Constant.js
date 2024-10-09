@@ -277,3 +277,6 @@ export const GET_NOW = 'Get Now';
 export const TOTAL_AMOUNT = 'Total Amount';
 export const AMOUNT_PAID = 'Amount to be paid'
 export const PAY_NOW = 'Pay Now'
+export const PAYMENT_FAILED = 'Payment Failed'
+export const PAYMENT_SUCESS = 'YAY! Payment successful'
+export const DONE = 'Done'

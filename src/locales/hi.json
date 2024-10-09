@@ -255,5 +255,8 @@
   "YAY! You saved": "याय! आपने बचत की",
   "on this purchase": "इस खरीद पर",
   "Amount to be paid": "भुगतान की राशि",
-  "Pay Now": "भुगतान करें"
+  "Pay Now": "भुगतान करें",
+  "Payment Failed": "भुगतान असफल हुआ",
+  "YAY! Payment successful": "याय! भुगतान सफल हुआ",
+  "Done": "हो गया"
 }

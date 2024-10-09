@@ -3,10 +3,13 @@ import {StyleSheet, Text, View} from 'react-native';
 import {pageBackground, textColor} from '../../Color/color';
 import LottieView from 'lottie-react-native';
 import Button from '../../Components/Button';
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
 import styles from './style'
 
 const PurchasingStatus = ({navigation, route}) => {
   const {statusCode} = route.params;
+  const {t} = useTranslation();
   // const statusCode = 300;
   console.log('puchasingstatus', route);
 
@@ -17,8 +20,8 @@ const PurchasingStatus = ({navigation, route}) => {
         <View style={styles.header}>
           <Text style={styles.purchaseStatusHeaderText}>
             {statusCode === 200
-              ? '🎉YAY! Payment successful🎉'
-              : 'Payment Failed!'}
+              ? `🎉${t(Constants.PAYMENT_SUCESS)}🎉`
+              : t(Constants.PAYMENT_FAILED)}
           </Text>
           <LottieView
             source={
@@ -33,7 +36,7 @@ const PurchasingStatus = ({navigation, route}) => {
           />
         </View>
         <Button
-          title={'Done'}
+          title={t(Constants.DONE)}
           onPress={() => navigation.navigate(route.params.navigation)}
           textStyle={styles.btnText}
           style={styles. purchaseStatusBtnStyle}
