@@ -12,7 +12,7 @@ import {
 } from '../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const DeliveryDetails = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -74,7 +74,10 @@ const DeliveryDetails = ({navigation, route}) => {
       Object.values(address).some(field => !field) ||
       rcNumbers.includes('')
     ) {
-      Toast.show(t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING), Toast.LONG);
+      Toast.show(
+        t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING),
+        Toast.LONG,
+      );
       return;
     }
     dispatch(
@@ -124,7 +127,9 @@ const DeliveryDetails = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <PurchaseGpsHeader
-        footertitle={`${t(Constants.TOTAL_AMOUNT_PAID)}: ₹ ${gpsCount * pricePerDevice}`}
+        footertitle={`${t(Constants.TOTAL_AMOUNT_PAID)}: ₹ ${
+          gpsCount * pricePerDevice
+        }`}
         icon={false}
         edit={true}
         planName={filteredPlanData?.plan_name}
@@ -143,7 +148,9 @@ const DeliveryDetails = ({navigation, route}) => {
           />
         </View>
         <View>
-          <Text style={styles.label}>{t(Constants.ENTER_ALT_PHONE_NUMBER)}*</Text>
+          <Text style={styles.label}>
+            {t(Constants.ENTER_ALT_PHONE_NUMBER)}*
+          </Text>
           <TextInputField
             value={alternativePhoneNumber}
             hint={t(Constants.ENTER_ALT_PHONE_NUMBER)}
