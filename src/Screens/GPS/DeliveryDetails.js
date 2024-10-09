@@ -33,9 +33,8 @@ const DeliveryDetails = ({navigation, route}) => {
   });
   const dispatch = useDispatch();
 
-  const {gpsOrderStatus, gpsPlansData, gpsOrderData} = useSelector(
-    state => state.data,
-  );
+  const {gpsOrderStatus, gpsPlansData, gpsOrderData, gpsOrderErrorStatus} =
+    useSelector(state => state.data);
   const filteredPlanData = gpsPlansData?.find(plan => plan.id === plan_id);
   // console.log(55555, filteredPlanData);
 
@@ -107,7 +106,7 @@ const DeliveryDetails = ({navigation, route}) => {
           totalAmount: gpsCount * pricePerDevice,
         });
         dispatch(placeGpsOrderFailure());
-      } else {
+      } else if (gpsOrderErrorStatus !== null) {
         AlertBox('Internal Server Error.');
       }
     }

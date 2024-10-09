@@ -1517,7 +1517,8 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PLACE_GPS_ORDER_FAILURE:
       return updateState(state, {
         gpsOrderLoading: false,
-        gpsOrderStatus: payload.status,
+        gpsOrderStatus: null,
+        gpsOrderErrorStatus: payload?.status,
       });
 
     // gps order details
