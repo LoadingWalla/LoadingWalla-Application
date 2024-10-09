@@ -1,7 +1,7 @@
 import React from 'react';
-import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {FlatList, Text, View, TouchableOpacity} from 'react-native';
 import LocationIcon from '../../../../assets/SVG/svg/LocationIcon';
-import {PrivacyPolicy, textColor, titleColor} from '../../../Color/color';
+import {PrivacyPolicy} from '../../../Color/color';
 import EditIcon from '../../../../assets/SVG/svg/EditIcon';
 import DeleteIcon from '../../../../assets/SVG/svg/DeleteIcon';
 import Button from '../../../Components/Button';

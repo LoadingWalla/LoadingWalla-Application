@@ -102,7 +102,7 @@ const Profile = ({navigation, route}) => {
           </TouchableOpacity>
           <View style={style.imageContainer}>
             <Image
-              style={profileImg(hei, wid)}
+              style={style.profileImg(hei, wid)}
               source={
                 Userdata?.profile_img
                   ? {uri: Userdata?.profile_img}
@@ -203,7 +203,7 @@ const Profile = ({navigation, route}) => {
                   style.profileImgStyle,
                   {
                     marginRight: Userdata?.user_type === 3 ? 10 : 0,
-                  }
+                  },
                 ]}
                 source={
                   Userdata?.profile_img
@@ -342,7 +342,10 @@ const Profile = ({navigation, route}) => {
                 )}
                 <MenuItem
                   title={t(Constants.SAVED_ADDRESS)}
-                  onPress={() => navigation.navigate('Address')}
+                  onPress={() =>
+                    // navigation.navigate('Address')
+                    navigation.navigate('Inconvenience')
+                  }
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>

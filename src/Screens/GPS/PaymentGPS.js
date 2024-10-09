@@ -308,8 +308,12 @@ const PaymentGPS = ({navigation, route}) => {
         <View style={styles.footerTextContainer}>
           <Text style={styles.amountText}>{t(Constants.AMOUNT_PAID)}</Text>
           <View style={styles.paymentGpsPriceContainer}>
-            <Text style={styles.markedPriceText}>₹ {markedPrice}</Text>
-            <Text style={styles.sellingPriceText}>₹ {sellingPrice}</Text>
+            <Text style={styles.markedPriceText}>
+              ₹ {markedPrice * gpsCount}
+            </Text>
+            <Text style={styles.sellingPriceText}>
+              ₹ {sellingPrice * gpsCount}
+            </Text>
           </View>
         </View>
         <Button
