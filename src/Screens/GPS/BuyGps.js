@@ -19,7 +19,7 @@ import {
 } from '../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const Plan = ({text}) => {
   return (
@@ -54,7 +54,8 @@ const Rates = ({item, navigation}) => {
           <View style={styles.discountContainer}>
             <PercentageIcon size={15} color={'#0F8B00'} />
             <Text style={styles.discountText}>
-              {percentageDiscount}{t(Constants.PERCENTAGE_DISCOUNT)}
+              {percentageDiscount}
+              {t(Constants.PERCENTAGE_DISCOUNT)}
             </Text>
           </View>
         </View>

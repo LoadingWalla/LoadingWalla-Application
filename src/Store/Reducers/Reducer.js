@@ -1518,7 +1518,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsOrderLoading: false,
         gpsOrderStatus: null,
-        // gpsOrderData: null,
+        gpsOrderErrorStatus: payload?.status,
       });
 
     // gps order details
