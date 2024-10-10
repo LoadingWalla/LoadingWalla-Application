@@ -101,7 +101,7 @@ export default function MyLoadsBottomTabs() {
           }}
         />
         <Tab.Screen
-          name={'GPS'}
+          name={t(Constants.GPS)}
           component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused}) =>
@@ -145,7 +145,7 @@ export default function MyLoadsBottomTabs() {
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -159,6 +159,7 @@ export default function MyLoadsBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU)
           }}
           listeners={{
             tabPress: () => handleTabPress(4),

@@ -91,6 +91,11 @@ const Profile = ({navigation, route}) => {
     }, [dispatch, profileSetupData]),
   );
 
+  const profileImg = (hei, wid) => ({
+    height: hei / 2.5,
+    width: wid,
+  });
+  
   const bigImage = () => {
     return (
       <Modal animationType="slide" transparent={true} visible={isBigImage}>

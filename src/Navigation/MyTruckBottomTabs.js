@@ -148,7 +148,7 @@ export default function MyTruckBottomTabs() {
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -162,6 +162,7 @@ export default function MyTruckBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU)
           }}
           listeners={{
             tabPress: () => handleTabPress(4),

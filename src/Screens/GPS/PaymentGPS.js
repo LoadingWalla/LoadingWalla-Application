@@ -15,6 +15,7 @@ import {
   createOrderFailure,
   fetchGpsOrderDetailRequest,
   initCreateOrder,
+  initProfile,
   initVerifyPaymentRequest,
 } from '../../Store/Actions/Actions';
 import AnimatedText from '../../Components/AnimatedText';
@@ -117,11 +118,11 @@ const PaymentGPS = ({navigation, route}) => {
     dispatch(fetchGpsOrderDetailRequest(gpsOrderId));
   }, [dispatch, gpsOrderId]);
 
-  // useEffect(() => {
-  //   if (Userdata === null) {
-  //     navigation.navigate('Menu');
-  //   }
-  // }, [Userdata, navigation]);
+  useEffect(() => {
+    if (Userdata === null) {
+      dispatch(initProfile());
+    }
+  }, [Userdata]);
 
   useEffect(() => {
     if (verifyPaymentData && verifyPaymentStatus) {
