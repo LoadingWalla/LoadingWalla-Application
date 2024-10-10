@@ -259,5 +259,17 @@
   "Payment Failed": "भुगतान असफल हुआ",
   "YAY! Payment successful": "याय! भुगतान सफल हुआ",
   "Done": "हो गया",
-  "No Load Found": "कोई लोड नहीं मिला"
+  "No Load Found": "कोई लोड नहीं मिला",
+  "No Bookings Found": "कोई बुकिंग नहीं मिली",
+  "No Previous Bookings":"कोई पिछली बुकिंग नहीं है",
+  "Logistics Details": "लॉजिस्टिक्स विवरण",
+  "Truck Number": "ट्रक नंबर",
+  "Load Name": "लोड का नाम",
+  "Distance": "दूरी",
+  "Rate Now": "रेट करें",
+  "Complete Booking": "बुकिंग पूर्ण करें",
+  "Gallery": "गैलरी",
+  "Camera": "कैमरा",
+  "No Request Found": "कोई अनुरोध नहीं मिला",
+  "GPS Owner": "GPS मालिक"
 }

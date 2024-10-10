@@ -16,6 +16,7 @@ import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
 import {GradientColor1, titleColor, white} from '../../Color/color';
 import Button from '../../Components/Button';
+import {useTranslation} from 'react-i18next';
 import {
   acceptRejectFailure,
   fetchMapDataStart,
@@ -41,6 +42,7 @@ function offsetCoordinates(coord, isLeft) {
 }
 
 const ViewDetail = ({navigation, route}) => {
+  const {t} = useTranslation();
   // console.log('view detail', route);
   const {
     from,
@@ -235,7 +237,7 @@ const ViewDetail = ({navigation, route}) => {
             <View style={styles.viewDetailScrollView1}>
               <View style={styles.viewDetailScrollView2}>
                 <Text style={styles.fromToText}>
-                  {Constants.FROM}
+                  {t(Constants.FROM)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {from}</Text>
@@ -243,7 +245,7 @@ const ViewDetail = ({navigation, route}) => {
               </View>
               <View style={styles.viewDetailScrollView3}>
                 <Text style={styles.fromToText}>
-                  {Constants.TO}
+                  {t(Constants.TO)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {to}</Text>
@@ -254,12 +256,12 @@ const ViewDetail = ({navigation, route}) => {
             <View style={styles.marginTopStyle}>
               <Text
                 style={styles.logDetailsTxt}>
-                Logistics Details
+                {t(Constants.LOG_DETAILS)}
               </Text>
               <View
                 style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  Truck Number
+                  {t(Constants.TRUCK_NUM)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {vehicle_number}</Text>
@@ -271,7 +273,7 @@ const ViewDetail = ({navigation, route}) => {
               <View
                 style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  Load Name
+                {t(Constants.LOAD_NAME)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {material_name}</Text>
@@ -290,7 +292,7 @@ const ViewDetail = ({navigation, route}) => {
               <View
                 style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  {Constants.QUANTITY}
+                  {t(Constants.QUANTITY)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {qty} Ton</Text>
@@ -299,7 +301,7 @@ const ViewDetail = ({navigation, route}) => {
               <View
                 style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  {Constants.PRICE}
+                  {t(Constants.PRICE)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>
@@ -311,7 +313,7 @@ const ViewDetail = ({navigation, route}) => {
               </View>
               <View
                 style={styles.truckNumViewStyle}>
-                <Text style={styles.truckNumTxtStyle}>Distance</Text>
+                <Text style={styles.truckNumTxtStyle}>{t(Constants.DISTANCE)}</Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {distance}</Text>
                 </View>
@@ -322,7 +324,7 @@ const ViewDetail = ({navigation, route}) => {
             <Button
               loading={accept_rejectLoading}
               onPress={handlePressAction}
-              title={status === 'complete' ? 'Rate Now' : 'Complete Booking'}
+              title={status === 'complete' ? t(Constants.RATE_NOW) : t(Constants.COMPLETE_BOOKING)}
               textStyle={styles.findButtonText}
               style={styles.findButtonContainer}
             />

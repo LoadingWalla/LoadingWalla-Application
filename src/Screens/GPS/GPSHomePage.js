@@ -71,12 +71,10 @@ const GPSHomePage = ({navigation}) => {
             resizeMode="contain"
             style={styles.splashImage(250, 250)}
           />
-          <Text
-            style={styles.noGpsAvailTxt}>
+          <Text style={styles.noGpsAvailTxt}>
             {t(Constants.NO_GPS_AVAILABLE)}
           </Text>
-          <Text
-            style={styles.getGpsPlanTxt}>
+          <Text style={styles.getGpsPlanTxt}>
             {t(Constants.GET_GPS_FOR_YOUR_VEHICLE)}
           </Text>
         </View>

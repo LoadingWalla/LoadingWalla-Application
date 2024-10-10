@@ -203,7 +203,7 @@ const EditProfile = ({
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={style.cammeraView}>
                   <Cammera />
-                  <Text style={style.CameraText}>Camera</Text>
+                  <Text style={style.CameraText}>{t(Constants.CAMERA)}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -211,7 +211,7 @@ const EditProfile = ({
                 onPress={() => choosePhoto()}>
                 <View style={style.galleryView}>
                   <Gallery />
-                  <Text style={style.CameraText}>Gallery</Text>
+                  <Text style={style.CameraText}>{t(Constants.GALLERY)}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -223,7 +223,7 @@ const EditProfile = ({
                     style={style.editRemoveImg}
                     source={require('../../../../assets/remove.png')}
                   />
-                  <Text style={style.CameraText}>Remove</Text>
+                  <Text style={style.CameraText}>{t(Constants.REMOVE)}</Text>
                 </View>
               </TouchableOpacity>
             </View>
