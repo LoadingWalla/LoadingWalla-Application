@@ -86,19 +86,20 @@ export default function MyGpsBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={t(Constants.GPS)}
+          name="GPS"
           component={GPSHomePage}
           options={{
             tabBarIcon: ({ focused }) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
+            title: t(Constants.GPS),
           }}
           listeners={{
             tabPress: () => handleTabPress(0),
           }}
         />
         <Tab.Screen
-          name={t(Constants.MY_GPS)}
+          name="MyGPS"
           component={MyGpsScreen}
           options={{
             tabBarIcon: ({ focused }) =>
@@ -108,6 +109,7 @@ export default function MyGpsBottomTabs() {
                 <GpsRoadIcon size={22} color={'#000000'} />
               ),
             headerShown: false,
+            title: t(Constants.MY_GPS),
           }}
           listeners={{
             tabPress: () => handleTabPress(1),
@@ -128,7 +130,7 @@ export default function MyGpsBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
-            title: t(Constants.MENU)
+            title: t(Constants.MENU),
           }}
           listeners={{
             tabPress: () => handleTabPress(2),
