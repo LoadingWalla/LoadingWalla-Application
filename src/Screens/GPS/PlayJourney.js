@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
@@ -29,7 +29,7 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import styles from './style'
+import styles from './style';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to, name, item} = route.params;
