@@ -29,6 +29,8 @@ import {
   addParkingRequest,
   removeParkingRequest,
 } from '../Store/Actions/Actions';
+import * as Constants from '../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -90,13 +92,14 @@ const getIconColor = (type, item, positions) => {
   }
 };
 
-const getIconTitle = (type, item, positions) => {
+const getIconTitle = (type, item, positions, t) => {
+  // const {t} = useTranslation();
   const position = positions[0];
   switch (type) {
     case 'Battery':
       return position?.attributes?.batteryLevel
         ? `${position.attributes.batteryLevel}%`
-        : 'Battery';
+        : t(Constants.BATTERY);
     case 'Network':
       if (position?.network?.cellTowers) {
         const signalStrength = calculateSignalStrength(
@@ -104,56 +107,56 @@ const getIconTitle = (type, item, positions) => {
         );
         const networkStrengthColor =
           signalStrength > 70
-            ? 'Network'
+            ? t(Constants.NETWORK)
             : signalStrength > 30
-            ? 'Weak'
-            : 'Poor';
+            ? t(Constants.WEAK)
+            : t(Constants.POOR);
         return networkStrengthColor;
       } else {
-        return 'No Signal';
+        return t(Constants.NO_SIGNAL);
       }
     case 'Ignition':
       return position?.attributes?.ignition
-        ? 'ON'
+        ? t(Constants.ON)
         : item?.position[0]?.ignition
-        ? 'ON'
-        : 'OFF';
+        ? t(Constants.ON)
+        : t(Constants.OFF);
     case 'Geozone':
-      return 'Geozone';
+      return t(Constants.GEOZONE);
     case 'Alarm':
       return position?.attributes?.alarm
         ? position?.attributes?.alarm
-        : 'Alarm';
+        : t(Constants.ALARM);
     default:
       return '';
   }
 };
 
-const ICONS = (item, positions) =>
+const ICONS = (item, positions, t) =>
   useMemo(() => {
     return [
       {
-        title: getIconTitle('Battery', item, positions),
+        title: getIconTitle('Battery', item, positions, t),
         icon: BatteryIcon,
         color: getIconColor('Battery', item, positions),
       },
       {
-        title: getIconTitle('Network', item, positions),
+        title: getIconTitle('Network', item, positions, t),
         icon: NetworkIcon,
         color: getIconColor('Network', item, positions),
       },
       {
-        title: getIconTitle('Ignition', item, positions),
+        title: getIconTitle('Ignition', item, positions, t),
         icon: KeyIcon,
         color: getIconColor('Ignition', item, positions),
       },
       {
-        title: getIconTitle('Geozone', item, positions),
+        title: getIconTitle('Geozone', item, positions, t),
         icon: GeoFencingIcon,
         color: getIconColor('Geozone', item, positions),
       },
       {
-        title: getIconTitle('Alarm', item, positions),
+        title: getIconTitle('Alarm', item, positions, t),
         icon: AlertIcon,
         color: getIconColor('Alarm', item, positions),
       },
@@ -174,6 +177,7 @@ const BottomSwipeUpContainer = React.memo(
     const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
     const dispatch = useDispatch();
+    const {t} = useTranslation();
     // console.log(444, item);
 
     const panResponder = useMemo(
@@ -266,7 +270,7 @@ const BottomSwipeUpContainer = React.memo(
 
     const onTheftPress = () => {
       navigation.navigate('FuelPump', {
-        headerTitle: 'Nearby Police Station',
+        headerTitle: t(Constants.POLICE_STAT),
         theft: true,
         latitude: positions[0]?.latitude || item?.position[0]?.latitude,
         longitude: positions[0]?.longitude || item?.position[0]?.longitude,
@@ -283,7 +287,7 @@ const BottomSwipeUpContainer = React.memo(
 
     const onFuelPumpPress = () => {
       navigation.navigate('FuelPump', {
-        headerTitle: 'Fuel Pump',
+        headerTitle: t(Constants.FUEL_PUMP),
         theft: false,
         latitude: positions[0]?.latitude || item?.position[0]?.latitude,
         longitude: positions[0]?.longitude || item?.position[0]?.longitude,
@@ -296,7 +300,7 @@ const BottomSwipeUpContainer = React.memo(
         {...panResponder.panHandlers}>
         <View style={styles.swipeIndicator} />
         <View style={styles.iconRow}>
-          {ICONS(item, positions).map((iconItem, index) => (
+          {ICONS(item, positions,t).map((iconItem, index) => (
             <View key={index} style={styles.iconContainer}>
               <IconWithNameBelow
                 IconComponent={iconItem.icon}
@@ -309,7 +313,7 @@ const BottomSwipeUpContainer = React.memo(
         </View>
 
         <View style={styles.infoSection}>
-          {renderButtonSections({
+          {/* {renderButtonSections({
             onNavigatePress,
             onHistoryPress,
             onGeozonePress,
@@ -317,11 +321,53 @@ const BottomSwipeUpContainer = React.memo(
             onRelayPress,
             onFuelPumpPress,
             gpsRelayData,
-          })}
+          })} */}
+          <View style={styles.buttonRow}>
+            <ButtonComponent
+              icon={NavigationIcon}
+              label={t(Constants.NAVIGATE)}
+              onPress={onNavigatePress}
+            />
+            <ButtonComponent
+              icon={LocationHistory}
+              label={t(Constants.HISTORY)}
+              onPress={onHistoryPress}
+              size={20}
+            />
+            <ButtonComponent
+              icon={RelayIcon}
+              label={t(Constants.RELAY)}
+              dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+              dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+              onPress={onRelayPress}
+              size={20}
+              color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+              bgcolor={gpsRelayData?.relay}
+            />
+          </View>
+          <View style={styles.buttonRow}>
+            <ButtonComponent
+              icon={TheftIcon}
+              label={t(Constants.THEFT)}
+              onPress={onTheftPress}
+              size={20}
+            />
+            <ButtonComponent
+              icon={FuelPumpIcon}
+              label={t(Constants.FUEL_PUMP)}
+              onPress={onFuelPumpPress}
+              size={20}
+            />
+            <ButtonComponent
+              icon={GeoFencingIcon}
+              label={t(Constants.GEOZONE)}
+              onPress={onGeozonePress}
+            />
+          </View>
         </View>
 
         <View style={styles.parkingAlarm}>
-          <Text style={styles.parkingText}>Parking Alarm</Text>
+          <Text style={styles.parkingText}>{t(Constants.PARKING_ALARM)}</Text>
           <Switch
             isOn={!!switchOn}
             onColor={GradientColor2}
@@ -353,60 +399,60 @@ const BottomSwipeUpContainer = React.memo(
 
 export default BottomSwipeUpContainer;
 
-const renderButtonSections = ({
-  onNavigatePress,
-  onHistoryPress,
-  onGeozonePress,
-  onTheftPress,
-  onRelayPress,
-  onFuelPumpPress,
-  gpsRelayData,
-}) => (
-  <>
-    <View style={styles.buttonRow}>
-      <ButtonComponent
-        icon={NavigationIcon}
-        label="Navigate"
-        onPress={onNavigatePress}
-      />
-      <ButtonComponent
-        icon={LocationHistory}
-        label="History"
-        onPress={onHistoryPress}
-        size={20}
-      />
-      <ButtonComponent
-        icon={RelayIcon}
-        label="Relay"
-        dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-        dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-        onPress={onRelayPress}
-        size={20}
-        color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-        bgcolor={gpsRelayData?.relay}
-      />
-    </View>
-    <View style={styles.buttonRow}>
-      <ButtonComponent
-        icon={TheftIcon}
-        label="Theft"
-        onPress={onTheftPress}
-        size={20}
-      />
-      <ButtonComponent
-        icon={FuelPumpIcon}
-        label="Fuel Pump"
-        onPress={onFuelPumpPress}
-        size={20}
-      />
-      <ButtonComponent
-        icon={GeoFencingIcon}
-        label="Geozone"
-        onPress={onGeozonePress}
-      />
-    </View>
-  </>
-);
+// const renderButtonSections = ({
+//   onNavigatePress,
+//   onHistoryPress,
+//   onGeozonePress,
+//   onTheftPress,
+//   onRelayPress,
+//   onFuelPumpPress,
+//   gpsRelayData,
+// }) => (
+//   <>
+//     <View style={styles.buttonRow}>
+//       <ButtonComponent
+//         icon={NavigationIcon}
+//         label={Constants.NAVIGATE}
+//         onPress={onNavigatePress}
+//       />
+//       <ButtonComponent
+//         icon={LocationHistory}
+//         label="History here"
+//         onPress={onHistoryPress}
+//         size={20}
+//       />
+//       <ButtonComponent
+//         icon={RelayIcon}
+//         label="Relay here"
+//         dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+//         dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+//         onPress={onRelayPress}
+//         size={20}
+//         color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+//         bgcolor={gpsRelayData?.relay}
+//       />
+//     </View>
+//     <View style={styles.buttonRow}>
+//       <ButtonComponent
+//         icon={TheftIcon}
+//         label="Theft"
+//         onPress={onTheftPress}
+//         size={20}
+//       />
+//       <ButtonComponent
+//         icon={FuelPumpIcon}
+//         label="Fuel Pump"
+//         onPress={onFuelPumpPress}
+//         size={20}
+//       />
+//       <ButtonComponent
+//         icon={GeoFencingIcon}
+//         label="Geozone"
+//         onPress={onGeozonePress}
+//       />
+//     </View>
+//   </>
+// );
 
 const ButtonComponent = ({
   icon: Icon,

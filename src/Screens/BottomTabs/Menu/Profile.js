@@ -91,6 +91,11 @@ const Profile = ({navigation, route}) => {
     }, [dispatch, profileSetupData]),
   );
 
+  const profileImg = (hei, wid) => ({
+    height: hei / 2.5,
+    width: wid,
+  });
+  
   const bigImage = () => {
     return (
       <Modal animationType="slide" transparent={true} visible={isBigImage}>
@@ -219,10 +224,10 @@ const Profile = ({navigation, route}) => {
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <Text style={style.subTitle}>
                 {Userdata?.user_type === 1
-                  ? 'Load Owner'
+                  ? t(Constants.LOAD_OWNER)
                   : Userdata?.user_type === 3
-                  ? 'GPS Owner'
-                  : 'Truck Owner'}
+                  ? t(Constants.GPS_OWNER)
+                  : t(Constants.TRUCK_OWNER)}
               </Text>
               {Userdata?.user_type !== 3 && (
                 <View style={style.profileRateVerifyOutView}>

@@ -16,6 +16,8 @@ import PlayIcon from '../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../Color/color';
 import AlertsIcon from '../../assets/SVG/svg/AlertsIcon';
 import StopsIcon from '../../assets/SVG/svg/StopsIcon';
+import * as Constants from '../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -37,6 +39,7 @@ const MapComponent = React.memo(
     const mapRef = useRef();
     const markerRef = useRef();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const fullAddressData = useSelector(state => state.data.fullAddressData);
 
@@ -232,7 +235,7 @@ const MapComponent = React.memo(
               <Text style={styles.boldText}>{`${(item?.distance / 1000).toFixed(
                 2,
               )} KM`}</Text>
-              <Text style={styles.labelText}>Today distance</Text>
+              <Text style={styles.labelText}>{t(Constants.TODAY_DIS)}</Text>
             </View>
             <View style={styles.verticalLine} />
             <View style={styles.infoColumn}>
@@ -241,7 +244,7 @@ const MapComponent = React.memo(
                   (positions[0]?.speed || item?.position[0]?.speed) * 1.852,
                 )} KMPH`}
               </Text>
-              <Text style={styles.labelText}>Vehicle Speed</Text>
+              <Text style={styles.labelText}>{t(Constants.VEHICLE_SPEED)}</Text>
             </View>
           </View>
 
@@ -261,7 +264,7 @@ const MapComponent = React.memo(
               color={backgroundColorNew}
               style={styles.iconStyle}
             />
-            <Text style={styles.btnText}>Play Journey</Text>
+            <Text style={styles.btnText}>{t(Constants.PLAY)}</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1000,7 +1000,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Alerts',
+          title: t(Constants.ALERTS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1027,7 +1027,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'History',
+          title: t(Constants.HISTORY),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1386,7 +1386,7 @@ const Navigation = ({language}) => {
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: route?.params?.name || 'All Geozones',
+          title: route?.params?.name || t(Constants.ALL_GEO),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

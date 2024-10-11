@@ -137,7 +137,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={'No Request Found'} />
+                <NotFound imageName="noRequest" title={t(Constants.NO_REQ_FOUND)} />
               </ScrollView>
             )}
           </>
@@ -194,7 +194,7 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={'No Request Found'} />
+                <NotFound imageName="noRequest" title={t(Constants.NO_REQ_FOUND)} />
               </ScrollView>
             )}
           </>

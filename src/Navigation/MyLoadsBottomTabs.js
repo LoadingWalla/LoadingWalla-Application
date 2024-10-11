@@ -89,19 +89,20 @@ export default function MyLoadsBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={t(Constants.NAV_MY_LOAD)}
+          name="My Load"
           component={MyLorry}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <LoadActiveIcon size={20} /> : <LoadIcon size={20} />,
             headerShown: false,
+            title: t(Constants.NAV_MY_LOAD),
           }}
           listeners={{
             tabPress: () => handleTabPress(0),
           }}
         />
         <Tab.Screen
-          name={'GPS'}
+          name="GPS"
           component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused}) =>
@@ -111,25 +112,27 @@ export default function MyLoadsBottomTabs() {
                 <GpsRoadIcon size={22} color={'#000000'} />
               ),
             headerShown: false,
+            title: t(Constants.GPS),
           }}
           listeners={{
             tabPress: () => handleTabPress(1),
           }}
         />
         <Tab.Screen
-          name={t(Constants.NAV_DASHBOARD)}
+          name="Dashboard"
           component={DashboardLoad}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
+            title: t(Constants.NAV_DASHBOARD)
           }}
           listeners={{
             tabPress: () => handleTabPress(2),
           }}
         />
         <Tab.Screen
-          name={t(Constants.BOOKINGS)}
+          name="Bookings"
           component={Booking}
           options={{
             tabBarIcon: ({focused}) =>
@@ -139,13 +142,14 @@ export default function MyLoadsBottomTabs() {
                 <BookingIcon size={20} />
               ),
             headerShown: false,
+            title: t(Constants.BOOKINGS),
           }}
           listeners={{
             tabPress: () => handleTabPress(3),
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -159,6 +163,7 @@ export default function MyLoadsBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU),
           }}
           listeners={{
             tabPress: () => handleTabPress(4),

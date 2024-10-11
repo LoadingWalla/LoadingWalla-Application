@@ -18,6 +18,7 @@ import {
   fetchPositionsRequest,
   fetchSummaryReportRequest,
 } from '../../Store/Actions/Actions';
+
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
@@ -29,12 +30,14 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import styles from './style';
+import styles from './style'
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 export default function PlayJourney({navigation, route}) {
   const {deviceId, from, to, name, item} = route.params;
   console.log(1111, 'PlayJourney Parmas----->', route);
-
+  const {t} = useTranslation();
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -503,7 +506,7 @@ export default function PlayJourney({navigation, route}) {
                     onPress={() => navigation.navigate('stops')}
                     style={styles.stopsBtnStyle}>
                     <AlertsIcon size={20} />
-                    <Text style={styles.alertButtonText}>Stops</Text>
+                    <Text style={styles.alertButtonText}>{t(Constants.STOPS)}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.ctrlBtn}
@@ -600,7 +603,7 @@ export default function PlayJourney({navigation, route}) {
             <View style={styles.totalBox}>
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#3BA700'}]}>
-                  Total Distance
+                  {t(Constants.TOT_DIS)}
                 </Text>
                 <Text style={styles.stopCount}>
                   {Math.abs(totalRun).toFixed(2)} KM
@@ -609,7 +612,7 @@ export default function PlayJourney({navigation, route}) {
               <View style={styles.verticalLine} />
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#F50000'}]}>
-                  Total Stops: {totalStops}
+                  {t(Constants.TOT_STOPS)}: {totalStops}
                 </Text>
                 <Text style={styles.stopCount}>
                   {formatDuration(totalDuration)}
@@ -618,7 +621,7 @@ export default function PlayJourney({navigation, route}) {
               <View style={styles.verticalLine} />
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#E0BD00'}]}>
-                  Engine Hours
+                  {t(Constants.ENG_HRS)}
                 </Text>
                 <Text style={styles.stopCount}>
                   {convertMillisToTime(gpsSummaryData[0]?.engineHours)}

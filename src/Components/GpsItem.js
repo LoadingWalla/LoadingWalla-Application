@@ -126,7 +126,7 @@ const GpsItem = ({navigation, item}) => {
                 {renderStatus}
                 <View style={styles.verticalLine} />
                 <View style={styles.row}>
-                  <Text style={styles.distanceText}>Ignition</Text>
+                  <Text style={styles.distanceText}>{t(Constants.IGNITION)}</Text>
                   <Text
                     style={[
                       styles.ignitionText(ignition || motion),

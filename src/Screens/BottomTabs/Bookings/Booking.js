@@ -136,7 +136,7 @@ const Booking = ({navigation}) => {
               imageName="noBookings"
               height={150}
               width={300}
-              title={'No Bookings Found'}
+              title={t(Constants.NO_BOOKINGS_FOUND)}
             />
 
             <TouchableOpacity

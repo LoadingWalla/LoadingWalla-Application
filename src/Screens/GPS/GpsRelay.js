@@ -5,9 +5,13 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import InnerButton from '../../Components/InnerButton';
 import TruckRelayIcon from '../../../assets/SVG/svg/TruckRelayIcon';
 import {setGpsRelayRequest} from '../../Store/Actions/Actions';
-import styles from './style'
+import styles from './style';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
+
 
 const GpsRelay = ({navigation, route}) => {
+  const {t} = useTranslation();
   const {deviceId, item} = route.params;
   // console.log('gpsrelay-----------', route);
 
@@ -41,24 +45,31 @@ const GpsRelay = ({navigation, route}) => {
           </View>
         </View>
         <View style={styles.relayTextContainer}>
-          <Text style={styles.relayText}>Like to turn</Text>
+          <Text style={styles.relayText}>{t(Constants.TO_TURN)}</Text>
           <Text style={styles.relayTextBold(gpsRelayData.relay)}>
-            {gpsRelayData.relay ? 'OFF RELAY?' : 'ON RELAY?'}
+            {gpsRelayData.relay
+              ? t(Constants.OFF_RELAY)
+              : t(Constants.ON_RELAY)}
           </Text>
         </View>
         <View style={styles.descriptionBox}>
           <Text style={styles.descriptionText}>
-            By clicking{'  '}
+            {t(Constants.BY_CLICK)}{'  '}
             <Text style={styles.descriptionTextBold(gpsRelayData.relay)}>
-              {gpsRelayData.relay ? 'TURN OFF RELAY' : 'TURN ON RELAY'}
+              {gpsRelayData.relay
+                ? t(Constants.TURN_OFF_RELAY)
+                : t(Constants.TURN_ON_RELAY)}
             </Text>
-            , your vehicle will stop if the speed drops below 20 km/h.
+            {t(Constants.VEH_STOP)}
           </Text>
         </View>
 
         <InnerButton
           navigation={handleRelayToggle}
-          title={gpsRelayData.relay ? 'TURN OFF RELAY' : 'TURN ON RELAY'}
+          title={
+            gpsRelayData.relay
+              ? t(Constants.TURN_OFF_RELAY)
+              : t(Constants.TURN_ON_RELAY)}
           enabledStyle={styles.gpsRelayBtnStyle(gpsRelayData.relay)}
           textStyle={styles.gpsRelayBtnText}
         />

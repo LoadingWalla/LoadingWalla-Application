@@ -120,19 +120,20 @@ export default function MyTruckBottomTabs() {
           }}
         />
         <Tab.Screen
-          name={t(Constants.NAV_HOME)}
+          name="Market"
           component={Dashboard}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
+            title: t(Constants.NAV_HOME),
           }}
           listeners={{
             tabPress: () => handleTabPress(2),
           }}
         />
         <Tab.Screen
-          name={t(Constants.BOOKINGS)}
+          name="Bookings"
           component={Booking}
           options={{
             tabBarIcon: ({focused}) =>
@@ -142,13 +143,14 @@ export default function MyTruckBottomTabs() {
                 <BookingIcon size={20} />
               ),
             headerShown: false,
+            title: t(Constants.BOOKINGS),
           }}
           listeners={{
             tabPress: () => handleTabPress(3),
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -162,6 +164,7 @@ export default function MyTruckBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU),
           }}
           listeners={{
             tabPress: () => handleTabPress(4),

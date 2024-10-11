@@ -92,7 +92,7 @@ const FindLoads = ({navigation, route}) => {
       ) : (
         <NotFound
           imageName="noLoadFound"
-          title={'No Load Found'}
+          title={t(Constants.NO_LOAD_FOUND)}
           height={200}
           width={300}
         />

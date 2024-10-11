@@ -27,6 +27,8 @@ import {convertToCSV} from '../../Utils/CSVutils';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
 import styles from './style';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -35,6 +37,7 @@ const convertMillisToTime = millis => {
 };
 
 const TripItem = React.memo(({item, onShowAddress}) => {
+  const {t} = useTranslation();
   console.log(8888888888, item);
   return (
     <View style={styles.tripItemContainer}>
@@ -56,6 +59,7 @@ const TripItem = React.memo(({item, onShowAddress}) => {
           distance={item?.distance}
           averageSpeed={item?.averageSpeed}
           duration={item?.duration}
+          t={t}
         />
         <TripDetail
           address={item?.endAddress}
@@ -97,26 +101,27 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
 };
 
 const ShowFullAddress = ({lat, lng, itemId, onShowAddress}) => {
+  const {t} = useTranslation();
   return (
     <TouchableOpacity
       style={styles.showAddressContainer}
       onPress={() => onShowAddress(itemId, lat, lng)}>
-      <Text style={styles.showAddressText}>Show full address</Text>
+      <Text style={styles.showAddressText}>{t(Constants.SHOW_FULL_ADDRESS)}</Text>
       <RightArrow size={15} color={'#EF4D23'} />
     </TouchableOpacity>
   );
 };
 
-const TripStats = ({distance, averageSpeed, duration}) => (
+const TripStats = ({distance, averageSpeed, duration, t}) => (
   <View style={styles.tripStatsContainer}>
     <StatBox
       value={`${(distance / 1000).toFixed(2)} KM`}
-      label="Total Distance"
+      label={t(Constants.TOT_DIS)}
     />
     <VerticalLine />
     <StatBox
       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
-      label="Avg. Speed"
+      label={t(Constants.AVG_SPEED)}
     />
     {/* <VerticalLine />
     <StatBox
@@ -124,7 +129,7 @@ const TripStats = ({distance, averageSpeed, duration}) => (
       label="Max Speed"
     /> */}
     <VerticalLine />
-    <StatBox value={convertMillisToTime(duration)} label="Duration" />
+    <StatBox value={convertMillisToTime(duration)} label={t(Constants.DURATION)} />
   </View>
 );
 
@@ -147,6 +152,7 @@ const VerticalLine = () => <View style={styles.locHistoryVerticalLine} />;
 const LocationHistory = ({navigation, route}) => {
   const {deviceId, name, from, to} = route?.params;
   // console.log(777777, route);
+  const {t} = useTranslation();
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -303,21 +309,21 @@ const LocationHistory = ({navigation, route}) => {
     <View style={styles.container}>
       <View style={styles.locHistoryHeaderBox}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.locHistoryTimeText}>Trip summary</Text>
+          <Text style={styles.locHistoryTimeText}>{t(Constants.TRIP_SUM)}</Text>
           <Text style={styles.locHistoryTimeText}>
-            Vehicle number: <Text style={styles.vehicleNumberText}>{name}</Text>
+            {t(Constants.VEHICLE_NUM)}<Text style={styles.vehicleNumberText}>{name}</Text>
           </Text>
         </View>
         <View style={styles.summaryContainer}>
           <StopBox
-            label="Total distance"
+            label={t(Constants.TOT_DIS)}
             value={
               gpsSummaryData && gpsSummaryData.length > 0
                 ? `${(gpsSummaryData[0]?.distance / 1000).toFixed(2)} KM`
                 : '0.00 KM'
             }
           />
-          <StopBox label="Avg. Speed" value={`${averageSpeed} KM/H`} />
+          <StopBox label={t(Constants.AVG_SPEED)} value={`${averageSpeed} KM/H`} />
           <View style={styles.iconButtonsContainer}>
             <TouchableOpacity
               style={styles.downloadIconBox}

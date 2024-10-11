@@ -13,6 +13,8 @@ import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import moment from 'moment';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 import styles from './style'
 
 // Memoized NotificationItem component
@@ -42,31 +44,31 @@ const NotificationItem = React.memo(({call, item}) => {
 });
 
 // Memoized SettingsSection component
-const SettingsSection = React.memo(() => (
+const SettingsSection = React.memo(({t}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={styles.settingsContainer}>
     <View style={styles.settingsRow}>
       <GpsSettingItem
         detailInput={false}
-        title={'Ignition (ON /OFF)'}
+        title={t(Constants.IG_ON_OFF)}
         storageKey="ignition"
       />
       <GpsSettingItem
         detailInput={false}
-        title={'Geofence'}
+        title={t(Constants.GEOF)}
         storageKey="geofence"
       />
     </View>
     <View style={styles.settingsRow}>
       <GpsSettingItem
         detailInput={false}
-        title={'Overspeeding Alerts'}
+        title={t(Constants.OVERSPEED_ALERT)}
         storageKey="overspeeding"
       />
       <GpsSettingItem
         detailInput={false}
-        title={'Device moving'}
+        title={t(Constants.DEV_MOV)}
         storageKey="deviceMoving"
       />
     </View>
@@ -75,7 +77,7 @@ const SettingsSection = React.memo(() => (
 
 const GpsAlert = ({route}) => {
   const {eventData} = route.params;
-
+  const {t} = useTranslation();
   const {gpsNotificationLoading} = useSelector(state => state.data);
 
   // Memoized renderItem function for FlatList
@@ -89,9 +91,9 @@ const GpsAlert = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <SettingsSection />
+      <SettingsSection t={t} />
       <View style={styles.notificationContainer}>
-        <Text style={styles.notificationHeader}>GPS notification</Text>
+        <Text style={styles.notificationHeader}>{t(Constants.GPS_NOTIFI)}</Text>
         {gpsNotificationLoading ? (
           <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color={backgroundColorNew} />

@@ -98,7 +98,7 @@ const PreviousBookings = ({navigation, route}) => {
             imageName="noPreviousBookings"
             height={200}
             width={300}
-            title={'No Previous Bookings'}
+            title={t(Constants.NO_PREV_BOOKINGS)}
           />
         </ScrollView>
       )}

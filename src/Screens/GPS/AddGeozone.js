@@ -22,6 +22,8 @@ import AlertBox from '../../Components/AlertBox';
 import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import styles from './style'
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -37,7 +39,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 
 const AddGeozone = ({navigation, route}) => {
   const {deviceId, lat, lon, address} = route.params;
-
+  const {t} = useTranslation();
   const dispatch = useDispatch();
   const mapRef = useRef(null);
   const [livePositions, setLivePositions] = useState([]);
@@ -85,7 +87,7 @@ const AddGeozone = ({navigation, route}) => {
 
   const handleSave = () => {
     if (!geozoneName.trim()) {
-      AlertBox('Please enter a geozone name.');
+      AlertBox(t(Constants.ADD_GEO_NAME));
       return;
     }
     dispatch(
@@ -100,13 +102,13 @@ const AddGeozone = ({navigation, route}) => {
   useEffect(() => {
     if (addGeofenceStatus !== null) {
       if (addGeofenceStatus === 200) {
-        AlertBox('Geofence Added Successfully!');
+        AlertBox(t(Constants.GEO_ADD_SUC));
         navigation.navigate('geozones', {deviceId, lat, lon});
         setGeozoneName('');
         setSliderValue(0.5);
         dispatch(clearGeofenceAddedData());
       } else {
-        AlertBox('Error in Adding Geofencing.');
+        AlertBox(t(Constants.GEO_ADD_ERR));
         dispatch(clearGeofenceAddedData());
       }
     }
@@ -179,7 +181,7 @@ const AddGeozone = ({navigation, route}) => {
               onPress={() =>
                 navigation.navigate('geozones', {deviceId, lat, lon})
               }>
-              <Text style={styles.btnText2}>Geozones</Text>
+              <Text style={styles.btnText2}>{t(Constants.GEO)}</Text>
               <SettingIcon
                 size={15}
                 color={backgroundColorNew}
@@ -192,7 +194,7 @@ const AddGeozone = ({navigation, route}) => {
 
       <View style={styles.bottomContainer}>
         <View style={styles.geozoneContainer}>
-          <Text style={styles.geozoneText}>Geofence radius</Text>
+          <Text style={styles.geozoneText}>{t(Constants.GEO_RADIUS)}</Text>
           <View style={styles.sliderContainer}>
             <Slider
               style={styles.slider}
@@ -211,9 +213,9 @@ const AddGeozone = ({navigation, route}) => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Geozone name:</Text>
+            <Text style={styles.inputLabel}>{t(Constants.GEO_NAME)}</Text>
             <TextInput
-              placeholder="Geozone name"
+              placeholder={t(Constants.GEO_NAME)}
               placeholderTextColor="#8A8A8A"
               style={styles.textInput}
               value={geozoneName}
@@ -223,7 +225,7 @@ const AddGeozone = ({navigation, route}) => {
         </View>
 
         <Button
-          title="Save"
+          title={t(Constants.SAVE)}
           onPress={handleSave}
           textStyle={styles.btnText}
           style={styles.addGeozoneBtnStyle}
