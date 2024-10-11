@@ -90,7 +90,7 @@ const App = () => {
     }
   };
 
-  if (!forceUpdate) {
+  if (forceUpdate) {
     // Show force update screen if an update is required
     return (
       <View style={styles.mainContainer}>
