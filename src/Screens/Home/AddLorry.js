@@ -39,7 +39,7 @@ import {
 } from '../../Store/Actions/Actions';
 import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
 
 const AddLorry = ({navigation, route}) => {
   const [vehicleNumber, setVehicleNumber] = useState('');
@@ -288,12 +288,9 @@ const AddLorry = ({navigation, route}) => {
         visible={isSeeMore}
         style
         onRequestClose={() => {}}>
-        <View
-          style={styles.seeMoreModalView1}>
-          <View
-            style={styles.seeMoreModalView2}>
-            <View
-              style={styles.seeMoreModalView3}>
+        <View style={styles.seeMoreModalView1}>
+          <View style={styles.seeMoreModalView2}>
+            <View style={styles.seeMoreModalView3}>
               <Text style={styles.label}>{'All Permits'}</Text>
               <TruckItem
                 backgroundStyle={styles.truckTypeItem}
@@ -334,9 +331,7 @@ const AddLorry = ({navigation, route}) => {
           {seeMore()}
           {viewIndex === 0 ? (
             <View>
-              <Text style={styles.label}>
-                {t(Constants.VEHICLE_NUMBER)}
-              </Text>
+              <Text style={styles.label}>{t(Constants.VEHICLE_NUMBER)}</Text>
               <TextInputField
                 value={removeEmojis(vehicleNumber).toUpperCase()}
                 hint={'XX 00 XX 0000'}
@@ -369,10 +364,7 @@ const AddLorry = ({navigation, route}) => {
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={styles.label}>{t(Constants.PERMIT)}</Text>
                 <TouchableOpacity onPress={() => setSeeMore(true)}>
-                  <Text
-                    style={styles.seeMoreTxt}>
-                    {t(Constants.SEE_MORE)}
-                  </Text>
+                  <Text style={styles.seeMoreTxt}>{t(Constants.SEE_MORE)}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -415,12 +407,8 @@ const AddLorry = ({navigation, route}) => {
             </View>
           ) : (
             <View style={styles.addLorryView1}>
-              <View
-                style={styles.addLorryView2}>
-                <Text
-                  style={styles.activeTxt}>
-                  {t(Constants.ACTIVE)}
-                </Text>
+              <View style={styles.addLorryView2}>
+                <Text style={styles.activeTxt}>{t(Constants.ACTIVE)}</Text>
                 <Switch
                   isOn={isEnabled}
                   onColor={GradientColor2}
@@ -451,19 +439,12 @@ const AddLorry = ({navigation, route}) => {
                 textStyle={styles.searchLoadTextStyle}
                 style={styles.searchLoadStyle}
               />
-              <Text
-                style={styles.noteTxt}>
-                {t(Constants.NOTE)}
-              </Text>
-              <View
-                style={styles.skipTxtView}>
+              <Text style={styles.noteTxt}>{t(Constants.NOTE)}</Text>
+              <View style={styles.skipTxtView}>
                 <TouchableOpacity
                   onPress={() => navigation.goBack()}
                   style={styles.skipTxtBdColor}>
-                  <Text
-                    style={styles.skipTxt}>
-                    {t(Constants.SKIP)}
-                  </Text>
+                  <Text style={styles.skipTxt}>{t(Constants.SKIP)}</Text>
                 </TouchableOpacity>
               </View>
             </View>

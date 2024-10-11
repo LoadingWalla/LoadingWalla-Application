@@ -70,6 +70,12 @@ export const GEOF = 'Geofence';
 export const DEV_MOV = 'Device moving';
 export const GPS_NOTIFI = 'GPS notification';
 export const IGNITION = 'Ignition';
+export const NO_TRIPS = 'No Trips';
+export const UPDATE_TEXT = 'New update is available';
+export const UPDATE_BODY =
+  'The current version of this application is no longer supported. We apologize for any inconvenience we may have caused you.';
+export const UPDATE_NOW = 'Update Now';
+export const CLOSE_APP = 'No, Thanks! Close the app';
 export const OVERSPEED_ALERT = 'Overspeeding Alerts';
 export const GEO_RADIUS = 'Geofence radius';
 export const GEO_NAME = 'Geozone name';
