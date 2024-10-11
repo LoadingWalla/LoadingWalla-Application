@@ -229,7 +229,7 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const business = [
-    {id: 0, code: '', name: 'Select Document Type'},
+    {id: 0, code: '', name: t(Constants.SEL_DOC_TYPE)},
     {id: 1, code: 'gst', name: 'GST'},
     {id: 2, code: 'udyog', name: 'Udyog Aadhar'},
     {id: 3, code: 'trade', name: 'Trade License'},
@@ -272,7 +272,7 @@ const CardDetails = ({route, navigation}) => {
               ? 'XXXX XXXX XXXX'
               : from.from === 'fromPan'
               ? 'ABCDE1234F'
-              : 'Enter Document Number'
+              : t(Constants.ENTER_DOC_NUM)
           }
           value={aadhaarNumber}
           placeholderTextColor={PrivacyPolicy}

@@ -60,7 +60,7 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
         <InnerButton
           enabledStyle={style.requestButtonContainer}
           textStyle={style.gradientButtonText}
-          title={Constants.REQUEST}
+          title={t(Constants.REQUEST)}
           navigation={() =>
             navigation.navigate('Negotiation', {
               item: item,
@@ -72,7 +72,7 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
         <InnerButton
           enabledStyle={style.findButtonContainer}
           textStyle={style.findButtonText}
-          title={'Call'}
+          title={t(Constants.CALL)}
           navigation={() => call()}
         />
       </View>

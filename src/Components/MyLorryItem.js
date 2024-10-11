@@ -14,10 +14,11 @@ import ShowPermitModal from './ShowPermitModal';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
 import PencilIcon from '../../assets/SVG/svg/PencilIcon';
+import { useTranslation } from 'react-i18next';
 
-const MyLorryItem = ({item, userType, t, navigation}) => {
+const MyLorryItem = ({item, userType, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
-
+  const {t} = useTranslation();
   const priceType =
     item?.price_type === 1 ? `${t(Constants.FIXED)}` : t(Constants.PER_TON);
   const ac_time = userType === '2' ? item?.updated : false;
@@ -127,7 +128,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
                 fontSize: 14,
                 fontFamily: 'PlusJakartaSans-Bold',
               }}>
-              Go to Bookings
+              {t(Constants.GO_TO_BOOKINGS)}
             </Text>
           </TouchableOpacity>
           <Text
@@ -137,7 +138,7 @@ const MyLorryItem = ({item, userType, t, navigation}) => {
               fontFamily: 'PlusJakartaSans-Bold',
               padding: 8,
             }}>
-            Booked
+            {t(Constants.BOOKED)}
           </Text>
         </View>
       ) : (

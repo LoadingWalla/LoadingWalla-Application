@@ -18,6 +18,7 @@ import {GradientColor2} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 
+
 const {width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
@@ -83,7 +84,7 @@ const Dashboard = ({navigation}) => {
         if (val === 'from') {
           setSearchFromId(item.id);
           setSearchFrom(item?.place_name);
-          setSearchTo('Anywhere');
+          setSearchTo(t(Constants.ANYWHERE));
           setSearchToId(0);
           return;
         }
@@ -107,11 +108,11 @@ const Dashboard = ({navigation}) => {
 
   const searchLoad = () => {
     if (searchFrom === '') {
-      Toast.show('Enter Location', Toast.LONG);
+      Toast.show(t(Constants.ENTER_LOC), Toast.LONG);
       return;
     }
     if (truckItem === '') {
-      Toast.show('Select Truck', Toast.LONG);
+      Toast.show(t(Constants.TRUCK_TYPE), Toast.LONG);
       return;
     }
     handleNavigate.current = true;
