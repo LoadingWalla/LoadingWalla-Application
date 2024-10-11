@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';

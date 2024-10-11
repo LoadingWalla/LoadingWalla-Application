@@ -194,6 +194,7 @@ const initialState = {
   gpsOrderLoading: false,
   gpsOrderData: null,
   gpsOrderStatus: null,
+  gpsOrderErrorStatus: null,
   // gps order Details
   gpsOrderDetailsLoading: false,
   gpsOrderDetailsData: null,
