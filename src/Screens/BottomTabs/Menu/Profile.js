@@ -1,8 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback, Suspense} from 'react';
 import {
   View,
   Text,
-  KeyboardAvoidingView,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -31,11 +30,11 @@ import {
   uriTermsCondition3,
 } from '../../../Utils/Url';
 import * as Constants from '../../../Constants/Constant';
-import ProfileShimmer from '../../../Components/Shimmer/ProfileShimmer';
-import EditProfile from './EditProfile';
 import {GradientColor1, GradientColor2, titleColor} from '../../../Color/color';
-import PercentageBar from '../../../Components/PercentageBar';
-import MenuItem from '../../../Components/MenuItem';
+import {useTranslation} from 'react-i18next';
+import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+
+// SVGs
 import Shield from '../../../../assets/SVG/svg/Shield';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import AccountEditIcon from '../../../../assets/SVG/svg/AccountEditIcon';
@@ -55,53 +54,62 @@ import HelpIcon from '../../../../assets/SVG/svg/HelpIcon';
 import PolicyIcon from '../../../../assets/SVG/svg/PolicyIcon';
 import TermsIcon from '../../../../assets/SVG/svg/TermsIcon';
 import RightArrow from '../../../../assets/SVG/svg/RightArrow';
-import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
-import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+
+// Lazy loading components
+const ProfileShimmer = React.lazy(() =>
+  import('../../../Components/Shimmer/ProfileShimmer'),
+);
+const EditProfile = React.lazy(() => import('./EditProfile'));
+const PercentageBar = React.lazy(() =>
+  import('../../../Components/PercentageBar'),
+);
+const MenuItem = React.lazy(() => import('../../../Components/MenuItem'));
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
 
-const Profile = ({navigation, route}) => {
+const Profile = ({navigation}) => {
   const [isEditProfile, setEditProfile] = useState(false);
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
-    useSelector(state => {
-      // console.log('profile Data', state.data);
-      return state.data;
-    });
-  const {wsConnected} = useSelector(state => {
-    console.log('WEBSOCKET profile ----', state.wsData);
-    return state.wsData;
-  });
-
-  useEffect(() => {
-    if (wsConnected) {
-      dispatch(websocketDisconnect());
-    }
-  }, [wsConnected]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(initProfile());
-    }, [dispatch, profileSetupData]),
+  const {UserVerifyPercentage, profileLoading, Userdata} = useSelector(
+    state => state.data,
   );
+  const {wsConnected} = useSelector(state => state.wsData);
 
+  // Disconnect websocket and get async storage keys when component mounts
+  useEffect(() => {
+    const fetchKeysAndDisconnect = async () => {
+      const keys = await AsyncStorage.getAllKeys();
+      console.log('Stored keys:', keys);
+      if (wsConnected) {
+        dispatch(websocketDisconnect());
+      }
+    };
+    fetchKeysAndDisconnect();
+  }, [wsConnected, dispatch]);
+
+  // Fetch profile on focus
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(initProfile());
+    }, [dispatch]),
+  );
   const profileImg = (hei, wid) => ({
     height: hei / 2.5,
     width: wid,
   });
-  
-  const bigImage = () => {
-    return (
+
+  const bigImage = useCallback(
+    () => (
       <Modal animationType="slide" transparent={true} visible={isBigImage}>
         <View style={style.bigImageStyle}>
           <TouchableOpacity
-            onPress={() => setBigImage(!isBigImage)}
+            onPress={() => setBigImage(false)}
             style={style.closeIcon}>
             <CloseCircle size={30} color={'white'} />
           </TouchableOpacity>
@@ -118,27 +126,31 @@ const Profile = ({navigation, route}) => {
           </View>
         </View>
       </Modal>
-    );
-  };
+    ),
+    [isBigImage, Userdata],
+  );
 
-  const logout = () => {
+  const logout = useCallback(() => {
     Alert.alert(
       t(Constants.LOGOUT),
       t(Constants.LOGOUT_CONFIRM),
       [
-        {
-          text: t(Constants.CANCEL),
-          style: t(Constants.CANCEL),
-        },
+        {text: t(Constants.CANCEL), style: 'cancel'},
         {
           text: t(Constants.LOGOUT),
           onPress: async () => {
             try {
               dispatch(initLogout());
-              await AsyncStorage.removeItem('UserType');
-              await AsyncStorage.removeItem('auth-token');
+              await AsyncStorage.multiRemove([
+                'UserType',
+                'auth-token',
+                'whatsAppAlert',
+                'deviceMoving',
+                'geofence',
+                'ignition',
+                'overspeeding',
+              ]);
               dispatch(clearStore());
-
               navigation.reset({
                 index: 0,
                 routes: [{name: 'Signup', params: {fromLogout: true}}],
@@ -151,36 +163,33 @@ const Profile = ({navigation, route}) => {
       ],
       {cancelable: false},
     );
-  };
+  }, [dispatch, navigation, t]);
 
-  const handleRateUs = () => {
+  const handleRateUs = useCallback(() => {
     if (Platform.OS === 'android') {
       const url = playStoreLink;
-
       Linking.canOpenURL(url)
-        .then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          } else {
-            console.log("Don't know how to open URI: " + url);
-          }
-        })
-        .catch(err => console.error('An error occurred', err));
+        .then(supported =>
+          supported
+            ? Linking.openURL(url)
+            : console.error(`Cannot open: ${url}`),
+        )
+        .catch(err => console.error('Error opening URL:', err));
     } else {
       console.log('This feature is only available on Android.');
     }
-  };
+  }, []);
 
   return (
     <View style={style.profileContainer}>
       {profileLoading ? (
-        <View>
+        <Suspense fallback={<Text>Loading...</Text>}>
           <ProfileShimmer />
-        </View>
+        </Suspense>
       ) : (
         <View style={style.backgroundView}>
           {isBigImage && bigImage()}
-          {
+          <Suspense fallback={<Text>Loading...</Text>}>
             <EditProfile
               defaultValue={{
                 id: Userdata?.id,
@@ -191,24 +200,22 @@ const Profile = ({navigation, route}) => {
               }}
               dismissModal={() => setEditProfile(false)}
               isEdit={isEditProfile}
-              editStatus={event => setEditProfile(event)}
+              editStatus={setEditProfile}
               navigation={navigation}
             />
-          }
+          </Suspense>
           <View style={style.profileView}>
             <Pressable
               onPress={() =>
                 Userdata?.profile_img
-                  ? setBigImage(!isBigImage)
+                  ? setBigImage(true)
                   : Toast.show('No Profile Image!', Toast.LONG)
               }
               style={style.pressable}>
               <Image
                 style={[
                   style.profileImgStyle,
-                  {
-                    marginRight: Userdata?.user_type === 3 ? 10 : 0,
-                  },
+                  {marginRight: Userdata?.user_type === 3 ? 10 : 0},
                 ]}
                 source={
                   Userdata?.profile_img
@@ -247,7 +254,7 @@ const Profile = ({navigation, route}) => {
                   <View style={style.verticalLine} />
                   <View>
                     <Rating
-                      readonly={true}
+                      readonly
                       type="star"
                       ratingCount={5}
                       imageSize={15}
@@ -257,85 +264,82 @@ const Profile = ({navigation, route}) => {
                 </View>
               )}
             </View>
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => setEditProfile(true)}>
-                {/* onPress={() => navigation.navigate('Edit Profile')} */}
-                <AccountEditIcon size={30} color={GradientColor2} />
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => setEditProfile(true)}>
+              <AccountEditIcon size={30} color={GradientColor2} />
+            </TouchableOpacity>
           </View>
+
           <ScrollView
             style={style.profileScrollView}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
-            {/* {Userdata?.user_type !== 3 && ( */}
-            <View style={style.percentageBarView}>
-              <PercentageBar
-                navigation={navigation}
-                percentage={UserVerifyPercentage || 0}
-                verify={Userdata?.verify}
-                style={style}
-              />
-              <TouchableOpacity
-                style={style.buttonContainer}
-                onPress={() => navigation.navigate('Wallet')}>
-                <WalletIcon size={25} color={'#F0C200'} />
-                <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
-                <View style={style.rightArrowView}>
+            showsVerticalScrollIndicator={false}>
+            <Suspense fallback={<Text>Loading...</Text>}>
+              <View style={style.percentageBarView}>
+                <PercentageBar
+                  navigation={navigation}
+                  percentage={UserVerifyPercentage || 0}
+                  verify={Userdata?.verify}
+                  style={style}
+                />
+                <TouchableOpacity
+                  style={style.buttonContainer}
+                  onPress={() => navigation.navigate('Wallet')}>
+                  <WalletIcon size={25} color={'#F0C200'} />
+                  <Text style={style.buttonText}>{t(Constants.WALLET)}</Text>
                   <RightArrow size={20} color={GradientColor1} />
-                </View>
-              </TouchableOpacity>
-            </View>
-            {/* )} */}
-
-            <View style={style.section}>
-              <View style={style.sectionHeader}>
-                <UserDetailsIcon size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>
-                  {t(Constants.USER_DETAILS)}
-                </Text>
+                </TouchableOpacity>
               </View>
-              <View style={style.userDetails}>
-                {Userdata?.user_type === 3 ? (
-                  <>
-                    <MenuItem
-                      title={t(Constants.ORDERS_PAYMENT)}
-                      onPress={() => navigation.navigate('Orders & Payment')}
-                      Icon={
-                        <GpsTrackingIcon size={30} color={GradientColor1} />
-                      }
-                    />
-                    <View style={style.horizontalLine} />
-                  </>
-                ) : (
-                  <>
-                    <MenuItem
-                      title={t(Constants.USER_SUMMARY)}
-                      onPress={() =>
-                        navigation.navigate('Inconvenience', {
-                          headerTitle: t(Constants.USER_SUMMARY),
-                        })
-                      }
-                      Icon={
-                        <UserSummaryIcon size={30} color={GradientColor1} />
-                      }
-                    />
-                    <View style={style.horizontalLine} />
-                    <MenuItem
-                      title={t(Constants.PREVIOUS_BOOKINGS)}
-                      onPress={() =>
-                        navigation.navigate('Previous Bookings', {
-                          Owner: Userdata,
-                        })
-                      }
-                      Icon={
-                        <PreviousBookingIcon size={30} color={GradientColor1} />
-                      }
-                    />
-                    <View style={style.horizontalLine} />
-                    {/* <MenuItem
+
+              <View style={style.section}>
+                <View style={style.sectionHeader}>
+                  <UserDetailsIcon size={25} color={titleColor} />
+                  <Text style={style.sectionHeaderText}>
+                    {t(Constants.USER_DETAILS)}
+                  </Text>
+                </View>
+                <View style={style.userDetails}>
+                  {Userdata?.user_type === 3 ? (
+                    <>
+                      <MenuItem
+                        title={t(Constants.ORDERS_PAYMENT)}
+                        onPress={() => navigation.navigate('Orders & Payment')}
+                        Icon={
+                          <GpsTrackingIcon size={30} color={GradientColor1} />
+                        }
+                      />
+                      <View style={style.horizontalLine} />
+                    </>
+                  ) : (
+                    <>
+                      <MenuItem
+                        title={t(Constants.USER_SUMMARY)}
+                        onPress={() =>
+                          navigation.navigate('Inconvenience', {
+                            headerTitle: t(Constants.USER_SUMMARY),
+                          })
+                        }
+                        Icon={
+                          <UserSummaryIcon size={30} color={GradientColor1} />
+                        }
+                      />
+                      <View style={style.horizontalLine} />
+                      <MenuItem
+                        title={t(Constants.PREVIOUS_BOOKINGS)}
+                        onPress={() =>
+                          navigation.navigate('Previous Bookings', {
+                            Owner: Userdata,
+                          })
+                        }
+                        Icon={
+                          <PreviousBookingIcon
+                            size={30}
+                            color={GradientColor1}
+                          />
+                        }
+                      />
+                      <View style={style.horizontalLine} />
+                      {/* <MenuItem
                       title={'GPS Tracking'}
                       onPress={() => navigation.navigate('GpsPurchase')}
                       Icon={
@@ -343,109 +347,115 @@ const Profile = ({navigation, route}) => {
                       }
                     />
                     <View style={style.horizontalLine} /> */}
-                  </>
-                )}
-                <MenuItem
-                  title={t(Constants.SAVED_ADDRESS)}
-                  onPress={() =>
-                    // navigation.navigate('Address')
-                    navigation.navigate('Inconvenience')
-                  }
-                  Icon={<GpsIcon size={30} color={GradientColor1} />}
-                />
+                    </>
+                  )}
+                  <MenuItem
+                    title={t(Constants.SAVED_ADDRESS)}
+                    onPress={() =>
+                      // navigation.navigate('Address')
+                      navigation.navigate('Inconvenience')
+                    }
+                    Icon={<GpsIcon size={30} color={GradientColor1} />}
+                  />
+                </View>
               </View>
-            </View>
 
-            <View style={style.section}>
-              <View style={style.sectionHeader}>
-                <SupportIcon2 size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>
-                  {t(Constants.SUPPORT)}
+              <View style={style.section}>
+                <View style={style.sectionHeader}>
+                  <SupportIcon2 size={25} color={titleColor} />
+                  <Text style={style.sectionHeaderText}>
+                    {t(Constants.SUPPORT)}
+                  </Text>
+                </View>
+                <View style={style.userDetails}>
+                  <MenuItem
+                    title={t(Constants.CONTACT_US)}
+                    onPress={() => navigation.navigate('Contactus')}
+                    Icon={<ContactUsIcon size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.TERMS_CONDITION_TITLE2)}
+                    onPress={() => {
+                      navigation.navigate('Legal Policies', {
+                        headerTitle: t(Constants.TERMS_AND_CONDITITIONS),
+                        uri: uriTermsCondition3,
+                      });
+                    }}
+                    Icon={<TermsIcon size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.TERMS_CONDITION_TITLE3)}
+                    onPress={() => {
+                      navigation.navigate('Legal Policies', {
+                        headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
+                        uri: uriTermsCondition2,
+                      });
+                    }}
+                    Icon={<PolicyIcon size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.HELP_GUIDE)}
+                    onPress={() => navigation.navigate('Guide')}
+                    Icon={<HelpIcon size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.RATE_US_ON_PLAY_STORE)}
+                    onPress={handleRateUs}
+                    Icon={<RateIcon size={30} color={GradientColor1} />}
+                  />
+                </View>
+              </View>
+
+              <View style={style.section}>
+                <View style={style.sectionHeader}>
+                  <SettingIcon size={25} color={titleColor} />
+                  <Text style={style.sectionHeaderText}>
+                    {t(Constants.SETTINGS)}
+                  </Text>
+                </View>
+                <View style={style.userDetails}>
+                  <MenuItem
+                    title={t(Constants.LANGUAGE)}
+                    onPress={() =>
+                      navigation.navigate('Language', {fromMenu: true})
+                    }
+                    Icon={<LanguageIcon size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.WHATSAPP_ALERT)}
+                    onPress={() =>
+                      navigation.navigate('WhatsApp', {fromMenu: true})
+                    }
+                    Icon={<WhatsAppIcon2 size={30} color={GradientColor1} />}
+                  />
+                  <View style={style.horizontalLine} />
+                  <MenuItem
+                    title={t(Constants.LOGOUT)}
+                    onPress={() => logout()}
+                    Icon={<LogoutIcon size={30} color={GradientColor1} />}
+                  />
+                </View>
+              </View>
+
+              <View style={style.appVersionView}>
+                <Text style={style.appVersionText}>
+                  {t(Constants.APP_VERSION)} {version}
                 </Text>
               </View>
-              <View style={style.userDetails}>
-                <MenuItem
-                  title={t(Constants.CONTACT_US)}
-                  onPress={() => navigation.navigate('Contactus')}
-                  Icon={<ContactUsIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.TERMS_CONDITION_TITLE2)}
-                  onPress={() => {
-                    navigation.navigate('Legal Policies', {
-                      headerTitle: t(Constants.TERMS_AND_CONDITITIONS),
-                      uri: uriTermsCondition3,
-                    });
-                  }}
-                  Icon={<TermsIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.TERMS_CONDITION_TITLE3)}
-                  onPress={() => {
-                    navigation.navigate('Legal Policies', {
-                      headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
-                      uri: uriTermsCondition2,
-                    });
-                  }}
-                  Icon={<PolicyIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.HELP_GUIDE)}
-                  onPress={() => navigation.navigate('Guide')}
-                  Icon={<HelpIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.RATE_US_ON_PLAY_STORE)}
-                  onPress={handleRateUs}
-                  Icon={<RateIcon size={30} color={GradientColor1} />}
-                />
-              </View>
-            </View>
-
-            <View style={style.section}>
-              <View style={style.sectionHeader}>
-                <SettingIcon size={25} color={titleColor} />
-                <Text style={style.sectionHeaderText}>
-                  {t(Constants.SETTINGS)}
-                </Text>
-              </View>
-              <View style={style.userDetails}>
-                <MenuItem
-                  title={t(Constants.LANGUAGE)}
-                  onPress={() =>
-                    navigation.navigate('Language', {fromMenu: true})
-                  }
-                  Icon={<LanguageIcon size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.WHATSAPP_ALERT)}
-                  onPress={() =>
-                    navigation.navigate('WhatsApp', {fromMenu: true})
-                  }
-                  Icon={<WhatsAppIcon2 size={30} color={GradientColor1} />}
-                />
-                <View style={style.horizontalLine} />
-                <MenuItem
-                  title={t(Constants.LOGOUT)}
-                  onPress={() => logout()}
-                  Icon={<LogoutIcon size={30} color={GradientColor1} />}
-                />
-              </View>
-            </View>
-
-            <View style={style.appVersionView}>
-              <Text style={style.appVersionText}>
-                {t(Constants.APP_VERSION)} {version}
-              </Text>
-            </View>
+            </Suspense>
           </ScrollView>
         </View>
       )}
+      <View style={style.appVersionView}>
+        <Text style={style.appVersionText}>
+          {t(Constants.APP_VERSION)} {version}
+        </Text>
+      </View>
     </View>
   );
 };

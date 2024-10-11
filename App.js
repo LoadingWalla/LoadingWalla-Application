@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import store from './src/Store';
 import {
   BackHandler,
+  Linking,
   PermissionsAndroid,
   Platform,
   Pressable,
@@ -21,13 +22,13 @@ import {navigationRef} from './src/Navigation/NavigationService';
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
 import ForcUpdateSvg from './assets/SVG/svg/ForcUpdateSvg';
-import {GradientColor2, textColor} from './src/Color/color';
 import Button from './src/Components/Button';
 import * as Constants from './src/Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import {appStoreLink, playStoreLink} from './src/Utils/Url';
+import {GradientColor2, textColor} from './src/Color/color';
 
 const App = () => {
-  const [updateVersion, setUpdateVersion] = useState('');
   const [forceUpdate, setForceUpdate] = useState(false);
   const {t} = useTranslation();
 
@@ -56,7 +57,6 @@ const App = () => {
       } else {
         setForceUpdate(false); // App is up to date
       }
-      setUpdateVersion(latestVersion);
     } catch (error) {
       console.error('Error fetching version:', error);
     }
@@ -78,6 +78,17 @@ const App = () => {
 
   useEffect(() => {
     getVersion();
+    const initializeApp = async () => {
+      try {
+        foregroundNotification();
+        await checkNotificationPermission();
+        await checkForAppUpdate();
+      } catch (error) {
+        console.error('Initialization error:', error);
+      }
+    };
+
+    initializeApp();
   }, []);
 
   const checkNotificationPermission = async () => {
@@ -86,12 +97,45 @@ const App = () => {
         await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
         );
-      } catch (error) {}
+      } catch (error) {
+        console.error('Notification permission error:', error);
+      }
     }
   };
 
+  const checkForAppUpdate = async () => {
+    try {
+      const versionDoc = await firestore()
+        .collection('AppVersion')
+        .doc('latest')
+        .get();
+
+      const latestVersion = versionDoc.data()?.version;
+      const currentVersion = DeviceInfo.getVersion();
+
+      if (latestVersion && latestVersion !== currentVersion) {
+        setForceUpdate(true);
+      }
+    } catch (error) {
+      console.error('Error checking app version:', error);
+    }
+  };
+
+  const handleForceUpdate = () => {
+    const url = Platform.OS === 'android' ? playStoreLink : appStoreLink;
+
+    Linking.canOpenURL(url)
+      .then(supported => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          console.error('Cannot open URL:', url);
+        }
+      })
+      .catch(err => console.error('Error opening URL:', err));
+  };
+
   if (forceUpdate) {
-    // Show force update screen if an update is required
     return (
       <View style={styles.mainContainer}>
         <View style={styles.svgContainer}>
@@ -103,9 +147,7 @@ const App = () => {
             <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
             <Button
               title={t(Constants.UPDATE_NOW)}
-              onPress={() => {
-                console.log('Redirect to app store for update');
-              }}
+              onPress={handleForceUpdate}
               textStyle={styles.btnText}
               style={styles.btnStyle}
             />
@@ -124,7 +166,7 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       <NavigationContainer ref={navigationRef}>
         <Navigation />
         <NoInternetScreen />
@@ -139,11 +181,11 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   svgContainer: {
     flex: 0.5,
-    width: '100%'
+    width: '100%',
   },
   textMainContainer: {
     flex: 0.5,

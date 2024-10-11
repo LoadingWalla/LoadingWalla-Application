@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   FlatList,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -11,11 +10,11 @@ import {
 import {useSelector} from 'react-redux';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import GpsSettingItem from '../../Components/GpsSettingItem';
-import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import moment from 'moment';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {
@@ -119,95 +118,3 @@ const GpsAlert = ({route}) => {
 };
 
 export default GpsAlert;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   loaderContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   noDataContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   noDataText: {
-//     fontSize: 16,
-//     color: PrivacyPolicy,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   notificationContainer: {
-//     flex: 4,
-//     backgroundColor: '#ffffff',
-//     padding: 20,
-//     elevation: 2,
-//   },
-//   notificationHeader: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 14,
-//   },
-//   headerBox: {
-//     paddingVertical: 10,
-//     paddingHorizontal: 15,
-//     backgroundColor: '#FFFFFF',
-//     // elevation: 2,
-//     borderRadius: 8,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     margin: 5,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#00000029',
-//   },
-//   mediumTextStyle: {
-//     color: PrivacyPolicy,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//     fontSize: 12,
-//   },
-//   headerText: {
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     textTransform: 'capitalize',
-//   },
-//   timeText: {
-//     fontSize: 8,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   textView: {
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     // borderEndWidth: 1,
-//   },
-//   speedBox: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     flex: 1,
-//   },
-//   callBox: {
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   iconBox: {
-//     borderRadius: 20,
-//     padding: 5,
-//     backgroundColor: '#f7f7f7',
-//     elevation: 2,
-//     marginVertical: 5,
-//   },
-//   settingsContainer: {
-//     flex: 1,
-//     padding: 10,
-//     paddingBottom: 50,
-//     backgroundColor: '#ffffff',
-//     marginBottom: 10,
-//     elevation: 2,
-//   },
-//   settingsRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-// });
