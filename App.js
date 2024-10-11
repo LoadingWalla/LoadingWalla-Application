@@ -6,10 +6,12 @@ import Navigation from './src/Navigation/router';
 import {Provider} from 'react-redux';
 import store from './src/Store';
 import {
-  Button,
+  BackHandler,
   PermissionsAndroid,
   Platform,
+  Pressable,
   StatusBar,
+  StyleSheet,
   Text,
   View,
 } from 'react-native';
@@ -18,10 +20,16 @@ import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
 import {navigationRef} from './src/Navigation/NavigationService';
 import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
+import ForcUpdateSvg from './assets/SVG/svg/ForcUpdateSvg';
+import {GradientColor2, textColor} from './src/Color/color';
+import Button from './src/Components/Button';
+import * as Constants from './src/Constants/Constant';
+import {useTranslation} from 'react-i18next';
 
 const App = () => {
   const [updateVersion, setUpdateVersion] = useState('');
   const [forceUpdate, setForceUpdate] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     foregroundNotification();
@@ -38,9 +46,9 @@ const App = () => {
       // Get current app version using react-native-device-info
       const currentVersion = DeviceInfo.getVersion(); // Get app version as a string
       console.log(
-        'Current version:',
+        '--------- Current version: ----------',
         currentVersion,
-        'Latest version:',
+        '--------- Latest version: -----------',
         latestVersion,
       );
       if (latestVersion && latestVersion !== currentVersion) {
@@ -53,6 +61,21 @@ const App = () => {
       console.error('Error fetching version:', error);
     }
   };
+
+  function handleBackButton() {
+    BackHandler.exitApp();
+    return true;
+  }
+
+  useEffect(() => {
+    console.log('HandleExitApp');
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackButton,
+    );
+    return () => backHandler.remove();
+  }, []);
+
   useEffect(() => {
     getVersion();
   }, []);
@@ -70,18 +93,31 @@ const App = () => {
   if (forceUpdate) {
     // Show force update screen if an update is required
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text style={{fontSize: 20, marginBottom: 20}}>
-          A new version is available!
-        </Text>
-        <Button
-          title="Update Now"
-          onPress={() => {
-            // Redirect user to the app store for updating
-            // You can use your preferred method to open the store or provide a download link
-            console.log('Redirect to app store for update');
-          }}
-        />
+      <View style={styles.mainContainer}>
+        <View style={styles.svgContainer}>
+          <ForcUpdateSvg />
+        </View>
+        <View style={styles.textMainContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
+            <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
+            <Button
+              title={t(Constants.UPDATE_NOW)}
+              onPress={() => {
+                console.log('Redirect to app store for update');
+              }}
+              textStyle={styles.btnText}
+              style={styles.btnStyle}
+            />
+            <Pressable
+              onPress={() => {
+                console.log('Exit from the app');
+                handleBackButton();
+              }}>
+              <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
+            </Pressable>
+          </View>
+        </View>
       </View>
     );
   }
@@ -98,3 +134,59 @@ const App = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  svgContainer: {
+    flex: 0.5,
+    width: '100%'
+  },
+  textMainContainer: {
+    flex: 0.5,
+    width: '100%',
+    alignItems: 'center',
+  },
+  textContainer: {
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  updateTxt: {
+    fontSize: 20,
+    marginBottom: 20,
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  updateBody: {
+    fontSize: 11,
+    marginBottom: 20,
+    marginLeft: 105,
+    marginRight: 105,
+    textAlign: 'center',
+  },
+  btnStyle: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    paddingHorizontal: 120,
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 30,
+    marginTop: 30,
+  },
+  btnText: {
+    color: textColor,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'center',
+  },
+  btnText2: {
+    color: GradientColor2,
+    fontSize: 16,
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'center',
+  },
+});

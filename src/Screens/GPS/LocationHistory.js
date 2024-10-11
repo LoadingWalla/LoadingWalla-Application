@@ -385,7 +385,7 @@ const LocationHistory = ({navigation, route}) => {
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
             <View style={styles.noDataView}>
-              <Text style={styles.locHistorynoDataText}>No Trips</Text>
+              <Text style={styles.locHistorynoDataText}>{t(Constants.NO_TRIPS)}</Text>
             </View>
           }
           style={styles.tableContainer}
