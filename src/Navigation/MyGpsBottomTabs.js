@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
-import { Animated, BackHandler, Dimensions } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useNavigation } from '@react-navigation/native';
+import React, {useRef, useEffect} from 'react';
+import {Animated, BackHandler, Dimensions} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useNavigation} from '@react-navigation/native';
 import * as Constants from '../Constants/Constant';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import Profile from '../Screens/BottomTabs/Menu/Profile';
@@ -11,7 +11,7 @@ import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 import style from './style';
 import DashboardActiveIcon from '../../assets/SVG/svg/DashboardActiveIcon';
 import DashboardIcon from '../../assets/SVG/svg/DashboardIcon';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
   backgroundColorNew,
   GradientColor2,
@@ -31,7 +31,7 @@ export default function MyGpsBottomTabs() {
 
   const tabOffsetValue = useRef(new Animated.Value(getWidth() * 1)).current;
   const navigation = useNavigation();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   // Handle back button presses across the app
   function handleBackButton() {
@@ -63,7 +63,7 @@ export default function MyGpsBottomTabs() {
   };
 
   return (
-    <Animated.View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+    <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
         initialRouteName={'MyGPS'}
         screenOptions={{
@@ -89,7 +89,7 @@ export default function MyGpsBottomTabs() {
           name="GPS"
           component={GPSHomePage}
           options={{
-            tabBarIcon: ({ focused }) =>
+            tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
             title: t(Constants.GPS),
@@ -102,7 +102,7 @@ export default function MyGpsBottomTabs() {
           name="MyGPS"
           component={MyGpsScreen}
           options={{
-            tabBarIcon: ({ focused }) =>
+            tabBarIcon: ({focused}) =>
               focused ? (
                 <GpsRoadIcon size={22} color={backgroundColorNew} />
               ) : (
@@ -119,7 +119,7 @@ export default function MyGpsBottomTabs() {
           name="Menu"
           component={Profile}
           options={{
-            tabBarIcon: ({ focused }) =>
+            tabBarIcon: ({focused}) =>
               focused ? (
                 <DashboardActiveIcon size={20} />
               ) : (

@@ -1,12 +1,21 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import Navigation from './src/Navigation/router';
 import {Provider} from 'react-redux';
 import store from './src/Store';
+import Navigation from './src/Navigation/router';
+import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
+import Button from './src/Components/Button';
+import {navigationRef} from './src/Navigation/NavigationService';
+import {foregroundNotification} from './src/Utils/Notification_helper';
+import DeviceInfo from 'react-native-device-info';
+import axios from 'axios';
+import analytics from '@react-native-firebase/analytics';
+import {useTranslation} from 'react-i18next';
 import {
   BackHandler,
+  Linking,
   PermissionsAndroid,
   Platform,
   Pressable,
@@ -14,109 +23,133 @@ import {
   StyleSheet,
   Text,
   View,
+  ImageBackground,
 } from 'react-native';
-import {foregroundNotification} from './src/Utils/Notification_helper';
-import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
-import {navigationRef} from './src/Navigation/NavigationService';
-import firestore from '@react-native-firebase/firestore';
-import DeviceInfo from 'react-native-device-info';
-import ForcUpdateSvg from './assets/SVG/svg/ForcUpdateSvg';
-import {GradientColor2, textColor} from './src/Color/color';
-import Button from './src/Components/Button';
 import * as Constants from './src/Constants/Constant';
-import {useTranslation} from 'react-i18next';
+import {appStoreLink, playStoreLink} from './src/Utils/Url';
+import {GradientColor2, textColor} from './src/Color/color';
 
 const App = () => {
-  const [updateVersion, setUpdateVersion] = useState('');
   const [forceUpdate, setForceUpdate] = useState(false);
   const {t} = useTranslation();
+  const startTime = useRef(Date.now());
 
-  useEffect(() => {
-    foregroundNotification();
-    checkNotificationPermission();
-  }, []);
-
-  const getVersion = async () => {
+  /** Helper: Track screen views and time spent */
+  const trackScreenView = useCallback(async screenName => {
     try {
-      const versionDoc = await firestore()
-        .collection('AppVersion')
-        .doc('latest')
-        .get();
-      const latestVersion = versionDoc.data()?.version;
-      // Get current app version using react-native-device-info
-      const currentVersion = DeviceInfo.getVersion(); // Get app version as a string
-      console.log(
-        '--------- Current version: ----------',
-        currentVersion,
-        '--------- Latest version: -----------',
-        latestVersion,
-      );
-      if (latestVersion && latestVersion !== currentVersion) {
-        setForceUpdate(true); // Set force update if versions don't match
-      } else {
-        setForceUpdate(false); // App is up to date
-      }
-      setUpdateVersion(latestVersion);
+      await analytics().logScreenView({
+        screen_name: screenName,
+        screen_class: screenName,
+      });
+
+      const duration = (Date.now() - startTime.current) / 1000;
+      await analytics().logEvent('screen_time', {
+        screen_name: screenName,
+        time_spent: duration,
+      });
+
+      startTime.current = Date.now();
     } catch (error) {
-      console.error('Error fetching version:', error);
+      console.error('Analytics tracking failed:', error);
     }
-  };
+  }, []);
 
-  function handleBackButton() {
-    BackHandler.exitApp();
-    return true;
-  }
-
-  useEffect(() => {
-    console.log('HandleExitApp');
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButton,
+  /** Helper: Handle force update by opening store link */
+  const handleForceUpdate = useCallback(() => {
+    const storeUrl = Platform.OS === 'android' ? playStoreLink : appStoreLink;
+    Linking.openURL(storeUrl).catch(err =>
+      console.error('Failed to open URL:', err),
     );
-    return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    getVersion();
-  }, []);
-
-  const checkNotificationPermission = async () => {
+  /** Helper: Check and request notification permissions */
+  const checkNotificationPermission = useCallback(async () => {
     if (Platform.OS === 'android') {
       try {
         await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
         );
-      } catch (error) {}
+      } catch (error) {
+        console.error('Notification permission error:', error);
+      }
     }
-  };
+  }, []);
+
+  /** Helper: Check app version and decide on force update */
+  const getVersion = useCallback(async () => {
+    try {
+      const response = await axios.get('https://loadingwalla.com/api/version');
+      if (response.status === 200) {
+        const latestVersion = response.data;
+        const currentVersion = DeviceInfo.getVersion();
+        setForceUpdate(latestVersion > currentVersion);
+      } else {
+        console.error('Failed to fetch version, status:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching version:', error);
+    }
+  }, []);
+
+  /** Initialize app: Runs once on mount */
+  useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        foregroundNotification();
+        await checkNotificationPermission();
+        await getVersion();
+      } catch (error) {
+        console.error('Initialization error:', error);
+      }
+    };
+
+    initializeApp();
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        BackHandler.exitApp();
+        return true;
+      },
+    );
+
+    return () => backHandler.remove();
+  }, [checkNotificationPermission, getVersion]);
+
+  /** Handle navigation state changes to track screen views */
+  const handleStateChange = useCallback(
+    state => {
+      const currentRoute = state?.routes[state.index]?.name;
+      if (currentRoute) {
+        trackScreenView(currentRoute);
+      }
+    },
+    [trackScreenView],
+  );
 
   if (forceUpdate) {
-    // Show force update screen if an update is required
     return (
       <View style={styles.mainContainer}>
+        <StatusBar hidden />
         <View style={styles.svgContainer}>
-          <ForcUpdateSvg />
+          <ImageBackground
+            source={require('./assets/ForceUpdateImage.png')}
+            resizeMode="cover"
+            style={styles.imageBackground}
+          />
         </View>
-        <View style={styles.textMainContainer}>
-          <View style={styles.textContainer}>
-            <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
-            <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
-            <Button
-              title={t(Constants.UPDATE_NOW)}
-              onPress={() => {
-                console.log('Redirect to app store for update');
-              }}
-              textStyle={styles.btnText}
-              style={styles.btnStyle}
-            />
-            <Pressable
-              onPress={() => {
-                console.log('Exit from the app');
-                handleBackButton();
-              }}>
-              <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
-            </Pressable>
-          </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
+          <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
+          <Button
+            title={t(Constants.UPDATE_NOW)}
+            onPress={handleForceUpdate}
+            textStyle={styles.btnText}
+            style={styles.btnStyle}
+          />
+          <Pressable onPress={() => BackHandler.exitApp()}>
+            <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
+          </Pressable>
         </View>
       </View>
     );
@@ -124,8 +157,10 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <StatusBar barStyle={'dark-content'} backgroundColor={'#FFFFFF'} />
-      <NavigationContainer ref={navigationRef}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={handleStateChange}>
         <Navigation />
         <NoInternetScreen />
       </NavigationContainer>
@@ -136,57 +171,41 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  svgContainer: {
-    flex: 0.5,
-    width: '100%'
-  },
-  textMainContainer: {
-    flex: 0.5,
-    width: '100%',
-    alignItems: 'center',
-  },
-  textContainer: {
-    marginTop: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  imageBackground: {flex: 1},
+  mainContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  svgContainer: {flex: 0.5, width: '100%'},
+  textContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   updateTxt: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 20,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   updateBody: {
-    fontSize: 11,
-    marginBottom: 20,
-    marginLeft: 105,
-    marginRight: 105,
+    fontSize: 12,
+    marginHorizontal: 20,
     textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-SemiBold',
   },
   btnStyle: {
     flexDirection: 'row',
     borderRadius: 12,
-    paddingHorizontal: 120,
+    paddingHorizontal: 100,
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
     marginTop: 30,
   },
   btnText: {
     color: textColor,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
   btnText2: {
     color: GradientColor2,
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
+    marginTop: 10,
   },
 });

@@ -14,7 +14,7 @@ import {backgroundColorNew} from '../../Color/color';
 import moment from 'moment';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {

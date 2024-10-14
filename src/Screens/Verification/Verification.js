@@ -74,9 +74,7 @@ const Verification = ({navigation, route}) => {
         <View style={styles.stepContainer}>
           <View style={styles.circleContainer}>
             <View style={styles.circle(item.status)} />
-            <Text style={styles.itemTitleTxt}>
-              {item.title}
-            </Text>
+            <Text style={styles.itemTitleTxt}>{item.title}</Text>
           </View>
           {item.status === 'Verified' ? (
             <CheckCircle size={30} color="green" strokeColor="#FFFFFF" />

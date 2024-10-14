@@ -525,7 +525,7 @@ export const getWalletFailure = payload => ({
 });
 
 // Logout
-export const initLogout = amount => ({
+export const initLogout = () => ({
   type: actionTypes.INIT_LOGOUT,
 });
 

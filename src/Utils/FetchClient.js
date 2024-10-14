@@ -38,12 +38,12 @@ const instanceFunction = instanceObj => {
         }
         return config;
       } catch (error) {
-        // console.error('Error in request interceptor:', error);
+        console.error('Error in request interceptor:', error);
         return config;
       }
     },
     error => {
-      // console.error('Request Interceptor Error:', error);
+      console.error('Request Interceptor Error:', error);
       return Promise.reject(error);
     },
   );

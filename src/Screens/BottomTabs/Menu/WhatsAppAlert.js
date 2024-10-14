@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import {View, SafeAreaView, Text, Alert} from 'react-native';
+import {View, SafeAreaView, Text} from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import * as Constants from '../../../Constants/Constant';
-
 import {GradientColor2, seperator} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
 import AlertBox from '../../../Components/AlertBox';
@@ -19,8 +18,6 @@ const WhatsAppAlert = ({navigation}) => {
       const storedValue = await AsyncStorage.getItem('whatsAppAlert');
       if (storedValue !== null) {
         setSwitchOn(JSON.parse(storedValue));
-      } else {
-        await AsyncStorage.setItem('whatsAppAlert', JSON.stringify(false));
       }
     } catch (error) {
       console.error('Failed to fetch WhatsApp Alert state from storage', error);
