@@ -36,7 +36,6 @@ import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
 import RenderTabBar from '../Requests/RenderTabBar';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
-
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
   const minutes = Math.floor((millis % (1000 * 60 * 60)) / (1000 * 60));
@@ -173,8 +172,6 @@ const LocationHistory = ({navigation, route}) => {
   const [selected, setSelected] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  const [index, setIndex] = useState(0);
-  const [selected, setSelected] = useState(1);
 
   const {
     gpsTripsLoading,

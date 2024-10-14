@@ -1453,11 +1453,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   gpsButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -1722,5 +1717,4 @@ export default StyleSheet.create({
     fontSize: 14,
     marginTop: 15,
   },
-  tabView: {flex: 1},
 });
