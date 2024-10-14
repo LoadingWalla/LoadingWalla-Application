@@ -9,7 +9,7 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
@@ -139,7 +139,10 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={t(Constants.NO_REQ_FOUND)} />
+                <NotFound
+                  imageName="noRequest"
+                  title={t(Constants.NO_REQ_FOUND)}
+                />
               </ScrollView>
             )}
           </>
@@ -196,7 +199,10 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={t(Constants.NO_REQ_FOUND)} />
+                <NotFound
+                  imageName="noRequest"
+                  title={t(Constants.NO_REQ_FOUND)}
+                />
               </ScrollView>
             )}
           </>

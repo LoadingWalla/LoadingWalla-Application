@@ -1598,8 +1598,7 @@ export default StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginVertical: 60,
-    padding: 10,
+    // borderWidth: 1,
   },
   notFoundText: {
     color: '#707070',
@@ -1723,4 +1722,5 @@ export default StyleSheet.create({
     fontSize: 14,
     marginTop: 15,
   },
+  tabView: {flex: 1},
 });
