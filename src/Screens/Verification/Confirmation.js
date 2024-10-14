@@ -6,7 +6,7 @@ import {initMyLoadById, initMyLorryById} from '../../Store/Actions/Actions';
 import Button from '../../Components/Button';
 import Shield from '../../../assets/SVG/svg/Shield';
 import NotFound from '../../Components/NotFound';
-import styles from './style'
+import styles from './style';
 
 const Confirmation = ({navigation, route}) => {
   // console.log(888, route);

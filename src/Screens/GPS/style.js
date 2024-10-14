@@ -10,6 +10,10 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  tabView: {
+    flex: 1,
+    backgroundColor: '#FFFDFD',
+  },
   gpsSettingContainer: {
     flex: 1,
     padding: 10,

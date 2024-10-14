@@ -15,6 +15,7 @@ import {initLanguage} from '../../Store/Actions/Actions';
 import styles from './style';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
@@ -38,6 +39,8 @@ const GridView = ({data, index, selected, onPress}) => (
 );
 
 const Language = ({navigation, route}) => {
+  useTrackScreenTime('Language');
+
   const {params} = route;
   console.log('Language Screen ', route);
 
