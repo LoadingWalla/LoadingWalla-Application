@@ -13,8 +13,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import AlertBox from '../../Components/AlertBox';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const QuickFilters = ({navigation, route}) => {
+  useTrackScreenTime('QuickFilters');
   const {deviceId, name, navigationPath} = route.params;
 
   // const filters = [

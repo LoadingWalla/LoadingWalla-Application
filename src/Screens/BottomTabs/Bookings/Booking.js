@@ -24,8 +24,10 @@ import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const Booking = ({navigation}) => {
+  useTrackScreenTime('Booking');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [refreshing, setRefreshing] = useState(false);

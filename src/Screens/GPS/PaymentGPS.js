@@ -21,6 +21,7 @@ import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
@@ -53,6 +54,7 @@ const ReusableItem = React.memo(({title, value, isTax, isTaxValue}) => (
 ));
 
 const PaymentGPS = ({navigation, route}) => {
+  useTrackScreenTime('PaymentGps');
   const {plan_id, gpsCount, gpsOrderId, totalAmount} = route.params;
   const {t} = useTranslation();
   // console.log(77777, 'paymentGPS', route);

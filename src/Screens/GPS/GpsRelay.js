@@ -8,9 +8,11 @@ import {setGpsRelayRequest} from '../../Store/Actions/Actions';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 
 const GpsRelay = ({navigation, route}) => {
+  useTrackScreenTime('GpsRelay');
   const {t} = useTranslation();
   const {deviceId, item} = route.params;
   // console.log('gpsrelay-----------', route);

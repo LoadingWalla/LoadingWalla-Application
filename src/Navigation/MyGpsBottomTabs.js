@@ -18,10 +18,12 @@ import {
   tabIndicatorColor,
 } from '../Color/color';
 import GPSHomePage from '../Screens/GPS/GPSHomePage';
+import useTrackScreenTime from '../hooks/useTrackScreenTime';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyGpsBottomTabs() {
+  useTrackScreenTime('MyGpsBottomTabs');
   // Calculate tab width based on screen dimensions
   function getWidth() {
     const totalWidth = Dimensions.get('window').width;

@@ -16,8 +16,10 @@ import styles from './style'
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const PreviousBookings = ({navigation, route}) => {
+  useTrackScreenTime('PreviousBooking');
   const {Owner} = route?.params;
   // console.log(989898, Owner);
   const {t} = useTranslation();

@@ -8,6 +8,7 @@ import Button from '../../../Components/Button';
 import {useTranslation} from 'react-i18next';
 import styles from './style'
 import * as Constants from '../../../Constants/Constant';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const data = [
   // {
@@ -25,7 +26,7 @@ const data = [
 
 const Address = ({navigation}) => {
   const {t} = useTranslation();
-
+  useTrackScreenTime('Address');
   const renderItem = ({item}) => (
     <View style={styles.card}>
       <View style={styles.iconBox}>

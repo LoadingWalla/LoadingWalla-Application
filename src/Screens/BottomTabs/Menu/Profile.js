@@ -57,11 +57,13 @@ import RightArrow from '../../../../assets/SVG/svg/RightArrow';
 import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
 
 const Profile = ({navigation, route}) => {
+  useTrackScreenTime('Profile');
   const [isEditProfile, setEditProfile] = useState(false);
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();

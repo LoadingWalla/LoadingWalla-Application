@@ -19,6 +19,7 @@ import {
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Plan = ({text}) => {
   return (
@@ -73,6 +74,7 @@ const Rates = ({item, navigation}) => {
 };
 
 const BuyGps = ({navigation}) => {
+  useTrackScreenTime('BuyGps');
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData, gpsPlansError, gpsPlansLoading} =
     useSelector(state => {

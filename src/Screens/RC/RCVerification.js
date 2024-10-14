@@ -22,8 +22,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import QRScanner from '../../../assets/SVG/svg/QRScanner';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const RCVerification = ({navigation, route}) => {
+  useTrackScreenTime('RCVerification');
   const {title, RC, truck_id} = route.params;
   const [rcFrontImage, setRcFrontImage] = useState(null);
   const [rcBackImage, setRcBackImage] = useState(null);

@@ -22,6 +22,7 @@ import BackArrow from '../../../../assets/SVG/svg/BackArrow';
 import Close from '../../../../assets/SVG/Close';
 import {useTranslation} from 'react-i18next';
 import styles from './style'
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 if (
   Platform.OS === 'android' &&
@@ -31,6 +32,7 @@ if (
 }
 
 const Guide = ({navigation}) => {
+  useTrackScreenTime('Guide');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [selectedId, setSelectedId] = useState(null);

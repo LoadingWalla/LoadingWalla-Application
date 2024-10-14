@@ -14,8 +14,10 @@ import {
 } from '../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
 import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const PostLoads = ({navigation, route}) => {
+  useTrackScreenTime('PostLoads');
   const [searchFrom, setSearchFrom] = useState(
     !!route?.params?.from ? route?.params?.from : '',
   );

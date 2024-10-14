@@ -16,8 +16,10 @@ import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
 import {backgroundColorNew} from '../../Color/color';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const VerifyOtp = ({navigation, route}) => {
+  useTrackScreenTime('VerifyOtp');
   const {t} = useTranslation();
   const {userId, mobileNumber} = route?.params;
   const [otpValue, setOtpvalue] = useState('');

@@ -24,10 +24,12 @@ import {
 } from '../Color/color';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
+import useTrackScreenTime from '../hooks/useTrackScreenTime';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyLoadsBottomTabs() {
+  useTrackScreenTime('MyLoadsBottomTabs');
   const totalWidth = Dimensions.get('window').width;
   const numberOfTabs = 5;
 

@@ -1,8 +1,10 @@
 import {Image, Text, View} from 'react-native';
 import React from 'react';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const OrdersPayment = () => {
+  useTrackScreenTime('OrdersPayment');
   return (
     <View style={styles.container}>
       <View style={styles.notFoundView}>

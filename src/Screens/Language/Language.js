@@ -40,7 +40,6 @@ const GridView = ({data, index, selected, onPress}) => (
 
 const Language = ({navigation, route}) => {
   useTrackScreenTime('Language');
-
   const {params} = route;
   console.log('Language Screen ', route);
 

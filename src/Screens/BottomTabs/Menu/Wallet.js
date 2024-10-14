@@ -29,8 +29,10 @@ import RenderTabBar from '../../Requests/RenderTabBar';
 import {useTranslation} from 'react-i18next';
 import NotFound from '../../../Components/NotFound';
 import styles from './style';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const Wallet = ({navigation}) => {
+  useTrackScreenTime('Wallet');
   const [amount, setAmount] = useState(100);
   const dispatch = useDispatch();
   const {t} = useTranslation();

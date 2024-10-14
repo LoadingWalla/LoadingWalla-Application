@@ -16,6 +16,7 @@ import {
   websocketDisconnect,
 } from '../../Store/Actions/WebSocketActions';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const truck = {
   id: '1',
@@ -55,6 +56,7 @@ const paymentData = [
 ];
 
 const OwnedGPS = ({navigation, route}) => {
+  useTrackScreenTime('OwnedGPS');
   const {deviceId} = route.params;
   // console.log(4444, route.params);
   const dispatch = useDispatch();

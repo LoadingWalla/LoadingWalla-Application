@@ -2,6 +2,7 @@ import {FlatList, Text, View} from 'react-native';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const RenderItem = React.memo(({item, index}) => {
   // console.log(4444, item, index);
@@ -49,6 +50,7 @@ const RenderItem = React.memo(({item, index}) => {
 });
 
 const StopsScreen = ({navigation, route}) => {
+  useTrackScreenTime('StopScreen');
   // const {deviceId, from, to} = route.params;
 
   const {gpsStopsData, gpsTokenData} = useSelector(state => state.data);

@@ -26,8 +26,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {Picker} from '@react-native-picker/picker';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const CardDetails = ({route, navigation}) => {
+  useTrackScreenTime('CardDetails');
   const {title, from, headerTitle} = route.params;
   // console.log(9999, route);
   const [aadhaarNumber, setAadhaarNumber] = useState('');

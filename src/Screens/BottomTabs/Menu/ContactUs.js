@@ -24,8 +24,10 @@ import EmailIcon from '../../../../assets/SVG/svg/EmailIcon';
 import WhatsAppIcon from '../../../../assets/SVG/svg/WhatsAppIcon';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const ContactUs = ({navigation}) => {
+  useTrackScreenTime('ContactUs');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');

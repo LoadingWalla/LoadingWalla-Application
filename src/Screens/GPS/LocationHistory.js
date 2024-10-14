@@ -34,6 +34,7 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
 import NotFound from '../../Components/NotFound';
 import RenderTabBar from '../Requests/RenderTabBar';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -163,6 +164,7 @@ const StopBox = ({label, value}) => (
 const VerticalLine = () => <View style={styles.locHistoryVerticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
+  useTrackScreenTime('LocationHistory');
   const {deviceId, name, from, to} = route?.params;
   // console.log(777777, route);
   const {t} = useTranslation();

@@ -32,8 +32,10 @@ import {
 import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const AddLorry = ({navigation, route}) => {
+  useTrackScreenTime('AddLorry');
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('');
   const [vehicle, setVehicle] = useState('');

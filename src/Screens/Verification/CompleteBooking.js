@@ -24,8 +24,10 @@ import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
 import Button from '../../Components/Button';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const CompleteBooking = ({navigation, route}) => {
+  useTrackScreenTime('CompleteBooking');
   const {
     id,
     from,

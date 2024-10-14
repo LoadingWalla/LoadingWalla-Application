@@ -21,8 +21,10 @@ import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const FindLoadResult = ({navigation, route}) => {
+  useTrackScreenTime('FindLoadResult');
   const user = useRef('');
   const animationProgress = useRef(new Animated.Value(0));
   const [searchFrom, setSearchFrom] = useState(route?.params?.searchFrom);

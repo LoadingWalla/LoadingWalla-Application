@@ -15,6 +15,7 @@ import moment from 'moment';
 import styles from './style';
 import MapComponent from '../../Components/MapComponent';
 import BottomSwipeUpContainer from '../../Components/BottomSwipeUpContainer';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const getFilteredPositions = (wsMessages22, deviceId) => {
   return wsMessages22.positions.filter(
@@ -23,6 +24,7 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
 };
 
 const TrackingTruckNew = ({navigation, route}) => {
+  useTrackScreenTime('TrackingTruckNew');
   const {item, lat, long, deviceId} = route.params;
   // console.log(11111, 'TrackingTruck Params ------>', route);
 

@@ -15,6 +15,7 @@ import RenderTabBar from '../../Requests/RenderTabBar';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 function getRoutesForUserType(type, t) {
   if (type === '1') {
@@ -38,6 +39,7 @@ function getRoutesForUserType(type, t) {
 }
 
 const MyLorry = ({navigation}) => {
+  useTrackScreenTime('MyLorry');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [userType, setUserType] = useState('');
