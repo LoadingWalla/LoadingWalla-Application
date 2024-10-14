@@ -1,5 +1,10 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import {backgroundColorNew, pageBackground, textColor, titleColor} from '../../Color/color';
+import {
+  backgroundColorNew,
+  pageBackground,
+  textColor,
+  titleColor,
+} from '../../Color/color';
 import {PrivacyPolicy} from '../../Color/color';
 
 export default StyleSheet.create({
@@ -31,7 +36,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   mapContainer: {
-    flex: 1
+    flex: 1,
   },
   gpsTrackContainer: {
     padding: 10,
@@ -135,18 +140,6 @@ export default StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 8,
     elevation: 2,
-  },
-  bottomContainer: {
-    backgroundColor: '#FFF7F5',
-    position: 'absolute',
-    bottom: 0,
-    padding: 10,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: '100%',
-    elevation: 3,
-    borderColor: '#F7F7F7',
-    borderWidth: 1,
   },
   getNowButton: {
     backgroundColor: '#3BA700',
@@ -1044,10 +1037,6 @@ export default StyleSheet.create({
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  fullScreenContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -1153,11 +1142,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   noDataText: {
     fontSize: 16,
     color: PrivacyPolicy,
@@ -1259,7 +1243,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     // borderEndWidth: 1,
   },
-  speedBox: {
+  speedBoxA: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -1339,7 +1323,7 @@ export default StyleSheet.create({
     marginTop: 50,
   },
   detailBox: {
-    maxWidth: '73%'
+    maxWidth: '73%',
   },
   listContainer: {
     flex: 1,
@@ -1396,8 +1380,8 @@ export default StyleSheet.create({
     marginBottom: 15,
   },
   rateHeaderView: {
-    borderWidth: 0, 
-    padding: 8
+    borderWidth: 0,
+    padding: 8,
   },
   planTitle: {
     fontFamily: 'PlusJakartaSans-Bold',
@@ -1450,14 +1434,14 @@ export default StyleSheet.create({
     textTransform: 'capitalize',
   },
   geoZoneLoader: {
-    flex: 0.5, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loader: {
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center'
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tableContainer: {
     flex: 1,
@@ -1470,9 +1454,9 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   loaderContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   gpsButton: {
     justifyContent: 'center',
@@ -1584,7 +1568,7 @@ export default StyleSheet.create({
   },
   geozoneAbsFillObj: {
     ...StyleSheet.absoluteFillObject,
-  }, 
+  },
   gpsSettingBtnStyle: {
     flexDirection: 'row',
     borderRadius: 8,
@@ -1592,15 +1576,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 5,
-  },
-  addGeozoneBtnStyle: {
-    borderRadius: 8,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    marginTop: 20,
-    width: '100%',
   },
   getGpsPlanTxt: {
     color: titleColor,
@@ -1626,18 +1601,13 @@ export default StyleSheet.create({
     marginVertical: 60,
     padding: 10,
   },
-  loadingStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   notFoundText: {
     color: '#707070',
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 28,
   },
   notFoundView: {
-    // borderWidth: 1,
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1717,15 +1687,16 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
     // borderWidth: 1,
-    width: 200
+    width: 200,
   },
   homeView: {
     flex: 1,
     marginVertical: 60,
     justifyContent: 'center',
   },
-  notFoundView: {
+  notFoundViewA: {
     flex: 0.75,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1734,7 +1705,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 0.2,
-
   },
   offerText: {
     fontFamily: 'PlusJakartaSans-Medium',

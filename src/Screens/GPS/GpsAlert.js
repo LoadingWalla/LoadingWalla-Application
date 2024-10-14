@@ -26,7 +26,7 @@ const NotificationItem = React.memo(({call, item}) => {
   return (
     <View style={styles.headerBox}>
       {/* <View style={styles.textView}> */}
-      <View style={styles.speedBox}>
+      <View style={styles.speedBoxA}>
         <Text style={styles.gpsAlertHeaderText}>{message}</Text>
         <Text style={styles.timeText}>{timeAgo}</Text>
       </View>
