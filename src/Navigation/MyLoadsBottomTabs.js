@@ -70,7 +70,7 @@ export default function MyLoadsBottomTabs() {
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
-        initialRouteName={t(Constants.NAV_DASHBOARD)}
+        initialRouteName={'Dashboard'}
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
@@ -125,7 +125,7 @@ export default function MyLoadsBottomTabs() {
             tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
-            title: t(Constants.NAV_DASHBOARD)
+            title: t(Constants.NAV_DASHBOARD),
           }}
           listeners={{
             tabPress: () => handleTabPress(2),

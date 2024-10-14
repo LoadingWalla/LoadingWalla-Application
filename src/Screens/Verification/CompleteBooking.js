@@ -29,7 +29,7 @@ import {
 import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
 import Button from '../../Components/Button';
-import styles from './style'
+import styles from './style';
 
 const CompleteBooking = ({navigation, route}) => {
   const {
@@ -154,13 +154,11 @@ const CompleteBooking = ({navigation, route}) => {
         visible={isCameraOptions}
         onRequestClose={() => {}}>
         <View style={styles.completeBookingChooseOptModal}>
-          <View
-            style={styles.completeBookingView}>
+          <View style={styles.completeBookingView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View
-              style={styles.viewStyle1}>
+            <View style={styles.viewStyle1}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={styles.viewStyle2}>
                   <Cammera />
@@ -185,8 +183,7 @@ const CompleteBooking = ({navigation, route}) => {
   return (
     <View style={styles.completeBookingCcontainer}>
       {chooseOptions()}
-      <View
-        style={styles.completeBookingCardHolderView}>
+      <View style={styles.completeBookingCardHolderView}>
         <CardHeader from={from} to={to} icon={icon} t={t} />
         <View style={styles.horizontalLine} />
         <View style={styles.rowdirection}>
@@ -200,8 +197,7 @@ const CompleteBooking = ({navigation, route}) => {
           </Text>
         </View>
         <View style={styles.horizontalLine} />
-        <View
-          style={styles.viewStyle1}>
+        <View style={styles.viewStyle1}>
           <View style={styles.rowFlexDirection}>
             <Text style={styles.textStyle}>Weight</Text>
             <Text style={styles.textStyle}>{`: ${qty} Ton`}</Text>
@@ -225,8 +221,7 @@ const CompleteBooking = ({navigation, route}) => {
         </View>
 
         <View style={styles.setFlex}>
-          <View
-            style={styles.selectDocUploadView}>
+          <View style={styles.selectDocUploadView}>
             <View style={styles.selectorContainer}>
               <Text style={styles.headerText}>Select document to Upload</Text>
               <View style={styles.radioButtonContainer}>

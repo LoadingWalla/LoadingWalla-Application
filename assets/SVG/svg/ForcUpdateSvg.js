@@ -8,12 +8,12 @@ import Svg, {
   ClipPath,
 } from 'react-native-svg';
 
-function ForcUpdateSvg({size}) {
+function ForcUpdateSvg() {
   return (
     <Svg
-      width={size}
-      height={size}
-      viewBox="0 0 310 310"
+      width={500}
+      height={500}
+      viewBox="0 0 320 310"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
       <Path fill="url(#paint0_linear_904_4102)" d="M0 0H322V239H0z" />
@@ -4169,8 +4169,7 @@ function ForcUpdateSvg({size}) {
           y1={0}
           x2={161}
           y2={248}
-          gradientUnits="userSpaceOnUse"
-        >
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#60E2FF" />
           <Stop offset={1} stopColor="#C6EFEC" />
         </LinearGradient>
@@ -4180,8 +4179,7 @@ function ForcUpdateSvg({size}) {
           y1={174.192}
           x2={286.788}
           y2={165.048}
-          gradientUnits="userSpaceOnUse"
-        >
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#fff" />
           <Stop offset={0.34} stopColor="#FCFCFC" />
           <Stop offset={0.48} stopColor="#F5F5F5" />
@@ -4199,8 +4197,7 @@ function ForcUpdateSvg({size}) {
           y1={165.436}
           x2={284.154}
           y2={165.854}
-          gradientUnits="userSpaceOnUse"
-        >
+          gradientUnits="userSpaceOnUse">
           <Stop stopColor="#D3CFC3" />
           <Stop offset={0.05} stopColor="#E6E2D8" />
           <Stop offset={0.08} stopColor="#EDEAE0" />
@@ -4217,11 +4214,7 @@ function ForcUpdateSvg({size}) {
         </ClipPath>
       </Defs>
     </Svg>
-  )
+  );
 }
 
 export default ForcUpdateSvg;
-
-
-
-

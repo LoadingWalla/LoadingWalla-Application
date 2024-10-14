@@ -7,6 +7,7 @@ import {Provider} from 'react-redux';
 import store from './src/Store';
 import {
   BackHandler,
+  ImageBackground,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -19,14 +20,13 @@ import {
 import {foregroundNotification} from './src/Utils/Notification_helper';
 import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
 import {navigationRef} from './src/Navigation/NavigationService';
-import firestore from '@react-native-firebase/firestore';
 import DeviceInfo from 'react-native-device-info';
-import ForcUpdateSvg from './assets/SVG/svg/ForcUpdateSvg';
 import Button from './src/Components/Button';
 import * as Constants from './src/Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import {appStoreLink, playStoreLink} from './src/Utils/Url';
 import {GradientColor2, textColor} from './src/Color/color';
+import axios from 'axios';
 
 const App = () => {
   const [forceUpdate, setForceUpdate] = useState(false);
@@ -39,23 +39,18 @@ const App = () => {
 
   const getVersion = async () => {
     try {
-      const versionDoc = await firestore()
-        .collection('AppVersion')
-        .doc('latest')
-        .get();
-      const latestVersion = versionDoc.data()?.version;
-      // Get current app version using react-native-device-info
-      const currentVersion = DeviceInfo.getVersion(); // Get app version as a string
-      console.log(
-        '--------- Current version: ----------',
-        currentVersion,
-        '--------- Latest version: -----------',
-        latestVersion,
-      );
-      if (latestVersion && latestVersion !== currentVersion) {
-        setForceUpdate(true); // Set force update if versions don't match
+      const response = await axios.get('https://loadingwalla.com/api/version');
+      // console.log(4444, response);
+      if (response.status === 200) {
+        const latestVersion = response?.data;
+        const currentVersion = DeviceInfo.getVersion();
+        if (latestVersion && latestVersion > currentVersion) {
+          setForceUpdate(true);
+        } else {
+          setForceUpdate(false);
+        }
       } else {
-        setForceUpdate(false); // App is up to date
+        console.log('Failed to fetch version, status:', response.status);
       }
     } catch (error) {
       console.error('Error fetching version:', error);
@@ -68,7 +63,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log('HandleExitApp');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,
@@ -82,7 +76,7 @@ const App = () => {
       try {
         foregroundNotification();
         await checkNotificationPermission();
-        await checkForAppUpdate();
+        await getVersion();
       } catch (error) {
         console.error('Initialization error:', error);
       }
@@ -103,24 +97,6 @@ const App = () => {
     }
   };
 
-  const checkForAppUpdate = async () => {
-    try {
-      const versionDoc = await firestore()
-        .collection('AppVersion')
-        .doc('latest')
-        .get();
-
-      const latestVersion = versionDoc.data()?.version;
-      const currentVersion = DeviceInfo.getVersion();
-
-      if (latestVersion && latestVersion !== currentVersion) {
-        setForceUpdate(true);
-      }
-    } catch (error) {
-      console.error('Error checking app version:', error);
-    }
-  };
-
   const handleForceUpdate = () => {
     const url = Platform.OS === 'android' ? playStoreLink : appStoreLink;
 
@@ -138,10 +114,15 @@ const App = () => {
   if (forceUpdate) {
     return (
       <View style={styles.mainContainer}>
+        <StatusBar hidden />
         <View style={styles.svgContainer}>
-          <ForcUpdateSvg />
+          <ImageBackground
+            source={require('./assets/ForceUpdateImage.png')}
+            resizeMode="cover"
+            style={styles.imageBackground}
+          />
         </View>
-        <View style={styles.textMainContainer}>
+        <View style={styles.svgContainer}>
           <View style={styles.textContainer}>
             <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
             <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
@@ -151,11 +132,7 @@ const App = () => {
               textStyle={styles.btnText}
               style={styles.btnStyle}
             />
-            <Pressable
-              onPress={() => {
-                console.log('Exit from the app');
-                handleBackButton();
-              }}>
+            <Pressable onPress={handleBackButton}>
               <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
             </Pressable>
           </View>
@@ -178,6 +155,7 @@ const App = () => {
 export default App;
 
 const styles = StyleSheet.create({
+  imageBackground: {flex: 1},
   mainContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -187,48 +165,42 @@ const styles = StyleSheet.create({
     flex: 0.5,
     width: '100%',
   },
-  textMainContainer: {
-    flex: 0.5,
-    width: '100%',
-    alignItems: 'center',
-  },
   textContainer: {
-    marginTop: 60,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   updateTxt: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 20,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   updateBody: {
-    fontSize: 11,
-    marginBottom: 20,
-    marginLeft: 105,
-    marginRight: 105,
+    fontSize: 12,
+    marginHorizontal: 20,
     textAlign: 'center',
+    fontFamily: 'PlusJakartaSans-SemiBold',
   },
   btnStyle: {
     flexDirection: 'row',
     borderRadius: 12,
-    paddingHorizontal: 120,
+    paddingHorizontal: 100,
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 30,
     marginTop: 30,
   },
   btnText: {
     color: textColor,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
   btnText2: {
     color: GradientColor2,
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
+    marginTop: 10,
   },
 });

@@ -71,7 +71,7 @@ export default function MyTruckBottomTabs() {
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
-        initialRouteName={t(Constants.NAV_HOME)}
+        initialRouteName={'Market'}
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
