@@ -1,7 +1,6 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import React from 'react';
-import {titleColor} from '../../Color/color';
-import styles from './style'
+import styles from './style';
 
 const OrdersPayment = () => {
   return (
@@ -22,16 +21,3 @@ const OrdersPayment = () => {
 };
 
 export default OrdersPayment;
-
-// const styles = StyleSheet.create({
-//   notFoundView: {
-//     // borderWidth: 1,
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   splashImage: (height, width) => ({
-//     height: height,
-//     width: width,
-//   }),
-// });

@@ -1,11 +1,10 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {initDocumentVerification} from '../../Store/Actions/Actions';
-import {titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import UploadIcon from '../../../assets/SVG/svg/UploadIcon';

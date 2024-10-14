@@ -1,12 +1,10 @@
 import {
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React from 'react';
-import {textColor} from '../../Color/color';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import Button from '../../Components/Button';
 import {useFocusEffect} from '@react-navigation/native';
@@ -15,7 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-import styles from './style'
+import styles from './style';
 
 const GpsSetting = ({navigation, route}) => {
   const {deviceId} = route.params;
@@ -83,54 +81,3 @@ const GpsSetting = ({navigation, route}) => {
 };
 
 export default GpsSetting;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 10,
-//   },
-//   headerBox: {
-//     padding: 15,
-//     backgroundColor: '#FFFFFF',
-//     flexDirection: 'row',
-//     // justifyContent: 'center',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     elevation: 2,
-//     marginBottom: 5,
-//   },
-//   iconBox: {
-//     flexDirection: 'row',
-//   },
-//   textStyle: {
-//     fontSize: 18,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//     textTransform: 'uppercase',
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginVertical: 5,
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   gpsInfo: {alignItems: 'center', marginVertical: 5},
-//   gpsInfoText: {
-//     fontSize: 15,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     color: 'blue',
-//   },
-//   errorText: {
-//     fontSize: 16,
-//     color: 'red',
-//     textAlign: 'center',
-//     marginTop: 20,
-//   },
-// });

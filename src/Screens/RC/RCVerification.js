@@ -9,13 +9,12 @@ import {
   Modal,
   PermissionsAndroid,
   ActivityIndicator,
-  StyleSheet,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './style';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import {GradientColor3, titleColor} from '../../Color/color';
+import {GradientColor3} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
@@ -280,77 +279,3 @@ const RCVerification = ({navigation, route}) => {
 
 export default RCVerification;
 
-// const stylesss = StyleSheet.create({
-//   modalContainer: {
-//     backgroundColor: 'rgba(0,0,0, 0.5)',
-//     flex: 1,
-//   },
-//   modalChildContainer: {
-//     backgroundColor: '#FFFFFF',
-//     padding: 10,
-//     borderTopLeftRadius: 20,
-//     borderTopRightRadius: 20,
-//     width: '100%',
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 4,
-//     elevation: 5,
-//     position: 'absolute',
-//     bottom: 0,
-//     marginTop: 200,
-//   },
-//   iconBox: {justifyContent: 'center', alignItems: 'center'},
-//   optionBox: {flexDirection: 'row', justifyContent: 'space-around'},
-//   seperatorBox: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginVertical: 20,
-//   },
-//   halfHorizontalLine: {
-//     backgroundColor: titleColor,
-//     height: 2,
-//     flex: 1,
-//   },
-//   orText: {
-//     fontSize: 14,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     marginHorizontal: 5,
-//   },
-//   paramBox: {
-//     borderRadius: 5,
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     paddingVertical: 10,
-//     backgroundColor: '#FFEBE6',
-//   },
-//   RCText: {
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   imageBox: {marginTop: 20, flex: 1},
-//   borderLineContainer: {
-//     flexDirection: 'row',
-//     borderWidth: 1.5,
-//     borderColor: GradientColor3,
-//     borderStyle: 'dotted',
-//     padding: 10,
-//     borderRadius: 5,
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//     marginTop: 15,
-//     flex: 1,
-//   },
-//   innerContainer: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     flex: 1,
-//     marginTop: 5,
-//   },
-// });

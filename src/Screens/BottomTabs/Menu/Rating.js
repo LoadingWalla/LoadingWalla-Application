@@ -1,7 +1,6 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
 import styles from './style';
-import {PrivacyPolicy} from '../../../Color/color';
 
 const Rating = () => {
   return (
@@ -12,7 +11,3 @@ const Rating = () => {
 };
 
 export default Rating;
-
-// const styles = StyleSheet.create({
-//   colotss: {color: PrivacyPolicy},
-// });

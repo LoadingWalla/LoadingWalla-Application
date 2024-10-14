@@ -13,15 +13,14 @@ import {useFocusEffect} from '@react-navigation/native';
 import {
   ActivityIndicator,
   FlatList,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 import GpsItem from '../../Components/GpsItem';
 import Button from '../../Components/Button';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import Snackbar from 'react-native-snackbar';
-import styles from './style'
+import styles from './style';
 
 const GpsTrackings = ({navigation}) => {
   const dispatch = useDispatch();
@@ -187,46 +186,3 @@ const GpsTrackings = ({navigation}) => {
 };
 
 export default GpsTrackings;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 10,
-//     flex: 1,
-//   },
-//   headerContainer: {
-//     marginVertical: 10,
-//   },
-//   headerTitle: {
-//     fontSize: 18,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     paddingLeft: 10,
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginVertical: 5,
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   loadingStyle: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   noAddressContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   noAddressText: {
-//     fontSize: 16,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-// });

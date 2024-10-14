@@ -5,12 +5,12 @@ export const ENTER_MOBILE_NUMBER_TITLE =
   'Enter mobile number to sign up/login & continue to Truck';
 export const MOBILE_NUMBER = 'Mobile Number';
 export const ENTER_MOBILE_NUMBER = 'Enter mobile number';
-
+export const ANYWHERE = 'Anywhere'
 export const NAME = 'Name';
 export const QUANTITY = 'Quantity';
 export const DISTANCE = 'Distance';
 export const POST_LOOK = 'This is how your post looks';
-
+export const ENTER_LOC= 'Enter Location';
 export const PRICE = 'Price';
 export const SELECT_PRICE_TYPE = 'Select price type';
 
@@ -125,8 +125,12 @@ export const RATE_NOW = 'Rate Now';
 export const CAMERA = 'Camera';
 export const GALLERY = 'Gallery';
 export const REMOVE = 'Remove';
+export const SEL_DOC_TYPE = 'Select Document Type';
+export const ENTER_DOC_NUM = 'Enter Document Number';
 export const COMPLETE_BOOKING = 'Complete Booking';
 export const LOG_DETAILS = 'Logistics Details';
+export const BOOKED = 'Booked';
+export const GO_TO_BOOKINGS = 'Go to Bookings';
 export const SELECT_LOCATION = 'Select drop off locations';
 export const SELECT_LOCATION_TITLE = 'Select Location';
 export const POST_LOAD_CARRY = 'Post loads to carry';

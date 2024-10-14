@@ -6,8 +6,6 @@ import {
   ScrollView,
   Modal,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,16 +13,10 @@ import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import {
   GradientColor2,
-  PrivacyPolicy,
-  inputColor,
-  seperator,
-  textColor,
-  titleColor,
-  white,
+  seperator
 } from '../../Color/color';
 import Button from '../../Components/Button';
 import SearchFilter from '../../Components/SearchFilter';
-import RadioButton from '../../Components/RadioButton';
 import TruckItem from '../../Components/TruckItem';
 import TextInputField from '../../Components/TextInputField';
 import {useDispatch, useSelector} from 'react-redux';
@@ -457,56 +449,4 @@ const AddLorry = ({navigation, route}) => {
 
 export default AddLorry;
 
-// const styles = StyleSheet.create({
-//   MainContainer: {
-//     backgroundColor: white,
-//     flex: 1,
-//   },
-//   button: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   touchStyle: {
-//     marginLeft: 30,
-//     marginRight: 30,
-//     marginTop: 30,
-//   },
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   truckTypeItem: {
-//     // width: 60,
-//     height: 45,
-//     paddingHorizontal: 10,
-//     minWidth: 45,
-//     marginRight: 10,
-//     marginBottom: 10,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#f19e72',
-//   },
-//   TyuckTypeUnSelectItem: {
-//     height: 45,
-//     paddingHorizontal: 10,
-//     minWidth: 45,
-//     marginRight: 10,
-//     marginBottom: 10,
-//     backgroundColor: inputColor,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   label: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-// });
+

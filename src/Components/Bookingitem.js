@@ -68,7 +68,7 @@ const BookingItem = ({detail, onpressStatus, buttonStatus, userType}) => {
               color: 'blue',
               textDecorationLine: 'underline',
             }}>
-            View Details
+            {t(Constants.VIEW_DETAILS)}
           </Text>
         </TouchableOpacity>
       ) : (

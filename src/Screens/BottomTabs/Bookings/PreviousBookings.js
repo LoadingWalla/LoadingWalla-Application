@@ -1,13 +1,11 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   FlatList,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Image,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,7 +14,6 @@ import {initBooking} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 import styles from './style'
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
-import {PrivacyPolicy} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 
@@ -107,52 +104,3 @@ const PreviousBookings = ({navigation, route}) => {
 };
 
 export default PreviousBookings;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FFFDFD',
-//   },
-//   card: {
-//     borderRadius: 8,
-//     elevation: 2,
-//     backgroundColor: '#FFFFFF',
-//     padding: 10,
-//     marginBottom: 10,
-//     marginTop: 10,
-//     marginLeft: 5,
-//     marginRight: 5,
-//   },
-//   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
-//   infoContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   textStyle: {
-//     fontWeight: '700',
-//     fontSize: 16,
-//     color: 'green',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   viewDetail: {
-//     fontSize: 15,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     color: 'blue',
-//     textDecorationLine: 'underline',
-//   },
-//   scrollViewContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   notFoundText: {
-//     fontSize: 18,
-//     color: PrivacyPolicy,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   lottieStyle: {height: 250, width: 250},
-//   detailsButton: {
-//     alignItems: 'center',
-//   },
-// });

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   View,
@@ -6,7 +6,6 @@ import {
   Animated,
   BackHandler,
   Easing,
-  Image,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,7 +16,6 @@ import {initFindLoad} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 import InnerButton from '../../../Components/InnerButton';
 import {DialCall} from '../../../Utils/DialCall';
-
 import SearchFilter from '../../../Components/SearchFilter';
 import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';
@@ -75,7 +73,7 @@ const FindLoadResult = ({navigation, route}) => {
       setSearchTo(`${item?.place_name}`);
     } else {
       setSearchFrom(`${item?.place_name}`);
-      setSearchTo('Anywhere');
+      setSearchTo(t(Constants.ANYWHERE));
     }
   };
 
@@ -110,7 +108,7 @@ const FindLoadResult = ({navigation, route}) => {
         if (val === 'from') {
           setSearchFrom(item?.place_name);
           setSearchFromId(item?.id);
-          setSearchTo('Anywhere');
+          setSearchTo(t(Constants.ANYWHERE));
           return;
         }
         setSearchTo(item?.place_name);
@@ -132,7 +130,7 @@ const FindLoadResult = ({navigation, route}) => {
   const renderItem = item => {
     return (
       <View style={style.card}>
-        <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
+        <CardHeader from={item?.from} to={item?.to} icon={item?.image} />
         <View style={style.horizontalLine} />
         <View style={style.rowdirection}>
           <View style={style.point} />
@@ -159,7 +157,7 @@ const FindLoadResult = ({navigation, route}) => {
           <InnerButton
             enabledStyle={style.findButtonContainer}
             textStyle={style.findButtonText}
-            title={'Call'}
+            title={t(Constants.CALL)}
             navigation={() => DialCall(item?.phone)}
           />
         </View>
@@ -172,10 +170,10 @@ const FindLoadResult = ({navigation, route}) => {
       <View style={style.findLocationBox}>
         <SearchFilter
           defaultValue={searchFrom}
-          leftTitle={Constants.FROM}
+          leftTitle={t(Constants.FROM)}
           closeIconClick={() => closeIconClick('from')}
           onSearchPress={() => navigateToSeach('from')}
-          placeholder={Constants.SELECT_LOCATION_TITLE}
+          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
         />
         {showLocationFrom === true && (
           <LocationModal
@@ -185,10 +183,10 @@ const FindLoadResult = ({navigation, route}) => {
         )}
         <SearchFilter
           defaultValue={searchTo}
-          leftTitle={Constants.TO}
+          leftTitle={t(Constants.TO)}
           closeIconClick={() => closeIconClick('to')}
           onSearchPress={() => navigateToSeach()}
-          placeholder={Constants.SELECT_LOCATION_TITLE}
+          placeholder={t(Constants.SELECT_LOCATION_TITLE)}
         />
         {showLocationTo === true && (
           <LocationModal
@@ -198,7 +196,7 @@ const FindLoadResult = ({navigation, route}) => {
         )}
         <Button
           onPress={() => searchLoad()}
-          title={Constants.FIND_LOADS}
+          title={t(Constants.FIND_LOADS)}
           loading={findLoadLoading}
           textStyle={style.buttonTextStyle}
           style={style.findBtnStyle}
