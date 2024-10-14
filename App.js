@@ -1,13 +1,20 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import Navigation from './src/Navigation/router';
 import {Provider} from 'react-redux';
 import store from './src/Store';
+import Navigation from './src/Navigation/router';
+import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
+import Button from './src/Components/Button';
+import {navigationRef} from './src/Navigation/NavigationService';
+import {foregroundNotification} from './src/Utils/Notification_helper';
+import DeviceInfo from 'react-native-device-info';
+import axios from 'axios';
+import analytics from '@react-native-firebase/analytics';
+import {useTranslation} from 'react-i18next';
 import {
   BackHandler,
-  ImageBackground,
   Linking,
   PermissionsAndroid,
   Platform,
@@ -16,62 +23,76 @@ import {
   StyleSheet,
   Text,
   View,
+  ImageBackground,
 } from 'react-native';
-import {foregroundNotification} from './src/Utils/Notification_helper';
-import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
-import {navigationRef} from './src/Navigation/NavigationService';
-import DeviceInfo from 'react-native-device-info';
-import Button from './src/Components/Button';
 import * as Constants from './src/Constants/Constant';
-import {useTranslation} from 'react-i18next';
 import {appStoreLink, playStoreLink} from './src/Utils/Url';
 import {GradientColor2, textColor} from './src/Color/color';
-import axios from 'axios';
 
 const App = () => {
   const [forceUpdate, setForceUpdate] = useState(false);
   const {t} = useTranslation();
+  const startTime = useRef(Date.now());
 
-  useEffect(() => {
-    foregroundNotification();
-    checkNotificationPermission();
+  /** Helper: Track screen views and time spent */
+  const trackScreenView = useCallback(async screenName => {
+    try {
+      await analytics().logScreenView({
+        screen_name: screenName,
+        screen_class: screenName,
+      });
+
+      const duration = (Date.now() - startTime.current) / 1000;
+      await analytics().logEvent('screen_time', {
+        screen_name: screenName,
+        time_spent: duration,
+      });
+
+      startTime.current = Date.now();
+    } catch (error) {
+      console.error('Analytics tracking failed:', error);
+    }
   }, []);
 
-  const getVersion = async () => {
+  /** Helper: Handle force update by opening store link */
+  const handleForceUpdate = useCallback(() => {
+    const storeUrl = Platform.OS === 'android' ? playStoreLink : appStoreLink;
+    Linking.openURL(storeUrl).catch(err =>
+      console.error('Failed to open URL:', err),
+    );
+  }, []);
+
+  /** Helper: Check and request notification permissions */
+  const checkNotificationPermission = useCallback(async () => {
+    if (Platform.OS === 'android') {
+      try {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        );
+      } catch (error) {
+        console.error('Notification permission error:', error);
+      }
+    }
+  }, []);
+
+  /** Helper: Check app version and decide on force update */
+  const getVersion = useCallback(async () => {
     try {
       const response = await axios.get('https://loadingwalla.com/api/version');
-      // console.log(4444, response);
       if (response.status === 200) {
-        const latestVersion = response?.data;
+        const latestVersion = response.data;
         const currentVersion = DeviceInfo.getVersion();
-        if (latestVersion && latestVersion > currentVersion) {
-          setForceUpdate(true);
-        } else {
-          setForceUpdate(false);
-        }
+        setForceUpdate(latestVersion > currentVersion);
       } else {
-        console.log('Failed to fetch version, status:', response.status);
+        console.error('Failed to fetch version, status:', response.status);
       }
     } catch (error) {
       console.error('Error fetching version:', error);
     }
-  };
-
-  function handleBackButton() {
-    BackHandler.exitApp();
-    return true;
-  }
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButton,
-    );
-    return () => backHandler.remove();
   }, []);
 
+  /** Initialize app: Runs once on mount */
   useEffect(() => {
-    getVersion();
     const initializeApp = async () => {
       try {
         foregroundNotification();
@@ -83,33 +104,28 @@ const App = () => {
     };
 
     initializeApp();
-  }, []);
 
-  const checkNotificationPermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-        );
-      } catch (error) {
-        console.error('Notification permission error:', error);
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        BackHandler.exitApp();
+        return true;
+      },
+    );
+
+    return () => backHandler.remove();
+  }, [checkNotificationPermission, getVersion]);
+
+  /** Handle navigation state changes to track screen views */
+  const handleStateChange = useCallback(
+    state => {
+      const currentRoute = state?.routes[state.index]?.name;
+      if (currentRoute) {
+        trackScreenView(currentRoute);
       }
-    }
-  };
-
-  const handleForceUpdate = () => {
-    const url = Platform.OS === 'android' ? playStoreLink : appStoreLink;
-
-    Linking.canOpenURL(url)
-      .then(supported => {
-        if (supported) {
-          Linking.openURL(url);
-        } else {
-          console.error('Cannot open URL:', url);
-        }
-      })
-      .catch(err => console.error('Error opening URL:', err));
-  };
+    },
+    [trackScreenView],
+  );
 
   if (forceUpdate) {
     return (
@@ -122,20 +138,18 @@ const App = () => {
             style={styles.imageBackground}
           />
         </View>
-        <View style={styles.svgContainer}>
-          <View style={styles.textContainer}>
-            <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
-            <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
-            <Button
-              title={t(Constants.UPDATE_NOW)}
-              onPress={handleForceUpdate}
-              textStyle={styles.btnText}
-              style={styles.btnStyle}
-            />
-            <Pressable onPress={handleBackButton}>
-              <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
-            </Pressable>
-          </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
+          <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
+          <Button
+            title={t(Constants.UPDATE_NOW)}
+            onPress={handleForceUpdate}
+            textStyle={styles.btnText}
+            style={styles.btnStyle}
+          />
+          <Pressable onPress={() => BackHandler.exitApp()}>
+            <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
+          </Pressable>
         </View>
       </View>
     );
@@ -144,7 +158,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer
+        ref={navigationRef}
+        onStateChange={handleStateChange}>
         <Navigation />
         <NoInternetScreen />
       </NavigationContainer>
@@ -156,20 +172,9 @@ export default App;
 
 const styles = StyleSheet.create({
   imageBackground: {flex: 1},
-  mainContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  svgContainer: {
-    flex: 0.5,
-    width: '100%',
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  mainContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  svgContainer: {flex: 0.5, width: '100%'},
+  textContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
   updateTxt: {
     fontSize: 24,
     marginBottom: 20,

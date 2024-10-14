@@ -29,17 +29,15 @@ const Tab = createBottomTabNavigator();
 
 export default function MyTruckBottomTabs() {
   const totalWidth = Dimensions.get('window').width;
-  const tabOffsetValue = useRef(new Animated.Value(getWidth(2))).current; // Starts from the third tab
+  const tabOffsetValue = useRef(new Animated.Value(getWidth(2))).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // Function to get width of each tab based on total screen width and number of tabs
   function getWidth(multiplier = 1) {
     const numberOfTabs = 5;
     return (totalWidth / numberOfTabs) * multiplier;
   }
 
-  // Handles hardware back press
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -50,14 +48,13 @@ export default function MyTruckBottomTabs() {
     }
   }
 
-  // Effect to handle back button across the app
   useEffect(() => {
     console.log('MyTruckBottomTabs');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,
     );
-    return () => backHandler.remove(); // Cleanup the listener on unmount
+    return () => backHandler.remove();
   }, []);
 
   // Function to handle tab press and animation
@@ -172,7 +169,6 @@ export default function MyTruckBottomTabs() {
         />
       </Tab.Navigator>
 
-      {/* Animated sliding indicator */}
       <Animated.View
         style={style.animatedViewStyle(getWidth, tabOffsetValue)}
       />
