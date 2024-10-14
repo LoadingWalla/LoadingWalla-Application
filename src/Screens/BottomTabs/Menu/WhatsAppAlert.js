@@ -7,8 +7,10 @@ import * as Constants from '../../../Constants/Constant';
 import {GradientColor2, seperator} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
 import AlertBox from '../../../Components/AlertBox';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const WhatsAppAlert = ({navigation}) => {
+  useTrackScreenTime('WhatsAppAlert');
   const {t} = useTranslation();
   const [switchOn, setSwitchOn] = useState(false);
 

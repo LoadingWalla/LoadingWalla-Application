@@ -6,8 +6,10 @@ import Shield from '../../../assets/SVG/svg/Shield';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import LottieView from 'lottie-react-native';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Status = ({navigation, route}) => {
+  useTrackScreenTime('Status');
   const {truck_id} = route.params;
   const dispatch = useDispatch();
 

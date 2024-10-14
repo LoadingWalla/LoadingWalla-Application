@@ -13,8 +13,10 @@ import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import AlertBox from '../../Components/AlertBox';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const DeliveryDetails = ({navigation, route}) => {
+  useTrackScreenTime('DeliveryDetails');
   const {t} = useTranslation();
   const {gpsCount, pricePerDevice, plan_id} = route.params;
   // console.log(4444, route);

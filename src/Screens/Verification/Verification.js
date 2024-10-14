@@ -9,8 +9,10 @@ import Button from '../../Components/Button';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import UploadIcon from '../../../assets/SVG/svg/UploadIcon';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Verification = ({navigation, route}) => {
+  useTrackScreenTime('Verification');
   const dispatch = useDispatch();
   const {t} = useTranslation();
 

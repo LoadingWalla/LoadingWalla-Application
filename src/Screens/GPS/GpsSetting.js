@@ -14,8 +14,10 @@ import Toast from 'react-native-simple-toast';
 import GpsIcon2 from '../../../assets/SVG/svg/GpsIcon2';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const GpsSetting = ({navigation, route}) => {
+  useTrackScreenTime('GpsSetting');
   const {deviceId} = route.params;
   const dispatch = useDispatch();
 

@@ -1,10 +1,12 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   FlatList,
   Text,
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -32,12 +34,21 @@ import {SceneMap, TabView} from 'react-native-tab-view';
 import NotFound from '../../Components/NotFound';
 import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
 import RenderTabBar from '../Requests/RenderTabBar';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
   const minutes = Math.floor((millis % (1000 * 60 * 60)) / (1000 * 60));
   return `${hours}h ${minutes}m`;
 };
+
+function getRoutesForUserType(t) {
+  return [
+    {key: 'active', title: `${t(Constants.HISTORY)}`},
+    {key: 'inactive', title: `${t(Constants.STOPS)}`},
+  ];
+}
 
 const TripItem = React.memo(({item, onShowAddress}) => {
   const {t} = useTranslation();
@@ -128,11 +139,6 @@ const TripStats = ({distance, averageSpeed, duration, t}) => (
       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
       label={t(Constants.AVG_SPEED)}
     />
-    {/* <VerticalLine />
-    <StatBox
-      value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
-      label="Max Speed"
-    /> */}
     <VerticalLine />
     <StatBox
       value={convertMillisToTime(duration)}
@@ -158,10 +164,14 @@ const StopBox = ({label, value}) => (
 const VerticalLine = () => <View style={styles.locHistoryVerticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
+  useTrackScreenTime('LocationHistory');
   const {deviceId, name, from, to} = route?.params;
   // console.log(777777, route);
   const {t} = useTranslation();
   const dispatch = useDispatch();
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState(1);
@@ -173,9 +183,14 @@ const LocationHistory = ({navigation, route}) => {
     gpsSummaryData,
     gpsTripsError,
     gpsSummaryError,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log(444444444, state);
+    return state.data;
+  });
 
   const {wsConnected} = useSelector(state => state.wsData);
+
+  const routes = useMemo(() => getRoutesForUserType(t), []);
 
   const handleDownload = async () => {
     if (gpsTripsData && gpsTripsData.length > 0) {
@@ -221,6 +236,19 @@ const LocationHistory = ({navigation, route}) => {
       dispatch(fetchTokenRequest());
     }
   }, [gpsTokenData, dispatch]);
+
+  useEffect(() => {
+    switch (index) {
+      case 0:
+        setSelected(1);
+        break;
+      case 1:
+        setSelected(0);
+        break;
+      default:
+        break;
+    }
+  }, [index]);
 
   const handleShowAddress = (itemId, lat, lng) => {
     dispatch(fetchAddressRequest(lat, lng, itemId));
@@ -391,6 +419,101 @@ const LocationHistory = ({navigation, route}) => {
     );
   }
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    if (gpsTokenData) {
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+          false,
+        ),
+      );
+      dispatch(
+        fetchGpsTripsRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+        ),
+      );
+    }
+    setRefreshing(false);
+  };
+
+  const renderContentOrShimmer = relevantData => {
+    if (gpsTripsLoading) {
+      console.log('-------------gpsTripsLoading--------------');
+      return (
+        <View>
+          <MyLorryShimmer />
+          <MyLorryShimmer />
+          <MyLorryShimmer />
+        </View>
+      );
+    }
+
+    if (relevantData?.length === 0) {
+      console.log('-------------relevantData?.length--------------');
+      return (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          <NotFound
+            imageName={'noLoadFound'}
+            height={200}
+            width={200}
+            title={'No Load Found'}
+          />
+        </ScrollView>
+      );
+    }
+
+    return (
+      <View>
+        <FlatList
+          data={relevantData}
+          renderItem={renderItem}
+          keyExtractor={(item, _index) => _index.toString()}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.locHistorynoDataText}>
+                {t(Constants.NO_TRIPS)}
+              </Text>
+            </View>
+          }
+          style={styles.tableContainer}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
+      </View>
+    );
+  };
+
+  const ActiveTab = () => {
+    const relevantData = Array.isArray(gpsTripsData)
+      ? gpsTripsData.filter(data => data)
+      : [];
+    console.log('---------ActiveTab--------', relevantData);
+    return renderContentOrShimmer(relevantData);
+  };
+
+  const InactiveTab = () => {
+    const relevantData = Array.isArray(gpsTripsData)
+      ? gpsTripsData.filter(data => data)
+      : [];
+    console.log('---------InactiveTab--------', relevantData);
+    return renderContentOrShimmer(relevantData);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.locHistoryHeaderBox}>
@@ -420,6 +543,7 @@ const LocationHistory = ({navigation, route}) => {
               onPress={handleDownload}>
               <DownloadIcon size={20} />
             </TouchableOpacity>
+            {/* to be done */}
             <TouchableOpacity
               style={styles.locHistoryCalendarIconBox}
               onPress={() =>
@@ -434,7 +558,6 @@ const LocationHistory = ({navigation, route}) => {
           </View>
         </View>
       </View>
-
       <View style={styles.tabView}>
         <TabView
           navigationState={{

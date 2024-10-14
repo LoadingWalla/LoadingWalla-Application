@@ -29,8 +29,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../assets/SVG/svg/CameraIcon';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const CompanyDetails = ({navigation, route}) => {
+  useTrackScreenTime('CompanyDetails');
   const [selected, setSelected] = useState('');
   const [name, setname] = useState('');
   const [city, setCity] = useState('');

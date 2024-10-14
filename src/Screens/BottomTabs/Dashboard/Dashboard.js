@@ -17,11 +17,13 @@ import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 
 const {width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
+  useTrackScreenTime('Dashboard');
   const {t} = useTranslation();
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');

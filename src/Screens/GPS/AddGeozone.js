@@ -22,6 +22,7 @@ import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import styles from './style'
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const getLivePositions = (wsMessages, deviceId) => {
   return wsMessages
@@ -36,6 +37,7 @@ const getLivePositions = (wsMessages, deviceId) => {
 };
 
 const AddGeozone = ({navigation, route}) => {
+  useTrackScreenTime('AddGeozones');
   const {deviceId, lat, lon, address} = route.params;
   const {t} = useTranslation();
   const dispatch = useDispatch();

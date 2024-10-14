@@ -12,8 +12,10 @@ import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Signup = ({navigation}) => {
+  useTrackScreenTime('Signup');
   const {t} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);

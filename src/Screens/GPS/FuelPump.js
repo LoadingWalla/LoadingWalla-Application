@@ -9,6 +9,7 @@ import {
 import GoToIcon from '../../../assets/SVG/svg/GoToIcon';
 import FetchGoogleApi from '../../Utils/FetchGoogleApi';
 import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const fetchData = async (latitude, longitude, type) => {
   try {
@@ -70,6 +71,7 @@ const FuelPumpItem = ({item, distance}) => {
 };
 
 const FuelPump = ({navigation, route}) => {
+  useTrackScreenTime('FuelPump');
   const {theft, latitude, longitude} = route.params;
   const [locations, setLocations] = useState([]);
   const [distances, setDistances] = useState([]);

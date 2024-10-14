@@ -6,9 +6,11 @@ import {initMyLoadById, initMyLorryById} from '../../Store/Actions/Actions';
 import Button from '../../Components/Button';
 import Shield from '../../../assets/SVG/svg/Shield';
 import NotFound from '../../Components/NotFound';
-import styles from './style'
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Confirmation = ({navigation, route}) => {
+  useTrackScreenTime('Confirmation');
   // console.log(888, route);
   const {
     status,

@@ -17,8 +17,10 @@ import GpsItem from '../../Components/GpsItem';
 import DashboardHeader from '../../Components/DashboardHeader';
 import SearchBox from '../../Components/SearchBox';
 import EmptyListComponent from '../../Components/EmptyListComponent';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const MyGpsScreen = ({navigation}) => {
+  useTrackScreenTime('MyGpsScreen');
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {

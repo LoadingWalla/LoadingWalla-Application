@@ -24,6 +24,7 @@ import {
 import ExitFullScreen from '../../../assets/SVG/svg/ExitFullScreen';
 import FullScreenIcon from '../../../assets/SVG/svg/FullScreenIcon';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 const blueDot = require('../../../assets/dot.png');
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
@@ -42,6 +43,7 @@ function offsetCoordinates(coord, isLeft) {
 
 const ViewDetail = ({navigation, route}) => {
   const {t} = useTranslation();
+  useTrackScreenTime('ViewDetail');
   // console.log('view detail', route);
   const {
     from,

@@ -2,8 +2,10 @@ import {Image, View} from 'react-native';
 import React from 'react';
 import InnerButton from '../../Components/InnerButton';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Inconvenience = ({navigation}) => {
+  useTrackScreenTime('Inconvenience');
   return (
     <View style={styles.inconvContainer}>
       <View style={styles.containerChild1}>

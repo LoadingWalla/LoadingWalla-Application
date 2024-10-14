@@ -25,6 +25,7 @@ import Button from '../../Components/Button';
 import GeozoneShimmer from '../../Components/Shimmer/GeozoneShimmer';
 import AlertBox from '../../Components/AlertBox';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Separator = React.memo(() => <View style={styles.separator} />);
 
@@ -44,6 +45,7 @@ const parseGeofenceArea = area => {
 };
 
 const Geozones = ({navigation, route}) => {
+  useTrackScreenTime('Geozones');
   const {deviceId} = route.params;
   const dispatch = useDispatch();
   const mapRef = useRef(null);

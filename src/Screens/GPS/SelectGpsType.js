@@ -13,8 +13,10 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const SelectGpsType = ({navigation, route}) => {
+  useTrackScreenTime('SelectGpsType');
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData} = useSelector(state => state.data);

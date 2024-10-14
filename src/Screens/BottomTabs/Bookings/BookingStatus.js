@@ -8,8 +8,10 @@ import {useTranslation} from 'react-i18next';
 import * as Constants from '../../../Constants/Constant';
 import NotFound from '../../../Components/NotFound';
 import styles from './style'
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const BookingStatus = ({navigation, route}) => {
+  useTrackScreenTime('BookingStatus');
   // console.log('booking---status', route);
   const {status, Owner, userType, messages, renter} = route.params;
   const {t} = useTranslation();

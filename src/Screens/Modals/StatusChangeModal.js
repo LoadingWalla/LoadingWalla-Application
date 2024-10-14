@@ -28,8 +28,10 @@ import Button from '../../Components/Button';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {useTranslation} from 'react-i18next';
 import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const StatusChangeModal = ({navigation, route}) => {
+  useTrackScreenTime('StatusChangeModal');
   const {userType, data} = route?.params;
   // console.log(9898989, route.params);
   const dispatch = useDispatch();

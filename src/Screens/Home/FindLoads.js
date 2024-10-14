@@ -10,8 +10,10 @@ import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
 import NotFound from '../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const FindLoads = ({navigation, route}) => {
+  useTrackScreenTime('FindLoads');
   // console.log(22222, route.params);
   const {Owner, userType} = route?.params;
   const animationProgress = useRef(new Animated.Value(0));

@@ -6,8 +6,10 @@ import {initNotification} from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Notification = ({navigation, route}) => {
+  useTrackScreenTime('Notification');
   const dispatch = useDispatch();
 
   const {NotificationData, NotificationLoading, NotificationStatus} =

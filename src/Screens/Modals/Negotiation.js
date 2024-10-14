@@ -23,8 +23,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import Button from '../../Components/Button';
 import {useTranslation} from 'react-i18next';
 import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Negotiation = ({navigation, route}) => {
+  useTrackScreenTime('Negotiation');
   // console.log('negotiation screen', route);
   const {item, owner, userType} = route?.params; // this should be on top
   const dispatch = useDispatch();

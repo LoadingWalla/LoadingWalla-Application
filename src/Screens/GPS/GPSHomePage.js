@@ -9,8 +9,10 @@ import DashboardHeader from '../../Components/DashboardHeader';
 import InnerButton from '../../Components/InnerButton';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const GPSHomePage = ({navigation}) => {
+  useTrackScreenTime('GPSHomePage');
   const {t} = useTranslation();
   const dispatch = useDispatch();
 

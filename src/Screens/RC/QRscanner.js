@@ -18,8 +18,10 @@ import {PrivacyPolicy} from '../../Color/color';
 import FlashOn from '../../../assets/SVG/svg/FlashOn';
 import FlashOff from '../../../assets/SVG/svg/FlashOff';
 import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const QRscanner = ({route, navigation}) => {
+  useTrackScreenTime('QRscanner');
   const {truck_id} = route.params;
   const dispatch = useDispatch();
   const qrCodeStatus = useSelector(state => state.data.qrCodeStatus);

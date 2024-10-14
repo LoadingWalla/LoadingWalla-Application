@@ -5,8 +5,10 @@ import Button from '../../Components/Button';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const PurchasingStatus = ({navigation, route}) => {
+  useTrackScreenTime('PurchasingStatus');
   const {statusCode} = route.params;
   const {t} = useTranslation();
   // const statusCode = 300;

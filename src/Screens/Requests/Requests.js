@@ -35,8 +35,10 @@ import NotFound from '../../Components/NotFound';
 import {DialCall} from '../../Utils/DialCall';
 import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Requests = ({route, navigation}) => {
+  useTrackScreenTime('Requests');
   const {Owner, userType} = route?.params;
   // console.log(3456789, Owner);
   const dispatch = useDispatch();

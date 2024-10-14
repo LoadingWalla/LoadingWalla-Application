@@ -15,6 +15,7 @@ import moment from 'moment';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {
@@ -25,7 +26,7 @@ const NotificationItem = React.memo(({call, item}) => {
   return (
     <View style={styles.headerBox}>
       {/* <View style={styles.textView}> */}
-      <View style={styles.speedBox}>
+      <View style={styles.speedBoxA}>
         <Text style={styles.gpsAlertHeaderText}>{message}</Text>
         <Text style={styles.timeText}>{timeAgo}</Text>
       </View>
@@ -75,6 +76,7 @@ const SettingsSection = React.memo(({t}) => (
 ));
 
 const GpsAlert = ({route}) => {
+  useTrackScreenTime('GpsAlert');
   const {eventData} = route.params;
   const {t} = useTranslation();
   const {gpsNotificationLoading} = useSelector(state => state.data);

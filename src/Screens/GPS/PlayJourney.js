@@ -32,8 +32,10 @@ import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import styles from './style'
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 export default function PlayJourney({navigation, route}) {
+  useTrackScreenTime('PlayJourney');
   const {deviceId, from, to, name, item} = route.params;
   console.log(1111, 'PlayJourney Parmas----->', route);
   const {t} = useTranslation();

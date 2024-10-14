@@ -20,10 +20,12 @@ import {
 } from '../../../Store/Actions/Actions';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const {width} = Dimensions.get('window');
 
 const DashboardLoad = ({navigation}) => {
+  useTrackScreenTime('DashboardLoad');
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');

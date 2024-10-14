@@ -9,8 +9,10 @@ import React from 'react';
 import Button from '../../Components/Button';
 import TextInputField from '../../Components/TextInputField';
 import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const AddAddress = ({navigation}) => {
+  useTrackScreenTime('AddAddress');
   return (
     <KeyboardAvoidingView
       style={styles.fullScreenContainer}
