@@ -15,7 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import Button from '../../Components/Button';
-import {GradientColor2, GradientColor3, PrivacyPolicy} from '../../Color/color';
+import {GradientColor3, PrivacyPolicy} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   documentVerifyFailure,

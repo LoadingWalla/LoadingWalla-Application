@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   Text,
   View,
   Platform,
@@ -20,9 +19,7 @@ import {
 } from '../../Store/Actions/Actions';
 import {
   GradientColor2,
-  pageBackground,
   seperator,
-  textColor,
   titleColor,
 } from '../../Color/color';
 import SearchFilter from '../../Components/SearchFilter';
@@ -249,92 +246,3 @@ const StatusChangeModal = ({navigation, route}) => {
 
 export default StatusChangeModal;
 
-// const styles = StyleSheet.create({
-//   fullScreenContainer: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0, 0, 0, 0.2)',
-//   },
-//   screenModalView: {
-//     marginTop: '25%',
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     borderTopRightRadius: 20,
-//     borderTopLeftRadius: 20,
-//     backgroundColor: pageBackground,
-//     padding: 10,
-//   },
-//   header: {
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingTop: 10,
-//     paddingBottom: 10,
-//   },
-//   headerTitle: {
-//     color: titleColor,
-//     fontSize: 20,
-//     textAlign: 'center',
-//     justifyContent: 'center',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   closeButton: {
-//     position: 'absolute',
-//     right: 20,
-//     color: titleColor,
-//   },
-//   centeredView: {
-//     flex: 1,
-//     marginTop: '15%',
-//     // width: "100%",
-//     paddingVertical: 10,
-//   },
-//   body: {marginTop: 30},
-//   activeContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     margin: 10,
-//   },
-//   activeText: {fontSize: 18, fontWeight: '700', color: '#352422'},
-//   permitText: {fontSize: 16, fontWeight: '700', color: '#352422'},
-//   permitCountText: {fontSize: 16, fontWeight: '700', color: '#0089DE'},
-//   saveText: {
-//     color: textColor,
-//     fontWeight: '700',
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   saveButton: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     padding: 14,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: 20,
-//     width: '50%',
-//     alignSelf: 'center',
-//   },
-//   removeButton: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   removeText: {
-//     marginRight: 20,
-//     color: GradientColor2,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   noteText: {
-//     textAlign: 'center',
-//     marginHorizontal: 30,
-//     fontSize: 14,
-//     marginBottom: 15,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-// });

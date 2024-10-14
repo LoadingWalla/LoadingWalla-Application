@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -15,7 +14,6 @@ import {
 import {
   GradientColor2,
   PrivacyPolicy,
-  pageBackground,
 } from '../../../Color/color';
 import style from './style';
 import LocationModal from '../../../Components/LocationModal';

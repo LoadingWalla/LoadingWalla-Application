@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   View,
@@ -6,7 +6,6 @@ import {
   Animated,
   BackHandler,
   Easing,
-  Image,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,7 +16,6 @@ import {initFindLoad} from '../../../Store/Actions/Actions';
 import CardHeader from '../../../Components/CardHeader';
 import InnerButton from '../../../Components/InnerButton';
 import {DialCall} from '../../../Utils/DialCall';
-
 import SearchFilter from '../../../Components/SearchFilter';
 import LocationModal from '../../../Components/LocationModal';
 import Button from '../../../Components/Button';

@@ -1,16 +1,13 @@
 import React, {useEffect, useMemo} from 'react';
 import {
   ScrollView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import Button from '../../Components/Button';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 import {useDispatch, useSelector} from 'react-redux';
-import EditIcon from '../../../assets/SVG/svg/EditIcon';
 import {
   createOrderFailure,
   fetchGpsOrderDetailRequest,
@@ -23,7 +20,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const createFullAddressArray = data => {
   const fullAddress = `${data.address}, ${data.landmark}, ${data.city}, ${data.state}, ${data.pincode}`;
@@ -339,153 +336,3 @@ const PaymentGPS = ({navigation, route}) => {
 
 export default PaymentGPS;
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   scrollContainer: {
-//     paddingHorizontal: 10,
-//     marginBottom: 10,
-//   },
-//   paymentContainer: {
-//     borderRadius: 8,
-//     backgroundColor: '#FFFFFF',
-//     elevation: 2,
-//   },
-//   reusableItemContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     paddingBottom: 15,
-//   },
-//   totalAmountContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     paddingBottom: 15,
-//     borderColor: '#00000029',
-//   },
-//   totalAmountTextContainer: {
-//     flexDirection: 'row',
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 6,
-//     paddingHorizontal: 25,
-//     paddingVertical: 10,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-//   paymentDetailView: {
-//     flexDirection: 'row',
-//     backgroundColor: '#FFF3F0',
-//     borderTopLeftRadius: 6,
-//     borderTopRightRadius: 6,
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//   },
-//   discountView: {
-//     flexDirection: 'row',
-//     backgroundColor: '#FFF3F0',
-//     borderBottomLeftRadius: 6,
-//     borderBottomRightRadius: 6,
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//   },
-//   paymentDetailText: {
-//     fontSize: 14,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   discountText: {
-//     fontSize: 14,
-//     color: '#3BA700',
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   footerContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     padding: 10,
-//     margin: 10,
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 8,
-//     elevation: 2,
-//   },
-//   footerTextContainer: {
-//     paddingLeft: 10,
-//   },
-//   amountText: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 12,
-//   },
-//   markedPriceText: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 12,
-//     color: '#EF4D23',
-//     textDecorationLine: 'line-through',
-//     marginRight: 10,
-//   },
-//   sellingPriceText: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 20,
-//     color: '#3BA700',
-//   },
-//   editButton: {
-//     flexDirection: 'row',
-//     borderRadius: 20,
-//     paddingHorizontal: 15,
-//     paddingVertical: 5,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   editButtonText: {
-//     marginLeft: 10,
-//     color: backgroundColorNew,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 14,
-//   },
-//   reusableItemContainerText: {
-//     color: '#4B4B4B',
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 14,
-//   },
-//   row: {
-//     flexDirection: 'row',
-//   },
-//   taxText: {
-//     fontFamily: 'PlusJakartaSans-Regular',
-//     fontSize: 12,
-//     textAlign: 'center',
-//     marginTop: 5,
-//   },
-//   boldText: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 16,
-//   },
-//   sectionBackground: {
-//     backgroundColor: '#FAFAFA',
-//   },
-//   sectionPadding: {
-//     paddingHorizontal: 10,
-//     marginTop: -10,
-//   },
-//   priceContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'flex-start',
-//   },
-// });

@@ -2,13 +2,11 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  clearCombinedGpsData,
   clearGpsDeviceData,
   clearGpsStopsData,
   fetchAddressFailure,
   fetchCombinedGpsDataRequest,
   fetchGpsStopsRequest,
-  fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
 } from '../../Store/Actions/Actions';

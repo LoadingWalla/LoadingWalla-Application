@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
-  StyleSheet,
 } from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
@@ -21,21 +20,15 @@ import {
   walletFailure,
 } from '../../../Store/Actions/Actions';
 import {
-  GradientColor3,
   PrivacyPolicy,
   backgroundColorNew,
-  pageBackground,
-  textColor,
-  titleColor,
 } from '../../../Color/color';
 import Button from '../../../Components/Button';
-import AlertBox from '../../../Components/AlertBox';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
-import RightArrow2 from '../../../../assets/SVG/svg/RightArrow2';
 import {useTranslation} from 'react-i18next';
 import NotFound from '../../../Components/NotFound';
-import styles from './style'
+import styles from './style';
 
 const Wallet = ({navigation}) => {
   const [amount, setAmount] = useState(100);
@@ -366,195 +359,3 @@ const Wallet = ({navigation}) => {
 };
 
 export default Wallet;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     // paddingHorizontal: 20,
-//     backgroundColor: pageBackground,
-//     flex: 1,
-//   },
-//   box: {
-//     backgroundColor: 'white',
-//     padding: 15,
-//     elevation: 2,
-//     borderRadius: 8,
-//     marginTop: 20,
-//     marginHorizontal: 10,
-//   },
-//   texts: {
-//     color: PrivacyPolicy,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//     fontSize: 12,
-//   },
-//   walletText: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     color: titleColor,
-//     fontSize: 20,
-//   },
-//   horizontalLine: {
-//     height: 1,
-//     backgroundColor: '#E7E7E7',
-//     marginVertical: 10,
-//   },
-//   topupWallet: {
-//     color: PrivacyPolicy,
-//     marginTop: 10,
-//     marginBottom: 10,
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   dateText: {
-//     color: PrivacyPolicy,
-//     fontSize: 12,
-//     marginTop: 5,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   inputContainer: {
-//     height: 50,
-//     borderRadius: 4,
-//     borderColor: '#E7E7E7',
-//     paddingLeft: 10,
-//     paddingRight: 10,
-//     borderWidth: 1,
-//     // marginBottom: 10,
-//     minWidth: 150,
-//   },
-//   textInput: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 15,
-//     width: '100%',
-//     color: titleColor,
-//   },
-//   renderItemStyle: {
-//     flexShrink: 1,
-//     backgroundColor: '#fffffa',
-//     shadowColor: GradientColor3,
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 3.84,
-//     elevation: 2,
-//     width: 100,
-//     padding: 8,
-//     margin: 5,
-//     borderRadius: 20,
-//     marginRight: 10,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   suggest: {
-//     fontFamily: 'PlusJakartaSans-Medium',
-//     color: titleColor,
-//   },
-//   buttonStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     paddingHorizontal: 20,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   textStyle: {
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   requestButtonContainer: {
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     borderColor: GradientColor3,
-//     paddingHorizontal: 15,
-//     paddingVertical: 8,
-//   },
-//   gradientButtonText: {
-//     fontSize: 12,
-//     color: GradientColor3,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     textAlign: 'center',
-//   },
-//   repeatView: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     backgroundColor: 'white',
-//     padding: 15,
-//     elevation: 2,
-//     borderRadius: 8,
-//     marginVertical: 10,
-//     marginHorizontal: 15,
-//     alignItems: 'center',
-//   },
-//   deductionCard: {
-//     flexDirection: 'column',
-//     // alignItems: 'center',
-//     // justifyContent: 'space-between',
-//     backgroundColor: 'white',
-//     padding: 15,
-//     elevation: 2,
-//     borderRadius: 8,
-//     marginVertical: 10,
-//     marginHorizontal: 15,
-//   },
-//   tabView: {
-//     flex: 1,
-//     marginTop: 10,
-//     backgroundColor: '#FFFDFD',
-//   },
-//   paymentText: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     color: 'green',
-//   },
-//   rowdirection: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'flex-start',
-//   },
-//   textDetailStyle: {
-//     color: titleColor,
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   verticalLine: {
-//     backgroundColor: PrivacyPolicy,
-//     width: 2,
-//     marginHorizontal: 10,
-//     height: '100%',
-//   },
-//   loacationBox: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//   },
-//   circleDot: {
-//     width: 8,
-//     height: 8,
-//     borderRadius: 4,
-//     backgroundColor: 'green',
-//     marginRight: 5,
-//   },
-//   squareDot: {
-//     width: 8,
-//     height: 8,
-//     backgroundColor: 'red',
-//     marginRight: 5,
-//   },
-//   loactionTextView: {
-//     flexDirection: 'row',
-//     // justifyContent: 'center',
-//     alignItems: 'center',
-//     flex: 1,
-//     flexWrap: 'wrap',
-//   },
-//   locationText: {
-//     // borderWidth: 1,
-//     color: titleColor,
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   inputContainerBox: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 10,
-//   },
-// });

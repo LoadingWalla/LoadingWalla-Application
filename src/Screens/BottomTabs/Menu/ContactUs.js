@@ -7,7 +7,6 @@ import {
   Linking,
   Platform,
   StatusBar,
-  StyleSheet,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../../Constants/Constant';
@@ -18,17 +17,11 @@ import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
 import {
   backgroundColorNew,
-  GradientColor1,
-  GradientColor2,
-  GradientColor3,
-  textColor,
-  titleColor,
 } from '../../../Color/color';
 import {contactusFailure, initContactus} from '../../../Store/Actions/Actions';
 import PhoneCall from '../../../../assets/SVG/svg/PhoneCall';
 import EmailIcon from '../../../../assets/SVG/svg/EmailIcon';
 import WhatsAppIcon from '../../../../assets/SVG/svg/WhatsAppIcon';
-import AlertBox from '../../../Components/AlertBox';
 import LinearGradient from 'react-native-linear-gradient';
 import {useTranslation} from 'react-i18next';
 
@@ -220,46 +213,3 @@ const GradientStatusBar = () => {
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   statusBar: {
-//     height: StatusBar.currentHeight,
-//     width: '100%',
-//   },
-//   gradient: {
-//     flex: 1,
-//   },
-//   iconContainer: {
-//     flexDirection: 'row',
-//     width: '100%',
-//     marginVertical: 20,
-//     justifyContent: 'space-evenly',
-//   },
-//   buttonStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     margin: 20,
-//   },
-//   textStyle: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   label: {
-//     fontSize: 15,
-//     color: titleColor,
-//     marginTop: 20,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   formContainer: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//     borderTopLeftRadius: 25,
-//     borderTopRightRadius: 25,
-//     paddingTop: 20,
-//   },
-// });

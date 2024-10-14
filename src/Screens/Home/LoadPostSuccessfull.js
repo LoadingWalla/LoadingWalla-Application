@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';

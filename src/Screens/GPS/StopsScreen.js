@@ -1,12 +1,7 @@
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import React from 'react';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import ShareIcon from '../../../assets/SVG/svg/ShareIcon';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchGpsStopsRequest} from '../../Store/Actions/Actions';
-import {useFocusEffect} from '@react-navigation/native';
-import moment from 'moment';
-import styles from './style'
+import styles from './style';
 
 const RenderItem = React.memo(({item, index}) => {
   // console.log(4444, item, index);
@@ -72,61 +67,3 @@ const StopsScreen = ({navigation, route}) => {
 };
 
 export default StopsScreen;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     padding: 10,
-//   },
-//   itemContainer: {
-//     marginBottom: 15,
-//   },
-//   summaryBox: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     padding: 10,
-//     backgroundColor: backgroundColorNew,
-//     borderRadius: 5,
-//     marginBottom: 10,
-//   },
-//   verticalLine: {
-//     backgroundColor: '#FFFFFF',
-//     width: 2,
-//     marginHorizontal: 5,
-//     height: '100%',
-//   },
-//   verticalLine2: {
-//     backgroundColor: '#AFAFAF',
-//     width: 2,
-//     marginHorizontal: 5,
-//     height: '100%',
-//   },
-//   headText: {
-//     color: '#FFFFFF',
-//     fontSize: 12,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   headingText: {
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 14,
-//     textAlign: 'center',
-//   },
-//   headingValue: {
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Medium',
-//     fontSize: 12,
-//     marginTop: 5,
-//   },
-//   whiteBox: {
-//     flexDirection: 'row',
-//     backgroundColor: '#FFFFFF',
-//     elevation: 3,
-//     borderRadius: 5,
-//     paddingVertical: 15,
-//     paddingHorizontal: 10,
-//   },
-//   row: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-// });

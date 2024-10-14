@@ -1,7 +1,6 @@
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
 import WebView from 'react-native-webview';
-import {pageBackground} from '../../Color/color';
 import styles from './style'
 
 const AllTerms = ({navigation, route}) => {
@@ -20,15 +19,3 @@ const AllTerms = ({navigation, route}) => {
 };
 
 export default AllTerms;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: pageBackground,
-//     flex: 1,
-//     padding: 10,
-//   },
-//   webview: {
-//     flex: 1,
-//     marginTop: 10,
-//   },
-// });

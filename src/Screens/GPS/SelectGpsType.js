@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {
   GradientColor2,
-  pageBackground,
-  textColor,
-  titleColor,
 } from '../../Color/color';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {useFocusEffect} from '@react-navigation/native';
@@ -15,7 +12,7 @@ import MinusIcon from '../../../assets/SVG/svg/MinusIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const SelectGpsType = ({navigation, route}) => {
   const {t} = useTranslation();
@@ -117,132 +114,5 @@ const SelectGpsType = ({navigation, route}) => {
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   fullScreenContainer: {
-//     flex: 1,
-//     justifyContent: 'flex-end',
-//   },
-//   overlay: {
-//     ...StyleSheet.absoluteFillObject,
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   screenModalView: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     borderTopRightRadius: 20,
-//     borderTopLeftRadius: 20,
-//     backgroundColor: pageBackground,
-//     maxHeight: 250,
-//   },
-//   closeButton: {
-//     position: 'absolute',
-//     right: 15,
-//     top: 15,
-//     zIndex: 10,
-//     color: titleColor,
-//   },
-//   header: {
-//     position: 'absolute',
-//     top: 10,
-//     left: 0,
-//     right: 0,
-//     flexDirection: 'row',
-//     justifyContent: 'flex-start',
-//     alignItems: 'center',
-//     padding: 10,
-//   },
-//   headerTitle: {
-//     color: titleColor,
-//     fontSize: 18,
-//     textAlign: 'left',
-//     justifyContent: 'center',
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     maxWidth: 200,
-//     marginLeft: 10,
-//   },
-//   centeredView: {
-//     paddingHorizontal: 20,
-//   },
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   button: {
-//     flexDirection: 'row',
-//     // borderRadius: 10,
-//     // height: 50,
-//     alignItems: 'center',
-//     alignSelf: 'center',
-//     justifyContent: 'center',
-//     width: '100%',
-//     height: '100%',
-//   },
-//   gpsCount: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//   },
-//   gpsSelectionView: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     borderRadius: 5,
-//     backgroundColor: '#EFEFEF',
-//   },
-//   bottomBox: {
-//     position: 'absolute',
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     bottom: 0,
-//     // borderWidth: 1,
-//     width: '100%',
-//   },
-//   amountBox: {
-//     width: '50%',
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderTopWidth: 1,
-//     borderBottomWidth: 1,
-//     borderColor: '#707070',
-//     justifyContent: 'center',
-//     alignItems: 'flex-start',
-//   },
-//   totalAmountText: {
-//     fontSize: 12,
-//     color: '#4B4B4B',
-//     fontFamily: 'PlusJakartaSans-Regular',
-//   },
-//   totalAmountValue: {
-//     fontSize: 20,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     color: titleColor,
-//   },
-//   gpsCountValue: {
-//     fontSize: 20,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     color: titleColor,
-//     textAlign: 'center',
-//   },
-//   iconBox: {
-//     width: 40,
-//     height: 40,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   inputBox: {
-//     borderWidth: 1,
-//     width: 50,
-//     height: 40,
-//     backgroundColor: 'white',
-//     borderColor: '#707070',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     fontSize: 16,
-//   },
-// });
 
 export default SelectGpsType;

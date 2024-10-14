@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -140,47 +139,3 @@ const FuelPump = ({navigation, route}) => {
 };
 
 export default FuelPump;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: '#FFFFFF',
-//     marginHorizontal: 10,
-//     marginVertical: 5,
-//     paddingHorizontal: 15,
-//     paddingVertical: 10,
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     borderRadius: 8,
-//     elevation: 2,
-//   },
-//   iconContainer: {
-//     padding: 3,
-//     elevation: 2,
-//     backgroundColor: '#ffffff',
-//     borderRadius: 8,
-//     transform: [{rotate: '45deg'}],
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   headerText: {
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   headerTextValue: {
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     color: PrivacyPolicy,
-//   },
-//   loadingContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   errorContainer: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   detailBox: {maxWidth: '73%'},
-// });

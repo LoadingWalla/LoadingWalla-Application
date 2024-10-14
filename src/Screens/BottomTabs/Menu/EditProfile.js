@@ -7,7 +7,6 @@ import {
   Modal,
   ScrollView,
   Alert,
-  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -22,10 +21,6 @@ import Gallery from '../../../../assets/SVG/Gallery';
 import Cammera from '../../../../assets/SVG/Camera';
 import {
   GradientColor2,
-  PrivacyPolicy,
-  inputColor,
-  textColor,
-  titleColor,
 } from '../../../Color/color';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
@@ -315,82 +310,3 @@ const EditProfile = ({
 };
 
 export default EditProfile;
-
-// const style = StyleSheet.create({
-//   button: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   label: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   CameraText: {
-//     fontSize: 15,
-//     color: 'black',
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   editProfileTitle: {
-//     fontWeight: '700',
-//     color: titleColor,
-//     fontSize: 20,
-//     marginBottom: 10,
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   editProfileContainer: {
-//     height: 80,
-//     width: 80,
-//     borderRadius: 40,
-//     alignSelf: 'center',
-//     justifyContent: 'center',
-//   },
-//   profileImgEdit: {
-//     height: 25,
-//     width: 25,
-//     backgroundColor: GradientColor2,
-//     borderRadius: 40,
-//     position: 'absolute',
-//     bottom: -5,
-//     left: 30,
-//     borderWidth: 1,
-//     borderColor: 'white',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   profileImg: {
-//     height: 80,
-//     width: 80,
-//     borderRadius: 40,
-//   },
-//   paddingStyle: {
-//     padding: 20,
-//   },
-//   editModalView: {
-//     backgroundColor: '#FFFFFF',
-//     padding: 10,
-//     borderRadius: 8,
-//     margin: 10,
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 4,
-//     elevation: 5,
-//     marginTop: 60,
-//   },
-// });

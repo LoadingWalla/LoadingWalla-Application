@@ -1,11 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {pageBackground, textColor} from '../../Color/color';
+import {Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import Button from '../../Components/Button';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const PurchasingStatus = ({navigation, route}) => {
   const {statusCode} = route.params;
@@ -48,53 +47,3 @@ const PurchasingStatus = ({navigation, route}) => {
 
 export default PurchasingStatus;
 
-// const styles = StyleSheet.create({
-//   fullScreenContainer: {
-//     flex: 1,
-//     justifyContent: 'flex-end',
-//   },
-//   overlay: {
-//     ...StyleSheet.absoluteFillObject,
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   screenModalView: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     borderTopRightRadius: 20,
-//     borderTopLeftRadius: 20,
-//     backgroundColor: pageBackground,
-//     maxHeight: 320,
-//     padding: 20,
-//   },
-//   header: {
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     // borderWidth: 1,
-//   },
-//   headerText: {
-//     fontSize: 20,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   splashImage: {
-//     height: 200,
-//     width: 300,
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 6,
-//     // paddingHorizontal: 25,
-//     // paddingVertical: 10,
-//     width: '100%',
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-// });

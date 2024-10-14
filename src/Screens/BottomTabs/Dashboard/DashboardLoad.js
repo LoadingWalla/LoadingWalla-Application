@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Constants from '../../../Constants/Constant';

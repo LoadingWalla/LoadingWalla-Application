@@ -21,14 +21,3 @@ const AllTerms = ({navigation, route}) => {
 
 export default AllTerms;
 
-// const styles = StyleSheet.create({
-//   container: {
-//     backgroundColor: pageBackground,
-//     flex: 1,
-//     padding: 10,
-//   },
-//   webview: {
-//     flex: 1,
-//     marginTop: 10,
-//   },
-// });
