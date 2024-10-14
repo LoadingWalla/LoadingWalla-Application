@@ -28,6 +28,10 @@ import Share from 'react-native-share';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import {SceneMap, TabView} from 'react-native-tab-view';
+import NotFound from '../../Components/NotFound';
+import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
+import RenderTabBar from '../Requests/RenderTabBar';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -37,7 +41,7 @@ const convertMillisToTime = millis => {
 
 const TripItem = React.memo(({item, onShowAddress}) => {
   const {t} = useTranslation();
-  console.log(8888888888, item);
+  // console.log(8888888888, item);
   return (
     <View style={styles.tripItemContainer}>
       <View style={styles.statusIndicatorContainer}>
@@ -105,7 +109,9 @@ const ShowFullAddress = ({lat, lng, itemId, onShowAddress}) => {
     <TouchableOpacity
       style={styles.showAddressContainer}
       onPress={() => onShowAddress(itemId, lat, lng)}>
-      <Text style={styles.showAddressText}>{t(Constants.SHOW_FULL_ADDRESS)}</Text>
+      <Text style={styles.showAddressText}>
+        {t(Constants.SHOW_FULL_ADDRESS)}
+      </Text>
       <RightArrow size={15} color={'#EF4D23'} />
     </TouchableOpacity>
   );
@@ -128,7 +134,10 @@ const TripStats = ({distance, averageSpeed, duration, t}) => (
       label="Max Speed"
     /> */}
     <VerticalLine />
-    <StatBox value={convertMillisToTime(duration)} label={t(Constants.DURATION)} />
+    <StatBox
+      value={convertMillisToTime(duration)}
+      label={t(Constants.DURATION)}
+    />
   </View>
 );
 
@@ -154,6 +163,8 @@ const LocationHistory = ({navigation, route}) => {
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState(1);
 
   const {
     gpsTripsLoading,
@@ -214,6 +225,82 @@ const LocationHistory = ({navigation, route}) => {
   const handleShowAddress = (itemId, lat, lng) => {
     dispatch(fetchAddressRequest(lat, lng, itemId));
   };
+
+  // tabview
+  const HistoryTab = () => (
+    <View style={styles.contentContainer}>
+      {gpsTripsError || gpsSummaryError ? (
+        <View style={styles.locHistoryErrorContainer}>
+          <Text style={styles.locHistoryErrorText}>
+            Failed to fetch data. Please try again.
+          </Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : gpsTripsLoading ? (
+        <ActivityIndicator
+          size="large"
+          color={backgroundColorNew}
+          style={styles.locHistoryLoader}
+        />
+      ) : (
+        <FlatList
+          data={gpsTripsData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.locHistorynoDataText}>
+                {t(Constants.NO_TRIPS)}
+              </Text>
+            </View>
+          }
+          style={styles.tableContainer}
+        />
+      )}
+    </View>
+  );
+
+  const StopsTab = () => (
+    <View style={styles.contentContainer}>
+      {gpsTripsError || gpsSummaryError ? (
+        <View style={styles.locHistoryErrorContainer}>
+          <Text style={styles.locHistoryErrorText}>
+            Failed to fetch data. Please try again.
+          </Text>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : gpsTripsLoading ? (
+        <ActivityIndicator
+          size="large"
+          color={backgroundColorNew}
+          style={styles.locHistoryLoader}
+        />
+      ) : (
+        <FlatList
+          data={gpsTripsData}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.locHistorynoDataText}>
+                {t(Constants.NO_TRIPS)}
+              </Text>
+            </View>
+          }
+          style={styles.tableContainer}
+        />
+      )}
+    </View>
+  );
+
+  useEffect(() => {
+    setSelected(index + 1);
+  }, [index]);
+  // tabview
 
   useFocusEffect(
     useCallback(() => {
@@ -310,7 +397,8 @@ const LocationHistory = ({navigation, route}) => {
         <View style={styles.headerTextContainer}>
           <Text style={styles.locHistoryTimeText}>{t(Constants.TRIP_SUM)}</Text>
           <Text style={styles.locHistoryTimeText}>
-            {t(Constants.VEHICLE_NUM)}<Text style={styles.vehicleNumberText}>{name}</Text>
+            {t(Constants.VEHICLE_NUM)}
+            <Text style={styles.vehicleNumberText}>{name}</Text>
           </Text>
         </View>
         <View style={styles.summaryContainer}>
@@ -322,7 +410,10 @@ const LocationHistory = ({navigation, route}) => {
                 : '0.00 KM'
             }
           />
-          <StopBox label={t(Constants.AVG_SPEED)} value={`${averageSpeed} KM/H`} />
+          <StopBox
+            label={t(Constants.AVG_SPEED)}
+            value={`${averageSpeed} KM/H`}
+          />
           <View style={styles.iconButtonsContainer}>
             <TouchableOpacity
               style={styles.downloadIconBox}
@@ -343,56 +434,23 @@ const LocationHistory = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      {/* <View
-        style={{
-          // borderWidth: 1,
-          // backgroundColor: '#FFE9E3',
-          borderRadius: 8,
-          marginHorizontal: 10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          elevation: 2,
-          backgroundColor: '#FFFFFF',
-        }}>
-        <View style={{flex: 0.5, paddingVertical: 5}}>
-          <Text style={{textAlign: 'center'}}>History</Text>
-        </View>
-        <View style={{flex: 0.5, paddingVertical: 5}}>
-          <Text style={{textAlign: 'center'}}>Stops</Text>
-        </View>
-      </View> */}
-      {gpsTripsError || gpsSummaryError ? (
-        <View style={styles.locHistoryErrorContainer}>
-          <Text style={styles.locHistoryErrorText}>
-            Failed to fetch data. Please try again.
-          </Text>
-          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
-          </TouchableOpacity>
-        </View>
-      ) : gpsTripsLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={backgroundColorNew}
-          style={styles.locHistoryLoader}
+
+      <View style={styles.tabView}>
+        <TabView
+          navigationState={{
+            index,
+            routes: [
+              {key: 'history', title: 'History'},
+              {key: 'stops', title: 'Stops'},
+            ],
+          }}
+          renderScene={SceneMap({history: HistoryTab, stops: StopsTab})}
+          onIndexChange={setIndex}
+          renderTabBar={RenderTabBar}
         />
-      ) : (
-        <FlatList
-          data={gpsTripsData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={
-            <View style={styles.noDataView}>
-              <Text style={styles.locHistorynoDataText}>{t(Constants.NO_TRIPS)}</Text>
-            </View>
-          }
-          style={styles.tableContainer}
-        />
-      )}
+      </View>
     </View>
   );
 };
 
 export default LocationHistory;
-

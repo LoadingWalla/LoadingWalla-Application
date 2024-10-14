@@ -52,14 +52,14 @@ const MyTabBar = ({state, navigation, position, tabs}) => {
                 styles.tabBgColor,
                 {
                   overflow: 'hidden',
-                  transform: [{translateX: translateX()}]
+                  transform: [{translateX: translateX()}],
                 },
               ]}>
               <Animated.View
                 style={[
                   styles.iconTextContainer,
                   {
-                    transform: [{translateX: translateX()}]
+                    transform: [{translateX: translateX()}],
                   },
                 ]}>
                 <Text style={styles.routeNameBlack}>{route.name}</Text>
