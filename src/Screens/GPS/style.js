@@ -1598,7 +1598,11 @@ export default StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    // borderWidth: 1,
+  },
+  gpsDataStyle: {
+    flex: 1,
+    marginVertical: 60,
+    padding: 10,
   },
   notFoundText: {
     color: '#707070',

@@ -966,7 +966,7 @@ const Navigation = ({language}) => {
         })}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="GpsSetting"
         component={GpsSetting}
         options={{
@@ -993,7 +993,7 @@ const Navigation = ({language}) => {
               handleBackButton,
             ),
         })}
-      />
+      /> */}
       <Stack.Screen
         name="GpsAlert"
         component={GpsAlert}

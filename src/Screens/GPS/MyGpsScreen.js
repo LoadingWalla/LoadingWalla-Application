@@ -224,7 +224,7 @@ const MyGpsScreen = ({navigation}) => {
           t={t}
         />
       </View>
-      <View style={styles.contentContainer}>
+      <View style={styles.gpsDataStyle}>
         <SearchBox
           onSearch={handleSearch}
           onToggle={handleToggleSearch}
