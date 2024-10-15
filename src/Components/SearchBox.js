@@ -90,7 +90,11 @@ const SearchBox = ({
         <View style={styles.defaultContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.buttonsContainer}>
-              <FilterButton label={t(Constants.ALL)} value="All" count={deviceCounts.all} />
+              <FilterButton
+                label={t(Constants.ALL)}
+                value="All"
+                count={deviceCounts.all}
+              />
               <FilterButton
                 label={t(Constants.ACTIVE)}
                 value="Active"
