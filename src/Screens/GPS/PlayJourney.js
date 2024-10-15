@@ -507,7 +507,9 @@ export default function PlayJourney({navigation, route}) {
                     onPress={() => navigation.navigate('stops')}
                     style={styles.stopsBtnStyle}>
                     <AlertsIcon size={20} />
-                    <Text style={styles.alertButtonText}>{t(Constants.STOPS)}</Text>
+                    <Text style={styles.alertButtonText}>
+                      {t(Constants.STOPS)}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.ctrlBtn}

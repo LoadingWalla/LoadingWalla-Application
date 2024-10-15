@@ -470,6 +470,11 @@ export default StyleSheet.create({
     color: '#EF4D23',
     textDecorationLine: 'underline',
   },
+  showTimeText: (det) => ({
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: det === 'Start Time' ? 'green' : 'red',
+  }),
   tripStatsContainer: {
     flexDirection: 'row',
     paddingVertical: 10,
