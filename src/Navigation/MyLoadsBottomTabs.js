@@ -77,7 +77,7 @@ export default function MyLoadsBottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 60,
+            height: 65,
             position: 'absolute',
             bottom: 0,
             left: 0,

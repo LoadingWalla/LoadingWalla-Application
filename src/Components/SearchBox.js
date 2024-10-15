@@ -9,7 +9,7 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import * as Constants from '../Constants/Constant'
+import * as Constants from '../Constants/Constant';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
 import {GradientColor1, titleColor} from '../Color/color';
@@ -90,7 +90,11 @@ const SearchBox = ({
         <View style={styles.defaultContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <View style={styles.buttonsContainer}>
-              <FilterButton label={t(Constants.ALL)} value="All" count={deviceCounts.all} />
+              <FilterButton
+                label={t(Constants.ALL)}
+                value="All"
+                count={deviceCounts.all}
+              />
               <FilterButton
                 label={t(Constants.ACTIVE)}
                 value="Active"

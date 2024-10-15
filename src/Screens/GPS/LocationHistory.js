@@ -92,7 +92,7 @@ const TripItem = React.memo(({item, onShowAddress}) => {
 
 const RenderStopsItem = React.memo(({item, index, onShowAddress}) => {
   // console.log(4444, item, index);
-  console.log('inside renderStopsItem', item)
+  console.log('inside renderStopsItem', item);
   const date = new Date(item.startTime).toLocaleDateString();
   const lat = item.latitude;
   const lng = item.longitude;
@@ -101,7 +101,7 @@ const RenderStopsItem = React.memo(({item, index, onShowAddress}) => {
   const startTime = new Date(item.startTime).toLocaleTimeString();
   const endTime = new Date(item.endTime).toLocaleTimeString();
   const durationInHours = (item.duration / (1000 * 60 * 60)).toFixed(2);
-  
+
   return (
     <View style={styles.tripItemContainer} key={index}>
       <View style={styles.statusIndicatorContainer}>
