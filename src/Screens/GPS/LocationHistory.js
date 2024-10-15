@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   FlatList,
@@ -11,9 +12,11 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
+  clearGpsStopsData,
   clearGpsTripsData,
   clearSummaryReportData,
   fetchAddressRequest,
+  fetchGpsStopsRequest,
   fetchGpsTripsRequest,
   fetchSummaryReportRequest,
   fetchTokenRequest,
@@ -87,6 +90,50 @@ const TripItem = React.memo(({item, onShowAddress}) => {
   );
 });
 
+const RenderStopsItem = React.memo(({item, index, onShowAddress}) => {
+  // console.log(4444, item, index);
+  console.log('inside renderStopsItem', item)
+  const date = new Date(item.startTime).toLocaleDateString();
+  const lat = item.latitude;
+  const lng = item.longitude;
+  const itemId = item.positionId;
+  const address = item.address;
+  const startTime = new Date(item.startTime).toLocaleTimeString();
+  const endTime = new Date(item.endTime).toLocaleTimeString();
+  const durationInHours = (item.duration / (1000 * 60 * 60)).toFixed(2);
+  
+  return (
+    <View style={styles.tripItemContainer} key={index}>
+      <View style={styles.statusIndicatorContainer}>
+        <View style={styles.greenIndicator} />
+        <View style={styles.line} />
+        <View style={styles.redIndicator} />
+      </View>
+      <View style={styles.tripDetailsContainer}>
+        <StopDetail det={'Start Time'} date={date} time={startTime} />
+        <StopStats
+          address={address}
+          lat={lat}
+          lng={lng}
+          itemId={itemId}
+          duration={durationInHours}
+          onShowAddress={onShowAddress}
+        />
+        <StopDetail det={'End Time'} date={date} time={endTime} />
+      </View>
+    </View>
+  );
+});
+
+const StopDetail = ({det, date, time}) => {
+  return (
+    <View style={styles.detailContainer}>
+      <Text style={styles.showTimeText(det)}>{det}</Text>
+      <Text style={styles.locHistoryTimeText}>{`${date} | ${time}`}</Text>
+    </View>
+  );
+};
+
 const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
   const {fullAddressData, fullAddressCustomId} = useSelector(
     state => state.data,
@@ -124,6 +171,37 @@ const ShowFullAddress = ({lat, lng, itemId, onShowAddress}) => {
       </Text>
       <RightArrow size={15} color={'#EF4D23'} />
     </TouchableOpacity>
+  );
+};
+
+function formatDuration(duration) {
+  const hours = Math.floor(duration);
+  const minutes = Math.round((duration - hours) * 60);
+  return `${hours} hr ${minutes} mins`;
+}
+
+const StopStats = ({address, lat, lng, itemId, duration, onShowAddress}) => {
+  const {fullAddressData, fullAddressCustomId} = useSelector(
+    state => state.data,
+  );
+  return (
+    <View style={styles.detailContainer}>
+      {address || (fullAddressCustomId === itemId && fullAddressData) ? (
+        <Text style={styles.locHistoryAddressText}>
+          {address || fullAddressData}
+        </Text>
+      ) : (
+        <ShowFullAddress
+          lat={lat}
+          lng={lng}
+          itemId={itemId}
+          onShowAddress={onShowAddress}
+        />
+      )}
+      <Text style={styles.locHistoryTimeText}>{`Duration: ${formatDuration(
+        duration,
+      )}`}</Text>
+    </View>
   );
 };
 
@@ -176,6 +254,8 @@ const LocationHistory = ({navigation, route}) => {
   const {
     gpsTripsLoading,
     gpsTripsData,
+    gpsStopsData,
+    gpsStopsLoading,
     gpsTokenData,
     gpsSummaryData,
     gpsTripsError,
@@ -186,8 +266,6 @@ const LocationHistory = ({navigation, route}) => {
   });
 
   const {wsConnected} = useSelector(state => state.wsData);
-
-  const routes = useMemo(() => getRoutesForUserType(t), []);
 
   const handleDownload = async () => {
     if (gpsTripsData && gpsTripsData.length > 0) {
@@ -287,6 +365,7 @@ const LocationHistory = ({navigation, route}) => {
     </View>
   );
 
+  console.log('--------------gpsStopsData---------------', gpsStopsData);
   const StopsTab = () => (
     <View style={styles.contentContainer}>
       {gpsTripsError || gpsSummaryError ? (
@@ -298,7 +377,7 @@ const LocationHistory = ({navigation, route}) => {
             <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
-      ) : gpsTripsLoading ? (
+      ) : gpsStopsLoading ? (
         <ActivityIndicator
           size="large"
           color={backgroundColorNew}
@@ -306,9 +385,17 @@ const LocationHistory = ({navigation, route}) => {
         />
       ) : (
         <FlatList
-          data={gpsTripsData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          data={gpsStopsData}
+          renderItem={({item, index}) => (
+            <RenderStopsItem
+              item={item}
+              index={index}
+              onShowAddress={handleShowAddress}
+            />
+          )}
+          // keyExtractor={item => item.id}
+          keyExtractor={item => `${item.startTime}-${item.endTime}`}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.noDataView}>
               <Text style={styles.locHistorynoDataText}>
@@ -349,10 +436,26 @@ const LocationHistory = ({navigation, route}) => {
             to,
           ),
         );
+
+        const defaultFrom =
+          from || moment().utcOffset(330).startOf('day').toISOString();
+        const defaultTo =
+          to || moment().utcOffset(330).endOf('day').toISOString();
+
+        dispatch(
+          fetchGpsStopsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
       }
 
       return () => {
         dispatch(clearGpsTripsData());
+        dispatch(clearGpsStopsData());
         dispatch(clearSummaryReportData());
       };
     }, [dispatch, deviceId, from, to, gpsTokenData]),
@@ -440,75 +543,6 @@ const LocationHistory = ({navigation, route}) => {
       );
     }
     setRefreshing(false);
-  };
-
-  const renderContentOrShimmer = relevantData => {
-    if (gpsTripsLoading) {
-      console.log('-------------gpsTripsLoading--------------');
-      return (
-        <View>
-          <MyLorryShimmer />
-          <MyLorryShimmer />
-          <MyLorryShimmer />
-        </View>
-      );
-    }
-
-    if (relevantData?.length === 0) {
-      console.log('-------------relevantData?.length--------------');
-      return (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
-          <NotFound
-            imageName={'noLoadFound'}
-            height={200}
-            width={200}
-            title={'No Load Found'}
-          />
-        </ScrollView>
-      );
-    }
-
-    return (
-      <View>
-        <FlatList
-          data={relevantData}
-          renderItem={renderItem}
-          keyExtractor={(item, _index) => _index.toString()}
-          ListEmptyComponent={
-            <View style={styles.noDataView}>
-              <Text style={styles.locHistorynoDataText}>
-                {t(Constants.NO_TRIPS)}
-              </Text>
-            </View>
-          }
-          style={styles.tableContainer}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-      </View>
-    );
-  };
-
-  const ActiveTab = () => {
-    const relevantData = Array.isArray(gpsTripsData)
-      ? gpsTripsData.filter(data => data)
-      : [];
-    console.log('---------ActiveTab--------', relevantData);
-    return renderContentOrShimmer(relevantData);
-  };
-
-  const InactiveTab = () => {
-    const relevantData = Array.isArray(gpsTripsData)
-      ? gpsTripsData.filter(data => data)
-      : [];
-    console.log('---------InactiveTab--------', relevantData);
-    return renderContentOrShimmer(relevantData);
   };
 
   return (
