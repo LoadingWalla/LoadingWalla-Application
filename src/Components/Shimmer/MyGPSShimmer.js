@@ -3,10 +3,11 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import styles from './style'
 
 const MyGPSShimmer = () => {
   return (
-    <View style={styles.container}>
+    <View style={styles.historycontainer}>
       <View style={styles.topbar}>
         <SkeletonPlaceholder>
             <View style={styles.mainTopBtn}>
@@ -20,19 +21,19 @@ const MyGPSShimmer = () => {
       </View>
       <View style={styles.mainCard}>
         {[...Array(4)].map((_, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={styles.myGpscard}>
             <SkeletonPlaceholder>
-              <View style={styles.header}>
+              <View style={styles.myGpsheader}>
                 <ShimmerPlaceholder style={styles.icon} />
-                <View style={styles.headerContent}>
+                <View style={styles.myGpsheaderContent}>
                   <ShimmerPlaceholder style={styles.title} />
-                  <ShimmerPlaceholder style={styles.status} />
+                  <ShimmerPlaceholder style={styles.myGpsstatus} />
                 </View>
-                <ShimmerPlaceholder style={styles.speed} />
+                <ShimmerPlaceholder style={styles.myGpsspeed} />
               </View>
               <View style={styles.location}>
                 <ShimmerPlaceholder style={styles.address} />
-                <ShimmerPlaceholder style={styles.date} />
+                <ShimmerPlaceholder style={styles.myGpsdate} />
               </View>
 
               <View style={styles.footer}>
@@ -47,100 +48,100 @@ const MyGPSShimmer = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-  },
-  topbar: {
-    height: 45,
-    alignItems: 'center',
-  },
-  mainTopBtn: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  card: {
-    backgroundColor: '#fff',
-    padding: 8,
-    marginBottom: 7,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 2,
-    height: 150,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    width: 55,
-    height: 55,
-    borderRadius: 6,
-  },
-  headerContent: {
-    flex: 1,
-    marginLeft: 10,
-  },
-  title: {
-    width: 100,
-    height: 15,
-    borderRadius: 5,
-  },
-  status: {
-    marginTop: 5,
-    width: 50,
-    height: 15,
-    borderRadius: 5,
-  },
-  speed: {
-    width: 45,
-    height: 45,
-    borderRadius: 5,
-  },
-  topBtn: wid => ({
-    width: wid,
-    height: 30,
-    borderRadius: 5,
-    marginRight:5
-  }),
-  topBtn2: wid => ({
-    width: wid,
-    height: 30,
-    borderRadius: 5,
-  }),
-  location: {
-    marginTop: 10,
-  },
-  address: {
-    width: '90%',
-    height: 15,
-    borderRadius: 5,
-  },
-  date: {
-    marginTop: 5,
-    width: '70%',
-    height: 15,
-    borderRadius: 5,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 15,
-  },
-  footerText: {
-    width: '45%',
-    height: 15,
-    borderRadius: 5,
-  },
-  distance: {
-    width: '45%',
-    height: 15,
-    borderRadius: 5,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#f0f0f0',
+//   },
+//   topbar: {
+//     height: 45,
+//     alignItems: 'center',
+//   },
+//   mainTopBtn: {
+//     width: '100%',
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//   },
+//   card: {
+//     backgroundColor: '#fff',
+//     padding: 8,
+//     marginBottom: 7,
+//     borderRadius: 10,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 10,
+//     elevation: 2,
+//     height: 150,
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   icon: {
+//     width: 55,
+//     height: 55,
+//     borderRadius: 6,
+//   },
+//   headerContent: {
+//     flex: 1,
+//     marginLeft: 10,
+//   },
+//   title: {
+//     width: 100,
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   status: {
+//     marginTop: 5,
+//     width: 50,
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   speed: {
+//     width: 45,
+//     height: 45,
+//     borderRadius: 5,
+//   },
+//   topBtn: wid => ({
+//     width: wid,
+//     height: 30,
+//     borderRadius: 5,
+//     marginRight:5
+//   }),
+//   topBtn2: wid => ({
+//     width: wid,
+//     height: 30,
+//     borderRadius: 5,
+//   }),
+//   location: {
+//     marginTop: 10,
+//   },
+//   address: {
+//     width: '90%',
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   date: {
+//     marginTop: 5,
+//     width: '70%',
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   footer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     marginTop: 15,
+//   },
+//   footerText: {
+//     width: '45%',
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   distance: {
+//     width: '45%',
+//     height: 15,
+//     borderRadius: 5,
+//   },
+// });
 
 export default MyGPSShimmer;

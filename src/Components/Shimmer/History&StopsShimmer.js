@@ -5,16 +5,16 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 const HistoryStopsShimmer = () => {
   return (
-    <View style={styles.container}>
+    <View style={styles.historycontainer}>
       <View style={styles.mainCard}>
         {[...Array(4)].map((_, index) => (
-          <View key={index} style={styles.card}>
+          <View key={index} style={styles.historycard}>
             <SkeletonPlaceholder>
-              <View style={styles.header}>
-                <View style={styles.headerContent}>
-                  <ShimmerPlaceholder style={styles.status} />
-                  <ShimmerPlaceholder style={styles.title} />
-                  <ShimmerPlaceholder style={styles.status} />
+              <View style={styles.historyheader}>
+                <View style={styles.historyheaderContent}>
+                  <ShimmerPlaceholder style={styles.historystatus} />
+                  <ShimmerPlaceholder style={styles.historytitle} />
+                  <ShimmerPlaceholder style={styles.historystatus} />
                 </View>
               </View>
             </SkeletonPlaceholder>

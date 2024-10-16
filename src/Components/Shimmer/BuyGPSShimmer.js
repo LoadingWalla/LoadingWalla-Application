@@ -3,6 +3,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import styles from './style'
 
 const BuyGPSShimmer = () => {
   return (
@@ -32,62 +33,62 @@ const BuyGPSShimmer = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-    padding: 8,
-    // margin:8
-  },
-  card: {
-    backgroundColor: '#fff',
-    padding: 8,
-    marginBottom: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 2,
-    height: 200,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingEnd: 2,
-  },
-  headerContent: {
-    flex: 1,
-  },
-  title: {
-    width: 100,
-    height: 15,
-    borderRadius: 5,
-  },
-  status: {
-    marginTop: 5,
-    width: 150,
-    height: 15,
-    borderRadius: 5,
-  },
-  speed: {
-    width: 100,
-    height: 75,
-    borderRadius: 5,
-  },
-  date: {
-    marginTop: 5,
-    width: '50%',
-    height: 15,
-    borderRadius: 5,
-    marginBottom: 5,
-  },
-  date2: {
-    marginTop: 5,
-    width: '30%',
-    height: 15,
-    borderRadius: 5,
-    marginBottom: 5,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#f0f0f0',
+//     padding: 8,
+//     // margin:8
+//   },
+//   card: {
+//     backgroundColor: '#fff',
+//     padding: 8,
+//     marginBottom: 20,
+//     borderRadius: 10,
+//     shadowColor: '#000',
+//     shadowOpacity: 0.1,
+//     shadowRadius: 10,
+//     elevation: 2,
+//     height: 200,
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingEnd: 2,
+//   },
+//   headerContent: {
+//     flex: 1,
+//   },
+//   title: {
+//     width: 100,
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   status: {
+//     marginTop: 5,
+//     width: 150,
+//     height: 15,
+//     borderRadius: 5,
+//   },
+//   speed: {
+//     width: 100,
+//     height: 75,
+//     borderRadius: 5,
+//   },
+//   date: {
+//     marginTop: 5,
+//     width: '50%',
+//     height: 15,
+//     borderRadius: 5,
+//     marginBottom: 5,
+//   },
+//   date2: {
+//     marginTop: 5,
+//     width: '30%',
+//     height: 15,
+//     borderRadius: 5,
+//     marginBottom: 5,
+//   },
+// });
 
 export default BuyGPSShimmer;

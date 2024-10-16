@@ -2,7 +2,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import style from '../style';
+import style from './style';
 
 const HeaderShimmer = ({title}) => {
   return (
