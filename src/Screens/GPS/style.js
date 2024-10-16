@@ -609,6 +609,11 @@ export default StyleSheet.create({
     borderRadius: 40,
     marginRight: 10,
   },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   controlsContainer: {
     flex: 1,
     flexDirection: 'row',

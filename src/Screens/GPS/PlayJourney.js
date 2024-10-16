@@ -29,10 +29,11 @@ import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
 import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
-import styles from './style'
+import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
 
 export default function PlayJourney({navigation, route}) {
   useTrackScreenTime('PlayJourney');
@@ -55,6 +56,7 @@ export default function PlayJourney({navigation, route}) {
 
   const dispatch = useDispatch();
   const {
+    mapLoading,
     gpsTokenData,
     gpsReplayLoading,
     gpsReplayData,
@@ -387,13 +389,14 @@ export default function PlayJourney({navigation, route}) {
   return (
     <View style={styles.container}>
       {loading && (
-        <View style={styles.loaderOverlay}>
-          <ActivityIndicator size="large" color={backgroundColorNew} />
+        <View style={styles.playJourneyBottomContainer}>
+          <View style={styles.controlsContainer}>
+            <PlayJourneyShimmer />
+          </View>
         </View>
       )}
       {!loading && !isDataAvailable() && (
         <View style={styles.noDataContainer}>
-          {/* <Text style={styles.noDataText}>No data available</Text> */}
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>

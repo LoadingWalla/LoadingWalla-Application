@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {PrivacyPolicy, white} from '../Color/color';
+import styles from './style'
 
 const CommonItem = ({item, color}) => {
   // console.log(8888888, item);
@@ -49,37 +50,37 @@ const CommonItem = ({item, color}) => {
 };
 export default CommonItem;
 
-const styles = StyleSheet.create({
-  notificationItemView: color => ({
-    backgroundColor: white,
-    borderRadius: 5,
-    flexDirection: 'column',
-    elevation: 2,
-    margin: 5,
-    padding: 10,
-    borderLeftWidth: 10,
-    borderColor: 'green',
-  }),
-  textBox: {},
-  notificationTitle: color => ({
-    fontSize: 14,
-    color: 'green',
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'left',
-  }),
-  notitficationDesc: {
-    fontSize: 12,
-    color: PrivacyPolicy,
-    fontWeight: '400',
-    fontFamily: 'PlusJakartaSans-Regular',
-  },
-  NotificationTime: {
-    // borderWidth: 1,
-  },
-  NotificationText: {
-    textAlign: 'right',
-    fontFamily: 'PlusJakartaSans-Light',
-    fontSize: 10,
-    color: PrivacyPolicy,
-  },
-});
+// const styles = StyleSheet.create({
+//   notificationItemView: color => ({
+//     backgroundColor: white,
+//     borderRadius: 5,
+//     flexDirection: 'column',
+//     elevation: 2,
+//     margin: 5,
+//     padding: 10,
+//     borderLeftWidth: 10,
+//     borderColor: 'green',
+//   }),
+//   textBox: {},
+//   notificationTitle: color => ({
+//     fontSize: 14,
+//     color: 'green',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'left',
+//   }),
+//   notitficationDesc: {
+//     fontSize: 12,
+//     color: PrivacyPolicy,
+//     fontWeight: '400',
+//     fontFamily: 'PlusJakartaSans-Regular',
+//   },
+//   NotificationTime: {
+//     // borderWidth: 1,
+//   },
+//   NotificationText: {
+//     textAlign: 'right',
+//     fontFamily: 'PlusJakartaSans-Light',
+//     fontSize: 10,
+//     color: PrivacyPolicy,
+//   },
+// });

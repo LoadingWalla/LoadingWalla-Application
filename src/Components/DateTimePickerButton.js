@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Platform, Text, TouchableOpacity} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {useEffect} from 'react';
+import styles from './style';
 import {PrivacyPolicy, inputColor} from '../Color/color';
 
 const DateTimePickerButton = ({initialDate, onDateChange}) => {
@@ -38,7 +39,7 @@ const DateTimePickerButton = ({initialDate, onDateChange}) => {
   return (
     <View>
       <TouchableOpacity onPress={() => setShow(true)} style={styles.inputField}>
-        <Text style={styles.textStyle}>{getFormattedDate(date)}</Text>
+        <Text style={styles.dateTimePickertextStyle}>{getFormattedDate(date)}</Text>
       </TouchableOpacity>
       {show && (
         <DateTimePicker
@@ -56,21 +57,21 @@ const DateTimePickerButton = ({initialDate, onDateChange}) => {
 
 export default DateTimePickerButton;
 
-const styles = StyleSheet.create({
-  inputField: {
-    backgroundColor: inputColor,
-    marginTop: 12,
-    marginBottom: 20,
-    borderRadius: 8,
-    paddingLeft: 10,
-    paddingRight: 10,
-    flexDirection: 'row',
-    height: 50,
-    alignItems: 'center',
-  },
-  textStyle: {
-    fontFamily: 'PlusJakartaSans-Regular',
-    fontSize: 15,
-    color: PrivacyPolicy,
-  },
-});
+// const styles = StyleSheet.create({
+//   inputField: {
+//     backgroundColor: inputColor,
+//     marginTop: 12,
+//     marginBottom: 20,
+//     borderRadius: 8,
+//     paddingLeft: 10,
+//     paddingRight: 10,
+//     flexDirection: 'row',
+//     height: 50,
+//     alignItems: 'center',
+//   },
+//   textStyle: {
+//     fontFamily: 'PlusJakartaSans-Regular',
+//     fontSize: 15,
+//     color: PrivacyPolicy,
+//   },
+// });

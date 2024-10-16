@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import styles from './style'
 
 const MapViewShimmer = () => {
   const {width, height} = Dimensions.get('window');
@@ -13,12 +14,12 @@ const MapViewShimmer = () => {
 
 export default MapViewShimmer;
 
-const styles = StyleSheet.create({
-  mapShimmer: {
-    borderRadius: 10,
-    marginHorizontal: 10,
-    marginTop: 10,
-    borderWidth: 1,
-    backgroundColor: 'red',
-  },
-});
+// const styles = StyleSheet.create({
+//   mapShimmer: {
+//     borderRadius: 10,
+//     marginHorizontal: 10,
+//     marginTop: 10,
+//     borderWidth: 1,
+//     backgroundColor: 'red',
+//   },
+// });

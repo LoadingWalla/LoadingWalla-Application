@@ -15,6 +15,7 @@ import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
 import PencilIcon from '../../assets/SVG/svg/PencilIcon';
 import { useTranslation } from 'react-i18next';
+import styles from './style'
 
 const MyLorryItem = ({item, userType, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +25,7 @@ const MyLorryItem = ({item, userType, navigation}) => {
   const ac_time = userType === '2' ? item?.updated : false;
 
   return (
-    <View style={styles.card}>
+    <View style={styles.myLorrycard}>
       <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
       <View style={styles.horizontalLine} />
       <View>
@@ -83,7 +84,7 @@ const MyLorryItem = ({item, userType, navigation}) => {
                 })
               }>
               <Shield size={20} verified={item?.verified} />
-              <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
+              <Text style={styles.myLorrydashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
                   ? `${t(Constants.VERIFIED)}`
                   : `${t(Constants.NOT_VERIFIED)}`}
@@ -217,164 +218,127 @@ const MyLorryItem = ({item, userType, navigation}) => {
 
 export default MyLorryItem;
 
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 8,
-    elevation: 2,
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    marginBottom: 10,
-    marginTop: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  headerView: {flexDirection: 'row'},
-  image: {height: 50, width: 60, borderRadius: 5},
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: 'green',
-  },
-  square: {
-    width: 7,
-    height: 7,
-    borderRadius: 1,
-    backgroundColor: 'red',
-  },
-  routeInfo: {
-    flex: 1,
-    marginLeft: 20,
-  },
-  routeTextContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textHeading: {
-    minWidth: 45,
-    marginLeft: 10,
-    color: PrivacyPolicy,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  routeText: {
-    flex: 1,
-    color: titleColor,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    alignSelf: 'center',
-    justifyContent: 'center',
-  },
-  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 15,
-    height: '100%',
-  },
+// const styles = StyleSheet.create({
+//   card: {
+//     borderRadius: 8,
+//     elevation: 2,
+//     backgroundColor: '#FFFFFF',
+//     padding: 10,
+//     marginBottom: 10,
+//     marginTop: 10,
+//     marginLeft: 5,
+//     marginRight: 5,
+//   },
+//   image: {height: 50, width: 60, borderRadius: 5},
+//   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
+//   verticalLine: {
+//     backgroundColor: '#AFAFAF',
+//     width: 2,
+//     marginHorizontal: 15,
+//     height: '100%',
+//   },
 
-  smallImageHeaderTitle: {
-    fontSize: 15,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  point: {
-    height: 8,
-    width: 8,
-    backgroundColor: PrivacyPolicy,
-    borderRadius: 4,
-    marginRight: 20,
-    marginLeft: 10,
-  },
-  verifyTruck: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#ccc',
-    paddingVertical: 3,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    elevation: 2,
-    backgroundColor: white,
-  },
-  dashboardHeaderVerifiedTitle: color => ({
-    fontSize: 12,
-    color: color ? 'green' : GradientColor2,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginLeft: 5,
-  }),
-  rowdirection: {flexDirection: 'row', alignItems: 'center'},
-  ac_time: {
-    marginTop: 5,
-    fontSize: 12,
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  editButtonText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginRight: 10,
-  },
-  editButtonStyle: {
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  locationInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  requestButtonContainer: {
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: GradientColor3,
-  },
-  requestButtonContainerDisabled: {
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: PrivacyPolicy,
-  },
-  findButtonContainer: {
-    marginLeft: 20,
-    borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: GradientColor3,
-    borderColor: GradientColor3,
-  },
-  findButtonContainerDisabled: {
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: PrivacyPolicy,
-    backgroundColor: PrivacyPolicy,
-  },
-  gradientButtonText: {
-    fontSize: 13,
-    color: GradientColor3,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-  disabledText: {
-    color: PrivacyPolicy,
-  },
-  findButtonText: {
-    fontSize: 13,
-    color: white,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-  findDisabledText: {
-    color: white,
-  },
-  textStyle: {
-    color: PrivacyPolicy,
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-});
+//   smallImageHeaderTitle: {
+//     fontSize: 15,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   point: {
+//     height: 8,
+//     width: 8,
+//     backgroundColor: PrivacyPolicy,
+//     borderRadius: 4,
+//     marginRight: 20,
+//     marginLeft: 10,
+//   },
+//   verifyTruck: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     borderWidth: 1,
+//     borderRadius: 20,
+//     borderColor: '#ccc',
+//     paddingVertical: 3,
+//     paddingHorizontal: 15,
+//     marginRight: 10,
+//     elevation: 2,
+//     backgroundColor: white,
+//   },
+//   dashboardHeaderVerifiedTitle: color => ({
+//     fontSize: 12,
+//     color: color ? 'green' : GradientColor2,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     marginLeft: 5,
+//   }),
+//   rowdirection: {flexDirection: 'row', alignItems: 'center'},
+//   ac_time: {
+//     marginTop: 5,
+//     fontSize: 12,
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//   },
+//   editButtonText: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     marginRight: 10,
+//   },
+//   editButtonStyle: {
+//     borderWidth: 2,
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     paddingHorizontal: 20,
+//     paddingVertical: 10,
+//     borderRadius: 8,
+//   },
+//   locationInfo: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//   },
+//   requestButtonContainer: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     borderColor: GradientColor3,
+//   },
+//   requestButtonContainerDisabled: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     borderColor: PrivacyPolicy,
+//   },
+//   findButtonContainer: {
+//     marginLeft: 20,
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     backgroundColor: GradientColor3,
+//     borderColor: GradientColor3,
+//   },
+//   findButtonContainerDisabled: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     borderColor: PrivacyPolicy,
+//     backgroundColor: PrivacyPolicy,
+//   },
+//   gradientButtonText: {
+//     fontSize: 13,
+//     color: GradientColor3,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+//   disabledText: {
+//     color: PrivacyPolicy,
+//   },
+//   findButtonText: {
+//     fontSize: 13,
+//     color: white,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+//   findDisabledText: {
+//     color: white,
+//   },
+//   textStyle: {
+//     color: PrivacyPolicy,
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+// });

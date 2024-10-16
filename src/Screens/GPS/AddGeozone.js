@@ -19,7 +19,7 @@ import {
 import AlertBox from '../../Components/AlertBox';
 import SettingIcon from '../../../assets/SVG/svg/SettingIcon';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-import styles from './style'
+import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
@@ -136,7 +136,7 @@ const AddGeozone = ({navigation, route}) => {
         ) : (
           <MapView
             ref={mapRef}
-            style={styles.geozoneAbsFillObj} 
+            style={styles.geozoneAbsFillObj}
             initialRegion={{
               latitude:
                 livePositions.length > 0 ? livePositions[0].latitude : lat || 0,

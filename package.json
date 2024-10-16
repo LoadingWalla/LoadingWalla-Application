@@ -60,6 +60,7 @@
     "react-native-safe-area-context": "^4.11.0",
     "react-native-screens": "^3.34.0",
     "react-native-share": "^10.2.1",
+    "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-simple-toast": "^3.3.1",
     "react-native-skeleton-placeholder": "^5.2.4",
     "react-native-sms-retriever": "^1.1.1",

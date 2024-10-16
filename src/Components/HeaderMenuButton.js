@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MenuThreeDot from '../../assets/SVG/svg/MenuThreeDot';
 import Share from 'react-native-share';
+import styles from './style'
 
 const HeaderMenuButton = ({
   navigation,
@@ -58,7 +59,7 @@ const HeaderMenuButton = ({
               <Text style={styles.menuText}>Setting</Text>
             </TouchableOpacity> */}
             <TouchableOpacity
-              style={styles.menuItem}
+              style={styles.headermenuItem}
               onPress={() =>
                 navigation.navigate('geofencing', {
                   deviceId,
@@ -76,34 +77,34 @@ const HeaderMenuButton = ({
   );
 };
 
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    // backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    // justifyContent: 'flex-start',
-    // alignItems: 'flex-end',
-  },
-  menu: {
-    position: 'absolute',
-    top: 50,
-    right: 0,
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  menuItem: {
-    paddingVertical: 10,
-  },
-  menuText: {
-    fontSize: 16,
-    color: '#000',
-  },
-});
+// const styles = StyleSheet.create({
+//   modalOverlay: {
+//     flex: 1,
+//     // backgroundColor: 'rgba(0, 0, 0, 0.4)',
+//     // justifyContent: 'flex-start',
+//     // alignItems: 'flex-end',
+//   },
+//   menu: {
+//     position: 'absolute',
+//     top: 50,
+//     right: 0,
+//     backgroundColor: '#ffffff',
+//     borderRadius: 8,
+//     paddingVertical: 10,
+//     paddingHorizontal: 20,
+//     shadowColor: '#000',
+//     shadowOffset: {width: 0, height: 2},
+//     shadowOpacity: 0.8,
+//     shadowRadius: 2,
+//     elevation: 5,
+//   },
+//   menuItem: {
+//     paddingVertical: 10,
+//   },
+//   menuText: {
+//     fontSize: 16,
+//     color: '#000',
+//   },
+// });
 
 export default HeaderMenuButton;

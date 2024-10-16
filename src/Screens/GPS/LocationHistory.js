@@ -38,6 +38,7 @@ import NotFound from '../../Components/NotFound';
 import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
 import RenderTabBar from '../Requests/RenderTabBar';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import HistoryStopsShimmer from '../../Components/Shimmer/History&StopsShimmer';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -337,16 +338,16 @@ const LocationHistory = ({navigation, route}) => {
           <Text style={styles.locHistoryErrorText}>
             Failed to fetch data. Please try again.
           </Text>
-          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleRetryHistory}>
             <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       ) : gpsTripsLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={backgroundColorNew}
-          style={styles.locHistoryLoader}
-        />
+        <View>
+          <HistoryStopsShimmer />
+        </View>
       ) : (
         <FlatList
           data={gpsTripsData}
@@ -373,16 +374,16 @@ const LocationHistory = ({navigation, route}) => {
           <Text style={styles.locHistoryErrorText}>
             Failed to fetch data. Please try again.
           </Text>
-          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleRetryStops}>
             <Text style={styles.retryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       ) : gpsStopsLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={backgroundColorNew}
-          style={styles.locHistoryLoader}
-        />
+        <View>
+          <HistoryStopsShimmer />
+        </View>
       ) : (
         <FlatList
           data={gpsStopsData}
@@ -461,7 +462,7 @@ const LocationHistory = ({navigation, route}) => {
     }, [dispatch, deviceId, from, to, gpsTokenData]),
   );
 
-  const handleRetry = () => {
+  const handleRetryHistory = () => {
     if (gpsTokenData) {
       dispatch(
         fetchSummaryReportRequest(
@@ -480,6 +481,36 @@ const LocationHistory = ({navigation, route}) => {
           deviceId,
           from,
           to,
+        ),
+      );
+    }
+  };
+
+  const handleRetryStops = () => {
+    if (gpsTokenData) {
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+          false,
+        ),
+      );
+
+      const defaultFrom =
+        from || moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo =
+        to || moment().utcOffset(330).endOf('day').toISOString();
+
+      dispatch(
+        fetchGpsStopsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
         ),
       );
     }
@@ -519,31 +550,31 @@ const LocationHistory = ({navigation, route}) => {
     );
   }
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    if (gpsTokenData) {
-      dispatch(
-        fetchSummaryReportRequest(
-          gpsTokenData.email,
-          gpsTokenData.password,
-          deviceId,
-          from,
-          to,
-          false,
-        ),
-      );
-      dispatch(
-        fetchGpsTripsRequest(
-          gpsTokenData.email,
-          gpsTokenData.password,
-          deviceId,
-          from,
-          to,
-        ),
-      );
-    }
-    setRefreshing(false);
-  };
+  // const onRefresh = () => {
+  //   setRefreshing(true);
+  //   if (gpsTokenData) {
+  //     dispatch(
+  //       fetchSummaryReportRequest(
+  //         gpsTokenData.email,
+  //         gpsTokenData.password,
+  //         deviceId,
+  //         from,
+  //         to,
+  //         false,
+  //       ),
+  //     );
+  //     dispatch(
+  //       fetchGpsTripsRequest(
+  //         gpsTokenData.email,
+  //         gpsTokenData.password,
+  //         deviceId,
+  //         from,
+  //         to,
+  //       ),
+  //     );
+  //   }
+  //   setRefreshing(false);
+  // };
 
   return (
     <View style={styles.container}>

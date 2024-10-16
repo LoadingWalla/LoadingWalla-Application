@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   View,
   FlatList,
-  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
@@ -20,6 +19,7 @@ import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import BuyGPSShimmer from '../../Components/Shimmer/BuyGPSShimmer';
 
 const Plan = ({text}) => {
   return (
@@ -112,8 +112,8 @@ const BuyGps = ({navigation}) => {
   return (
     <View style={styles.container}>
       {gpsPlansLoading ? (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={backgroundColorNew} />
+        <View>
+          <BuyGPSShimmer />
         </View>
       ) : gpsPlansError ? (
         <Text>Error: {gpsPlansError}</Text>

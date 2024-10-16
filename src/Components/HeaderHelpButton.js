@@ -6,6 +6,7 @@ import ShareIcon from '../../assets/SVG/svg/ShareIcon';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import Share from 'react-native-share';
+import styles from './style'
 
 const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
   const {t} = useTranslation();
@@ -21,21 +22,21 @@ const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.headerHelpcontainer}>
       {shareIcon ? (
         <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
           <ShareIcon size={18} color={'#000000'} />
         </TouchableOpacity>
       ) : null}
       <TouchableOpacity
-        style={styles.btnContainer}
+        style={styles.headerHelpbtnContainer}
         onPress={() => navigation.navigate('Contactus')}>
         <HeadPhoneIcon
           size={15}
           style={styles.iconStyle}
           color={backgroundColorNew}
         />
-        <Text style={styles.btnText}>{t(Constants.HELP)}</Text>
+        <Text style={styles.headerHelpbtnText}>{t(Constants.HELP)}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -43,34 +44,34 @@ const HeaderHelpButton = ({shareIcon, navigation, latitude, longitude}) => {
 
 export default HeaderHelpButton;
 
-const styles = StyleSheet.create({
-  container: {flexDirection: 'row'},
-  btnContainer: {
-    // borderWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
-    elevation: 3,
-    backgroundColor: '#F7F7F7',
-  },
-  iconStyle: {marginRight: 5},
-  btnText: {
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  shareBtn: {
-    // borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-    borderRadius: 20,
-    padding: 5,
-    elevation: 3,
-    backgroundColor: '#F7F7F7',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {flexDirection: 'row'},
+//   btnContainer: {
+//     // borderWidth: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     paddingHorizontal: 10,
+//     paddingVertical: 5,
+//     borderRadius: 20,
+//     elevation: 3,
+//     backgroundColor: '#F7F7F7',
+//   },
+//   iconStyle: {marginRight: 5},
+//   btnText: {
+//     color: backgroundColorNew,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     fontSize: 12,
+//     textAlign: 'center',
+//   },
+//   shareBtn: {
+//     // borderWidth: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginRight: 10,
+//     borderRadius: 20,
+//     padding: 5,
+//     elevation: 3,
+//     backgroundColor: '#F7F7F7',
+//   },
+// });

@@ -230,24 +230,19 @@ const ViewDetail = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       {!isFullScreen && (
-        <View
-          style={styles.isFullScreenView}>
+        <View style={styles.isFullScreenView}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             <View style={styles.viewDetailScrollView1}>
               <View style={styles.viewDetailScrollView2}>
-                <Text style={styles.fromToText}>
-                  {t(Constants.FROM)}
-                </Text>
+                <Text style={styles.fromToText}>{t(Constants.FROM)}</Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {from}</Text>
                 </View>
               </View>
               <View style={styles.viewDetailScrollView3}>
-                <Text style={styles.fromToText}>
-                  {t(Constants.TO)}
-                </Text>
+                <Text style={styles.fromToText}>{t(Constants.TO)}</Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {to}</Text>
                 </View>
@@ -255,12 +250,10 @@ const ViewDetail = ({navigation, route}) => {
             </View>
 
             <View style={styles.marginTopStyle}>
-              <Text
-                style={styles.logDetailsTxt}>
+              <Text style={styles.logDetailsTxt}>
                 {t(Constants.LOG_DETAILS)}
               </Text>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
                   {t(Constants.TRUCK_NUM)}
                 </Text>
@@ -271,10 +264,9 @@ const ViewDetail = ({navigation, route}) => {
             </View>
 
             <View>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                {t(Constants.LOAD_NAME)}
+                  {t(Constants.LOAD_NAME)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {material_name}</Text>
@@ -290,8 +282,7 @@ const ViewDetail = ({navigation, route}) => {
                   </View>
                 </View>
               </View> */}
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
                   {t(Constants.QUANTITY)}
                 </Text>
@@ -299,8 +290,7 @@ const ViewDetail = ({navigation, route}) => {
                   <Text style={styles.textStyle}>: {qty} Ton</Text>
                 </View>
               </View>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
                   {t(Constants.PRICE)}
                 </Text>
@@ -312,9 +302,10 @@ const ViewDetail = ({navigation, route}) => {
                   </Text>
                 </View>
               </View>
-              <View
-                style={styles.truckNumViewStyle}>
-                <Text style={styles.truckNumTxtStyle}>{t(Constants.DISTANCE)}</Text>
+              <View style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
+                  {t(Constants.DISTANCE)}
+                </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {distance}</Text>
                 </View>
@@ -325,7 +316,11 @@ const ViewDetail = ({navigation, route}) => {
             <Button
               loading={accept_rejectLoading}
               onPress={handlePressAction}
-              title={status === 'complete' ? t(Constants.RATE_NOW) : t(Constants.COMPLETE_BOOKING)}
+              title={
+                status === 'complete'
+                  ? t(Constants.RATE_NOW)
+                  : t(Constants.COMPLETE_BOOKING)
+              }
               textStyle={styles.findButtonText}
               style={styles.findButtonContainer}
             />

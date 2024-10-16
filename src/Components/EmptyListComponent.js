@@ -4,6 +4,7 @@ import {textColor} from '../Color/color';
 import InnerButton from './InnerButton';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
+import styles from './style'
 
 const EmptyListComponent = ({navigation}) => {
   const {t} = useTranslation();
@@ -36,60 +37,60 @@ const EmptyListComponent = ({navigation}) => {
 
 export default EmptyListComponent;
 
-const styles = StyleSheet.create({
-  homeView: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  notFoundView: {
-    flex: 0.75,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  notFoundText: {
-    color: '#707070',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 24,
-  },
-  subText: {
-    color: '#707070',
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 14,
-    marginTop: 15,
-  },
-  getNowView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 0.25,
-  },
-  offerText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 12,
-    color: '#3BA700',
-    textAlign: 'center',
-    paddingVertical: 10,
-  },
-  splashImage: (height, width) => ({
-    height: height,
-    width: width,
-  }),
-  btnStyle: {
-    borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: '#3CA604',
-    borderColor: '#3CA604',
-    alignItems: 'center',
-    width: '50%',
-    // height: 50,
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-  },
-  btnText: {
-    fontSize: 16,
-    color: textColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-    // borderWidth: 1,
-    width: 200
-  },
-});
+// const styles = StyleSheet.create({
+//   homeView: {
+//     flex: 1,
+//     justifyContent: 'center',
+//   },
+//   notFoundView: {
+//     flex: 0.75,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   notFoundText: {
+//     color: '#707070',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 24,
+//   },
+//   subText: {
+//     color: '#707070',
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 14,
+//     marginTop: 15,
+//   },
+//   getNowView: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     flex: 0.25,
+//   },
+//   offerText: {
+//     fontFamily: 'PlusJakartaSans-Medium',
+//     fontSize: 12,
+//     color: '#3BA700',
+//     textAlign: 'center',
+//     paddingVertical: 10,
+//   },
+//   splashImage: (height, width) => ({
+//     height: height,
+//     width: width,
+//   }),
+//   btnStyle: {
+//     borderWidth: 2,
+//     borderRadius: 8,
+//     backgroundColor: '#3CA604',
+//     borderColor: '#3CA604',
+//     alignItems: 'center',
+//     width: '50%',
+//     // height: 50,
+//     // justifyContent: 'center',
+//     // alignSelf: 'center',
+//   },
+//   btnText: {
+//     fontSize: 16,
+//     color: textColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//     // borderWidth: 1,
+//     width: 200
+//   },
+// });
