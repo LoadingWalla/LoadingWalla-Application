@@ -24,12 +24,10 @@ import {
 } from '../Color/color';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
-import useTrackScreenTime from '../hooks/useTrackScreenTime';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyLoadsBottomTabs() {
-  useTrackScreenTime('MyLoadsBottomTabs');
   const totalWidth = Dimensions.get('window').width;
   const numberOfTabs = 5;
 
@@ -53,7 +51,6 @@ export default function MyLoadsBottomTabs() {
 
   // Set up and clean up the back button handler
   useEffect(() => {
-    console.log('MyLoadsBottomTabs');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,

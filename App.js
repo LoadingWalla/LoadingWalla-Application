@@ -3,12 +3,12 @@ import 'react-native-reanimated';
 import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {Provider} from 'react-redux';
+import * as Constants from './src/Constants/Constant';
 import store from './src/Store';
 import Navigation from './src/Navigation/router';
 import NoInternetScreen from './src/Screens/Details/NoInternetScreen';
 import Button from './src/Components/Button';
 import {navigationRef} from './src/Navigation/NavigationService';
-import {foregroundNotification} from './src/Utils/Notification_helper';
 import DeviceInfo from 'react-native-device-info';
 import axios from 'axios';
 import analytics from '@react-native-firebase/analytics';
@@ -25,9 +25,9 @@ import {
   View,
   ImageBackground,
 } from 'react-native';
-import * as Constants from './src/Constants/Constant';
 import {appStoreLink, playStoreLink} from './src/Utils/Url';
 import {GradientColor2, textColor} from './src/Color/color';
+import {foregroundNotification} from './src/Utils/Notification_helper';
 
 const App = () => {
   const [forceUpdate, setForceUpdate] = useState(false);
@@ -139,17 +139,21 @@ const App = () => {
           />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
-          <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
-          <Button
-            title={t(Constants.UPDATE_NOW)}
-            onPress={handleForceUpdate}
-            textStyle={styles.btnText}
-            style={styles.btnStyle}
-          />
-          <Pressable onPress={() => BackHandler.exitApp()}>
-            <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
-          </Pressable>
+          <View style={{alignItems: 'center'}}>
+            <Text style={styles.updateTxt}>{t(Constants.UPDATE_TEXT)}</Text>
+            <Text style={styles.updateBody}>{t(Constants.UPDATE_BODY)}</Text>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Button
+              title={t(Constants.UPDATE_NOW)}
+              onPress={handleForceUpdate}
+              textStyle={styles.btnText}
+              style={styles.btnStyle}
+            />
+            <Pressable onPress={() => BackHandler.exitApp()}>
+              <Text style={styles.btnText2}>{t(Constants.CLOSE_APP)}</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     );
@@ -173,11 +177,15 @@ export default App;
 const styles = StyleSheet.create({
   imageBackground: {flex: 1},
   mainContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  svgContainer: {flex: 0.5, width: '100%'},
-  textContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  svgContainer: {flex: 2, width: '100%'},
+  textContainer: {
+    flex: 1,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
   updateTxt: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 10,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   updateBody: {
@@ -185,6 +193,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     textAlign: 'center',
     fontFamily: 'PlusJakartaSans-SemiBold',
+    color: '#949494',
   },
   btnStyle: {
     flexDirection: 'row',
