@@ -8,11 +8,13 @@ export default StyleSheet.create({
 
   animatedViewStyle: (width, offsetValue) => ({
     width: width(),
-    height: 3,
+    height: 4,
     backgroundColor: GradientColor2,
     position: 'absolute',
-    bottom: 60,
-    borderRadius: 20,
+    bottom: 61,
+    // borderRadius: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
     transform: [{translateX: offsetValue}],
   }),
 

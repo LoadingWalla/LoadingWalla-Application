@@ -18,13 +18,10 @@ import {
   tabIndicatorColor,
 } from '../Color/color';
 import GPSHomePage from '../Screens/GPS/GPSHomePage';
-import useTrackScreenTime from '../hooks/useTrackScreenTime';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyGpsBottomTabs() {
-  useTrackScreenTime('MyGpsBottomTabs');
-  // Calculate tab width based on screen dimensions
   function getWidth() {
     const totalWidth = Dimensions.get('window').width;
     const numberOfTabs = 3;
@@ -35,7 +32,6 @@ export default function MyGpsBottomTabs() {
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // Handle back button presses across the app
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -46,17 +42,15 @@ export default function MyGpsBottomTabs() {
     }
   }
 
-  // Set the back button listener once for the component
   useEffect(() => {
     console.log('MyGpsBottomTabs');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,
     );
-    return () => backHandler.remove(); // Cleanup the listener on unmount
+    return () => backHandler.remove();
   }, []);
 
-  // Function to handle tab press animation
   const handleTabPress = index => {
     Animated.spring(tabOffsetValue, {
       toValue: getWidth() * index,
@@ -72,7 +66,7 @@ export default function MyGpsBottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 60,
+            height: 65,
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -140,7 +134,6 @@ export default function MyGpsBottomTabs() {
         />
       </Tab.Navigator>
 
-      {/* Animated view for the sliding tab indicator */}
       <Animated.View
         style={style.animatedViewStyle(getWidth, tabOffsetValue)}
       />

@@ -23,8 +23,8 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
   );
 };
 
-const TrackingTruckNew = ({navigation, route}) => {
-  useTrackScreenTime('TrackingTruckNew');
+const TrackingTruck = ({navigation, route}) => {
+  useTrackScreenTime('TrackingTruck');
   const {item, lat, long, deviceId} = route.params;
   // console.log(11111, 'TrackingTruck Params ------>', route);
 
@@ -135,4 +135,4 @@ const TrackingTruckNew = ({navigation, route}) => {
   );
 };
 
-export default TrackingTruckNew;
+export default TrackingTruck;

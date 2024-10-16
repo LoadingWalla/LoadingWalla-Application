@@ -24,12 +24,10 @@ import {
   GradientColor2,
   tabIndicatorColor,
 } from '../Color/color';
-import useTrackScreenTime from '../hooks/useTrackScreenTime';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyTruckBottomTabs() {
-  useTrackScreenTime('MyTruckBottomTabs');
   const totalWidth = Dimensions.get('window').width;
   const tabOffsetValue = useRef(new Animated.Value(getWidth(2))).current;
   const navigation = useNavigation();
@@ -75,7 +73,7 @@ export default function MyTruckBottomTabs() {
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 60,
+            height: 65,
             position: 'absolute',
             bottom: 0,
             left: 0,

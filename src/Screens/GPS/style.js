@@ -1,6 +1,7 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {
   backgroundColorNew,
+  GradientColor1,
   pageBackground,
   textColor,
   titleColor,
@@ -8,6 +9,15 @@ import {
 import {PrivacyPolicy} from '../../Color/color';
 
 export default StyleSheet.create({
+  myGpsContainer: {
+    flexGrow: 1,
+  },
+  fabStyle: {
+    bottom: 70,
+    right: 10,
+    position: 'absolute',
+    backgroundColor: GradientColor1,
+  },
   continueBtnWidth: {width: '50%'},
   numOfGps: {fontSize: 14, fontFamily: 'PlusJakartaSans-Bold'},
   goToIconView: {transform: [{rotate: '-45deg'}]},
@@ -470,7 +480,7 @@ export default StyleSheet.create({
     color: '#EF4D23',
     textDecorationLine: 'underline',
   },
-  showTimeText: (det) => ({
+  showTimeText: det => ({
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 12,
     color: det === 'Start Time' ? 'green' : 'red',
@@ -1615,7 +1625,7 @@ export default StyleSheet.create({
     fontSize: 28,
   },
   notFoundView: {
-    borderWidth: 1,
+    // borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

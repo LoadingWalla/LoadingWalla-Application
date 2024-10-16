@@ -12,8 +12,10 @@ import {
 export default StyleSheet.create({
   indicatorStyle: {
     backgroundColor: GradientColor2,
-    height: 3,
-    borderRadius: 10,
+    height: 4,
+    // borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   tabBarStyle: {
     backgroundColor: pageBackground,

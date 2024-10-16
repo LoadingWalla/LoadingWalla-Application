@@ -9,7 +9,7 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import * as Constants from '../Constants/Constant'
+import * as Constants from '../Constants/Constant';
 import Close from '../../assets/SVG/Close';
 import SearchIcon from '../../assets/SVG/svg/SearchIcon';
 import {GradientColor1, titleColor} from '../Color/color';
