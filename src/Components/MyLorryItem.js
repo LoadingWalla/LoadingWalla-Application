@@ -15,6 +15,7 @@ import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
 import PencilIcon from '../../assets/SVG/svg/PencilIcon';
 import { useTranslation } from 'react-i18next';
+import styles from './style'
 
 const MyLorryItem = ({item, userType, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -24,7 +25,7 @@ const MyLorryItem = ({item, userType, navigation}) => {
   const ac_time = userType === '2' ? item?.updated : false;
 
   return (
-    <View style={styles.card}>
+    <View style={styles.myLorrycard}>
       <CardHeader from={item?.from} to={item?.to} icon={item?.image} t={t} />
       <View style={styles.horizontalLine} />
       <View>
@@ -83,7 +84,7 @@ const MyLorryItem = ({item, userType, navigation}) => {
                 })
               }>
               <Shield size={20} verified={item?.verified} />
-              <Text style={styles.dashboardHeaderVerifiedTitle(item?.verified)}>
+              <Text style={styles.myLorrydashboardHeaderVerifiedTitle(item?.verified)}>
                 {item?.verified
                   ? `${t(Constants.VERIFIED)}`
                   : `${t(Constants.NOT_VERIFIED)}`}
@@ -228,44 +229,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
-  headerView: {flexDirection: 'row'},
   image: {height: 50, width: 60, borderRadius: 5},
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: 'green',
-  },
-  square: {
-    width: 7,
-    height: 7,
-    borderRadius: 1,
-    backgroundColor: 'red',
-  },
-  routeInfo: {
-    flex: 1,
-    marginLeft: 20,
-  },
-  routeTextContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  textHeading: {
-    minWidth: 45,
-    marginLeft: 10,
-    color: PrivacyPolicy,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  routeText: {
-    flex: 1,
-    color: titleColor,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    alignSelf: 'center',
-    justifyContent: 'center',
-  },
   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
   verticalLine: {
     backgroundColor: '#AFAFAF',

@@ -1,6 +1,5 @@
 import React, {useCallback} from 'react';
 import {
-  ActivityIndicator,
   FlatList,
   ScrollView,
   Text,
@@ -16,6 +15,7 @@ import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import GPSNotification from '../../Components/Shimmer/GPSNotification';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {
@@ -96,8 +96,8 @@ const GpsAlert = ({route}) => {
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationHeader}>{t(Constants.GPS_NOTIFI)}</Text>
         {gpsNotificationLoading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
+          <View>
+            <GPSNotification />
           </View>
         ) : (
           <FlatList

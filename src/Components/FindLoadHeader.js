@@ -7,6 +7,7 @@ import * as Constants from '../Constants/Constant';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import Shield from '../../assets/SVG/svg/Shield';
 import {useTranslation} from 'react-i18next';
+import styles from './style'
 
 const FindLoadHeader = ({
   title,
@@ -27,7 +28,7 @@ const FindLoadHeader = ({
   const {t} = useTranslation();
 
   return (
-    <View style={styles.card}>
+    <View style={styles.findLoadHeadercard}>
       <View style={styles.cardTop}>
         <View style={styles.cardHeaderView}>
           <CardHeader from={from} to={to} icon={icon} t={t} />
@@ -80,7 +81,7 @@ const FindLoadHeader = ({
                   })
                 }>
                 <Shield size={20} verified={verified} />
-                <Text style={styles.dashboardHeaderVerifiedTitle(verified)}>
+                <Text style={styles.findLoadHeaderdashboardHeaderVerifiedTitle(verified)}>
                   {verified
                     ? `${t(Constants.VERIFIED)}`
                     : t(Constants.NOT_VERIFIED)}
@@ -111,72 +112,72 @@ const FindLoadHeader = ({
 
 export default FindLoadHeader;
 
-const styles = StyleSheet.create({
-  card: {
-    elevation: 5,
-    backgroundColor: '#FFFDFD',
-  },
-  cardTop: {padding: 10, backgroundColor: white},
-  cardHeaderView: {
-    // marginTop: 10
-  },
-  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 2,
-    marginHorizontal: 15,
-    height: '100%',
-  },
-  rowdirection: {flexDirection: 'row', alignItems: 'center'},
-  smallImageHeaderTitle: {
-    fontSize: 15,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  point: {
-    height: 8,
-    width: 8,
-    backgroundColor: PrivacyPolicy,
-    borderRadius: 4,
-    marginRight: 20,
-    marginLeft: 10,
-  },
-  locationInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  verifyTruck: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#ccc',
-    paddingVertical: 3,
-    paddingHorizontal: 15,
-    marginRight: 10,
-    elevation: 2,
-    backgroundColor: white,
-  },
-  warning: {
-    paddingVertical: 5,
-    alignItems: 'center',
-    backgroundColor: '#ddd',
-  },
-  warningText: {
-    color: titleColor,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  dashboardHeaderVerifiedTitle: color => ({
-    fontSize: 12,
-    color: color ? 'green' : GradientColor2,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginLeft: 5,
-  }),
-  textStyle: {
-    color: PrivacyPolicy,
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-});
+// const styles = StyleSheet.create({
+//   card: {
+//     elevation: 5,
+//     backgroundColor: '#FFFDFD',
+//   },
+//   cardTop: {padding: 10, backgroundColor: white},
+//   cardHeaderView: {
+//     // marginTop: 10
+//   },
+//   horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginVertical: 10},
+//   verticalLine: {
+//     backgroundColor: '#AFAFAF',
+//     width: 2,
+//     marginHorizontal: 15,
+//     height: '100%',
+//   },
+//   rowdirection: {flexDirection: 'row', alignItems: 'center'},
+//   smallImageHeaderTitle: {
+//     fontSize: 15,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   point: {
+//     height: 8,
+//     width: 8,
+//     backgroundColor: PrivacyPolicy,
+//     borderRadius: 4,
+//     marginRight: 20,
+//     marginLeft: 10,
+//   },
+//   locationInfo: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//   },
+//   verifyTruck: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     borderWidth: 1,
+//     borderRadius: 20,
+//     borderColor: '#ccc',
+//     paddingVertical: 3,
+//     paddingHorizontal: 15,
+//     marginRight: 10,
+//     elevation: 2,
+//     backgroundColor: white,
+//   },
+//   warning: {
+//     paddingVertical: 5,
+//     alignItems: 'center',
+//     backgroundColor: '#ddd',
+//   },
+//   warningText: {
+//     color: titleColor,
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   dashboardHeaderVerifiedTitle: color => ({
+//     fontSize: 12,
+//     color: color ? 'green' : GradientColor2,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     marginLeft: 5,
+//   }),
+//   textStyle: {
+//     color: PrivacyPolicy,
+//     fontSize: 14,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+// });

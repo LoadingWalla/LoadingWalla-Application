@@ -1,6 +1,7 @@
 import LottieView from 'lottie-react-native';
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+import styles from './style'
 
 const images = {
   successImage: require('../../assets/GIFs/Done.json'),
@@ -25,40 +26,40 @@ const NotFound = ({imageName, height, width, title}) => {
   const imageSource = images[imageName];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.notFoundcontainer}>
       <View>
         <LottieView
           source={imageSource}
           autoPlay
           loop
           resizeMode="contain"
-          style={styles.splashImage(height, width)}
+          style={styles.notFoundsplashImage(height, width)}
         />
       </View>
-      {title ? <Text style={styles.textStyle}>{title}</Text> : ''}
+      {title ? <Text style={styles.notFoundtextStyle}>{title}</Text> : ''}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    // flex: 1,
-    // borderWidth: 1,
-    // backgroundColor: backgroundColorNew,
-  },
-  splashImage: (hei, wid) => ({
-    // height: Dimensions.get('window').height,
-    // width: Dimensions.get('window').width / 1.9,
-    height: hei || 200,
-    width: wid || 300,
-  }),
-  textStyle: {
-    fontSize: 20,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     // flex: 1,
+//     // borderWidth: 1,
+//     // backgroundColor: backgroundColorNew,
+//   },
+//   splashImage: (hei, wid) => ({
+//     // height: Dimensions.get('window').height,
+//     // width: Dimensions.get('window').width / 1.9,
+//     height: hei || 200,
+//     width: wid || 300,
+//   }),
+//   textStyle: {
+//     fontSize: 20,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     textAlign: 'center',
+//   },
+// });
 
 export default NotFound;

@@ -19,7 +19,7 @@ const MyGPSShimmer = () => {
         </SkeletonPlaceholder>
       </View>
       <View style={styles.mainCard}>
-        {[...Array(5)].map((_, index) => (
+        {[...Array(4)].map((_, index) => (
           <View key={index} style={styles.card}>
             <SkeletonPlaceholder>
               <View style={styles.header}>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     padding: 8,
-    marginBottom: 5,
+    marginBottom: 7,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,

@@ -202,13 +202,11 @@ const CardDetails = ({route, navigation}) => {
         visible={isCameraOptions}
         onRequestClose={() => {}}>
         <View style={styles.fullScreenContainer}>
-          <View
-            style={styles.chooseOptionsView1}>
+          <View style={styles.chooseOptionsView1}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View
-              style={styles.chooseOptionsView2}>
+            <View style={styles.chooseOptionsView2}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={styles.centeredText}>
                   <Cammera />
@@ -242,8 +240,7 @@ const CardDetails = ({route, navigation}) => {
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
       {from.from === 'business' && (
-        <View
-          style={styles.docPickerView}>
+        <View style={styles.docPickerView}>
           <Picker
             selectedValue={selectedDocument}
             onValueChange={(itemValue, itemIndex) =>
@@ -288,10 +285,8 @@ const CardDetails = ({route, navigation}) => {
           <Text style={styles.otpLabel}>{title}</Text>
 
           {from.from === 'fromAadhar' ? (
-            <View
-              style={styles.fromAadharView}>
-              <View
-                style={styles.frontTxt}>
+            <View style={styles.fromAadharView}>
+              <View style={styles.frontTxt}>
                 <Text>{t(Constants.FRONT)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
@@ -314,11 +309,8 @@ const CardDetails = ({route, navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
-              <View
-                style={styles.cardDetailsView}
-              />
-              <View
-                style={styles.backTextView}>
+              <View style={styles.cardDetailsView} />
+              <View style={styles.backTextView}>
                 <Text style={styles.backTextStyle}>{t(Constants.BACK)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('back')}
@@ -343,10 +335,8 @@ const CardDetails = ({route, navigation}) => {
               </View>
             </View>
           ) : (
-            <View
-              style={styles.frontImgView}>
-              <View
-                style={styles.touchableOpacityView}>
+            <View style={styles.frontImgView}>
+              <View style={styles.touchableOpacityView}>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
                   style={styles.activityIndicatorBox}>

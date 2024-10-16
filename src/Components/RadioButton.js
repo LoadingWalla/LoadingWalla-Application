@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
-import {GradientColor2, titleColor} from '../Color/color';
+import styles from './style'
 
 const RadioButton = ({
   label,
@@ -22,31 +22,31 @@ const RadioButton = ({
 
 export default RadioButton;
 
-const styles = StyleSheet.create({
-  radioButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  outerCircle: size => ({
-    height: size ? size : 24,
-    width: size ? size : 24,
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: GradientColor2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
-  innerCircle: size => ({
-    height: size ? size : 12,
-    width: size ? size : 12,
-    borderRadius: 6,
-    backgroundColor: GradientColor2,
-  }),
-  radioText: font => ({
-    marginLeft: 10,
-    fontSize: font ? font : 15,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  }),
-});
+// const styles = StyleSheet.create({
+//   radioButtonContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 10,
+//   },
+//   outerCircle: size => ({
+//     height: size ? size : 24,
+//     width: size ? size : 24,
+//     borderRadius: 12,
+//     borderWidth: 2,
+//     borderColor: GradientColor2,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   }),
+//   innerCircle: size => ({
+//     height: size ? size : 12,
+//     width: size ? size : 12,
+//     borderRadius: 6,
+//     backgroundColor: GradientColor2,
+//   }),
+//   radioText: font => ({
+//     marginLeft: 10,
+//     fontSize: font ? font : 15,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   }),
+// });

@@ -15,6 +15,7 @@ import SearchIcon from '../../assets/SVG/svg/SearchIcon';
 import {GradientColor1, titleColor} from '../Color/color';
 import {useTranslation} from 'react-i18next';
 import RefreshIcon from '../../assets/SVG/svg/RefreshIcon';
+import styles from './style'
 
 const SearchBox = ({
   onSearch,
@@ -72,11 +73,11 @@ const SearchBox = ({
 
   const FilterButton = ({label, value, count}) => (
     <TouchableOpacity
-      style={[styles.button, filterOption === value && styles.activeButton]}
+      style={[styles.searchbutton, filterOption === value && styles.activeButton]}
       onPress={() => handleFilterChange(value)}>
       <Text
         style={[
-          styles.buttonText,
+          styles.searchbuttonText,
           filterOption === value && styles.activeButtonText,
         ]}>
         {label} ({count || 0})
@@ -85,7 +86,7 @@ const SearchBox = ({
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.searchcontainer}>
       {!isExpanded && (
         <View style={styles.defaultContainer}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -145,72 +146,72 @@ const SearchBox = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: 10,
-    flexDirection: 'row',
-  },
-  defaultContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  searchIcon: {
-    marginLeft: 10,
-    backgroundColor: '#E9E9E9',
-    borderRadius: 5,
-    padding: 5,
-  },
-  refreshIcon: {
-    backgroundColor: '#E9E9E9',
-    borderRadius: 5,
-    padding: 5,
-  },
-  searchBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    backgroundColor: '#E9E9E9',
-    // borderWidth: 1,
-  },
-  input: {
-    flex: 1,
-    padding: 3,
-    color: '#000',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // borderWidth: 1,
-  },
-  refreshBtnBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // borderWidth: 1,
-    marginLeft: 5,
-  },
-  button: {
-    paddingVertical: 6,
-    paddingHorizontal: 15,
-    backgroundColor: '#E9E9E9',
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  activeButton: {
-    backgroundColor: GradientColor1,
-  },
-  buttonText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    color: titleColor,
-  },
-  activeButtonText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    color: '#FFFFFF',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     marginBottom: 10,
+//     flexDirection: 'row',
+//   },
+//   defaultContainer: {
+//     width: '100%',
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//   },
+//   searchIcon: {
+//     marginLeft: 10,
+//     backgroundColor: '#E9E9E9',
+//     borderRadius: 5,
+//     padding: 5,
+//   },
+//   refreshIcon: {
+//     backgroundColor: '#E9E9E9',
+//     borderRadius: 5,
+//     padding: 5,
+//   },
+//   searchBox: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     borderRadius: 5,
+//     paddingHorizontal: 10,
+//     backgroundColor: '#E9E9E9',
+//     // borderWidth: 1,
+//   },
+//   input: {
+//     flex: 1,
+//     padding: 3,
+//     color: '#000',
+//   },
+//   buttonsContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     // borderWidth: 1,
+//   },
+//   refreshBtnBox: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     // borderWidth: 1,
+//     marginLeft: 5,
+//   },
+//   button: {
+//     paddingVertical: 6,
+//     paddingHorizontal: 15,
+//     backgroundColor: '#E9E9E9',
+//     borderRadius: 5,
+//     marginRight: 10,
+//   },
+//   activeButton: {
+//     backgroundColor: GradientColor1,
+//   },
+//   buttonText: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     color: titleColor,
+//   },
+//   activeButtonText: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     color: '#FFFFFF',
+//   },
+// });
 
 export default memo(SearchBox);

@@ -222,11 +222,8 @@ const RCVerification = ({navigation, route}) => {
                 )}
               </TouchableOpacity>
             </View>
-            <View
-              style={styles.cardDetailsView}
-            />
-            <View
-              style={styles.backTextView}>
+            <View style={styles.cardDetailsView} />
+            <View style={styles.backTextView}>
               <Text style={styles.backTextStyle}>Back Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('back')}
@@ -280,4 +277,3 @@ const RCVerification = ({navigation, route}) => {
 };
 
 export default RCVerification;
-

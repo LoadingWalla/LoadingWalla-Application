@@ -1,5 +1,6 @@
 import React, {useRef, useEffect} from 'react';
 import {TouchableOpacity, Text, StyleSheet, Animated} from 'react-native';
+import styles from './style'
 
 const ToggleIconText = ({
   IconComponent,
@@ -22,7 +23,7 @@ const ToggleIconText = ({
   }, [activeIndex, index, opacity]);
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <TouchableOpacity onPress={onPress} style={styles.togglecontainer}>
       <IconComponent size={iconSize} color={color} />
       {activeText ? (
         <Text style={styles.hiddenText(color)}>{text}</Text>
@@ -37,22 +38,22 @@ const ToggleIconText = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderWidth: 1,
-    marginLeft: 10,
-  },
-  hiddenText: color => ({
-    marginLeft: 5,
-    textAlign: 'center',
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    color: color,
-    textTransform: 'lowercase',
-  }),
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flexDirection: 'row',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     // borderWidth: 1,
+//     marginLeft: 10,
+//   },
+//   hiddenText: color => ({
+//     marginLeft: 5,
+//     textAlign: 'center',
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-SemiBold',
+//     color: color,
+//     textTransform: 'lowercase',
+//   }),
+// });
 
 export default ToggleIconText;
