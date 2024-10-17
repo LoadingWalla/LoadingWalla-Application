@@ -30,16 +30,16 @@ const Tab = createBottomTabNavigator();
 export default function MyTruckBottomTabs() {
   const [currentTabIndex, setCurrentTabIndex] = useState(2);
   const totalWidth = Dimensions.get('window').width;
+  const numberOfTabs = 5;
+
+  // Calculate the width of each tab based on the screen dimensions
+  const getWidth = () => totalWidth / numberOfTabs;
+
   const tabOffsetValue = useRef(
     new Animated.Value(getWidth(currentTabIndex)),
   ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
-
-  function getWidth(multiplier = 1) {
-    const numberOfTabs = 5;
-    return (totalWidth / numberOfTabs) * multiplier;
-  }
 
   function handleBackButton() {
     if (navigation.canGoBack()) {
@@ -63,7 +63,7 @@ export default function MyTruckBottomTabs() {
   // Function to handle tab press and animation
   const handleTabPress = index => {
     Animated.spring(tabOffsetValue, {
-      toValue: getWidth(index),
+      toValue: getWidth() * index,
       useNativeDriver: true,
     }).start();
   };
@@ -99,12 +99,13 @@ export default function MyTruckBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={t(Constants.NAV_MY_LORRY)}
+          name="My Truck"
           component={MyLorry}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <TruckActiveIcon size={25} /> : <TruckIcon size={25} />,
             headerShown: false,
+            title: t(Constants.NAV_MY_LORRY),
           }}
           listeners={{
             tabPress: () => setCurrentTabIndex(0),
@@ -122,6 +123,7 @@ export default function MyTruckBottomTabs() {
               />
             ),
             headerShown: false,
+            title: t(Constants.GPS),
           }}
           listeners={{
             tabPress: () => setCurrentTabIndex(1),
