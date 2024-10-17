@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import styles from './style'
 
-const GPSNotification = () => {
+const GPSNotificationShimmer = () => {
   return (
     <View style={styles.gpsNoticontainer}>
       <View>
@@ -49,4 +49,4 @@ const GPSNotification = () => {
 //   },
 // });
 
-export default GPSNotification;
+export default GPSNotificationShimmer;

@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, BackHandler, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import * as Constants from '../Constants/Constant';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import Profile from '../Screens/BottomTabs/Menu/Profile';
@@ -22,13 +22,16 @@ import GPSHomePage from '../Screens/GPS/GPSHomePage';
 const Tab = createBottomTabNavigator();
 
 export default function MyGpsBottomTabs() {
+  const [currentTabIndex, setCurrentTabIndex] = useState(1);
   function getWidth() {
     const totalWidth = Dimensions.get('window').width;
     const numberOfTabs = 3;
     return totalWidth / numberOfTabs;
   }
 
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 1)).current;
+  const tabOffsetValue = useRef(
+    new Animated.Value(getWidth() * currentTabIndex),
+  ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -58,10 +61,17 @@ export default function MyGpsBottomTabs() {
     }).start();
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      handleTabPress(currentTabIndex);
+    }, [currentTabIndex]),
+  );
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
         initialRouteName={'MyGPS'}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
@@ -91,7 +101,8 @@ export default function MyGpsBottomTabs() {
             title: t(Constants.GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(0),
+            tabPress: () => setCurrentTabIndex(0),
+            focus: () => setCurrentTabIndex(0),
           }}
         />
         <Tab.Screen
@@ -108,7 +119,8 @@ export default function MyGpsBottomTabs() {
             title: t(Constants.MY_GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(1),
+            tabPress: () => setCurrentTabIndex(1),
+            focus: () => setCurrentTabIndex(1),
           }}
         />
         <Tab.Screen
@@ -129,7 +141,8 @@ export default function MyGpsBottomTabs() {
             title: t(Constants.MENU),
           }}
           listeners={{
-            tabPress: () => handleTabPress(2),
+            tabPress: () => setCurrentTabIndex(2),
+            focus: () => setCurrentTabIndex(2),
           }}
         />
       </Tab.Navigator>

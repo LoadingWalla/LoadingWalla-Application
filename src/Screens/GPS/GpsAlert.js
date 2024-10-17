@@ -15,7 +15,7 @@ import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
-import GPSNotification from '../../Components/Shimmer/GPSNotification';
+import GPSNotificationShimmer from '../../Components/Shimmer/GPSNotificationShimmer';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {
@@ -97,7 +97,7 @@ const GpsAlert = ({route}) => {
         <Text style={styles.notificationHeader}>{t(Constants.GPS_NOTIFI)}</Text>
         {gpsNotificationLoading ? (
           <View>
-            <GPSNotification />
+            <GPSNotificationShimmer />
           </View>
         ) : (
           <FlatList
