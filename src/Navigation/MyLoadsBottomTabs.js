@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, BackHandler, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import * as Constants from '../Constants/Constant';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
 import Booking from '../Screens/BottomTabs/Bookings/Booking';
@@ -28,13 +28,16 @@ import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
 const Tab = createBottomTabNavigator();
 
 export default function MyLoadsBottomTabs() {
+  const [currentTabIndex, setCurrentTabIndex] = useState(2);
   const totalWidth = Dimensions.get('window').width;
   const numberOfTabs = 5;
 
   // Calculate the width of each tab based on the screen dimensions
   const getWidth = () => totalWidth / numberOfTabs;
 
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 2)).current;
+  const tabOffsetValue = useRef(
+    new Animated.Value(getWidth() * currentTabIndex),
+  ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -55,7 +58,9 @@ export default function MyLoadsBottomTabs() {
       'hardwareBackPress',
       handleBackButton,
     );
-    return () => backHandler.remove();
+    return () => {
+      backHandler.remove();
+    };
   }, []);
 
   // Function to handle tab press animation
@@ -66,10 +71,17 @@ export default function MyLoadsBottomTabs() {
     }).start();
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      handleTabPress(currentTabIndex);
+    }, [currentTabIndex]),
+  );
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
         initialRouteName={'Dashboard'}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
@@ -97,7 +109,8 @@ export default function MyLoadsBottomTabs() {
             title: t(Constants.NAV_MY_LOAD),
           }}
           listeners={{
-            tabPress: () => handleTabPress(0),
+            tabPress: () => setCurrentTabIndex(0),
+            focus: () => setCurrentTabIndex(0),
           }}
         />
         <Tab.Screen
@@ -114,7 +127,8 @@ export default function MyLoadsBottomTabs() {
             title: t(Constants.GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(1),
+            tabPress: () => setCurrentTabIndex(1),
+            focus: () => setCurrentTabIndex(1),
           }}
         />
         <Tab.Screen
@@ -127,7 +141,8 @@ export default function MyLoadsBottomTabs() {
             title: t(Constants.NAV_DASHBOARD),
           }}
           listeners={{
-            tabPress: () => handleTabPress(2),
+            tabPress: () => setCurrentTabIndex(2),
+            focus: () => setCurrentTabIndex(2),
           }}
         />
         <Tab.Screen
@@ -144,7 +159,8 @@ export default function MyLoadsBottomTabs() {
             title: t(Constants.BOOKINGS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(3),
+            tabPress: () => setCurrentTabIndex(3),
+            focus: () => setCurrentTabIndex(3),
           }}
         />
         <Tab.Screen
@@ -165,7 +181,8 @@ export default function MyLoadsBottomTabs() {
             title: t(Constants.MENU),
           }}
           listeners={{
-            tabPress: () => handleTabPress(4),
+            tabPress: () => setCurrentTabIndex(4),
+            focus: () => setCurrentTabIndex(4),
           }}
         />
       </Tab.Navigator>

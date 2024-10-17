@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, BackHandler, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
@@ -28,8 +28,11 @@ import {
 const Tab = createBottomTabNavigator();
 
 export default function MyTruckBottomTabs() {
+  const [currentTabIndex, setCurrentTabIndex] = useState(2);
   const totalWidth = Dimensions.get('window').width;
-  const tabOffsetValue = useRef(new Animated.Value(getWidth(2))).current;
+  const tabOffsetValue = useRef(
+    new Animated.Value(getWidth(currentTabIndex)),
+  ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
@@ -65,10 +68,17 @@ export default function MyTruckBottomTabs() {
     }).start();
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      handleTabPress(currentTabIndex);
+    }, [currentTabIndex]),
+  );
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
         initialRouteName={'Market'}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
@@ -97,7 +107,8 @@ export default function MyTruckBottomTabs() {
             headerShown: false,
           }}
           listeners={{
-            tabPress: () => handleTabPress(0),
+            tabPress: () => setCurrentTabIndex(0),
+            focus: () => setCurrentTabIndex(0),
           }}
         />
         <Tab.Screen
@@ -113,7 +124,8 @@ export default function MyTruckBottomTabs() {
             headerShown: false,
           }}
           listeners={{
-            tabPress: () => handleTabPress(1),
+            tabPress: () => setCurrentTabIndex(1),
+            focus: () => setCurrentTabIndex(1),
           }}
         />
         <Tab.Screen
@@ -126,7 +138,8 @@ export default function MyTruckBottomTabs() {
             title: t(Constants.NAV_HOME),
           }}
           listeners={{
-            tabPress: () => handleTabPress(2),
+            tabPress: () => setCurrentTabIndex(2),
+            focus: () => setCurrentTabIndex(2),
           }}
         />
         <Tab.Screen
@@ -143,7 +156,8 @@ export default function MyTruckBottomTabs() {
             title: t(Constants.BOOKINGS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(3),
+            tabPress: () => setCurrentTabIndex(3),
+            focus: () => setCurrentTabIndex(3),
           }}
         />
         <Tab.Screen
@@ -164,7 +178,8 @@ export default function MyTruckBottomTabs() {
             title: t(Constants.MENU),
           }}
           listeners={{
-            tabPress: () => handleTabPress(4),
+            tabPress: () => setCurrentTabIndex(4),
+            focus: () => setCurrentTabIndex(4),
           }}
         />
       </Tab.Navigator>
