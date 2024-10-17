@@ -238,32 +238,7 @@ const MyGpsScreen = ({navigation}) => {
         ) : gpsDeviceData === null ? (
           <View />
         ) : (
-          <FlatList
-            data={filteredDeviceData}
-            initialNumToRender={4}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderGpsItem}
-            keyExtractor={item => item.id.toString()}
-            ListEmptyComponent={
-              filteredDeviceData.length === 0 ? (
-                <EmptyListComponent navigation={navigation} />
-              ) : null
-            }
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            onScroll={onScroll}
-          />
           <>
-            <SearchBox
-              onSearch={handleSearch}
-              onToggle={handleToggleSearch}
-              onFilterChange={handleFilterChange}
-              deviceCounts={deviceCounts}
-              onRefresh={onRefresh}
-            />
             <FlatList
               data={filteredDeviceData}
               initialNumToRender={4}
@@ -280,7 +255,37 @@ const MyGpsScreen = ({navigation}) => {
               refreshControl={
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
               }
+              onScroll={onScroll}
             />
+            <>
+              <SearchBox
+                onSearch={handleSearch}
+                onToggle={handleToggleSearch}
+                onFilterChange={handleFilterChange}
+                deviceCounts={deviceCounts}
+                onRefresh={onRefresh}
+              />
+              <FlatList
+                data={filteredDeviceData}
+                initialNumToRender={4}
+                maxToRenderPerBatch={5}
+                windowSize={5}
+                showsVerticalScrollIndicator={false}
+                renderItem={renderGpsItem}
+                keyExtractor={item => item.id.toString()}
+                ListEmptyComponent={
+                  filteredDeviceData.length === 0 ? (
+                    <EmptyListComponent navigation={navigation} />
+                  ) : null
+                }
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+              />
+            </>
           </>
         )}
       </View>
