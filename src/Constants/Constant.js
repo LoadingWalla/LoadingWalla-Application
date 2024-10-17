@@ -351,3 +351,4 @@ export const PAY_NOW = 'Pay Now';
 export const PAYMENT_FAILED = 'Payment Failed';
 export const PAYMENT_SUCESS = 'YAY! Payment successful';
 export const DONE = 'Done';
+export const MAXSPD = 'Max Speed';

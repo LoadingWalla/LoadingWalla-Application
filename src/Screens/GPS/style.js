@@ -492,6 +492,8 @@ export default StyleSheet.create({
   statBox: {
     flex: 1,
     alignItems: 'center',
+    // borderWidth: 1,
+    paddingHorizontal: 10,
   },
   statValue: {
     fontFamily: 'PlusJakartaSans-SemiBold',
