@@ -1,5 +1,4 @@
-/* eslint-disable react/no-unstable-nested-components */
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Text,
@@ -55,7 +54,7 @@ function getRoutesForUserType(t) {
 
 const TripItem = React.memo(({item, onShowAddress}) => {
   const {t} = useTranslation();
-  // console.log(8888888888, item);
+  console.log(8888888888, item);
   return (
     <View style={styles.tripItemContainer}>
       <View style={styles.statusIndicatorContainer}>
@@ -77,6 +76,7 @@ const TripItem = React.memo(({item, onShowAddress}) => {
           averageSpeed={item?.averageSpeed}
           duration={item?.duration}
           t={t}
+          maxSpeed={item?.maxSpeed}
         />
         <TripDetail
           address={item?.endAddress}
@@ -206,8 +206,14 @@ const StopStats = ({address, lat, lng, itemId, duration, onShowAddress}) => {
   );
 };
 
-const TripStats = ({distance, averageSpeed, duration, t}) => (
-  <View style={styles.tripStatsContainer}>
+const TripStats = ({distance, averageSpeed, duration, t, maxSpeed}) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={{
+      paddingVertical: 10,
+      // borderWidth: 1,
+    }}>
     <StatBox
       value={`${(distance / 1000).toFixed(2)} KM`}
       label={t(Constants.TOT_DIS)}
@@ -222,8 +228,31 @@ const TripStats = ({distance, averageSpeed, duration, t}) => (
       value={convertMillisToTime(duration)}
       label={t(Constants.DURATION)}
     />
-  </View>
+    <VerticalLine />
+    <StatBox
+      value={`${(maxSpeed * 1.852).toFixed(2)} km/h`}
+      label={t(Constants.MAXSPD)}
+    />
+  </ScrollView>
 );
+// const TripStats = ({distance, averageSpeed, duration, t}) => (
+//   <View style={styles.tripStatsContainer}>
+//     <StatBox
+//       value={`${(distance / 1000).toFixed(2)} KM`}
+//       label={t(Constants.TOT_DIS)}
+//     />
+//     <VerticalLine />
+//     <StatBox
+//       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
+//       label={t(Constants.AVG_SPEED)}
+//     />
+//     <VerticalLine />
+//     <StatBox
+//       value={convertMillisToTime(duration)}
+//       label={t(Constants.DURATION)}
+//     />
+//   </View>
+// );
 
 const StatBox = ({value, label}) => (
   <View style={styles.statBox}>
