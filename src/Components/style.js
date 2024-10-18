@@ -568,7 +568,7 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-SemiBoldItalic',
   },
   imageStyle: {width: 40, height: 40},
-  btnContainer: {
+  mapbtnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

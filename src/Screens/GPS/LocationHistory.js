@@ -45,13 +45,6 @@ const convertMillisToTime = millis => {
   return `${hours}h ${minutes}m`;
 };
 
-function getRoutesForUserType(t) {
-  return [
-    {key: 'active', title: `${t(Constants.HISTORY)}`},
-    {key: 'inactive', title: `${t(Constants.STOPS)}`},
-  ];
-}
-
 const TripItem = React.memo(({item, onShowAddress}) => {
   const {t} = useTranslation();
   console.log(8888888888, item);
@@ -379,7 +372,7 @@ const LocationHistory = ({navigation, route}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsTripsData}
+          data={gpsTripsData.slice().reverse()}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
@@ -415,7 +408,7 @@ const LocationHistory = ({navigation, route}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsStopsData}
+          data={gpsStopsData.slice().reverse()}
           renderItem={({item, index}) => (
             <RenderStopsItem
               item={item}
