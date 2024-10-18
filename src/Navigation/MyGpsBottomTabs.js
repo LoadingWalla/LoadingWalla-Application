@@ -23,11 +23,11 @@ const Tab = createBottomTabNavigator();
 
 export default function MyGpsBottomTabs() {
   const [currentTabIndex, setCurrentTabIndex] = useState(1);
-  function getWidth() {
-    const totalWidth = Dimensions.get('window').width;
-    const numberOfTabs = 3;
-    return totalWidth / numberOfTabs;
-  }
+  const totalWidth = Dimensions.get('window').width;
+  const numberOfTabs = 3;
+
+  // Calculate the width of each tab based on the screen dimensions
+  const getWidth = () => totalWidth / numberOfTabs;
 
   const tabOffsetValue = useRef(
     new Animated.Value(getWidth() * currentTabIndex),
