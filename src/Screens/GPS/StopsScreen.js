@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   Text,
@@ -114,7 +114,7 @@ const StopStats = ({address, lat, lng, itemId, duration, onShowAddress}) => {
 
 const StopsScreen = ({navigation, route}) => {
   useTrackScreenTime('StopsScreen');
-  const {deviceId, name, from, to} = route?.params;
+  const {deviceId, from, to} = route?.params;
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const [initialLoading, setInitialLoading] = useState(true);
@@ -173,7 +173,7 @@ const StopsScreen = ({navigation, route}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsStopsData}
+          data={gpsStopsData.slice().reverse()}
           renderItem={({item, index}) => (
             <RenderStopsItem
               item={item}

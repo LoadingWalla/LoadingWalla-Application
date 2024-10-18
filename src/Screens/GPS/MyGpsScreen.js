@@ -247,7 +247,7 @@ const MyGpsScreen = ({navigation}) => {
               onRefresh={onRefresh}
             />
             <FlatList
-              data={filteredDeviceData}
+              data={filteredDeviceData.slice().reverse()}
               initialNumToRender={4}
               maxToRenderPerBatch={5}
               windowSize={5}

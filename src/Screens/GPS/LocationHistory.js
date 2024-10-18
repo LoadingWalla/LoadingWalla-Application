@@ -372,7 +372,7 @@ const LocationHistory = ({navigation, route}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsTripsData}
+          data={gpsTripsData.slice().reverse()}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
@@ -408,7 +408,7 @@ const LocationHistory = ({navigation, route}) => {
         </View>
       ) : (
         <FlatList
-          data={gpsStopsData}
+          data={gpsStopsData.slice().reverse()}
           renderItem={({item, index}) => (
             <RenderStopsItem
               item={item}
