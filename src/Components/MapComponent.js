@@ -250,7 +250,7 @@ const MapComponent = React.memo(
           </View>
 
           <TouchableOpacity
-            style={styles.btnContainer}
+            style={styles.mapbtnContainer}
             onPress={() =>
               navigation.navigate('PlayJourney', {
                 deviceId: item?.id,
@@ -265,7 +265,7 @@ const MapComponent = React.memo(
               color={backgroundColorNew}
               style={styles.iconStyle}
             />
-            <Text style={styles.mapbtnText}>{t(Constants.PLAY)}</Text>
+            <Text style={styles.mapbtnText}>{`${t(Constants.PLAY)}`}</Text>
           </TouchableOpacity>
         </View>
       </View>
