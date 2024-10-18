@@ -118,7 +118,7 @@ const Booking = ({navigation}) => {
           <FlatList
             keyExtractor={item => item?.id.toString()}
             showsVerticalScrollIndicator={false}
-            data={BookingData}
+            data={BookingData.slice().reverse()}
             renderItem={renderItem}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
