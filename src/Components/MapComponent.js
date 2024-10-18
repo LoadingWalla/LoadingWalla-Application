@@ -61,7 +61,7 @@ const MapComponent = React.memo(
 
     const toggleMapType = useCallback(() => {
       setMapType(prevType =>
-        prevType === 'standard' ? 'satellite' : 'standard',
+        prevType === 'standard' ? 'hybrid' : 'standard',
       );
     }, []);
 
