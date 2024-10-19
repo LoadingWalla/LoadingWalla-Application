@@ -1,12 +1,5 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
@@ -28,17 +21,17 @@ import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
-import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 export default function PlayJourney({navigation, route}) {
   useTrackScreenTime('PlayJourney');
   const {deviceId, from, to, name, item} = route.params;
-  console.log(1111, 'PlayJourney Parmas----->', route);
+  // console.log(1111, 'PlayJourney Parmas----->', route);
   const {t} = useTranslation();
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -56,7 +49,6 @@ export default function PlayJourney({navigation, route}) {
 
   const dispatch = useDispatch();
   const {
-    mapLoading,
     gpsTokenData,
     gpsReplayLoading,
     gpsReplayData,
@@ -83,9 +75,7 @@ export default function PlayJourney({navigation, route}) {
   }, [wsConnected]);
 
   const toggleMapType = () => {
-    setMapType(prevType =>
-      prevType === 'standard' ? 'satellite' : 'standard',
-    );
+    setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
   };
 
   useFocusEffect(
@@ -302,52 +292,6 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
-  // const goToNextStop = () => {
-  //   if (currentStopIndex < gpsStopsData?.length - 1) {
-  //     const newIndex = currentStopIndex + 1;
-  //     setCurrentStopIndex(newIndex);
-  //     const nextStop = gpsStopsData[newIndex];
-  //     animatedMarkerPosition
-  //       .timing({
-  //         latitude: nextStop.latitude,
-  //         longitude: nextStop.longitude,
-  //         duration: 500,
-  //         useNativeDriver: true,
-  //       })
-  //       .start();
-  //     setCurrentStop(nextStop);
-  //     mapRef.current?.animateToRegion({
-  //       latitude: nextStop.latitude,
-  //       longitude: nextStop.longitude,
-  //       latitudeDelta: 0.0922,
-  //       longitudeDelta: 0.0421,
-  //     });
-  //   }
-  // };
-
-  // const goToPrevStop = () => {
-  //   if (currentStopIndex > 0) {
-  //     const newIndex = currentStopIndex - 1;
-  //     setCurrentStopIndex(newIndex);
-  //     const prevStop = gpsStopsData[newIndex];
-  //     animatedMarkerPosition
-  //       .timing({
-  //         latitude: prevStop.latitude,
-  //         longitude: prevStop.longitude,
-  //         duration: 1000,
-  //         useNativeDriver: true,
-  //       })
-  //       .start();
-  //     setCurrentStop(prevStop);
-  //     mapRef.current?.animateToRegion({
-  //       latitude: prevStop.latitude,
-  //       longitude: prevStop.longitude,
-  //       latitudeDelta: 0.0922,
-  //       longitudeDelta: 0.0421,
-  //     });
-  //   }
-  // };
-
   const totalStops = gpsStopsData ? gpsStopsData.length : 0;
   const totalRun = gpsSummaryData[0]?.distance / 1000;
 
@@ -459,9 +403,9 @@ export default function PlayJourney({navigation, route}) {
                           </View>
                           <View style={styles.arrowBottom} />
                           <View style={styles.truckIconContainer}>
-                            <ActiveLocation
-                              size={40}
-                              course={currentPosition.course || 0}
+                            <TruckNavigationIcon
+                              size={50}
+                              course={currentPosition.course}
                             />
                           </View>
                         </View>

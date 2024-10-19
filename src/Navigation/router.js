@@ -65,6 +65,7 @@ import MyLoadsBottomTabs from './MyLoadsBottomTabs';
 import MyGpsBottomTabs from './MyGpsBottomTabs';
 import MyTruckBottomTabs from './MyTruckBottomTabs';
 import TrackingTruck from '../Screens/GPS/TrackingTruck';
+import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
 
 const Stack = createNativeStackNavigator();
 

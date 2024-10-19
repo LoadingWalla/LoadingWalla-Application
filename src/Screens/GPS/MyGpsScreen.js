@@ -268,7 +268,7 @@ const MyGpsScreen = ({navigation}) => {
         )}
       </View>
       <AnimatedFAB
-        icon={() => <AddIcon size={35} color={'#FFFFFF'} />}
+        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
         label={'Buy Now'}
         extended={isExtended}
         onPress={() => navigation.navigate('BuyGPS')}
@@ -277,7 +277,7 @@ const MyGpsScreen = ({navigation}) => {
         iconMode={'dynamic'}
         style={[styles.fabStyle]}
         uppercase={false}
-        color={'#FFFFFF'}
+        color={'#EF4D23'}
         rippleColor={GradientColor1}
       />
     </View>

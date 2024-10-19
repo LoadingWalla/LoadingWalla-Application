@@ -19,7 +19,7 @@ export default StyleSheet.create({
     bottom: 10,
     right: 10,
     position: 'absolute',
-    backgroundColor: GradientColor1,
+    backgroundColor: '#FFF3EF',
   },
   setFlex: {flex: 1},
   dashboardLoadContainer: {
