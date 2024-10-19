@@ -1,7 +1,6 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {
   backgroundColorNew,
-  GradientColor1,
   pageBackground,
   textColor,
   titleColor,
@@ -16,7 +15,7 @@ export default StyleSheet.create({
     bottom: 70,
     right: 10,
     position: 'absolute',
-    backgroundColor: GradientColor1,
+    backgroundColor: '#FFF3EF',
   },
   continueBtnWidth: {width: '50%'},
   numOfGps: {fontSize: 14, fontFamily: 'PlusJakartaSans-Bold'},

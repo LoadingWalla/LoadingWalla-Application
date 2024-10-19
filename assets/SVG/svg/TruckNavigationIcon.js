@@ -9,13 +9,15 @@ import Svg, {
   Ellipse,
 } from 'react-native-svg';
 
-function TruckNavigationIcon({size}) {
+function TruckNavigationIcon({size, course}) {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 247.36 387.1"
       height={size}
-      width={size}>
+      width={size}
+      transform={`rotate(${course} 123.68 193.55)`}
+    >
       <Defs>
         <LinearGradient
           id="a"

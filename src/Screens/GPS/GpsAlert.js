@@ -1,11 +1,5 @@
 import React, {useCallback} from 'react';
-import {
-  FlatList,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import GpsSettingItem from '../../Components/GpsSettingItem';

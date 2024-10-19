@@ -1,12 +1,6 @@
-import {
-  Text,
-  TouchableOpacity,
-  View,
-  FlatList,
-} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
-import {backgroundColorNew} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';

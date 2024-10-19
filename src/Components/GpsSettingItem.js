@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import Switch from 'toggle-switch-react-native';
 import {GradientColor2, PrivacyPolicy, seperator} from '../Color/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './style'
+import styles from './style';
 
 const GpsSettingItem = ({detailInput, title, storageKey}) => {
   const [switchOn, setSwitchOn] = useState(false);

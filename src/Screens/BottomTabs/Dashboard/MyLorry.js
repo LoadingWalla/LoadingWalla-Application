@@ -256,7 +256,7 @@ const MyLorry = ({navigation}) => {
       /> */}
 
       <AnimatedFAB
-        icon={() => <AddIcon size={35} color={'#FFFFFF'} />}
+        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
         label={
           userType === '1'
             ? t(Constants.POST_LOADS)
@@ -269,7 +269,7 @@ const MyLorry = ({navigation}) => {
         iconMode={'dynamic'}
         style={[style.fabStyle]}
         uppercase={false}
-        color={'#FFFFFF'}
+        color={'#EF4D23'}
         rippleColor={GradientColor1}
       />
     </View>

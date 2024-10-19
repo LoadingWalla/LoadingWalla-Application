@@ -53,7 +53,7 @@ const PaymentGPS = ({navigation, route}) => {
   useTrackScreenTime('PaymentGps');
   const {plan_id, gpsCount, gpsOrderId, totalAmount} = route.params;
   const {t} = useTranslation();
-  // console.log(77777, 'paymentGPS', route);
+  console.log(77777, 'paymentGPS', route);
 
   const {
     gpsPlansData,

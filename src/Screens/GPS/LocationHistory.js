@@ -388,7 +388,7 @@ const LocationHistory = ({navigation, route}) => {
     </View>
   );
 
-  console.log('--------------gpsStopsData---------------', gpsStopsData);
+  // console.log('--------------gpsStopsData---------------', gpsStopsData);
   const StopsTab = () => (
     <View style={styles.contentContainer}>
       {gpsTripsError || gpsSummaryError ? (
@@ -571,32 +571,6 @@ const LocationHistory = ({navigation, route}) => {
       </View>
     );
   }
-
-  // const onRefresh = () => {
-  //   setRefreshing(true);
-  //   if (gpsTokenData) {
-  //     dispatch(
-  //       fetchSummaryReportRequest(
-  //         gpsTokenData.email,
-  //         gpsTokenData.password,
-  //         deviceId,
-  //         from,
-  //         to,
-  //         false,
-  //       ),
-  //     );
-  //     dispatch(
-  //       fetchGpsTripsRequest(
-  //         gpsTokenData.email,
-  //         gpsTokenData.password,
-  //         deviceId,
-  //         from,
-  //         to,
-  //       ),
-  //     );
-  //   }
-  //   setRefreshing(false);
-  // };
 
   return (
     <View style={styles.container}>
