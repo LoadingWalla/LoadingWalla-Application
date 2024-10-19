@@ -18,6 +18,7 @@ const WhatsAppAlert = ({navigation}) => {
   const getSwitchValue = async () => {
     try {
       const storedValue = await AsyncStorage.getItem('whatsAppAlert');
+      console.log('------------ whatsapp alert ------------', storedValue);
       if (storedValue !== null) {
         setSwitchOn(JSON.parse(storedValue));
       }

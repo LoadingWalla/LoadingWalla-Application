@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  Image,
+} from 'react-native';
 import {
   GradientColor2,
   GradientColor4,
@@ -49,11 +56,13 @@ const CompleteBooking = ({navigation, route}) => {
   const [isChecked, setIsChecked] = useState(true);
   const [isCameraOptions, setCameraOptions] = useState(false);
   const [documentImage, setDocumentImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const {
     completeDocumentLoading,
     completeDocumentStatus,
     completeDocumentData,
+    Userdata,
   } = useSelector(state => {
     // console.log('complete bookings', state.data);
     return state.data;
@@ -62,7 +71,9 @@ const CompleteBooking = ({navigation, route}) => {
   useEffect(() => {
     if (completeDocumentStatus === 200) {
       Toast.show(`${completeDocumentData?.message}`, Toast.LONG);
-      // navigation.navigate('KYC');
+      navigation.navigate('Previous Bookings',{
+        Owner: Userdata,
+      });
     }
     dispatch(completeBookingDocumentFailure());
   }, [dispatch, completeDocumentStatus, navigation]);
@@ -105,6 +116,7 @@ const CompleteBooking = ({navigation, route}) => {
         width: image.width,
       };
       setDocumentImage(documentData);
+      setUploadedImage(documentData);
     } catch (e) {
       console.error('Take photo error', e);
     }
@@ -132,6 +144,7 @@ const CompleteBooking = ({navigation, route}) => {
         width: image.width,
       };
       setDocumentImage(documentData);
+      setUploadedImage(documentData);
     } catch (e) {
       console.error(e);
     }
@@ -210,7 +223,7 @@ const CompleteBooking = ({navigation, route}) => {
         // contentContainerStyle={{padding: 20, borderWidth: 1, flex: 1}}
         style={styles.biltyViewStyle1}>
         <View style={styles.biltyViewStyle2}>
-          <Text style={styles.header}>Upload BILTY/POD</Text>
+          <Text style={styles.header}>Upload BILTY / POD</Text>
           <Text style={styles.subheader}>
             Confirm your delivery by uploading your BILTY / POD from load owner
           </Text>
@@ -242,8 +255,19 @@ const CompleteBooking = ({navigation, route}) => {
             <TouchableOpacity
               onPress={() => onClickProfile()}
               style={styles.documentContainer}>
-              <UploadDocument />
-              <Text style={styles.filename}>Uploadedfilename.png</Text>
+              {uploadedImage ? (
+                // Render uploaded image
+                <Image
+                  source={{uri: uploadedImage.uri}}
+                  style={styles.previewImage}
+                />
+              ) : (
+                <>
+                  <UploadDocument />
+                  <Text style={styles.filename}>No image uploaded</Text>
+                </>
+              )}
+              {/* <Text style={styles.filename}>Uploadedfilename.png</Text> */}
             </TouchableOpacity>
           </View>
         </View>

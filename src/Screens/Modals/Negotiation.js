@@ -140,6 +140,7 @@ const Negotiation = ({navigation, route}) => {
                   <TextInput
                     defaultValue={offered_price}
                     placeholder={item?.price}
+                    maxLength={6}
                     onChangeText={text => setOffered_price(text)}
                     style={styles.inputStyle}
                     keyboardType="numeric"

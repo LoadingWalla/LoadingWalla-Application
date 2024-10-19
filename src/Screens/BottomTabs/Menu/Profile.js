@@ -136,8 +136,16 @@ const Profile = ({navigation, route}) => {
           onPress: async () => {
             try {
               dispatch(initLogout());
-              await AsyncStorage.removeItem('UserType');
-              await AsyncStorage.removeItem('auth-token');
+              // Run all AsyncStorage operations in parallel
+              await Promise.all([
+                AsyncStorage.removeItem('UserType'),
+                AsyncStorage.removeItem('auth-token'),
+                AsyncStorage.removeItem('whatsAppAlert'),
+                AsyncStorage.removeItem('deviceMoving'),
+                AsyncStorage.removeItem('geofence'),
+                AsyncStorage.removeItem('ignition'),
+                AsyncStorage.removeItem('overspeeding'),
+              ]);
               dispatch(clearStore());
 
               navigation.reset({

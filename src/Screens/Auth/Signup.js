@@ -48,6 +48,25 @@ const Signup = ({navigation}) => {
     }
   }, [dashboardStatus, data, dispatch, mobileNumber, navigation]);
 
+  const setDefaultWhatsAppAlert = async () => {
+    try {
+      // Check if the value is already set
+      const existingValue = await AsyncStorage.getItem('whatsAppAlert');
+
+      if (existingValue === null) {
+        // If not set, set the default value
+        const defaultValue = JSON.stringify(false); // or true, or any value you need
+        await AsyncStorage.setItem('whatsAppAlert', defaultValue);
+      }
+    } catch (error) {
+      console.error('Error setting default WhatsApp alert:', error);
+    }
+  };
+
+  useEffect(() => {
+    setDefaultWhatsAppAlert();
+  }, []);
+
   const sendOtp = () => {
     if (!mobileNumber) {
       Toast.show(t('Enter mobile number'), Toast.LONG);
@@ -156,4 +175,3 @@ const Signup = ({navigation}) => {
 };
 
 export default Signup;
-
