@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, BackHandler, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
@@ -28,18 +28,19 @@ import {
 const Tab = createBottomTabNavigator();
 
 export default function MyTruckBottomTabs() {
+  const [currentTabIndex, setCurrentTabIndex] = useState(2);
   const totalWidth = Dimensions.get('window').width;
-  const tabOffsetValue = useRef(new Animated.Value(getWidth(2))).current; // Starts from the third tab
+  const numberOfTabs = 5;
+
+  // Calculate the width of each tab based on the screen dimensions
+  const getWidth = () => totalWidth / numberOfTabs;
+
+  const tabOffsetValue = useRef(
+    new Animated.Value(getWidth(currentTabIndex)),
+  ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // Function to get width of each tab based on total screen width and number of tabs
-  function getWidth(multiplier = 1) {
-    const numberOfTabs = 5;
-    return (totalWidth / numberOfTabs) * multiplier;
-  }
-
-  // Handles hardware back press
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -50,33 +51,39 @@ export default function MyTruckBottomTabs() {
     }
   }
 
-  // Effect to handle back button across the app
   useEffect(() => {
     console.log('MyTruckBottomTabs');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,
     );
-    return () => backHandler.remove(); // Cleanup the listener on unmount
+    return () => backHandler.remove();
   }, []);
 
   // Function to handle tab press and animation
   const handleTabPress = index => {
     Animated.spring(tabOffsetValue, {
-      toValue: getWidth(index),
+      toValue: getWidth() * index,
       useNativeDriver: true,
     }).start();
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      handleTabPress(currentTabIndex);
+    }, [currentTabIndex]),
+  );
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
-        initialRouteName={t(Constants.NAV_HOME)}
+        initialRouteName={'Market'}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 60,
+            height: 65,
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -92,15 +99,17 @@ export default function MyTruckBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={t(Constants.NAV_MY_LORRY)}
+          name="My Truck"
           component={MyLorry}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <TruckActiveIcon size={25} /> : <TruckIcon size={25} />,
             headerShown: false,
+            title: t(Constants.NAV_MY_LORRY),
           }}
           listeners={{
-            tabPress: () => handleTabPress(0),
+            tabPress: () => setCurrentTabIndex(0),
+            focus: () => setCurrentTabIndex(0),
           }}
         />
         <Tab.Screen
@@ -114,25 +123,29 @@ export default function MyTruckBottomTabs() {
               />
             ),
             headerShown: false,
+            title: t(Constants.GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(1),
+            tabPress: () => setCurrentTabIndex(1),
+            focus: () => setCurrentTabIndex(1),
           }}
         />
         <Tab.Screen
-          name={t(Constants.NAV_HOME)}
+          name="Market"
           component={Dashboard}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
+            title: t(Constants.NAV_HOME),
           }}
           listeners={{
-            tabPress: () => handleTabPress(2),
+            tabPress: () => setCurrentTabIndex(2),
+            focus: () => setCurrentTabIndex(2),
           }}
         />
         <Tab.Screen
-          name={t(Constants.BOOKINGS)}
+          name="Bookings"
           component={Booking}
           options={{
             tabBarIcon: ({focused}) =>
@@ -142,13 +155,15 @@ export default function MyTruckBottomTabs() {
                 <BookingIcon size={20} />
               ),
             headerShown: false,
+            title: t(Constants.BOOKINGS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(3),
+            tabPress: () => setCurrentTabIndex(3),
+            focus: () => setCurrentTabIndex(3),
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -162,14 +177,15 @@ export default function MyTruckBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU),
           }}
           listeners={{
-            tabPress: () => handleTabPress(4),
+            tabPress: () => setCurrentTabIndex(4),
+            focus: () => setCurrentTabIndex(4),
           }}
         />
       </Tab.Navigator>
 
-      {/* Animated sliding indicator */}
       <Animated.View
         style={style.animatedViewStyle(getWidth, tabOffsetValue)}
       />

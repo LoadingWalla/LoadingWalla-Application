@@ -6,8 +6,6 @@ import {
   ScrollView,
   Modal,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,16 +13,10 @@ import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import {
   GradientColor2,
-  PrivacyPolicy,
-  inputColor,
-  seperator,
-  textColor,
-  titleColor,
-  white,
+  seperator
 } from '../../Color/color';
 import Button from '../../Components/Button';
 import SearchFilter from '../../Components/SearchFilter';
-import RadioButton from '../../Components/RadioButton';
 import TruckItem from '../../Components/TruckItem';
 import TextInputField from '../../Components/TextInputField';
 import {useDispatch, useSelector} from 'react-redux';
@@ -39,9 +31,11 @@ import {
 } from '../../Store/Actions/Actions';
 import AddLorryShimmer from '../../Components/Shimmer/AddLorryShimmer';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const AddLorry = ({navigation, route}) => {
+  useTrackScreenTime('AddLorry');
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [vehicleType, setVehicleType] = useState('');
   const [vehicle, setVehicle] = useState('');
@@ -288,12 +282,9 @@ const AddLorry = ({navigation, route}) => {
         visible={isSeeMore}
         style
         onRequestClose={() => {}}>
-        <View
-          style={styles.seeMoreModalView1}>
-          <View
-            style={styles.seeMoreModalView2}>
-            <View
-              style={styles.seeMoreModalView3}>
+        <View style={styles.seeMoreModalView1}>
+          <View style={styles.seeMoreModalView2}>
+            <View style={styles.seeMoreModalView3}>
               <Text style={styles.label}>{'All Permits'}</Text>
               <TruckItem
                 backgroundStyle={styles.truckTypeItem}
@@ -306,10 +297,7 @@ const AddLorry = ({navigation, route}) => {
               />
 
               <Button
-                touchStyle={{
-                  marginLeft: 30,
-                  marginRight: 30,
-                }}
+                touchStyle={styles.addLorryBtnTouchStyle}
                 onPress={() => {
                   setSeeMore(false);
                 }}
@@ -337,9 +325,7 @@ const AddLorry = ({navigation, route}) => {
           {seeMore()}
           {viewIndex === 0 ? (
             <View>
-              <Text style={styles.label}>
-                {t(Constants.VEHICLE_NUMBER)}
-              </Text>
+              <Text style={styles.label}>{t(Constants.VEHICLE_NUMBER)}</Text>
               <TextInputField
                 value={removeEmojis(vehicleNumber).toUpperCase()}
                 hint={'XX 00 XX 0000'}
@@ -372,10 +358,7 @@ const AddLorry = ({navigation, route}) => {
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={styles.label}>{t(Constants.PERMIT)}</Text>
                 <TouchableOpacity onPress={() => setSeeMore(true)}>
-                  <Text
-                    style={styles.seeMoreTxt}>
-                    {t(Constants.SEE_MORE)}
-                  </Text>
+                  <Text style={styles.seeMoreTxt}>{t(Constants.SEE_MORE)}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -418,12 +401,8 @@ const AddLorry = ({navigation, route}) => {
             </View>
           ) : (
             <View style={styles.addLorryView1}>
-              <View
-                style={styles.addLorryView2}>
-                <Text
-                  style={styles.activeTxt}>
-                  {t(Constants.ACTIVE)}
-                </Text>
+              <View style={styles.addLorryView2}>
+                <Text style={styles.activeTxt}>{t(Constants.ACTIVE)}</Text>
                 <Switch
                   isOn={isEnabled}
                   onColor={GradientColor2}
@@ -454,19 +433,12 @@ const AddLorry = ({navigation, route}) => {
                 textStyle={styles.searchLoadTextStyle}
                 style={styles.searchLoadStyle}
               />
-              <Text
-                style={styles.noteTxt}>
-                {t(Constants.NOTE)}
-              </Text>
-              <View
-                style={styles.skipTxtView}>
+              <Text style={styles.noteTxt}>{t(Constants.NOTE)}</Text>
+              <View style={styles.skipTxtView}>
                 <TouchableOpacity
                   onPress={() => navigation.goBack()}
                   style={styles.skipTxtBdColor}>
-                  <Text
-                    style={styles.skipTxt}>
-                    {t(Constants.SKIP)}
-                  </Text>
+                  <Text style={styles.skipTxt}>{t(Constants.SKIP)}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -479,56 +451,4 @@ const AddLorry = ({navigation, route}) => {
 
 export default AddLorry;
 
-// const styles = StyleSheet.create({
-//   MainContainer: {
-//     backgroundColor: white,
-//     flex: 1,
-//   },
-//   button: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   touchStyle: {
-//     marginLeft: 30,
-//     marginRight: 30,
-//     marginTop: 30,
-//   },
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   truckTypeItem: {
-//     // width: 60,
-//     height: 45,
-//     paddingHorizontal: 10,
-//     minWidth: 45,
-//     marginRight: 10,
-//     marginBottom: 10,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#f19e72',
-//   },
-//   TyuckTypeUnSelectItem: {
-//     height: 45,
-//     paddingHorizontal: 10,
-//     minWidth: 45,
-//     marginRight: 10,
-//     marginBottom: 10,
-//     backgroundColor: inputColor,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   label: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-// });
+

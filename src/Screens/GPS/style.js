@@ -1,10 +1,41 @@
-import {StyleSheet} from 'react-native';
-import {backgroundColorNew, pageBackground, textColor, titleColor} from '../../Color/color';
+import {Dimensions, StyleSheet} from 'react-native';
+import {
+  backgroundColorNew,
+  pageBackground,
+  textColor,
+  titleColor,
+} from '../../Color/color';
 import {PrivacyPolicy} from '../../Color/color';
 
 export default StyleSheet.create({
+  myGpsContainer: {
+    flexGrow: 1,
+  },
+  fabStyle: {
+    bottom: 70,
+    right: 10,
+    position: 'absolute',
+    backgroundColor: '#FFF3EF',
+  },
+  continueBtnWidth: {width: '50%'},
+  numOfGps: {fontSize: 14, fontFamily: 'PlusJakartaSans-Bold'},
+  goToIconView: {transform: [{rotate: '-45deg'}]},
+  playJourneyTouchableOpacityStyle: {width: 40, height: 40},
   container: {
     flex: 1,
+  },
+  tabView: {
+    flex: 1,
+    backgroundColor: '#FFFDFD',
+  },
+  gpsSettingContainer: {
+    flex: 1,
+    padding: 10,
+  },
+  noGpsOrderTxt: {
+    color: '#707070',
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 24,
   },
   stopScreenContainer: {
     padding: 10,
@@ -14,7 +45,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   mapContainer: {
-    flex: 1
+    flex: 1,
   },
   gpsTrackContainer: {
     padding: 10,
@@ -351,13 +382,55 @@ export default StyleSheet.create({
     textAlign: 'center',
     marginTop: 5,
   },
+  addGeozoneBoldText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 12,
+    // textAlign: 'center',
+    // borderWidth: 1,
+  },
   boldText: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 16,
   },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    elevation: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  btnText2: {
+    color: backgroundColorNew,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    // textAlign: 'center',
+  },
+  geofenceText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 12,
+  },
+  noGeozonesContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  oohText: {
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    fontSize: 40,
+    color: backgroundColorNew,
+  },
+  noGeozonesText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 24,
+    marginBottom: 10,
+  },
   sectionBackground: {
     backgroundColor: '#FAFAFA',
   },
+  iconStyle: {marginLeft: 5},
   sectionPadding: {
     paddingHorizontal: 10,
     marginTop: -10,
@@ -375,6 +448,12 @@ export default StyleSheet.create({
     marginHorizontal: 5,
     height: '90%',
   },
+  locHistoryVerticalLine: {
+    backgroundColor: '#AFAFAF',
+    width: 1,
+    marginHorizontal: 5,
+    height: '100%',
+  },
   extraButtonBox: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -383,6 +462,47 @@ export default StyleSheet.create({
     bottom: 130,
     right: 0,
     zIndex: 10,
+  },
+  locHistoryAddressText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: titleColor,
+  },
+  showAddressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  showAddressText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: '#EF4D23',
+    textDecorationLine: 'underline',
+  },
+  showTimeText: det => ({
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: det === 'Start Time' ? 'green' : 'red',
+  }),
+  tripStatsContainer: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
+  statBox: {
+    flex: 1,
+    alignItems: 'center',
+    // borderWidth: 1,
+    paddingHorizontal: 10,
+  },
+  statValue: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+    color: titleColor,
+  },
+  statLabel: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 10,
+    color: titleColor,
   },
   addressText: {
     flex: 1,
@@ -427,11 +547,38 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  locHistoryStopText: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 12,
+  },
   stopText: {
     color: titleColor,
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 10,
     textAlign: 'center',
+  },
+  iconButtonsContainer: {
+    flexDirection: 'row',
+  },
+  downloadIconBox: {
+    padding: 10,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#f7f7f7',
+    elevation: 2,
+    marginRight: 10,
+  },
+  locHistoryStopCount: {
+    color: titleColor,
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    textAlign: 'left',
+    textTransform: 'uppercase',
+    marginTop: -2,
   },
   stopCount: {
     color: titleColor,
@@ -462,6 +609,11 @@ export default StyleSheet.create({
     padding: 5,
     borderRadius: 40,
     marginRight: 10,
+  },
+  centered: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   controlsContainer: {
     flex: 1,
@@ -503,6 +655,47 @@ export default StyleSheet.create({
   },
   activeSpeedButtonText: {
     color: '#FFF',
+  },
+  gpsSettingIconBox: {
+    flexDirection: 'row',
+  },
+  locHistoryCalendarIconBox: {
+    padding: 10,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#f7f7f7',
+    elevation: 2,
+  },
+  tripItemContainer: {
+    flex: 1,
+    padding: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#ffffff',
+    elevation: 2,
+  },
+  statusIndicatorContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 17,
+    marginTop: 10,
+  },
+  greenIndicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#3BA700',
+  },
+  redIndicator: {
+    width: 10,
+    height: 10,
+    backgroundColor: '#FF0000',
+    borderRadius: 5,
   },
   calendarIconBox: {
     position: 'absolute',
@@ -587,10 +780,11 @@ export default StyleSheet.create({
   },
   quickFilterContainer: {
     flex: 0.4,
+    // backgroundColor: '#FFE9E3',
     flexDirection: 'row',
     padding: 10,
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
   },
   button: {
@@ -599,6 +793,9 @@ export default StyleSheet.create({
     paddingHorizontal: 20,
     margin: 5,
     elevation: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '30%', // Adjust based on the number of buttons in a row
   },
   activeButton: {
     backgroundColor: '#ff6347',
@@ -609,7 +806,7 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   buttonText: {
-    fontSize: 14,
+    fontSize: 11,
     textAlign: 'center',
   },
   activeText: {
@@ -638,6 +835,7 @@ export default StyleSheet.create({
     color: backgroundColorNew,
     fontFamily: 'PlusJakartaSans-Bold',
   },
+  separator: {height: 1, backgroundColor: '#F7F7F7', marginVertical: 5},
   input: {
     elevation: 3,
     width: 150,
@@ -783,6 +981,19 @@ export default StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
   },
+  line: {
+    flex: 1,
+    width: 1.5,
+    backgroundColor: '#AFAFAF',
+    marginHorizontal: 5,
+  },
+  tripDetailsContainer: {
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  detailContainer: {
+    padding: 5,
+  },
   stopScreenVerticalLine: {
     backgroundColor: '#FFFFFF',
     width: 2,
@@ -846,10 +1057,6 @@ export default StyleSheet.create({
     fontSize: 16,
     color: titleColor,
     fontFamily: 'PlusJakartaSans-Bold',
-  },
-  fullScreenContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -956,15 +1163,20 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   noDataText: {
     fontSize: 16,
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Medium',
+  },
+  noDataView: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
+  locHistorynoDataText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+    color: titleColor,
   },
   notificationContainer: {
     flex: 4,
@@ -975,6 +1187,17 @@ export default StyleSheet.create({
   notificationHeader: {
     fontFamily: 'PlusJakartaSans-Bold',
     fontSize: 14,
+  },
+  locHistoryHeaderBox: {
+    backgroundColor: '#FFE9E3',
+    borderRadius: 8,
+    margin: 10,
+  },
+  headerTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   headerBox: {
     paddingVertical: 10,
@@ -988,10 +1211,26 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#00000029',
   },
+  gpsSettingHeaderBox: {
+    padding: 15,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    elevation: 2,
+    marginBottom: 5,
+  },
   mediumTextStyle: {
     color: PrivacyPolicy,
     fontFamily: 'PlusJakartaSans-Medium',
     fontSize: 12,
+  },
+  textStyle: {
+    fontSize: 18,
+    fontFamily: 'PlusJakartaSans-Bold',
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
   gpsAlertHeaderText: {
     fontSize: 12,
@@ -1002,12 +1241,30 @@ export default StyleSheet.create({
     fontSize: 8,
     fontFamily: 'PlusJakartaSans-Medium',
   },
+  locHistoryTimeText: {
+    fontFamily: 'PlusJakartaSans-Medium',
+    fontSize: 10,
+    color: '#454545',
+  },
+  vehicleNumberText: {
+    fontFamily: 'PlusJakartaSans-ExtraBold',
+    color: titleColor,
+  },
+  summaryContainer: {
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 3,
+    zIndex: 10,
+  },
   textView: {
     flexDirection: 'column',
     justifyContent: 'center',
     // borderEndWidth: 1,
   },
-  speedBox: {
+  speedBoxA: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -1081,8 +1338,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  locHistoryErrorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 50,
+  },
   detailBox: {
-    maxWidth: '73%'
+    maxWidth: '73%',
   },
   listContainer: {
     flex: 1,
@@ -1139,8 +1401,8 @@ export default StyleSheet.create({
     marginBottom: 15,
   },
   rateHeaderView: {
-    borderWidth: 0, 
-    padding: 8
+    borderWidth: 0,
+    padding: 8,
   },
   planTitle: {
     fontFamily: 'PlusJakartaSans-Bold',
@@ -1192,15 +1454,25 @@ export default StyleSheet.create({
     fontSize: 14,
     textTransform: 'capitalize',
   },
-  loader: {
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center'
+  geoZoneLoader: {
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  loaderContainer: {
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center'
+  loader: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tableContainer: {
+    flex: 1,
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+  locHistoryLoader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   gpsButton: {
     justifyContent: 'center',
@@ -1225,6 +1497,34 @@ export default StyleSheet.create({
     elevation: 3,
     borderColor: '#F7F7F7',
     borderWidth: 1,
+  },
+  geozoneBottomContainer: {
+    backgroundColor: '#FFFFFF',
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    maxHeight: Dimensions.get('window').height / 2.4,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    elevation: 3,
+    borderColor: '#F7F7F7',
+    borderWidth: 1,
+    padding: 10,
+  },
+  geofenceItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  geofenceTouch: {
+    flex: 0.9,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  deleteTouch: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
   geozoneContainer: {
     backgroundColor: '#FFFFFF',
@@ -1284,15 +1584,14 @@ export default StyleSheet.create({
   },
   geozoneAbsFillObj: {
     ...StyleSheet.absoluteFillObject,
-  }, 
-  addGeozoneBtnStyle: {
+  },
+  gpsSettingBtnStyle: {
+    flexDirection: 'row',
     borderRadius: 8,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
-    marginTop: 20,
-    width: '100%',
+    marginVertical: 5,
   },
   getGpsPlanTxt: {
     color: titleColor,
@@ -1315,13 +1614,11 @@ export default StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+  },
+  gpsDataStyle: {
+    flex: 1,
     marginVertical: 60,
     padding: 10,
-  },
-  loadingStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   notFoundText: {
     color: '#707070',
@@ -1339,32 +1636,94 @@ export default StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#3CA604',
     borderColor: '#3CA604',
+    alignItems: 'center',
+    width: '50%',
+    // height: 50,
+    // justifyContent: 'center',
+    // alignSelf: 'center',
+  },
+  addGeozoneBtnStyle: {
+    borderRadius: 8,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '50%',
+    marginBottom: 10,
+    marginTop: 20,
+    width: '100%',
+  },
+  speedDistanceBox: {
+    position: 'absolute',
+    top: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
+    zIndex: 99,
+    borderRadius: 8,
+    width: '95%',
     alignSelf: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  infoColumn: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+    // borderWidth: 1,
+  },
+  gpsInfo: {alignItems: 'center', marginVertical: 5},
+  gpsInfoText: {
+    fontSize: 15,
+    fontFamily: 'PlusJakartaSans-Bold',
+    color: 'blue',
+  },
+  retryButton: {
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: backgroundColorNew,
+  },
+  retryButtonText: {
+    fontFamily: 'PlusJakartaSans-Bold',
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  locHistoryErrorText: {
+    fontFamily: 'PlusJakartaSans-SemiBold',
+    fontSize: 16,
+    color: '#FF0000',
+    marginBottom: 10,
+  },
+  errorText: {
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
   },
   btnText: {
     fontSize: 16,
     color: textColor,
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
+    // borderWidth: 1,
+    width: 200,
   },
   homeView: {
     flex: 1,
     marginVertical: 60,
     justifyContent: 'center',
   },
-  notFoundView: {
+  notFoundViewA: {
     flex: 0.75,
+    borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   getNowView: {
+    // borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0.25,
+    flex: 0.2,
   },
   offerText: {
     fontFamily: 'PlusJakartaSans-Medium',

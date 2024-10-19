@@ -8,26 +8,33 @@ import {
   titleColor,
   GradientColor3,
   GradientColor2,
+  GradientColor1,
 } from '../../../Color/color';
 
 export default StyleSheet.create({
   dashboardSwiper: width => ({
-    height: width / 2
+    height: width / 2,
   }),
+  fabStyle: {
+    bottom: 10,
+    right: 10,
+    position: 'absolute',
+    backgroundColor: '#FFF3EF',
+  },
   setFlex: {flex: 1},
   dashboardLoadContainer: {
-    flex: 1, 
-    backgroundColor: '#FFFFFF', 
-    marginBottom: 60
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 60,
   },
   activeDotStyle: {width: 15},
-  contentShimmer: {flex: 1}, 
+  contentShimmer: {flex: 1},
   searchContainer: {
     backgroundColor: pageBackground,
     flex: 1,
   },
   searchPadding: {
-    padding: 20
+    padding: 20,
   },
   searchCloseBtn: {
     alignItems: 'center',
@@ -36,9 +43,9 @@ export default StyleSheet.create({
   },
   myLorryFlatList: {flex: 1, paddingHorizontal: 5},
   dashboardContainer: {
-    flex: 1, 
-    backgroundColor: '#FFFFFF', 
-    marginBottom: 60
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 60,
   },
   backIconView: {
     backgroundColor: '#fff',

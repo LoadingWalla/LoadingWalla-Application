@@ -45,7 +45,6 @@ import CompleteBooking from '../Screens/Verification/CompleteBooking';
 import Address from '../Screens/BottomTabs/Menu/Address';
 import AddAddress from '../Screens/Modals/AddAddress';
 import HeaderHelpButton from '../Components/HeaderHelpButton';
-import GpsSetting from '../Screens/GPS/GpsSetting';
 import GpsAlert from '../Screens/GPS/GpsAlert';
 import LocationHistory from '../Screens/GPS/LocationHistory';
 import FuelPump from '../Screens/GPS/FuelPump';
@@ -60,12 +59,13 @@ import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
 import GpsRelay from '../Screens/GPS/GpsRelay';
-import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
 import AddGeozone from '../Screens/GPS/AddGeozone';
 import Geozones from '../Screens/GPS/Geozones';
 import MyLoadsBottomTabs from './MyLoadsBottomTabs';
 import MyGpsBottomTabs from './MyGpsBottomTabs';
 import MyTruckBottomTabs from './MyTruckBottomTabs';
+import TrackingTruck from '../Screens/GPS/TrackingTruck';
+import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
 
 const Stack = createNativeStackNavigator();
 
@@ -927,7 +927,7 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        component={TrackingTruckNew}
+        component={TrackingTruck}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
@@ -966,7 +966,7 @@ const Navigation = ({language}) => {
         })}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="GpsSetting"
         component={GpsSetting}
         options={{
@@ -993,14 +993,14 @@ const Navigation = ({language}) => {
               handleBackButton,
             ),
         })}
-      />
+      /> */}
       <Stack.Screen
         name="GpsAlert"
         component={GpsAlert}
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Alerts',
+          title: t(Constants.ALERTS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1027,7 +1027,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'History',
+          title: t(Constants.HISTORY),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1081,7 +1081,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Purchase GPS',
+          title: t(Constants.PURCHASE_GPS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1155,7 +1155,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Provide delivery details',
+          title: t(Constants.DELIVERY_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1386,7 +1386,7 @@ const Navigation = ({language}) => {
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: route?.params?.name || 'All Geozones',
+          title: route?.params?.name || t(Constants.ALL_GEO),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

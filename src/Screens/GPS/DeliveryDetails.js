@@ -1,8 +1,7 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import PurchaseGpsHeader from '../../Components/PurchaseGpsHeader';
 import TextInputField from '../../Components/TextInputField';
-import {textColor, titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
@@ -10,9 +9,15 @@ import {
   placeGpsOrderFailure,
   placeGpsOrderRequest,
 } from '../../Store/Actions/Actions';
-import styles from './style'
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
+import styles from './style';
+import AlertBox from '../../Components/AlertBox';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const DeliveryDetails = ({navigation, route}) => {
+  useTrackScreenTime('DeliveryDetails');
+  const {t} = useTranslation();
   const {gpsCount, pricePerDevice, plan_id} = route.params;
   // console.log(4444, route);
 
@@ -30,9 +35,8 @@ const DeliveryDetails = ({navigation, route}) => {
   });
   const dispatch = useDispatch();
 
-  const {gpsOrderStatus, gpsPlansData, gpsOrderData} = useSelector(
-    state => state.data,
-  );
+  const {gpsOrderStatus, gpsPlansData, gpsOrderData, gpsOrderErrorStatus} =
+    useSelector(state => state.data);
   const filteredPlanData = gpsPlansData?.find(plan => plan.id === plan_id);
   // console.log(55555, filteredPlanData);
 
@@ -51,27 +55,59 @@ const DeliveryDetails = ({navigation, route}) => {
   };
 
   const handleContinue = () => {
-    // navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    // console.log(
-    //   fullName,
-    //   alternativePhoneNumber,
-    //   plan_id,
-    //   gpsCount,
-    //   rcNumbers,
-    //   // deliveryAddress,
-    //   address.city,
-    //   address.deliveryAddress,
-    //   address.landmark,
-    //   address.pinCode,
-    //   address.state,
-    // );
-    if (
-      !fullName ||
-      !alternativePhoneNumber ||
-      Object.values(address).some(field => !field) ||
-      rcNumbers.includes('')
-    ) {
-      Toast.show('Please fill all the fields before continuing.', Toast.LONG);
+    // if (
+    //   !fullName ||
+    //   !alternativePhoneNumber ||
+    //   Object.values(address).some(field => !field) ||
+    //   rcNumbers.includes('')
+    // ) {
+    //   Toast.show(
+    //     t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING),
+    //     Toast.LONG,
+    //   );
+    //   return;
+    // }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    const pinCodeRegex = /^[0-9]{6}$/;
+
+    if (!fullName.trim()) {
+      Toast.show(t(Constants.PLS_FULL_NAME), Toast.LONG);
+      return;
+    }
+
+    if (!alternativePhoneNumber || !phoneRegex.test(alternativePhoneNumber)) {
+      Toast.show(t(Constants.PLS_PHONE_NO), Toast.LONG);
+      return;
+    }
+
+    if (rcNumbers.some(rcNumber => rcNumber.trim() === '')) {
+      Toast.show(t(Constants.PLS_RC_NO), Toast.LONG);
+      return;
+    }
+
+    if (!address.deliveryAddress.trim()) {
+      Toast.show(t(Constants.PLS_ADDR), Toast.LONG);
+      return;
+    }
+
+    if (!address.landmark.trim()) {
+      Toast.show(t(Constants.PLS_LAND), Toast.LONG);
+      return;
+    }
+
+    if (!address.city.trim()) {
+      Toast.show(t(Constants.PLS_CITY), Toast.LONG);
+      return;
+    }
+
+    if (!address.state.trim()) {
+      Toast.show(t(Constants.PLS_STATE), Toast.LONG);
+      return;
+    }
+
+    if (!address.pinCode || !pinCodeRegex.test(address.pinCode)) {
+      Toast.show(t(Constants.PLS_PINCODE), Toast.LONG);
       return;
     }
     dispatch(
@@ -101,6 +137,8 @@ const DeliveryDetails = ({navigation, route}) => {
           totalAmount: gpsCount * pricePerDevice,
         });
         dispatch(placeGpsOrderFailure());
+      } else if (gpsOrderErrorStatus !== null) {
+        AlertBox('Internal Server Error.');
       }
     }
     return () => {
@@ -121,7 +159,9 @@ const DeliveryDetails = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <PurchaseGpsHeader
-        footertitle={`Total amount to be paid: ₹ ${gpsCount * pricePerDevice}`}
+        footertitle={`${t(Constants.TOTAL_AMOUNT_PAID)}: ₹ ${
+          gpsCount * pricePerDevice
+        }`}
         icon={false}
         edit={true}
         planName={filteredPlanData?.plan_name}
@@ -132,77 +172,79 @@ const DeliveryDetails = ({navigation, route}) => {
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}>
         <View>
-          <Text style={styles.label}>Enter Full Name*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_FULL_NAME)}*</Text>
           <TextInputField
             value={fullName}
-            hint={'Enter Full Name'}
+            hint={t(Constants.ENTER_FULL_NAME)}
             onChangeText={setFullName}
           />
         </View>
         <View>
-          <Text style={styles.label}>Phone Number*</Text>
+          <Text style={styles.label}>
+            {t(Constants.ENTER_ALT_PHONE_NUMBER)}*
+          </Text>
           <TextInputField
             value={alternativePhoneNumber}
-            hint={'Enter Alternative Phone Number'}
+            hint={t(Constants.ENTER_ALT_PHONE_NUMBER)}
             onChangeText={setAlternativePhoneNumber}
             isPhone={true}
           />
         </View>
 
-        <Text style={styles.label}>Enter RC Numbers*</Text>
+        <Text style={styles.label}>{t(Constants.ENTER_RC_NUMBER)}*</Text>
         {Array.from({length: gpsCount}).map((_, index) => (
           <TextInputField
             key={index}
             value={rcNumbers[index]}
-            hint={`Enter RC number for GPS ${index + 1}`}
+            hint={`${t(Constants.RC_NUMBER_GPS)} ${index + 1}`}
             onChangeText={text => handleRcNumberChange(text, index)}
           />
         ))}
         <View>
-          <Text style={styles.label}>Delivery address*</Text>
+          <Text style={styles.label}>{t(Constants.DELIVERY_ADDRESS)}*</Text>
           <TextInputField
             // value={deliveryAddress}
             value={address.deliveryAddress}
-            hint={'Enter Delivery Address'}
+            hint={t(Constants.ENTER_DELIVERY_ADDRESS)}
             // onChangeText={setDeliveryAddress}
             onChangeText={text => handleAddressChange('deliveryAddress', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>Landmark*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_YOUR_LANDMARK)}*</Text>
           <TextInputField
             value={address.landmark}
-            hint={'Enter Landmark'}
+            hint={t(Constants.ENTER_YOUR_LANDMARK)}
             onChangeText={text => handleAddressChange('landmark', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>City*</Text>
+          <Text style={styles.label}>{t(Constants.ENTER_CITY_NAME)}*</Text>
           <TextInputField
             value={address.city}
-            hint={'Enter City'}
+            hint={t(Constants.CITY_NAME)}
             onChangeText={text => handleAddressChange('city', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>State*</Text>
+          <Text style={styles.label}>{t(Constants.STATE)}*</Text>
           <TextInputField
             value={address.state}
-            hint={'Enter State'}
+            hint={t(Constants.ENTER_STATE)}
             onChangeText={text => handleAddressChange('state', text)}
           />
         </View>
         <View>
-          <Text style={styles.label}>Pin Code*</Text>
+          <Text style={styles.label}>{t(Constants.PIN_CODE)}*</Text>
           <TextInputField
             value={address.pinCode}
-            hint={'Enter Pin Code'}
+            hint={t(Constants.ENTER_PIN_CODE)}
             isPhone={true}
             onChangeText={text => handleAddressChange('pinCode', text)}
           />
         </View>
         <Button
-          title={'Continue'}
+          title={t(Constants.CONTINUE)}
           onPress={handleContinue}
           textStyle={styles.deliveryDetailsBtnText}
           style={styles.deliveryDetailsBtnStyle}
@@ -213,45 +255,3 @@ const DeliveryDetails = ({navigation, route}) => {
 };
 
 export default DeliveryDetails;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 16,
-//     backgroundColor: '#fff',
-//   },
-//   inputContainer: {
-//     marginTop: 16,
-//   },
-//   listContainer: {
-//     flex: 1,
-//     borderWidth: 0,
-//     marginHorizontal: 10,
-//     backgroundColor: '#ffffff',
-//     paddingVertical: 15,
-//     paddingHorizontal: 10,
-//     elevation: 2,
-//     borderTopLeftRadius: 8,
-//     borderTopRightRadius: 8,
-//   },
-//   label: {
-//     fontSize: 15,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 6,
-//     paddingHorizontal: 25,
-//     paddingVertical: 10,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: 30,
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-// });

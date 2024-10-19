@@ -14,6 +14,27 @@ import {
 
 export default StyleSheet.create({
   Container: {flex: 1, backgroundColor: '#FFFDFD'},
+  truckItemBgStyle: {
+    padding: 20,
+    marginRight: 10,
+    // marginBottom: 10,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  truckItemUnselectBgStyle: {
+    padding: 20,
+    backgroundColor: inputColor,
+    borderRadius: 8,
+    marginRight: 10,
+    // marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addLorryBtnTouchStyle: {
+    marginLeft: 30,
+    marginRight: 30,
+  },
   MainContainer: {
     backgroundColor: white,
     flex: 1,

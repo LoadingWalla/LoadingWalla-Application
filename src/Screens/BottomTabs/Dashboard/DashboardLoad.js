@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, ScrollView, Text, Dimensions, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Constants from '../../../Constants/Constant';
@@ -20,10 +20,12 @@ import {
 } from '../../../Store/Actions/Actions';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const {width} = Dimensions.get('window');
 
 const DashboardLoad = ({navigation}) => {
+  useTrackScreenTime('DashboardLoad');
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
   const [searchTo, setSearchTo] = useState('');

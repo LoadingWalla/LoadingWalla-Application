@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
-import {View, FlatList, ActivityIndicator, RefreshControl} from 'react-native';
+import {View, FlatList, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import Snackbar from 'react-native-snackbar';
@@ -11,14 +11,19 @@ import {
   fetchTokenRequest,
   initProfile,
 } from '../../Store/Actions/Actions';
-import {backgroundColorNew} from '../../Color/color';
+import {backgroundColorNew, GradientColor1} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import GpsItem from '../../Components/GpsItem';
 import DashboardHeader from '../../Components/DashboardHeader';
 import SearchBox from '../../Components/SearchBox';
 import EmptyListComponent from '../../Components/EmptyListComponent';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import {AnimatedFAB} from 'react-native-paper';
+import AddIcon from '../../../assets/SVG/svg/AddIcon';
+import MyGPSShimmer from '../../Components/Shimmer/MyGPSShimmer';
 
 const MyGpsScreen = ({navigation}) => {
+  useTrackScreenTime('MyGpsScreen');
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {
@@ -27,22 +32,25 @@ const MyGpsScreen = ({navigation}) => {
     gpsDeviceData,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => {
-    // console.log('My Gps Screen---', state.data);
-    return state.data;
-  });
+  } = useSelector(state => state.data);
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
-    state => {
-      // console.log('WEBSOCKET My Gps Screen---', state.wsData);
-      return state.wsData;
-    },
+    state => state.wsData,
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
+  const [isExtended, setIsExtended] = useState(true);
+
+  const onScroll = ({nativeEvent}) => {
+    const currentScrollPosition =
+      Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+    setIsExtended(currentScrollPosition <= 0);
+  };
+
+  // const fabStyle = {[animateFrom]: 16};
 
   // Fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -206,7 +214,7 @@ const MyGpsScreen = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.myGpsContainer}>
       <View style={styles.dashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -222,40 +230,56 @@ const MyGpsScreen = ({navigation}) => {
           t={t}
         />
       </View>
-      <View style={styles.contentContainer}>
-        <SearchBox
-          onSearch={handleSearch}
-          onToggle={handleToggleSearch}
-          onFilterChange={handleFilterChange}
-          deviceCounts={deviceCounts}
-          onRefresh={onRefresh}
-        />
+      <View style={styles.gpsDataStyle}>
         {gpsDeviceLoading ? (
-          <View style={styles.loadingStyle}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
+          <View>
+            <MyGPSShimmer />
           </View>
         ) : gpsDeviceData === null ? (
           <View />
         ) : (
-          <FlatList
-            data={filteredDeviceData}
-            initialNumToRender={4}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderGpsItem}
-            keyExtractor={item => item.id.toString()}
-            ListEmptyComponent={
-              filteredDeviceData.length === 0 ? (
-                <EmptyListComponent navigation={navigation} />
-              ) : null
-            }
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          />
+          <>
+            <SearchBox
+              onSearch={handleSearch}
+              onToggle={handleToggleSearch}
+              onFilterChange={handleFilterChange}
+              deviceCounts={deviceCounts}
+              onRefresh={onRefresh}
+            />
+            <FlatList
+              data={filteredDeviceData.slice().reverse()}
+              initialNumToRender={4}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderGpsItem}
+              keyExtractor={item => item.id.toString()}
+              ListEmptyComponent={
+                filteredDeviceData.length === 0 ? (
+                  <EmptyListComponent navigation={navigation} />
+                ) : null
+              }
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              onScroll={onScroll}
+            />
+          </>
         )}
       </View>
+      <AnimatedFAB
+        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
+        label={'Buy Now'}
+        extended={isExtended}
+        onPress={() => navigation.navigate('BuyGPS')}
+        visible={true}
+        animateFrom={'right'}
+        iconMode={'dynamic'}
+        style={[styles.fabStyle]}
+        uppercase={false}
+        color={'#EF4D23'}
+        rippleColor={GradientColor1}
+      />
     </View>
   );
 };

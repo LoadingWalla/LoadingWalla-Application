@@ -1,9 +1,11 @@
 import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useTrackScreenTime from '../hooks/useTrackScreenTime';
 // import {CommonActions} from '@react-navigation/native';
 
 const Landing = ({navigation}) => {
+  useTrackScreenTime('Landing');
   // Used for remove screen from stack
   // const removeStack = () => {
   //   navigation.dispatch(state => {

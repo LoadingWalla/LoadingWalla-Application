@@ -1,7 +1,7 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {Animated, BackHandler, Dimensions} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import * as Constants from '../Constants/Constant';
 import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import Profile from '../Screens/BottomTabs/Menu/Profile';
@@ -22,18 +22,19 @@ import GPSHomePage from '../Screens/GPS/GPSHomePage';
 const Tab = createBottomTabNavigator();
 
 export default function MyGpsBottomTabs() {
-  // Calculate tab width based on screen dimensions
-  function getWidth() {
-    const totalWidth = Dimensions.get('window').width;
-    const numberOfTabs = 3;
-    return totalWidth / numberOfTabs;
-  }
+  const [currentTabIndex, setCurrentTabIndex] = useState(1);
+  const totalWidth = Dimensions.get('window').width;
+  const numberOfTabs = 3;
 
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 1)).current;
+  // Calculate the width of each tab based on the screen dimensions
+  const getWidth = () => totalWidth / numberOfTabs;
+
+  const tabOffsetValue = useRef(
+    new Animated.Value(getWidth() * currentTabIndex),
+  ).current;
   const navigation = useNavigation();
   const {t} = useTranslation();
 
-  // Handle back button presses across the app
   function handleBackButton() {
     if (navigation.canGoBack()) {
       navigation.goBack();
@@ -44,17 +45,15 @@ export default function MyGpsBottomTabs() {
     }
   }
 
-  // Set the back button listener once for the component
   useEffect(() => {
     console.log('MyGpsBottomTabs');
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       handleBackButton,
     );
-    return () => backHandler.remove(); // Cleanup the listener on unmount
+    return () => backHandler.remove();
   }, []);
 
-  // Function to handle tab press animation
   const handleTabPress = index => {
     Animated.spring(tabOffsetValue, {
       toValue: getWidth() * index,
@@ -62,15 +61,22 @@ export default function MyGpsBottomTabs() {
     }).start();
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      handleTabPress(currentTabIndex);
+    }, [currentTabIndex]),
+  );
+
   return (
     <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <Tab.Navigator
         initialRouteName={'MyGPS'}
+        backBehavior="history"
         screenOptions={{
           tabBarActiveTintColor: GradientColor2,
           tabBarInactiveTintColor: tabIndicatorColor,
           tabBarStyle: {
-            height: 60,
+            height: 65,
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -86,19 +92,21 @@ export default function MyGpsBottomTabs() {
           },
         }}>
         <Tab.Screen
-          name={'GPS'}
+          name="GPS"
           component={GPSHomePage}
           options={{
             tabBarIcon: ({focused}) =>
               focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
             headerShown: false,
+            title: t(Constants.GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(0),
+            tabPress: () => setCurrentTabIndex(0),
+            focus: () => setCurrentTabIndex(0),
           }}
         />
         <Tab.Screen
-          name={'MyGPS'}
+          name="MyGPS"
           component={MyGpsScreen}
           options={{
             tabBarIcon: ({focused}) =>
@@ -108,13 +116,15 @@ export default function MyGpsBottomTabs() {
                 <GpsRoadIcon size={22} color={'#000000'} />
               ),
             headerShown: false,
+            title: t(Constants.MY_GPS),
           }}
           listeners={{
-            tabPress: () => handleTabPress(1),
+            tabPress: () => setCurrentTabIndex(1),
+            focus: () => setCurrentTabIndex(1),
           }}
         />
         <Tab.Screen
-          name={t(Constants.MENU)}
+          name="Menu"
           component={Profile}
           options={{
             tabBarIcon: ({focused}) =>
@@ -128,14 +138,15 @@ export default function MyGpsBottomTabs() {
             headerStyle: {
               backgroundColor: '#FFFDFD',
             },
+            title: t(Constants.MENU),
           }}
           listeners={{
-            tabPress: () => handleTabPress(2),
+            tabPress: () => setCurrentTabIndex(2),
+            focus: () => setCurrentTabIndex(2),
           }}
         />
       </Tab.Navigator>
 
-      {/* Animated view for the sliding tab indicator */}
       <Animated.View
         style={style.animatedViewStyle(getWidth, tabOffsetValue)}
       />

@@ -1,6 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {
-  StyleSheet,
   View,
   Text,
   Dimensions,
@@ -14,8 +13,9 @@ import MapViewDirections from 'react-native-maps-directions';
 import CommonToolbar from '../../Components/CommonToolbar';
 import * as Constants from '../../Constants/Constant';
 import {useDispatch, useSelector} from 'react-redux';
-import {GradientColor1, titleColor, white} from '../../Color/color';
+import {GradientColor1} from '../../Color/color';
 import Button from '../../Components/Button';
+import {useTranslation} from 'react-i18next';
 import {
   acceptRejectFailure,
   fetchMapDataStart,
@@ -23,7 +23,8 @@ import {
 } from '../../Store/Actions/Actions';
 import ExitFullScreen from '../../../assets/SVG/svg/ExitFullScreen';
 import FullScreenIcon from '../../../assets/SVG/svg/FullScreenIcon';
-import styles from './style'
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 const blueDot = require('../../../assets/dot.png');
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE';
@@ -41,6 +42,8 @@ function offsetCoordinates(coord, isLeft) {
 }
 
 const ViewDetail = ({navigation, route}) => {
+  const {t} = useTranslation();
+  useTrackScreenTime('ViewDetail');
   // console.log('view detail', route);
   const {
     from,
@@ -227,24 +230,19 @@ const ViewDetail = ({navigation, route}) => {
         </TouchableOpacity>
       </View>
       {!isFullScreen && (
-        <View
-          style={styles.isFullScreenView}>
+        <View style={styles.isFullScreenView}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}>
             <View style={styles.viewDetailScrollView1}>
               <View style={styles.viewDetailScrollView2}>
-                <Text style={styles.fromToText}>
-                  {Constants.FROM}
-                </Text>
+                <Text style={styles.fromToText}>{t(Constants.FROM)}</Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {from}</Text>
                 </View>
               </View>
               <View style={styles.viewDetailScrollView3}>
-                <Text style={styles.fromToText}>
-                  {Constants.TO}
-                </Text>
+                <Text style={styles.fromToText}>{t(Constants.TO)}</Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {to}</Text>
                 </View>
@@ -252,14 +250,12 @@ const ViewDetail = ({navigation, route}) => {
             </View>
 
             <View style={styles.marginTopStyle}>
-              <Text
-                style={styles.logDetailsTxt}>
-                Logistics Details
+              <Text style={styles.logDetailsTxt}>
+                {t(Constants.LOG_DETAILS)}
               </Text>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  Truck Number
+                  {t(Constants.TRUCK_NUM)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {vehicle_number}</Text>
@@ -268,10 +264,9 @@ const ViewDetail = ({navigation, route}) => {
             </View>
 
             <View>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  Load Name
+                  {t(Constants.LOAD_NAME)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {material_name}</Text>
@@ -287,19 +282,17 @@ const ViewDetail = ({navigation, route}) => {
                   </View>
                 </View>
               </View> */}
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  {Constants.QUANTITY}
+                  {t(Constants.QUANTITY)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {qty} Ton</Text>
                 </View>
               </View>
-              <View
-                style={styles.truckNumViewStyle}>
+              <View style={styles.truckNumViewStyle}>
                 <Text style={styles.truckNumTxtStyle}>
-                  {Constants.PRICE}
+                  {t(Constants.PRICE)}
                 </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>
@@ -309,9 +302,10 @@ const ViewDetail = ({navigation, route}) => {
                   </Text>
                 </View>
               </View>
-              <View
-                style={styles.truckNumViewStyle}>
-                <Text style={styles.truckNumTxtStyle}>Distance</Text>
+              <View style={styles.truckNumViewStyle}>
+                <Text style={styles.truckNumTxtStyle}>
+                  {t(Constants.DISTANCE)}
+                </Text>
                 <View style={styles.setFlex}>
                   <Text style={styles.textStyle}>: {distance}</Text>
                 </View>
@@ -322,7 +316,11 @@ const ViewDetail = ({navigation, route}) => {
             <Button
               loading={accept_rejectLoading}
               onPress={handlePressAction}
-              title={status === 'complete' ? 'Rate Now' : 'Complete Booking'}
+              title={
+                status === 'complete'
+                  ? t(Constants.RATE_NOW)
+                  : t(Constants.COMPLETE_BOOKING)
+              }
               textStyle={styles.findButtonText}
               style={styles.findButtonContainer}
             />
@@ -332,77 +330,5 @@ const ViewDetail = ({navigation, route}) => {
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#bce2c5',
-//   },
-//   map: {
-//     flex: 1,
-//   },
-//   backButton: {
-//     position: 'absolute',
-//     top: 10,
-//     left: 10,
-//     backgroundColor: 'transparent',
-//     zIndex: 1,
-//   },
-//   fullScreenButton: {
-//     position: 'absolute',
-//     bottom: 10,
-//     right: 10,
-//     backgroundColor: '#FFFFFF',
-//     zIndex: 1,
-//     elevation: 2,
-//     padding: 10,
-//     borderRadius: 30,
-//   },
-//   buttonContainer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//   },
-//   textStyle: {
-//     color: '#352422',
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   centered: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   errorText: {
-//     textAlign: 'center',
-//     color: 'red',
-//   },
-//   modalTopLine: {
-//     height: 5,
-//     backgroundColor: '#E2E2E2',
-//     width: '30%',
-//     position: 'absolute',
-//     borderRadius: 50,
-//     top: 0,
-//     alignSelf: 'center',
-//     marginVertical: 10,
-//   },
-//   findButtonContainer: {
-//     flexDirection: 'row',
-//     borderRadius: 10,
-//     alignItems: 'center',
-//     alignSelf: 'center',
-//     justifyContent: 'center',
-//     paddingVertical: 15,
-//     paddingHorizontal: 20,
-//   },
-//   findButtonText: {
-//     fontSize: 14,
-//     color: white,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-// });
 
 export default ViewDetail;

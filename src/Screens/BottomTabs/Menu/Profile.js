@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  KeyboardAvoidingView,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -58,22 +57,31 @@ import RightArrow from '../../../../assets/SVG/svg/RightArrow';
 import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
 
 const Profile = ({navigation, route}) => {
+  useTrackScreenTime('Profile');
   const [isEditProfile, setEditProfile] = useState(false);
   const [isBigImage, setBigImage] = useState(false);
   const version = DeviceInfo.getVersion();
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
-    useSelector(state => {
-      // console.log('profile Data', state.data);
-      return state.data;
-    });
+  const {
+    UserVerifyPercentage,
+    profileLoading,
+    profileSetupData,
+    Userdata,
+    logoutData,
+    logoutStatus,
+    logoutLoading,
+  } = useSelector(state => {
+    console.log('profile Data', state.data);
+    return state.data;
+  });
   const {wsConnected} = useSelector(state => {
     console.log('WEBSOCKET profile ----', state.wsData);
     return state.wsData;
@@ -91,6 +99,11 @@ const Profile = ({navigation, route}) => {
     }, [dispatch, profileSetupData]),
   );
 
+  const profileImg = (hei, wid) => ({
+    height: hei / 2.5,
+    width: wid,
+  });
+
   const bigImage = () => {
     return (
       <Modal animationType="slide" transparent={true} visible={isBigImage}>
@@ -102,7 +115,7 @@ const Profile = ({navigation, route}) => {
           </TouchableOpacity>
           <View style={style.imageContainer}>
             <Image
-              style={profileImg(hei, wid)}
+              style={style.profileImg(hei, wid)}
               source={
                 Userdata?.profile_img
                   ? {uri: Userdata?.profile_img}
@@ -130,8 +143,16 @@ const Profile = ({navigation, route}) => {
           onPress: async () => {
             try {
               dispatch(initLogout());
-              await AsyncStorage.removeItem('UserType');
-              await AsyncStorage.removeItem('auth-token');
+              // Run all AsyncStorage operations in parallel
+              await Promise.all([
+                AsyncStorage.removeItem('UserType'),
+                AsyncStorage.removeItem('auth-token'),
+                AsyncStorage.removeItem('whatsAppAlert'),
+                AsyncStorage.removeItem('deviceMoving'),
+                AsyncStorage.removeItem('geofence'),
+                AsyncStorage.removeItem('ignition'),
+                AsyncStorage.removeItem('overspeeding'),
+              ]);
               dispatch(clearStore());
 
               navigation.reset({
@@ -203,7 +224,7 @@ const Profile = ({navigation, route}) => {
                   style.profileImgStyle,
                   {
                     marginRight: Userdata?.user_type === 3 ? 10 : 0,
-                  }
+                  },
                 ]}
                 source={
                   Userdata?.profile_img
@@ -219,10 +240,10 @@ const Profile = ({navigation, route}) => {
               <Text style={style.subTitle}>{Userdata?.mobile}</Text>
               <Text style={style.subTitle}>
                 {Userdata?.user_type === 1
-                  ? 'Load Owner'
+                  ? t(Constants.LOAD_OWNER)
                   : Userdata?.user_type === 3
-                  ? 'GPS Owner'
-                  : 'Truck Owner'}
+                  ? t(Constants.GPS_OWNER)
+                  : t(Constants.TRUCK_OWNER)}
               </Text>
               {Userdata?.user_type !== 3 && (
                 <View style={style.profileRateVerifyOutView}>
@@ -342,7 +363,10 @@ const Profile = ({navigation, route}) => {
                 )}
                 <MenuItem
                   title={t(Constants.SAVED_ADDRESS)}
-                  onPress={() => navigation.navigate('Address')}
+                  onPress={() =>
+                    // navigation.navigate('Address')
+                    navigation.navigate('Inconvenience')
+                  }
                   Icon={<GpsIcon size={30} color={GradientColor1} />}
                 />
               </View>

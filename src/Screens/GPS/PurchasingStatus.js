@@ -1,12 +1,16 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {pageBackground, textColor} from '../../Color/color';
+import {Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import Button from '../../Components/Button';
-import styles from './style'
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const PurchasingStatus = ({navigation, route}) => {
+  useTrackScreenTime('PurchasingStatus');
   const {statusCode} = route.params;
+  const {t} = useTranslation();
   // const statusCode = 300;
   console.log('puchasingstatus', route);
 
@@ -17,8 +21,8 @@ const PurchasingStatus = ({navigation, route}) => {
         <View style={styles.header}>
           <Text style={styles.purchaseStatusHeaderText}>
             {statusCode === 200
-              ? '🎉YAY! Payment successful🎉'
-              : 'Payment Failed!'}
+              ? `🎉${t(Constants.PAYMENT_SUCESS)}🎉`
+              : t(Constants.PAYMENT_FAILED)}
           </Text>
           <LottieView
             source={
@@ -33,7 +37,7 @@ const PurchasingStatus = ({navigation, route}) => {
           />
         </View>
         <Button
-          title={'Done'}
+          title={t(Constants.DONE)}
           onPress={() => navigation.navigate(route.params.navigation)}
           textStyle={styles.btnText}
           style={styles. purchaseStatusBtnStyle}
@@ -45,53 +49,3 @@ const PurchasingStatus = ({navigation, route}) => {
 
 export default PurchasingStatus;
 
-// const styles = StyleSheet.create({
-//   fullScreenContainer: {
-//     flex: 1,
-//     justifyContent: 'flex-end',
-//   },
-//   overlay: {
-//     ...StyleSheet.absoluteFillObject,
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   screenModalView: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     borderTopRightRadius: 20,
-//     borderTopLeftRadius: 20,
-//     backgroundColor: pageBackground,
-//     maxHeight: 320,
-//     padding: 20,
-//   },
-//   header: {
-//     flexDirection: 'column',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingVertical: 10,
-//     // borderWidth: 1,
-//   },
-//   headerText: {
-//     fontSize: 20,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   splashImage: {
-//     height: 200,
-//     width: 300,
-//   },
-//   btnStyle: {
-//     flexDirection: 'row',
-//     borderRadius: 6,
-//     // paddingHorizontal: 25,
-//     // paddingVertical: 10,
-//     width: '100%',
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   btnText: {
-//     color: textColor,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     textAlign: 'center',
-//   },
-// });

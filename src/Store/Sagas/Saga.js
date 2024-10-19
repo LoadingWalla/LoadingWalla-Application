@@ -585,12 +585,36 @@ function* apiCall() {
 }
 
 // Saga Logout
+// export function* logout() {
+//   try {
+//     console.log(11111, 'Logout api');
+//     const data = yield call(API.get, 'logout'); // Call your API endpoint
+
+//     console.log(11111, 'Logout api response:', data);
+
+//     if (data?.status === 200) {
+//       // Handle success
+//       yield put(actions.logoutSuccess(data.data));
+//     } else {
+//       yield put(actions.logoutFailure(data.status));
+//     }
+//   } catch (error) {
+//     yield put(actions.logoutFailure());
+//     console.error('Logout API error:', error);
+//   } finally {
+//     if (yield cancelled()) {
+//       console.log('Logout saga was cancelled');
+//     }
+//   }
+// }
 export function* logout() {
   try {
-    const apiTask = yield fork(apiCall);
+    // const apiTask = yield fork(apiCall);
+    console.log(11111, 'Logout api');
     const data = yield API.get('logout');
+    console.log(11111, 'Logout api', data);
     if (data?.data?.status === 200) {
-      yield cancel(apiTask);
+      // yield cancel(apiTask);
       yield put(actions.logoutSuccess(data));
     } else {
       yield put(actions.logoutFailure(data.status));
@@ -599,7 +623,11 @@ export function* logout() {
   } catch (error) {
     yield put(actions.logoutFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
-    // console.log("error", error);
+    console.log('error', error);
+  } finally {
+    if (yield cancelled()) {
+      console.log('Logout saga was cancelled');
+    }
   }
 }
 
@@ -1377,7 +1405,7 @@ export function* placeGpsOrderSaga({
     body.append('state', state);
     body.append('landmark', landmark);
     body.append('pincode', pinCode);
-    // console.log(9999999, body);
+    console.log(9999999, body);
     const data = yield multiPartApi.post('gps-order', body);
     console.log('API response------PaymentVerify', data);
     if (data?.status === 200) {

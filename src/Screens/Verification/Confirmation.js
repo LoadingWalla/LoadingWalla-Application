@@ -1,23 +1,16 @@
 import React, {useCallback} from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import ErrorImage from '../../../assets/GIFs/Wrong.json';
-import successImage from '../../../assets/GIFs/Done.json';
-import deletedImage from '../../../assets/GIFs/Wrong.json';
 import {initMyLoadById, initMyLorryById} from '../../Store/Actions/Actions';
 import Button from '../../Components/Button';
-import {
-  GradientColor1,
-  PrivacyPolicy,
-  textColor,
-  titleColor,
-} from '../../Color/color';
 import Shield from '../../../assets/SVG/svg/Shield';
 import NotFound from '../../Components/NotFound';
-import styles from './style'
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Confirmation = ({navigation, route}) => {
+  useTrackScreenTime('Confirmation');
   // console.log(888, route);
   const {
     status,
@@ -177,126 +170,3 @@ const Confirmation = ({navigation, route}) => {
 };
 
 export default Confirmation;
-
-// const styles = StyleSheet.create({
-//   fullScreen: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-//   },
-//   container: {
-//     backgroundColor: '#fff',
-//     borderRadius: 5,
-//     padding: 25,
-//     alignItems: 'center',
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 4,
-//     elevation: 5,
-//     width: '95%',
-//     maxWidth: 500,
-//   },
-//   image: {
-//     height: 150,
-//     width: 150,
-//   },
-//   cardContainer: {
-//     borderWidth: 2,
-//     borderRadius: 8,
-//     borderColor: GradientColor1,
-//     borderStyle: 'dotted',
-//     padding: 10,
-//     width: '100%',
-//   },
-//   card: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     borderRadius: 5,
-//     backgroundColor: '#FFF5EA',
-//     elevation: 1,
-//   },
-//   truckImage: {
-//     width: 70,
-//     height: 70,
-//     resizeMode: 'contain',
-//     marginHorizontal: 10,
-//   },
-//   truckDetails: {
-//     marginLeft: 10,
-//     flex: 1,
-//   },
-//   truckType: {
-//     fontSize: 16,
-//     fontWeight: 'bold',
-//     color: titleColor,
-//     marginRight: 5,
-//   },
-//   horizontalLine: {
-//     backgroundColor: '#AFAFAF',
-//     height: 1.5,
-//     marginVertical: 5,
-//   },
-//   verticalLine: {
-//     backgroundColor: '#AFAFAF',
-//     width: 2,
-//     marginHorizontal: 15,
-//     height: '100%',
-//   },
-//   rowdirection: {flexDirection: 'row', alignItems: 'center'},
-//   textStaticStyle: {
-//     color: titleColor,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     marginTop: 10,
-//     textAlign: 'center',
-//   },
-//   textStyle: {
-//     color: PrivacyPolicy,
-//     fontSize: 14,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   touchStyle: {
-//     marginTop: 20,
-//     width: '50%',
-//     alignSelf: 'center',
-//   },
-//   buttonstyle: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     padding: 10,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   buttonTextStyle: {
-//     color: textColor,
-//     fontWeight: '700',
-//     fontSize: 16,
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-
-//   gifView: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     // justifyContent: 'center',
-//     // borderWidth: 1,
-//   },
-//   congratsText: {
-//     fontSize: 26,
-//     marginBottom: 10,
-//     fontWeight: '700',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     color: titleColor,
-//   },
-// });

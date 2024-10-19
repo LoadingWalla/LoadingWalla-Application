@@ -1,6 +1,5 @@
 import React, {
   forwardRef,
-  useContext,
   useEffect,
   useRef,
   useState,
@@ -15,7 +14,6 @@ import {
 import {
   GradientColor2,
   PrivacyPolicy,
-  pageBackground,
 } from '../../../Color/color';
 import style from './style';
 import LocationModal from '../../../Components/LocationModal';
@@ -23,8 +21,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLocation, locationFailure} from '../../../Store/Actions/Actions';
 import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const Search = forwardRef(({navigation, route}, ref) => {
+  useTrackScreenTime('Search');
   // console.log(423423, route);
   const [value, setValue] = useState(null);
   const txtInput = useRef('');

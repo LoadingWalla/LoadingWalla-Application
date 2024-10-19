@@ -1,6 +1,7 @@
 import React, {useState, memo, useMemo, useCallback} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {PrivacyPolicy, backgroundColorNew, titleColor} from '../Color/color';
+import {useTranslation} from 'react-i18next';
 import FuelIcon from '../../assets/SVG/svg/FuelIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
@@ -11,9 +12,12 @@ import ToggleIconText from './ToggleIconText';
 import moment from 'moment';
 import VehicleIcon from './GpsVehicleIcon';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
+import * as Constants from '../Constants/Constant';
+import styles from './style'
 
 const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
+  const {t} = useTranslation();
   // console.log(444444, 'GpsItem---->', item);
   const {
     position = [],
@@ -77,7 +81,7 @@ const GpsItem = ({navigation, item}) => {
 
   const renderStatus = useMemo(() => {
     if (status === 'online') {
-      return <Text style={styles.ignitionText(true)}>GPS Active</Text>;
+      return <Text style={styles.ignitionText(true)}>GPS {t(Constants.ACTIVE)}</Text>;
     }
     if (status === 'offline') {
       return (
@@ -103,7 +107,7 @@ const GpsItem = ({navigation, item}) => {
 
   return (
     <View style={styles.cardContainer}>
-      <TouchableOpacity style={styles.container} onPress={handleNavigation}>
+      <TouchableOpacity style={styles.gpsItemcontainer} onPress={handleNavigation}>
         <View style={styles.itemContainer}>
           <View style={styles.imgContainer}>
             <View style={styles.imgBox}>
@@ -121,9 +125,9 @@ const GpsItem = ({navigation, item}) => {
 
               <View style={styles.ignBox}>
                 {renderStatus}
-                <View style={styles.verticalLine} />
+                <View style={styles.gpsItemverticalLine} />
                 <View style={styles.row}>
-                  <Text style={styles.distanceText}>Ignition</Text>
+                  <Text style={styles.distanceText}>{t(Constants.IGNITION)}</Text>
                   <Text
                     style={[
                       styles.ignitionText(ignition || motion),
@@ -135,7 +139,7 @@ const GpsItem = ({navigation, item}) => {
               </View>
             </View>
             <View style={styles.iconBox}>
-              <View style={styles.iconRow}>
+              <View style={styles.gpsItemiconRow}>
                 <BatteryIcon
                   size={15}
                   color={batteryLevel > 60 ? iconColor : 'red'}
@@ -178,9 +182,9 @@ const GpsItem = ({navigation, item}) => {
         <Text style={styles.footerText}>
           {moment(lastUpdate).format('MMM DD, YYYY hh:mm A')}
         </Text>
-        <View style={styles.verticalLine} />
+        <View style={styles.gpsItemverticalLine} />
         <View style={styles.footerDistanceContainer}>
-          <Text style={styles.footerText}>Today Distance:</Text>
+          <Text style={styles.footerText}>{t(Constants.TODAY_DISTANCE)}:</Text>
           <Text style={styles.footerDistanceText}>
             {(distance / 1000).toFixed(2)} KM
           </Text>
@@ -192,169 +196,169 @@ const GpsItem = ({navigation, item}) => {
 
 export default memo(GpsItem);
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    marginBottom: 20,
-    backgroundColor: '#FFE5DE',
-    borderRadius: 8,
-  },
-  container: {
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    elevation: 2,
-    // borderWidth: 1,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-  },
-  imgContainer: {
-    padding: 5,
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  imgBox: {
-    backgroundColor: '#ededed',
-    borderRadius: 6,
-    width: 65,
-    height: 60,
-    marginTop: 5,
-    marginLeft: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 8,
-  },
-  textViewContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  highlightText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'left',
-    textTransform: 'uppercase',
-  },
-  speedText: color => ({
-    color: color ? '#3BA700' : '#FF0000',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 2,
-  }),
-  distanceBox: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 6,
-    backgroundColor: '#EFEFEF',
-    maxWidth: 50,
-    maxHeight: 50,
-    padding: 10,
-  },
-  distanceText: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 10,
-    textAlign: 'center',
-  },
-  iconBox: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginVertical: 10,
-    minWidth: 180,
-  },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 1,
-    marginHorizontal: 10,
-    marginTop: 2,
-    height: '80%',
-  },
-  ignBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
-  },
-  ignitionText: status => ({
-    color: status ? 'green' : 'red',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 10,
-    // textTransform: 'uppercase',
-  }),
-  motionText: {
-    textAlign: 'left',
-    marginLeft: 10,
-  },
-  ignitionStatus: {
-    marginLeft: 5,
-    textTransform: 'uppercase',
-  },
-  addressText: {
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-    marginLeft: 10,
-    marginBottom: 10,
-  },
-  lastUpdateText: {
-    color: 'red',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 10,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  iconRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minWidth: 40,
-    marginRight: 5,
-  },
-  hiddenIconRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    minWidth: 40,
-    marginLeft: 10,
-  },
-  addressContainer: {
-    maxWidth: '100%',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    padding: 5,
-    // borderWidth: 1,
-  },
-  footerContainer: {
-    flexDirection: 'row',
-    paddingVertical: 7,
-    paddingHorizontal: 10,
-    justifyContent: 'space-around',
-  },
-  footerText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-  },
-  footerDistanceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  footerDistanceText: {
-    textAlign: 'left',
-    marginLeft: 5,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 12,
-  },
-  rowContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginBottom: 4,
-  },
-});
+// const styles = StyleSheet.create({
+//   cardContainer: {
+//     marginBottom: 20,
+//     backgroundColor: '#FFE5DE',
+//     borderRadius: 8,
+//   },
+//   container: {
+//     backgroundColor: '#ffffff',
+//     borderTopLeftRadius: 8,
+//     borderTopRightRadius: 8,
+//     elevation: 2,
+//     // borderWidth: 1,
+//   },
+//   itemContainer: {
+//     flexDirection: 'row',
+//   },
+//   imgContainer: {
+//     padding: 5,
+//     justifyContent: 'center',
+//     flexDirection: 'row',
+//   },
+//   imgBox: {
+//     backgroundColor: '#ededed',
+//     borderRadius: 6,
+//     width: 65,
+//     height: 60,
+//     marginTop: 5,
+//     marginLeft: 5,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   textContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     paddingTop: 8,
+//   },
+//   textViewContainer: {
+//     flex: 1,
+//     justifyContent: 'center',
+//   },
+//   highlightText: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     textAlign: 'left',
+//     textTransform: 'uppercase',
+//   },
+//   speedText: color => ({
+//     color: color ? '#3BA700' : '#FF0000',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 14,
+//     textAlign: 'center',
+//     marginBottom: 2,
+//   }),
+//   distanceBox: {
+//     flexDirection: 'column',
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     borderRadius: 6,
+//     backgroundColor: '#EFEFEF',
+//     maxWidth: 50,
+//     maxHeight: 50,
+//     padding: 10,
+//   },
+//   distanceText: {
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 10,
+//     textAlign: 'center',
+//   },
+//   iconBox: {
+//     flexDirection: 'row',
+//     justifyContent: 'flex-start',
+//     alignItems: 'center',
+//     marginVertical: 10,
+//     minWidth: 180,
+//   },
+//   verticalLine: {
+//     backgroundColor: '#AFAFAF',
+//     width: 1,
+//     marginHorizontal: 10,
+//     marginTop: 2,
+//     height: '80%',
+//   },
+//   ignBox: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 2,
+//   },
+//   ignitionText: status => ({
+//     color: status ? 'green' : 'red',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 10,
+//     // textTransform: 'uppercase',
+//   }),
+//   motionText: {
+//     textAlign: 'left',
+//     marginLeft: 10,
+//   },
+//   ignitionStatus: {
+//     marginLeft: 5,
+//     textTransform: 'uppercase',
+//   },
+//   addressText: {
+//     color: PrivacyPolicy,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//     marginLeft: 10,
+//     marginBottom: 10,
+//   },
+//   lastUpdateText: {
+//     color: 'red',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 10,
+//   },
+//   row: {
+//     flexDirection: 'row',
+//   },
+//   iconRow: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     minWidth: 40,
+//     marginRight: 5,
+//   },
+//   hiddenIconRow: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     minWidth: 40,
+//     marginLeft: 10,
+//   },
+//   addressContainer: {
+//     maxWidth: '100%',
+//     flexDirection: 'row',
+//     alignItems: 'flex-start',
+//     padding: 5,
+//     // borderWidth: 1,
+//   },
+//   footerContainer: {
+//     flexDirection: 'row',
+//     paddingVertical: 7,
+//     paddingHorizontal: 10,
+//     justifyContent: 'space-around',
+//   },
+//   footerText: {
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//   },
+//   footerDistanceContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   footerDistanceText: {
+//     textAlign: 'left',
+//     marginLeft: 5,
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     fontSize: 12,
+//   },
+//   rowContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'flex-start',
+//     marginBottom: 4,
+//   },
+// });

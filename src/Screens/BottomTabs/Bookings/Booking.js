@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -22,12 +21,13 @@ import {
 import BookingItem from '../../../Components/Bookingitem';
 import DashboardHeader from '../../../Components/DashboardHeader';
 import BookingShimmer from '../../../Components/Shimmer/BookingShimmer';
-import {backgroundColorNew} from '../../../Color/color';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const Booking = ({navigation}) => {
+  useTrackScreenTime('Booking');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
@@ -118,7 +118,7 @@ const Booking = ({navigation}) => {
           <FlatList
             keyExtractor={item => item?.id.toString()}
             showsVerticalScrollIndicator={false}
-            data={BookingData}
+            data={BookingData.slice().reverse()}
             renderItem={renderItem}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -136,7 +136,7 @@ const Booking = ({navigation}) => {
               imageName="noBookings"
               height={150}
               width={300}
-              title={'No Bookings Found'}
+              title={t(Constants.NO_BOOKINGS_FOUND)}
             />
 
             <TouchableOpacity

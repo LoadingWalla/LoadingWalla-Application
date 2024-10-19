@@ -7,7 +7,6 @@ import {
   Modal,
   ScrollView,
   Alert,
-  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -22,10 +21,6 @@ import Gallery from '../../../../assets/SVG/Gallery';
 import Cammera from '../../../../assets/SVG/Camera';
 import {
   GradientColor2,
-  PrivacyPolicy,
-  inputColor,
-  textColor,
-  titleColor,
 } from '../../../Color/color';
 import TextInputField from '../../../Components/TextInputField';
 import Button from '../../../Components/Button';
@@ -34,7 +29,7 @@ import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../../assets/SVG/svg/CameraIcon';
 import Toast from 'react-native-simple-toast';
 import {useTranslation} from 'react-i18next';
-import style from './style'
+import style from './style';
 
 const EditProfile = ({
   defaultValue,
@@ -194,19 +189,16 @@ const EditProfile = ({
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View
-          style={style.chooseOpnOutterView}>
-          <View
-            style={style.chooseOtnInnerView}>
+        <View style={style.chooseOpnOutterView}>
+          <View style={style.chooseOtnInnerView}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View
-              style={style.allEditBtnView}>
+            <View style={style.allEditBtnView}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
                 <View style={style.cammeraView}>
                   <Cammera />
-                  <Text style={style.CameraText}>Camera</Text>
+                  <Text style={style.CameraText}>{t(Constants.CAMERA)}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -214,7 +206,7 @@ const EditProfile = ({
                 onPress={() => choosePhoto()}>
                 <View style={style.galleryView}>
                   <Gallery />
-                  <Text style={style.CameraText}>Gallery</Text>
+                  <Text style={style.CameraText}>{t(Constants.GALLERY)}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
@@ -226,7 +218,7 @@ const EditProfile = ({
                     style={style.editRemoveImg}
                     source={require('../../../../assets/remove.png')}
                   />
-                  <Text style={style.CameraText}>Remove</Text>
+                  <Text style={style.CameraText}>{t(Constants.REMOVE)}</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -243,9 +235,7 @@ const EditProfile = ({
       transparent={true}
       visible={isEdit}>
       {chooseOptions()}
-      <TouchableOpacity
-        activeOpacity={1}
-        style={style.editProfileModalStyle}>
+      <TouchableOpacity activeOpacity={1} style={style.editProfileModalStyle}>
         <View style={style.editModalView}>
           <View style={style.closeBtnView}>
             <TouchableOpacity onPress={() => dismissModal()}>
@@ -277,7 +267,7 @@ const EditProfile = ({
                         }
                   }
                   resizeMode={'cover'}
-                  style={style.profileImg}
+                  style={style.editProfileImg}
                 />
                 <View style={style.profileImgEdit}>
                   <CameraIcon size={15} color="white" />
@@ -300,11 +290,10 @@ const EditProfile = ({
                 defaultValue={defaultValue?.city}
                 onChangeText={e => setCity(e)}
               /> */}
-              <Text style={style.editProfileLabel}>{t(Constants.MOBILE_NUMBER)}</Text>
-              <Text
-                style={style.mobileTxt}>
-                {defaultValue?.mobile}
+              <Text style={style.editProfileLabel}>
+                {t(Constants.MOBILE_NUMBER)}
               </Text>
+              <Text style={style.mobileTxt}>{defaultValue?.mobile}</Text>
             </View>
             <Button
               loading={profileSetupLoading}
@@ -321,82 +310,3 @@ const EditProfile = ({
 };
 
 export default EditProfile;
-
-// const style = StyleSheet.create({
-//   button: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   label: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   CameraText: {
-//     fontSize: 15,
-//     color: 'black',
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   editProfileTitle: {
-//     fontWeight: '700',
-//     color: titleColor,
-//     fontSize: 20,
-//     marginBottom: 10,
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   editProfileContainer: {
-//     height: 80,
-//     width: 80,
-//     borderRadius: 40,
-//     alignSelf: 'center',
-//     justifyContent: 'center',
-//   },
-//   profileImgEdit: {
-//     height: 25,
-//     width: 25,
-//     backgroundColor: GradientColor2,
-//     borderRadius: 40,
-//     position: 'absolute',
-//     bottom: -5,
-//     left: 30,
-//     borderWidth: 1,
-//     borderColor: 'white',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   profileImg: {
-//     height: 80,
-//     width: 80,
-//     borderRadius: 40,
-//   },
-//   paddingStyle: {
-//     padding: 20,
-//   },
-//   editModalView: {
-//     backgroundColor: '#FFFFFF',
-//     padding: 10,
-//     borderRadius: 8,
-//     margin: 10,
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 4,
-//     elevation: 5,
-//     marginTop: 60,
-//   },
-// });

@@ -1,14 +1,6 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  FlatList,
-  ActivityIndicator,
-} from 'react-native';
+import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import React, {useEffect, useRef} from 'react';
 import CheckOutline from '../../../assets/SVG/svg/CheckOutline';
-import {backgroundColorNew, titleColor} from '../../Color/color';
 import PercentageIcon from '../../../assets/SVG/svg/PercentageIcon';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -17,7 +9,11 @@ import {
   websocketConnect,
   websocketDisconnect,
 } from '../../Store/Actions/WebSocketActions';
-import styles from './style'
+import {useTranslation} from 'react-i18next';
+import * as Constants from '../../Constants/Constant';
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import BuyGPSShimmer from '../../Components/Shimmer/BuyGPSShimmer';
 
 const Plan = ({text}) => {
   return (
@@ -29,6 +25,7 @@ const Plan = ({text}) => {
 };
 
 const Rates = ({item, navigation}) => {
+  const {t} = useTranslation();
   const features = item.description.split('\n\n');
   const markedPrice =
     Math.ceil(item.gps_price * 1.18) +
@@ -51,7 +48,8 @@ const Rates = ({item, navigation}) => {
           <View style={styles.discountContainer}>
             <PercentageIcon size={15} color={'#0F8B00'} />
             <Text style={styles.discountText}>
-              {percentageDiscount}% discount on current plan
+              {percentageDiscount}
+              {t(Constants.PERCENTAGE_DISCOUNT)}
             </Text>
           </View>
         </View>
@@ -70,6 +68,7 @@ const Rates = ({item, navigation}) => {
 };
 
 const BuyGps = ({navigation}) => {
+  useTrackScreenTime('BuyGps');
   const dispatch = useDispatch();
   const {gpsTokenData, gpsPlansData, gpsPlansError, gpsPlansLoading} =
     useSelector(state => {
@@ -105,10 +104,10 @@ const BuyGps = ({navigation}) => {
   const renderRates = ({item}) => <Rates item={item} navigation={navigation} />;
 
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       {gpsPlansLoading ? (
-        <View style={styles.loader}>
-          <ActivityIndicator size="large" color={backgroundColorNew} />
+        <View>
+          <BuyGPSShimmer />
         </View>
       ) : gpsPlansError ? (
         <Text>Error: {gpsPlansError}</Text>
@@ -125,65 +124,3 @@ const BuyGps = ({navigation}) => {
 };
 
 export default BuyGps;
-
-// const styles = StyleSheet.create({
-//   rateContainer: {
-//     margin: 10,
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 8,
-//     elevation: 2,
-//     paddingVertical: 15,
-//     padding: 5,
-//   },
-//   rateHeader: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 15,
-//   },
-//   planTitle: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 14,
-//     color: titleColor,
-//     textTransform: 'capitalize',
-//   },
-//   discountContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     marginTop: 5,
-//   },
-//   discountText: {
-//     fontFamily: 'PlusJakartaSans-Light',
-//     fontSize: 12,
-//     color: '#0F8B00',
-//     marginLeft: 5,
-//   },
-//   priceContainer: {
-//     paddingVertical: 10,
-//     backgroundColor: '#EFFFE6',
-//     borderRadius: 6,
-//     paddingHorizontal: 15,
-//   },
-//   oldPrice: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 12,
-//     textDecorationLine: 'line-through',
-//   },
-//   newPrice: {
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 14,
-//     color: '#0F8B00',
-//   },
-//   planContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'flex-start',
-//     alignItems: 'center',
-//     marginVertical: 8,
-//   },
-//   planText: {
-//     fontFamily: 'PlusJakartaSans-Medium',
-//     fontSize: 14,
-//     textTransform: 'capitalize',
-//   },
-//   loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-// });

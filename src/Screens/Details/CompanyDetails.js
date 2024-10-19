@@ -9,7 +9,6 @@ import {
   Modal,
   ScrollView,
   BackHandler,
-  StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
@@ -26,21 +25,14 @@ import {
   initProfileSetup,
 } from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  backgroundColorNew,
-  GradientColor2,
-  inputColor,
-  pageBackground,
-  textColor,
-  titleColor,
-  white,
-} from '../../Color/color';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import CameraIcon from '../../../assets/SVG/svg/CameraIcon';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
-import styles from './style'
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const CompanyDetails = ({navigation, route}) => {
+  useTrackScreenTime('CompanyDetails');
   const [selected, setSelected] = useState('');
   const [name, setname] = useState('');
   const [city, setCity] = useState('');
@@ -368,150 +360,3 @@ const CompanyDetails = ({navigation, route}) => {
 };
 
 export default CompanyDetails;
-
-// const styles = StyleSheet.create({
-//   MainContainer: {
-//     backgroundColor: white,
-//     flex: 1,
-//     // borderWidth: 1,
-//   },
-//   button: {
-//     flexDirection: 'row',
-//     borderRadius: 8,
-//     height: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   touchStyle: {
-//     marginLeft: 20,
-//     marginRight: 20,
-//     marginTop: 20,
-//   },
-//   protypeimageStyle: {
-//     width: 60,
-//     height: 60,
-//     alignSelf: 'center',
-//     marginBottom: 5,
-//   },
-//   checkIconStyle: {position: 'absolute', top: 5, left: 5},
-//   flatListStyle: {marginTop: 12, marginBottom: 20},
-//   buttonTitile: {
-//     fontWeight: 'bold',
-//     color: textColor,
-//     fontSize: 16,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   selectItem: {
-//     padding: 18,
-//     margin: 10,
-//     borderRadius: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   unSelectItem: {
-//     padding: 18,
-//     backgroundColor: inputColor,
-//     borderRadius: 8,
-//     margin: 10,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   label: {
-//     fontWeight: '700',
-//     fontSize: 18,
-//     color: titleColor,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   CameraText: {
-//     fontSize: 15,
-//     color: 'black',
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   signupBackground: {
-//     padding: 10,
-//     backgroundColor: pageBackground,
-//     justifyContent: 'center',
-//     marginTop: 10,
-//     alignItems: 'center',
-//     // borderWidth: 1,
-//   },
-//   WelcomeTruckTitle: {
-//     fontWeight: '700',
-//     color: 'black',
-//     fontSize: 22,
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-Medium',
-//   },
-//   gridText: {
-//     fontSize: 12,
-//     color: 'white',
-//     textAlign: 'center',
-//     // marginTop: 5,
-//     // paddingBottom: 5,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//   },
-//   gridGreyText: {
-//     fontSize: 12,
-//     color: titleColor,
-//     // marginTop: 5,
-//     // paddingBottom: 5,
-//     textAlign: 'center',
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//   },
-//   profileImgContainer: {
-//     height: 80,
-//     width: 80,
-//     marginTop: 30,
-//     borderRadius: 40,
-//   },
-//   profileImgEdit: {
-//     height: 25,
-//     width: 25,
-//     // backgroundColor: GradientColor2,
-//     backgroundColor: backgroundColorNew,
-//     borderRadius: 40,
-//     position: 'absolute',
-//     bottom: -5,
-//     left: 30,
-//     borderWidth: 1,
-//     borderColor: 'white',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   profileImg: {
-//     height: 80,
-//     width: 80,
-//     borderRadius: 40,
-//   },
-//   paddingStyle: {
-//     padding: 10,
-//     // borderWidth: 1,
-//   },
-//   imagePickerView: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//   },
-//   chooseOptionBox: {
-//     backgroundColor: 'rgba(0,0,0, 0.5)',
-//     flex: 1,
-//   },
-//   chooseOptionBoxView: {
-//     backgroundColor: '#FFFFFF',
-//     padding: 10,
-//     borderTopLeftRadius: 20,
-//     borderTopRightRadius: 20,
-//     width: '100%',
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 2,
-//     },
-//     shadowOpacity: 0.25,
-//     shadowRadius: 4,
-//     elevation: 5,
-//     position: 'absolute',
-//     bottom: 0,
-//     marginTop: 200,
-//   },
-// });

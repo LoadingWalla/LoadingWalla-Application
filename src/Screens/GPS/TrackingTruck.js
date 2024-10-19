@@ -2,13 +2,11 @@ import React, {useCallback, useEffect, useMemo} from 'react';
 import {View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  clearCombinedGpsData,
   clearGpsDeviceData,
   clearGpsStopsData,
   fetchAddressFailure,
   fetchCombinedGpsDataRequest,
   fetchGpsStopsRequest,
-  fetchRouteRequest,
   gpsRelayFailure,
   gpsRelayRequest,
 } from '../../Store/Actions/Actions';
@@ -17,6 +15,7 @@ import moment from 'moment';
 import styles from './style';
 import MapComponent from '../../Components/MapComponent';
 import BottomSwipeUpContainer from '../../Components/BottomSwipeUpContainer';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const getFilteredPositions = (wsMessages22, deviceId) => {
   return wsMessages22.positions.filter(
@@ -24,7 +23,8 @@ const getFilteredPositions = (wsMessages22, deviceId) => {
   );
 };
 
-const TrackingTruckNew = ({navigation, route}) => {
+const TrackingTruck = ({navigation, route}) => {
+  useTrackScreenTime('TrackingTruck');
   const {item, lat, long, deviceId} = route.params;
   // console.log(11111, 'TrackingTruck Params ------>', route);
 
@@ -135,4 +135,4 @@ const TrackingTruckNew = ({navigation, route}) => {
   );
 };
 
-export default TrackingTruckNew;
+export default TrackingTruck;

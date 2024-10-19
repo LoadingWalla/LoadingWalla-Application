@@ -16,6 +16,10 @@ import PlayIcon from '../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../Color/color';
 import AlertsIcon from '../../assets/SVG/svg/AlertsIcon';
 import StopsIcon from '../../assets/SVG/svg/StopsIcon';
+import * as Constants from '../Constants/Constant';
+import {useTranslation} from 'react-i18next';
+import styles from './style';
+import TruckNavigationIcon from '../../assets/SVG/svg/TruckNavigationIcon';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -37,6 +41,8 @@ const MapComponent = React.memo(
     const mapRef = useRef();
     const markerRef = useRef();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+    // console.log(9999999, positions);
 
     const fullAddressData = useSelector(state => state.data.fullAddressData);
 
@@ -56,9 +62,7 @@ const MapComponent = React.memo(
     }, []);
 
     const toggleMapType = useCallback(() => {
-      setMapType(prevType =>
-        prevType === 'standard' ? 'satellite' : 'standard',
-      );
+      setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
     }, []);
 
     // Transform routeData from [[longitude, latitude], [longitude, latitude]]
@@ -133,7 +137,8 @@ const MapComponent = React.memo(
               longitude: initialRegion.longitude,
             }}
             ref={markerRef}>
-            <ActiveLocation size={40} course={50} />
+            {/* <ActiveLocation size={40} course={50} /> */}
+            <TruckNavigationIcon size={40} course={0} />
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>
@@ -152,7 +157,8 @@ const MapComponent = React.memo(
               longitude: position.longitude,
             }}
             ref={markerRef}>
-            <ActiveLocation size={40} course={50} />
+            {/* <ActiveLocation size={40} course={50} /> */}
+            <TruckNavigationIcon size={40} course={position.course} />
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>
@@ -232,21 +238,21 @@ const MapComponent = React.memo(
               <Text style={styles.boldText}>{`${(item?.distance / 1000).toFixed(
                 2,
               )} KM`}</Text>
-              <Text style={styles.labelText}>Today distance</Text>
+              <Text style={styles.labelText}>{t(Constants.TODAY_DIS)}</Text>
             </View>
-            <View style={styles.verticalLine} />
+            <View style={styles.mapverticalLine} />
             <View style={styles.infoColumn}>
               <Text style={styles.boldText}>
                 {`${Math.floor(
                   (positions[0]?.speed || item?.position[0]?.speed) * 1.852,
                 )} KMPH`}
               </Text>
-              <Text style={styles.labelText}>Vehicle Speed</Text>
+              <Text style={styles.labelText}>{t(Constants.VEHICLE_SPEED)}</Text>
             </View>
           </View>
 
           <TouchableOpacity
-            style={styles.btnContainer}
+            style={styles.mapbtnContainer}
             onPress={() =>
               navigation.navigate('PlayJourney', {
                 deviceId: item?.id,
@@ -261,7 +267,7 @@ const MapComponent = React.memo(
               color={backgroundColorNew}
               style={styles.iconStyle}
             />
-            <Text style={styles.btnText}>Play Journey</Text>
+            <Text style={styles.mapbtnText}>{`${t(Constants.PLAY)}`}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -270,108 +276,3 @@ const MapComponent = React.memo(
 );
 
 export default MapComponent;
-
-const styles = StyleSheet.create({
-  mapContainer: {flex: 1},
-  loader: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    zIndex: 100,
-    transform: [{translateX: -25}, {translateY: -25}],
-  },
-  mapToggleButton: {
-    position: 'absolute',
-    top: 80,
-    right: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 50,
-    elevation: 3,
-    zIndex: 99,
-  },
-  alertButton: {
-    position: 'absolute',
-    top: 130,
-    right: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 50,
-    elevation: 3,
-    zIndex: 99,
-    padding: 5,
-  },
-  gpsButton: {
-    position: 'absolute',
-    top: 170,
-    right: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 50,
-    elevation: 3,
-    zIndex: 99,
-    padding: 5,
-  },
-  speedDistanceBox: {
-    position: 'absolute',
-    top: 10,
-    backgroundColor: '#ffffff',
-    elevation: 3,
-    zIndex: 99,
-    borderRadius: 8,
-    width: '95%',
-    alignSelf: 'center',
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  calloutView: {
-    width: 300,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    backgroundColor: 'rgba(1, 1, 0, 0.5)',
-    borderColor: '#707070',
-    marginBottom: 5,
-  },
-  calloutText: {
-    fontSize: 12,
-    textAlign: 'center',
-    color: '#FFFFFF',
-    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
-  },
-  imageStyle: {width: 40, height: 40},
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderRadius: 20,
-    elevation: 1,
-    backgroundColor: '#F7F7F7',
-  },
-  iconStyle: {marginRight: 5},
-  btnText: {
-    color: backgroundColorNew,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  verticalLine: {
-    backgroundColor: '#707070',
-    width: 1,
-    marginHorizontal: 5,
-    height: 40,
-    alignSelf: 'center',
-  },
-  infoBox: {flexDirection: 'row', alignItems: 'center'},
-  infoColumn: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
-  boldText: {fontFamily: 'PlusJakartaSans-ExtraBold', fontSize: 12},
-  labelText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 8,
-    color: '#434343',
-  },
-});
