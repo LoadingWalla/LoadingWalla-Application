@@ -55,7 +55,7 @@ const Signup = ({navigation}) => {
 
       if (existingValue === null) {
         // If not set, set the default value
-        const defaultValue = JSON.stringify(false); // or true, or any value you need
+        const defaultValue = JSON.stringify(true); // or true, or any value you need
         await AsyncStorage.setItem('whatsAppAlert', defaultValue);
       }
     } catch (error) {
