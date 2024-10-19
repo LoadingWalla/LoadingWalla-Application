@@ -55,30 +55,59 @@ const DeliveryDetails = ({navigation, route}) => {
   };
 
   const handleContinue = () => {
-    // navigation.navigate('paymentGPS', {plan_id, gpsCount});
-    // console.log(
-    //   fullName,
-    //   alternativePhoneNumber,
-    //   plan_id,
-    //   gpsCount,
-    //   rcNumbers,
-    //   // deliveryAddress,
-    //   address.city,
-    //   address.deliveryAddress,
-    //   address.landmark,
-    //   address.pinCode,
-    //   address.state,
-    // );
-    if (
-      !fullName ||
-      !alternativePhoneNumber ||
-      Object.values(address).some(field => !field) ||
-      rcNumbers.includes('')
-    ) {
-      Toast.show(
-        t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING),
-        Toast.LONG,
-      );
+    // if (
+    //   !fullName ||
+    //   !alternativePhoneNumber ||
+    //   Object.values(address).some(field => !field) ||
+    //   rcNumbers.includes('')
+    // ) {
+    //   Toast.show(
+    //     t(Constants.PLEASE_FILL_ALL_FIELDS_BEFORE_CONTINUING),
+    //     Toast.LONG,
+    //   );
+    //   return;
+    // }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    const pinCodeRegex = /^[0-9]{6}$/;
+
+    if (!fullName.trim()) {
+      Toast.show(t(Constants.PLS_FULL_NAME), Toast.LONG);
+      return;
+    }
+
+    if (!alternativePhoneNumber || !phoneRegex.test(alternativePhoneNumber)) {
+      Toast.show(t(Constants.PLS_PHONE_NO), Toast.LONG);
+      return;
+    }
+
+    if (rcNumbers.some(rcNumber => rcNumber.trim() === '')) {
+      Toast.show(t(Constants.PLS_RC_NO), Toast.LONG);
+      return;
+    }
+
+    if (!address.deliveryAddress.trim()) {
+      Toast.show(t(Constants.PLS_ADDR), Toast.LONG);
+      return;
+    }
+
+    if (!address.landmark.trim()) {
+      Toast.show(t(Constants.PLS_LAND), Toast.LONG);
+      return;
+    }
+
+    if (!address.city.trim()) {
+      Toast.show(t(Constants.PLS_CITY), Toast.LONG);
+      return;
+    }
+
+    if (!address.state.trim()) {
+      Toast.show(t(Constants.PLS_STATE), Toast.LONG);
+      return;
+    }
+
+    if (!address.pinCode || !pinCodeRegex.test(address.pinCode)) {
+      Toast.show(t(Constants.PLS_PINCODE), Toast.LONG);
       return;
     }
     dispatch(
