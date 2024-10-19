@@ -70,11 +70,18 @@ const Profile = ({navigation, route}) => {
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
-  const {UserVerifyPercentage, profileLoading, profileSetupData, Userdata} =
-    useSelector(state => {
-      // console.log('profile Data', state.data);
-      return state.data;
-    });
+  const {
+    UserVerifyPercentage,
+    profileLoading,
+    profileSetupData,
+    Userdata,
+    logoutData,
+    logoutStatus,
+    logoutLoading,
+  } = useSelector(state => {
+    console.log('profile Data', state.data);
+    return state.data;
+  });
   const {wsConnected} = useSelector(state => {
     console.log('WEBSOCKET profile ----', state.wsData);
     return state.wsData;
