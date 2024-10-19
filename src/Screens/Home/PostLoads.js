@@ -213,9 +213,9 @@ const PostLoads = ({navigation, route}) => {
           <View>
             <Text style={styles.label}>{t(Constants.PRICE)}</Text>
             <TextInputField
-              isPhone={true}
+              isPhone={false}
               value={price}
-              // onChangeText={(e) => setPrice(e)}
+              maxLength={6}
               onChangeText={e => {
                 const sanitizedInput = e.replace(/\s+/g, '');
                 setPrice(sanitizedInput);

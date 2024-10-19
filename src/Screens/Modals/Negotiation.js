@@ -118,6 +118,8 @@ const Negotiation = ({navigation, route}) => {
                 <Text style={styles.textStyle}>
                   {userType === '1'
                     ? item?.truck_capacity
+                    : item?.material_name?.length > 10
+                    ? `${item.material_name.substring(0, 7)}...`
                     : item?.material_name}
                 </Text>
                 <View style={styles.verticalLine} />
@@ -140,6 +142,7 @@ const Negotiation = ({navigation, route}) => {
                   <TextInput
                     defaultValue={offered_price}
                     placeholder={item?.price}
+                    maxLength={6}
                     onChangeText={text => setOffered_price(text)}
                     style={styles.inputStyle}
                     keyboardType="numeric"

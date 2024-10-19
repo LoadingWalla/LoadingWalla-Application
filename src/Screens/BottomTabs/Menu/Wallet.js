@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {Text, View, TextInput, TouchableOpacity, FlatList} from 'react-native';
 import RazorpayCheckout from 'react-native-razorpay';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../../Constants/Constant';
@@ -19,10 +13,7 @@ import {
   initWallet,
   walletFailure,
 } from '../../../Store/Actions/Actions';
-import {
-  PrivacyPolicy,
-  backgroundColorNew,
-} from '../../../Color/color';
+import {PrivacyPolicy, backgroundColorNew} from '../../../Color/color';
 import Button from '../../../Components/Button';
 import {SceneMap, TabView} from 'react-native-tab-view';
 import RenderTabBar from '../../Requests/RenderTabBar';
@@ -30,6 +21,7 @@ import {useTranslation} from 'react-i18next';
 import NotFound from '../../../Components/NotFound';
 import styles from './style';
 import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
+import { formatDate } from '../../../Utils/dateUtils';
 
 const Wallet = ({navigation}) => {
   useTrackScreenTime('Wallet');
@@ -188,7 +180,7 @@ const Wallet = ({navigation}) => {
           <Text style={styles.paymentText}>
             ₹ {item?.amount} Payment successful
           </Text>
-          <Text style={styles.dateText}>{item?.date}</Text>
+          <Text style={styles.dateText}>{formatDate(item?.created_at)}</Text>
         </View>
         <TouchableOpacity
           onPress={() => setAmount(item?.amount)}
@@ -241,19 +233,19 @@ const Wallet = ({navigation}) => {
 
   const RechargeRoute = () => (
     <View style={styles.rechargeRouteView}>
-      {transcationData?.length === 0 ? (
+      {transcationData && transcationData.length > 0 ? (
+        <FlatList
+          data={transcationData.slice().reverse()}
+          keyExtractor={item => item.id}
+          renderItem={rechargeRenderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
         <NotFound
           imageName="noBookings"
           title={t(Constants.NO_TRANSCATION_FOUND)}
           height={150}
           width={300}
-        />
-      ) : (
-        <FlatList
-          data={transcationData}
-          keyExtractor={item => item.id}
-          renderItem={rechargeRenderItem}
-          showsVerticalScrollIndicator={false}
         />
       )}
     </View>

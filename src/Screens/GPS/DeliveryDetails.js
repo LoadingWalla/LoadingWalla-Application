@@ -176,7 +176,7 @@ const DeliveryDetails = ({navigation, route}) => {
           <TextInputField
             // value={deliveryAddress}
             value={address.deliveryAddress}
-            hint={t(Constants.DELIVERY_ADDRESS)}
+            hint={t(Constants.ENTER_DELIVERY_ADDRESS)}
             // onChangeText={setDeliveryAddress}
             onChangeText={text => handleAddressChange('deliveryAddress', text)}
           />

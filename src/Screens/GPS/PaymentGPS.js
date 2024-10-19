@@ -64,7 +64,13 @@ const PaymentGPS = ({navigation, route}) => {
     verifyPaymentData,
     gpsOrderData,
     verifyPaymentStatus,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    // Log state data for debugging purposes
+    console.log('----------payment gps----------', state.data);
+
+    // Correctly return the state you need
+    return state.data;
+  });
 
   const dispatch = useDispatch();
 
@@ -80,7 +86,9 @@ const PaymentGPS = ({navigation, route}) => {
   );
 
   const markedPrice = useMemo(() => {
-    const gpsPriceWithGst = Math.ceil(filteredPlanData.gps_price * 1.18);
+    const gpsPriceWithGst =
+      Math.ceil(filteredPlanData.gps_price * 1.18) +
+      Math.ceil(filteredPlanData.relay * 1.18);
     const rechargePriceWithGst = Math.ceil(
       filteredPlanData.recharge_price * 1.18,
     );
@@ -97,7 +105,7 @@ const PaymentGPS = ({navigation, route}) => {
     [filteredPlanData.gps_price],
   );
   const totalGps = useMemo(
-    () => filteredPlanData.gps_price + gpsGst,
+    () => filteredPlanData.gps_price + gpsGst + filteredPlanData.relay,
     [filteredPlanData.gps_price, gpsGst],
   );
   const rechargeGst = useMemo(
@@ -264,6 +272,12 @@ const PaymentGPS = ({navigation, route}) => {
                 <ReusableItem
                   title={'GPS Charges'}
                   value={`₹ ${filteredPlanData.gps_price.toFixed(2)}`}
+                />
+              </View>
+              <View style={styles.sectionPadding}>
+                <ReusableItem
+                  title={'Relay Charges'}
+                  value={`₹ ${filteredPlanData.relay.toFixed(2)}`}
                 />
               </View>
               <View style={styles.sectionPadding}>

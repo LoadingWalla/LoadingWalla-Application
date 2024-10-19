@@ -165,7 +165,7 @@ const ContactUs = ({navigation}) => {
           <Text style={styles.label}>{t(Constants.E_MAIL)}</Text>
           <TextInputField
             value={email}
-            hint={t(Constants.E_MAIL)}
+            hint={t(Constants.ENTER_EMAIL)}
             onChangeText={e => onChangeEmail(e)}
           />
           <Text style={styles.label}>{t(Constants.PHONE_NUMBER)}</Text>

@@ -26,7 +26,13 @@ const PreviousBookings = ({navigation, route}) => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
 
-  const {BookingData, BookingLoading} = useSelector(state => state.data);
+  const {BookingData, BookingLoading} = useSelector(state => {
+    console.log(
+      '----------previous bookings----------',
+      state.data.BookingData,
+    );
+    return state.data;
+  });
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -81,7 +87,7 @@ const PreviousBookings = ({navigation, route}) => {
       ) : BookingData?.length > 0 ? (
         <FlatList
           keyExtractor={item => item?.id.toString()}
-          data={BookingData}
+          data={BookingData.slice().reverse()}
           renderItem={renderBookingItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

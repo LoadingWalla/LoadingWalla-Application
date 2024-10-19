@@ -10,15 +10,22 @@ import {
 
 export default StyleSheet.create({
   setFlex: {flex: 1},
+  previewImage: {
+    width: 130,
+    height: 170,
+    resizeMode: 'cover',
+    // marginTop:,
+  },
   selectDocUploadView: {
     elevation: 2,
+    // borderWidth: 1,
     backgroundColor: '#FFFFFF',
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 20,
   },
   biltyViewStyle1: {padding: 20, flex: 1},
-  biltyViewStyle2: {flex: 0.2},
+  biltyViewStyle2: {flex: 0.3},
   rowFlexDirection: {flexDirection: 'row'},
   viewStyle1: {flexDirection: 'row', justifyContent: 'space-around'},
   viewStyle2: {justifyContent: 'center', alignItems: 'center'},
@@ -82,7 +89,7 @@ export default StyleSheet.create({
     paddingRight: 5,
   },
   radioButtonContainer: {
-    flex: 0.65,
+    flex: 0.75,
     flexDirection: 'row',
     justifyContent: 'space-between',
     // borderWidth: 1,
@@ -91,7 +98,7 @@ export default StyleSheet.create({
   documentContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: GradientColor1,
     borderStyle: 'dashed',
     padding: 10,
