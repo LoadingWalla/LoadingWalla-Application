@@ -1,13 +1,15 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {View, FlatList} from 'react-native';
-import {pageBackground} from '../../Color/color';
 import NotificationShimmer from '../../Components/Shimmer/NotificationShimmer';
 import CommonItem from '../../Components/CommonItem';
 import {initNotification} from '../../Store/Actions/Actions';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Notification = ({navigation, route}) => {
+  useTrackScreenTime('Notification');
   const dispatch = useDispatch();
 
   const {NotificationData, NotificationLoading, NotificationStatus} =
@@ -29,18 +31,14 @@ const Notification = ({navigation, route}) => {
 
   return (
     <View
-      style={{
-        paddingHorizontal: 5,
-        backgroundColor: '#FDFDFD',
-        flex: 1,
-      }}>
+      style={styles.notifContainer}>
       {NotificationLoading ? (
         <NotificationShimmer />
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
-          style={{marginTop: 10}}
+          style={styles.notifFlatList}
           data={NotificationData}
           renderItem={({item, index}) => <CommonItem item={item} />}
         />

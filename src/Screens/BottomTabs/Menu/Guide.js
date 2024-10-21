@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   FlatList,
   LayoutAnimation,
   UIManager,
@@ -12,7 +11,6 @@ import {
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {initGuide} from '../../../Store/Actions/Actions';
-import {PrivacyPolicy} from '../../../Color/color';
 import * as Constants from '../../../Constants/Constant';
 import GuideShimmer from '../../../Components/Shimmer/GuideShimmer';
 import UpArrow from '../../../../assets/SVG/svg/UpArrow';
@@ -23,6 +21,8 @@ import SearchIcon from '../../../../assets/SVG/svg/SearchIcon';
 import BackArrow from '../../../../assets/SVG/svg/BackArrow';
 import Close from '../../../../assets/SVG/Close';
 import {useTranslation} from 'react-i18next';
+import styles from './style'
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 if (
   Platform.OS === 'android' &&
@@ -32,6 +32,7 @@ if (
 }
 
 const Guide = ({navigation}) => {
+  useTrackScreenTime('Guide');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [selectedId, setSelectedId] = useState(null);
@@ -130,14 +131,14 @@ const Guide = ({navigation}) => {
             <Text style={styles.topic}>{item.description}</Text>
           )}
         </TouchableOpacity>
-        <View style={styles.horizontalLine} />
+        <View style={styles.guideHorizontalLine} />
       </View>
     ),
     [selectedId, handlePress],
   );
 
   return (
-    <View style={styles.backgroundView}>
+    <View style={styles.guideBackgroundView}>
       {!searchMode && (
         <View style={styles.callBox}>
           <Text style={styles.header}>Facing trouble?</Text>
@@ -162,90 +163,5 @@ const Guide = ({navigation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundView: {
-    padding: 10,
-    backgroundColor: '#FFFDFD',
-    flex: 1,
-  },
-  header: {
-    color: '#808080',
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 16,
-  },
-  callSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    backgroundColor: '#FFF5F2',
-    borderColor: '#EF4D23',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 50,
-  },
-  phoneNo: {
-    color: '#808080',
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 14,
-    marginLeft: 10,
-  },
-  callBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: '#FFFFFF',
-    elevation: 2,
-    marginBottom: 10,
-    marginHorizontal: 1,
-    paddingHorizontal: 5,
-    paddingVertical: 20,
-    borderRadius: 10,
-  },
-  itemContainer: {
-    borderRadius: 8,
-    marginBottom: 10,
-    marginHorizontal: 1,
-    padding: 10,
-  },
-  category: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginRight: 15,
-    color: '#808080',
-  },
-  topic: {
-    fontSize: 14,
-    textAlign: 'justify',
-    fontFamily: 'PlusJakartaSans-Medium',
-    lineHeight: 18 * 1.2,
-    marginTop: 10,
-    color: PrivacyPolicy,
-  },
-  arrow: {
-    position: 'absolute',
-    top: 15,
-    right: 5,
-  },
-  horizontalLine: {backgroundColor: '#AFAFAF', height: 1, marginBottom: 10},
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 2,
-    width: '90%',
-    paddingHorizontal: 10,
-    left: 15,
-    borderRadius: 20,
-    borderColor: PrivacyPolicy,
-  },
-  headerSearchInput: {
-    flex: 1,
-    height: 40,
-  },
-  searchButton: {
-    top: 2,
-  },
-});
 
 export default React.memo(Guide);

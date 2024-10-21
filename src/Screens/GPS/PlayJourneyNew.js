@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native';
 import React, {useEffect, useState, useMemo, useRef} from 'react';
-import MapView, {AnimatedRegion, Marker} from 'react-native-maps';
+import {AnimatedRegion} from 'react-native-maps';
 import {backgroundColorNew, titleColor} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
@@ -22,8 +22,6 @@ import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
-import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
-import MapViewDirections from 'react-native-maps-directions';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import MapComponent from '../../Components/MapComponent';
 

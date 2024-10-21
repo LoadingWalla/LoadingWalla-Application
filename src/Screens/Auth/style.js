@@ -3,12 +3,10 @@ import {
   PrivacyPolicy,
   textColor,
   GradientColor2,
-  GradientColor3,
   pageBackground,
   inputColor,
   titleColor,
   back_color,
-  loadingwalla,
   backgroundColorNew,
 } from '../../Color/color';
 
@@ -217,6 +215,7 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   pinCodeText: {color: PrivacyPolicy},
+  setPrivacyStyle: {color: PrivacyPolicy},
   activePinCodeContainer: {
     backgroundColor: GradientColor2,
     color: pageBackground,

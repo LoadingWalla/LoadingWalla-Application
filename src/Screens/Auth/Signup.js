@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
@@ -6,66 +6,75 @@ import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
-// import {Picker} from '@react-native-picker/picker';
 import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
-import {Dimensions} from 'react-native';
 import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
-const Signup = ({navigation, route}) => {
+const Signup = ({navigation}) => {
+  useTrackScreenTime('Signup');
   const {t} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
   const [isChecked, setIsChecked] = useState(true);
-  const screenHeight = Dimensions.get('window').height;
   const dispatch = useDispatch();
+  const {data, loading, dashboardStatus} = useSelector(state => state.data);
 
-  const {data, loading, dashboardStatus} = useSelector(state => {
-    // console.log('signup screen', state.data);
-    return state.data;
-  });
-  const handleCheckBoxChange = () => {
-    setIsChecked(!isChecked);
-  };
+  const handleCheckBoxChange = useCallback(async () => {
+    const newCheckedState = !isChecked;
+    setIsChecked(newCheckedState);
+    await AsyncStorage.setItem(
+      'whatsAppAlert',
+      JSON.stringify(newCheckedState),
+    );
+  }, [isChecked]);
 
   useEffect(() => {
     if (data?.data?.status === 201) {
-      Toast.show(`${data?.data?.message}`, Toast.LONG);
-      // AlertBox(data?.data?.message);
+      Toast.show(data?.data?.message, Toast.LONG);
       dispatch(loginFailure());
       return;
     }
 
     if (dashboardStatus === 200) {
-      // AlertBox(data.message);
-      Toast.show(`${data?.message}`, Toast.LONG);
+      Toast.show(data?.message, Toast.LONG);
       navigation.replace('VerifyOtp', {
         userId: data?.user_id,
-        mobileNumber: mobileNumber,
+        mobileNumber,
       });
       dispatch(loginFailure());
-      return;
     }
-  }, [
-    dashboardStatus,
-    data?.data?.message,
-    data?.data?.status,
-    data?.message,
-    data?.user_id,
-    dispatch,
-    mobileNumber,
-    navigation,
-  ]);
+  }, [dashboardStatus, data, dispatch, mobileNumber, navigation]);
+
+  const setDefaultWhatsAppAlert = async () => {
+    try {
+      // Check if the value is already set
+      const existingValue = await AsyncStorage.getItem('whatsAppAlert');
+
+      if (existingValue === null) {
+        // If not set, set the default value
+        const defaultValue = JSON.stringify(true);
+        await AsyncStorage.setItem('whatsAppAlert', defaultValue);
+      }
+    } catch (error) {
+      console.error('Error setting default WhatsApp alert:', error);
+    }
+  };
+
+  useEffect(() => {
+    setDefaultWhatsAppAlert();
+  }, []);
 
   const sendOtp = () => {
-    if (mobileNumber === '') {
-      Toast.show('Enter mobile number', Toast.LONG);
+    if (!mobileNumber) {
+      Toast.show(t('Enter mobile number'), Toast.LONG);
       return;
     }
     const regex = /^(?:\+91)?[6-9]\d{9}$/;
     if (!regex.test(mobileNumber)) {
-      Toast.show('Enter a valid mobile number', Toast.LONG);
+      Toast.show(t('Enter a valid mobile number'), Toast.LONG);
       return;
     }
     dispatch(initLogin(mobileNumber));
@@ -102,25 +111,11 @@ const Signup = ({navigation, route}) => {
             }}
             withShadow
             placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
-            // autoFocus={true}
             containerStyle={styles.phoneContainer}
             textContainerStyle={styles.textInput}
-            onChangeFormattedText={text => {
-              setMobileNumber(text);
-            }}
+            onChangeFormattedText={text => setMobileNumber(text)}
           />
         </View>
-
-        {/* {screenHeight >= 650 && (
-          <View style={styles.imageContainer(screenHeight)}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: 'https://loadingwalla.com/public/LoadingWalla2-03.png',
-              }}
-            />
-          </View>
-        )} */}
       </View>
       <View>
         <View style={styles.centerItem}>
@@ -128,11 +123,10 @@ const Signup = ({navigation, route}) => {
             <CheckBox
               value={isChecked}
               onValueChange={handleCheckBoxChange}
-              // tintColors={{true: GradientColor2, false: GradientColor4}}
               tintColors={{true: backgroundColorNew, false: backgroundColorNew}}
               style={styles.checkBoxStyle}
             />
-            <Text style={{color: PrivacyPolicy}}>
+            <Text style={styles.setPrivacyStyle}>
               {t(Constants.WHATSAPP_ALERT_CHECK)}
             </Text>
           </View>
@@ -141,25 +135,25 @@ const Signup = ({navigation, route}) => {
               {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
             </Text>
             <TouchableOpacity
-              onPress={() => {
+              onPress={() =>
                 navigation.navigate('Legal Policies', {
                   headerTitle: t(Constants.TERMS_CONDITION_TITLE2),
                   uri: uriTermsCondition3,
-                });
-              }}>
-              <Text style={[styles.policyLinkTitle(true)]}>
+                })
+              }>
+              <Text style={styles.policyLinkTitle(true)}>
                 {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
               </Text>
             </TouchableOpacity>
             <Text style={styles.policyTitle}> {` ${t(Constants.AND)} `} </Text>
             <TouchableOpacity
-              onPress={() => {
+              onPress={() =>
                 navigation.navigate('Legal Policies', {
                   headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
                   uri: uriTermsCondition2,
-                });
-              }}>
-              <Text style={[styles.policyLinkTitle(true)]}>
+                })
+              }>
+              <Text style={styles.policyLinkTitle(true)}>
                 {' '}
                 {t(Constants.TERMS_CONDITION_TITLE3)}
                 {'  '}
@@ -170,7 +164,7 @@ const Signup = ({navigation, route}) => {
         </View>
         <Button
           loading={loading}
-          onPress={() => sendOtp()}
+          onPress={sendOtp}
           title={t(Constants.SEND_OTP)}
           textStyle={styles.buttonTitile}
           style={styles.button}

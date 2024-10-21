@@ -9,7 +9,7 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Constants from '../../Constants/Constant';
@@ -35,8 +35,10 @@ import NotFound from '../../Components/NotFound';
 import {DialCall} from '../../Utils/DialCall';
 import AlertBox from '../../Components/AlertBox';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Requests = ({route, navigation}) => {
+  useTrackScreenTime('Requests');
   const {Owner, userType} = route?.params;
   // console.log(3456789, Owner);
   const dispatch = useDispatch();
@@ -137,7 +139,10 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={'No Request Found'} />
+                <NotFound
+                  imageName="noRequest"
+                  title={t(Constants.NO_REQ_FOUND)}
+                />
               </ScrollView>
             )}
           </>
@@ -194,7 +199,10 @@ const Requests = ({route, navigation}) => {
                     onRefresh={onRefresh}
                   />
                 }>
-                <NotFound imageName="noRequest" title={'No Request Found'} />
+                <NotFound
+                  imageName="noRequest"
+                  title={t(Constants.NO_REQ_FOUND)}
+                />
               </ScrollView>
             )}
           </>
@@ -326,7 +334,7 @@ const Requests = ({route, navigation}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1, backgroundColor: '#FFFDFD'}}>
+      style={styles.requestKeyboardAvoidView}>
       <FindLoadHeader
         title={t(Constants.MY_REQUEST)}
         goBack={() => navigation.goBack()}
@@ -347,7 +355,7 @@ const Requests = ({route, navigation}) => {
         qty={`${Owner?.qty} Ton`}
         verified={Owner?.verified}
       />
-      <View style={{flex: 1, marginTop: 10}}>
+      <View style={styles.tabView}>
         <TabView
           navigationState={{
             index,

@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   Animated,
   I18nManager,
-  StyleSheet,
 } from 'react-native';
+import styles from './style';
 
 const MyTabBar = ({state, navigation, position, tabs}) => {
   const layoutWidth = useRef(0);
@@ -41,10 +41,10 @@ const MyTabBar = ({state, navigation, position, tabs}) => {
         return (
           <TouchableOpacity
             key={`${route.name}_${index}`}
-            style={{flex: 1, overflow: 'hidden'}}
+            style={styles.touchableOpacityStyles}
             onPress={onPress}>
             <View style={[styles.iconTextContainer]}>
-              <Text style={{color: 'grey'}}>{route.name}</Text>
+              <Text style={styles.routeNameStyle}>{route.name}</Text>
             </View>
 
             <Animated.View
@@ -58,9 +58,11 @@ const MyTabBar = ({state, navigation, position, tabs}) => {
               <Animated.View
                 style={[
                   styles.iconTextContainer,
-                  {transform: [{translateX: translateX()}]},
+                  {
+                    transform: [{translateX: translateX()}],
+                  },
                 ]}>
-                <Text style={{color: 'black'}}>{route.name}</Text>
+                <Text style={styles.routeNameBlack}>{route.name}</Text>
               </Animated.View>
             </Animated.View>
           </TouchableOpacity>
@@ -71,29 +73,3 @@ const MyTabBar = ({state, navigation, position, tabs}) => {
 };
 
 export default MyTabBar;
-
-const styles = StyleSheet.create({
-  // MyTabBar
-  tabsContainer: {
-    flexDirection: 'row',
-    margin: 10,
-    backgroundColor: '#E2E2E2',
-    borderRadius: 8,
-    padding: 3,
-    // borderWidth: 1,
-  },
-  iconTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    gap: 8,
-    // borderWidth: 1,
-  },
-  tabBgColor: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'white',
-    borderRadius: 5,
-    // borderWidth: 1,
-  },
-});

@@ -1,38 +1,23 @@
 import React, {useEffect, useRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {backgroundColorNew} from '../Color/color';
+import {Animated, BackHandler} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from '../locales/i18n';
+import {useTranslation} from 'react-i18next';
+import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import * as Constants from '../Constants/Constant';
+// Screens and Components
 import Splash from '../Screens/Splash/Splash';
 import Signup from '../Screens/Auth/Signup';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Animated, BackHandler, Dimensions} from 'react-native';
 import Language from '../Screens/Language/Language';
-import * as Constants from '../Constants/Constant';
 import AllTerms from '../Screens/Details/AllTerms';
 import VerifyOtp from '../Screens/Auth/VerifyOtp';
 import Landing from './Landing';
 import CompanyDetails from '../Screens/Details/CompanyDetails';
-import style from './style';
-import DashboardActiveIcon from '../../assets/SVG/svg/DashboardActiveIcon';
-import DashboardIcon from '../../assets/SVG/svg/DashboardIcon';
-import TruckActiveIcon from '../../assets/SVG/svg/TruckActiveIcon';
-import TruckIcon from '../../assets/SVG/svg/TruckIcon';
-import BookingActiveIcon from '../../assets/SVG/svg/BookingActiveIcon';
-import BookingIcon from '../../assets/SVG/svg/BookingIcon';
-import HomeActiveIcon from '../../assets/SVG/svg/HomeActiveIcon';
-import HomeIcon from '../../assets/SVG/svg/HomeIcon';
-import {
-  backgroundColorNew,
-  GradientColor2,
-  tabIndicatorColor,
-} from '../Color/color';
-import Dashboard from '../Screens/BottomTabs/Dashboard/Dashboard';
-import MyLorry from '../Screens/BottomTabs/Dashboard/MyLorry';
-import Booking from '../Screens/BottomTabs/Bookings/Booking';
-import Profile from '../Screens/BottomTabs/Menu/Profile';
-import DashboardLoad from '../Screens/BottomTabs/Dashboard/DashboardLoad';
 import WhatsAppAlert from '../Screens/BottomTabs/Menu/WhatsAppAlert';
 import PreviousBookings from '../Screens/BottomTabs/Bookings/PreviousBookings';
-import LinearGradient from 'react-native-linear-gradient';
 import ContactUs from '../Screens/BottomTabs/Menu/ContactUs';
 import Notification from '../Screens/Details/Notification';
 import Search from '../Screens/BottomTabs/Dashboard/Search';
@@ -41,7 +26,6 @@ import FindLoadResult from '../Screens/BottomTabs/Dashboard/FindLoadResult';
 import RCVerification from '../Screens/RC/RCVerification';
 import StatusChangeModal from '../Screens/Modals/StatusChangeModal';
 import Requests from '../Screens/Requests/Requests';
-import {useNavigation} from '@react-navigation/native';
 import ViewDetail from '../Screens/Details/ViewDetail';
 import PostLoads from '../Screens/Home/PostLoads';
 import AddLorry from '../Screens/Home/AddLorry';
@@ -57,18 +41,12 @@ import QRscanner from '../Screens/RC/QRscanner';
 import CardDetails from '../Screens/RC/CardDetails';
 import BookingStatus from '../Screens/BottomTabs/Bookings/BookingStatus';
 import Inconvenience from '../Screens/Details/Inconvenience';
-import LoadIcon from '../../assets/SVG/svg/LoadIcon';
-import LoadActiveIcon from '../../assets/SVG/svg/LoadActiveIcon';
 import CompleteBooking from '../Screens/Verification/CompleteBooking';
-import i18n from '../locales/i18n';
-import {useTranslation} from 'react-i18next';
 import Address from '../Screens/BottomTabs/Menu/Address';
 import AddAddress from '../Screens/Modals/AddAddress';
 import HeaderHelpButton from '../Components/HeaderHelpButton';
-import GpsSetting from '../Screens/GPS/GpsSetting';
 import GpsAlert from '../Screens/GPS/GpsAlert';
 import LocationHistory from '../Screens/GPS/LocationHistory';
-import TrackingTruck from '../Screens/GPS/TrackingTruck';
 import FuelPump from '../Screens/GPS/FuelPump';
 import BuyGps from '../Screens/GPS/BuyGps';
 import PlayJourney from '../Screens/GPS/PlayJourney';
@@ -79,681 +57,17 @@ import PaymentGPS from '../Screens/GPS/PaymentGPS';
 import SelectGpsType from '../Screens/GPS/SelectGpsType';
 import DeliveryDetails from '../Screens/GPS/DeliveryDetails';
 import PurchasingStatus from '../Screens/GPS/PurchasingStatus';
-import GPSHomePage from '../Screens/GPS/GPSHomePage';
-import MyGpsScreen from '../Screens/GPS/MyGpsScreen';
 import OrdersPayment from '../Screens/GPS/OrdersPayment';
-import GpsRoadIcon from '../../assets/SVG/svg/GpsRoadIcon';
-import Geofencing from '../Screens/GPS/Geofencing';
-import HeaderMenuButton from '../Components/HeaderMenuButton';
 import GpsRelay from '../Screens/GPS/GpsRelay';
-import TrackingTruckNew from '../Screens/GPS/TrackingTruckNew';
+import AddGeozone from '../Screens/GPS/AddGeozone';
+import Geozones from '../Screens/GPS/Geozones';
+import MyLoadsBottomTabs from './MyLoadsBottomTabs';
+import MyGpsBottomTabs from './MyGpsBottomTabs';
+import MyTruckBottomTabs from './MyTruckBottomTabs';
+import TrackingTruck from '../Screens/GPS/TrackingTruck';
 import PlayJourneyNew from '../Screens/GPS/PlayJourneyNew';
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
-
-function BottomTabs() {
-  function getWidth() {
-    const totalWidth = Dimensions.get('window').width;
-    const numberOfTabs = 5;
-    return totalWidth / numberOfTabs;
-  }
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 2)).current;
-  const navigation = useNavigation();
-  const {t} = useTranslation();
-
-  function handleBackButton() {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-      return true;
-    } else {
-      BackHandler.exitApp();
-      return true;
-    }
-  }
-
-  return (
-    <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <Tab.Navigator
-        initialRouteName={t(Constants.NAV_HOME)}
-        screenOptions={({route}) => ({
-          tabBarActiveTintColor: GradientColor2,
-          tabBarInactiveTintColor: tabIndicatorColor,
-          // tabBarActiveBackgroundColor: 'pink',
-          // tabBarInactiveBackgroundColor: '#ccc',
-          // tabBarItemStyle: {borderWidth: 1},
-          // sceneContainerStyle: {},
-          // backBehavior: {},
-          // tabBarBadge: 5,
-          tabBarStyle: {
-            height: 60,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            elevation: 5,
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            marginBottom: 10,
-            fontFamily: 'PlusJakartaSans-SemiBold',
-            alignItems: 'center',
-            justifyContent: 'center',
-            // borderWidth: 1,
-          },
-        })}>
-        <Tab.Screen
-          name={t(Constants.NAV_MY_LORRY)}
-          component={MyLorry}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? <TruckActiveIcon size={25} /> : <TruckIcon size={25} />,
-            headerShown: false,
-            // tabBarButton: CustomTabButton,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={'GPS'}
-          component={MyGpsScreen}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <GpsRoadIcon size={22} color={backgroundColorNew} />
-              ) : (
-                <GpsRoadIcon size={22} color={'#000000'} />
-              ),
-            headerShown: false,
-            // tabBarButton: CustomTabButton,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={t(Constants.NAV_HOME)}
-          component={Dashboard}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            blur: () => {
-              BackHandler.removeEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-
-        <Tab.Screen
-          name={t(Constants.BOOKINGS)}
-          component={Booking}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <BookingActiveIcon size={23} />
-              ) : (
-                <BookingIcon size={20} />
-              ),
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={t(Constants.MENU)}
-          component={Profile}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <DashboardActiveIcon size={20} />
-              ) : (
-                <DashboardIcon size={20} />
-              ),
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#FFFDFD',
-            },
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 4,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 4,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-      </Tab.Navigator>
-      <Animated.View
-        style={style.animatedViewStyle(getWidth, tabOffsetValue)}
-      />
-    </Animated.View>
-  );
-}
-
-function MyLoadsBottomTabs() {
-  const totalWidth = Dimensions.get('window').width;
-  const numberOfTabs = 5;
-
-  function getWidth() {
-    return totalWidth / numberOfTabs;
-  }
-
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 2)).current;
-  const navigation = useNavigation();
-  const {t} = useTranslation();
-
-  function handleBackButton() {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-      return true;
-    } else {
-      BackHandler.exitApp();
-      return true;
-    }
-  }
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButton,
-    );
-    return () => backHandler.remove();
-  }, []);
-
-  return (
-    <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <Tab.Navigator
-        initialRouteName={t(Constants.NAV_DASHBOARD)}
-        screenOptions={({route}) => ({
-          tabBarActiveTintColor: GradientColor2,
-          tabBarInactiveTintColor: tabIndicatorColor,
-          tabBarStyle: {
-            height: 60,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            elevation: 5,
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            marginBottom: 10,
-            fontFamily: 'PlusJakartaSans-Medium',
-          },
-        })}>
-        <Tab.Screen
-          name={t(Constants.NAV_MY_LOAD)}
-          component={MyLorry}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? <LoadActiveIcon size={20} /> : <LoadIcon size={20} />,
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={'GPS'}
-          component={MyGpsScreen}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <GpsRoadIcon size={22} color={backgroundColorNew} />
-              ) : (
-                <GpsRoadIcon size={22} color={'#000000'} />
-              ),
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={t(Constants.NAV_DASHBOARD)}
-          component={DashboardLoad}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            blur: () => {
-              BackHandler.removeEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={t(Constants.BOOKINGS)}
-          component={Booking}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <BookingActiveIcon size={20} />
-              ) : (
-                <BookingIcon size={20} />
-              ),
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 3,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={t(Constants.MENU)}
-          component={Profile}
-          options={{
-            tabBarIcon: ({focused}) =>
-              focused ? (
-                <DashboardActiveIcon size={20} />
-              ) : (
-                <DashboardIcon size={20} />
-              ),
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#FFFDFD',
-            },
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 4,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 4,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-      </Tab.Navigator>
-      <Animated.View
-        style={style.animatedViewStyle(getWidth, tabOffsetValue)}
-      />
-    </Animated.View>
-  );
-}
-
-function MyGpsBottomTabs() {
-  function getWidth() {
-    const totalWidth = Dimensions.get('window').width;
-    const numberOfTabs = 3;
-    return totalWidth / numberOfTabs;
-  }
-
-  const tabOffsetValue = useRef(new Animated.Value(getWidth() * 1)).current;
-  const navigation = useNavigation();
-  const {t} = useTranslation();
-
-  function handleBackButton() {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-      return true;
-    } else {
-      BackHandler.exitApp();
-      return true;
-    }
-  }
-
-  return (
-    <Animated.View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
-      <Tab.Navigator
-        initialRouteName={'MyGPS'}
-        screenOptions={({route}) => ({
-          tabBarActiveTintColor: GradientColor2,
-          tabBarInactiveTintColor: tabIndicatorColor,
-          // tabBarActiveBackgroundColor: 'pink',
-          // tabBarInactiveBackgroundColor: '#ccc',
-          // tabBarItemStyle: {borderWidth: 1},
-          // sceneContainerStyle: {},
-          // backBehavior: {},
-          // tabBarBadge: 5,
-          tabBarStyle: {
-            height: 60,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            elevation: 5,
-          },
-          tabBarLabelStyle: {
-            fontSize: 12,
-            marginBottom: 10,
-            fontFamily: 'PlusJakartaSans-Regular',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-        })}>
-        <Tab.Screen
-          name={'GPS'}
-          component={GPSHomePage}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? <HomeActiveIcon size={20} /> : <HomeIcon size={20} />,
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 0,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-        <Tab.Screen
-          name={'MyGPS'}
-          component={MyGpsScreen}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <GpsRoadIcon size={22} color={backgroundColorNew} />
-              ) : (
-                <GpsRoadIcon size={22} color={'#000000'} />
-              ),
-            headerShown: false,
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 1,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-
-        <Tab.Screen
-          name={t(Constants.MENU)}
-          component={Profile}
-          options={{
-            tabBarIcon: ({focused, color, size}) =>
-              focused ? (
-                <DashboardActiveIcon size={20} />
-              ) : (
-                <DashboardIcon size={20} />
-              ),
-            headerShown: true,
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#FFFDFD',
-            },
-          }}
-          listeners={({navigation, route}) => ({
-            blur: () => {
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            focus: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-              BackHandler.addEventListener(
-                'hardwareBackPress',
-                handleBackButton,
-              );
-            },
-            tabPress: () => {
-              Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
-                useNativeDriver: true,
-              }).start();
-            },
-          })}
-        />
-      </Tab.Navigator>
-      {/* <View style={style.animatedContainer}>
-        <Animated.View
-          style={[
-            style.animatedBackground,
-            {
-              width: getWidth(),
-              transform: [{translateX: tabOffsetValue}],
-            },
-          ]}
-        />
-      </View> */}
-      <Animated.View
-        style={style.animatedViewStyle(getWidth, tabOffsetValue)}
-      />
-    </Animated.View>
-  );
-}
 
 const Navigation = ({language}) => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
@@ -914,7 +228,7 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="Home"
-        component={BottomTabs}
+        component={MyTruckBottomTabs}
         options={{headerShown: false}}
         listeners={({navigation, route}) => ({
           focus: () =>
@@ -1613,8 +927,7 @@ const Navigation = ({language}) => {
       {/* GPS */}
       <Stack.Screen
         name="trackingtruck"
-        // component={TrackingTruck}
-        component={TrackingTruckNew}
+        component={TrackingTruck}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
@@ -1653,7 +966,7 @@ const Navigation = ({language}) => {
         })}
       />
 
-      <Stack.Screen
+      {/* <Stack.Screen
         name="GpsSetting"
         component={GpsSetting}
         options={{
@@ -1680,14 +993,14 @@ const Navigation = ({language}) => {
               handleBackButton,
             ),
         })}
-      />
+      /> */}
       <Stack.Screen
         name="GpsAlert"
         component={GpsAlert}
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Alerts',
+          title: t(Constants.ALERTS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1714,7 +1027,7 @@ const Navigation = ({language}) => {
         options={{
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'History',
+          title: t(Constants.HISTORY),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1768,7 +1081,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Purchase GPS',
+          title: t(Constants.PURCHASE_GPS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -1842,7 +1155,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: 'Provide delivery details',
+          title: t(Constants.DELIVERY_DETAILS),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,
@@ -2037,12 +1350,43 @@ const Navigation = ({language}) => {
       />
 
       <Stack.Screen
-        name="geofencing"
-        component={Geofencing}
+        name="AddGeozone"
+        component={AddGeozone}
         options={({navigation, route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
-          title: route?.params?.name || 'Geofencing',
+          title: route?.params?.name || 'Add Geozone',
+          headerTitleStyle: {
+            fontFamily: 'PlusJakartaSans-Bold',
+            fontSize: 16,
+          },
+          headerRight: () => (
+            <HeaderHelpButton
+              shareIcon={false}
+              navigation={navigation}
+              // latitude={route.params.lat}
+              // longitude={route.params.long}
+            />
+          ),
+        })}
+        listeners={({navigation, route}) => ({
+          // Onpress Update....
+          focus: () =>
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton),
+          blur: () =>
+            BackHandler.removeEventListener(
+              'hardwareBackPress',
+              handleBackButton,
+            ),
+        })}
+      />
+      <Stack.Screen
+        name="geozones"
+        component={Geozones}
+        options={({navigation, route}) => ({
+          headerShown: true,
+          headerTitleAlign: 'left',
+          title: route?.params?.name || t(Constants.ALL_GEO),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

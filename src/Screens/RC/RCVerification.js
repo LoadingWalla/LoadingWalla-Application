@@ -9,13 +9,12 @@ import {
   Modal,
   PermissionsAndroid,
   ActivityIndicator,
-  StyleSheet,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import styles from './style';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
-import {GradientColor3, titleColor} from '../../Color/color';
+import {GradientColor3} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {initRcVerify, rcVerifyFailure} from '../../Store/Actions/Actions';
@@ -23,8 +22,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import QRScanner from '../../../assets/SVG/svg/QRScanner';
 import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const RCVerification = ({navigation, route}) => {
+  useTrackScreenTime('RCVerification');
   const {title, RC, truck_id} = route.params;
   const [rcFrontImage, setRcFrontImage] = useState(null);
   const [rcBackImage, setRcBackImage] = useState(null);
@@ -190,7 +191,7 @@ const RCVerification = ({navigation, route}) => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       {chooseOptions()}
-      <View style={{flex: 1}}>
+      <View style={styles.setFlex}>
         <View style={stylesss.paramBox}>
           <Text style={styles.RCText}>{t(Constants.RCV_TRUCK)}</Text>
           <Text style={styles.label}>{RC}</Text>
@@ -202,28 +203,16 @@ const RCVerification = ({navigation, route}) => {
               <Text>Front Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('front')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  flex: 1,
-                }}>
+                style={styles.touchableOpacityStyle}>
                 {getRcLoading ? (
                   <ActivityIndicator
                     size="large"
                     color={GradientColor3}
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
+                    style={styles.activityIndicator}
                   />
                 ) : (
                   <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      resizeMode: 'contain',
-                    }}
+                    style={styles.image}
                     source={
                       rcFrontImage
                         ? {uri: rcFrontImage.uri}
@@ -233,38 +222,17 @@ const RCVerification = ({navigation, route}) => {
                 )}
               </TouchableOpacity>
             </View>
-            <View
-              style={{
-                backgroundColor: '#AFAFAF',
-                width: 1.5,
-                height: '100%',
-                marginHorizontal: 10,
-              }}
-            />
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flex: 1,
-                marginTop: 5,
-              }}>
-              <Text style={{textAlign: 'center'}}>Back Side</Text>
+            <View style={styles.cardDetailsView} />
+            <View style={styles.backTextView}>
+              <Text style={styles.backTextStyle}>Back Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('back')}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  flex: 1,
-                }}>
+                style={styles.touchableOpacityStyle}>
                 {getRcLoading ? (
                   <ActivityIndicator
                     size="large"
                     color={GradientColor3}
-                    style={{
-                      flex: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
+                    style={styles.activityIndicator}
                   />
                 ) : (
                   <Image
@@ -294,11 +262,7 @@ const RCVerification = ({navigation, route}) => {
 
       <TouchableOpacity
         onPress={() => navigation.navigate('QRScanner', {truck_id: truck_id})}
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        style={styles.activityIndicator}>
         <QRScanner size={200} />
       </TouchableOpacity>
 
@@ -313,78 +277,3 @@ const RCVerification = ({navigation, route}) => {
 };
 
 export default RCVerification;
-
-const stylesss = StyleSheet.create({
-  modalContainer: {
-    backgroundColor: 'rgba(0,0,0, 0.5)',
-    flex: 1,
-  },
-  modalChildContainer: {
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    position: 'absolute',
-    bottom: 0,
-    marginTop: 200,
-  },
-  iconBox: {justifyContent: 'center', alignItems: 'center'},
-  optionBox: {flexDirection: 'row', justifyContent: 'space-around'},
-  seperatorBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 20,
-  },
-  halfHorizontalLine: {
-    backgroundColor: titleColor,
-    height: 2,
-    flex: 1,
-  },
-  orText: {
-    fontSize: 14,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginHorizontal: 5,
-  },
-  paramBox: {
-    borderRadius: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    backgroundColor: '#FFEBE6',
-  },
-  RCText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-  },
-  imageBox: {marginTop: 20, flex: 1},
-  borderLineContainer: {
-    flexDirection: 'row',
-    borderWidth: 1.5,
-    borderColor: GradientColor3,
-    borderStyle: 'dotted',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 15,
-    flex: 1,
-  },
-  innerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    marginTop: 5,
-  },
-});

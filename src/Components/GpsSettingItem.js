@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import Switch from 'toggle-switch-react-native';
 import {GradientColor2, PrivacyPolicy, seperator} from '../Color/color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './style';
 
 const GpsSettingItem = ({detailInput, title, storageKey}) => {
   const [switchOn, setSwitchOn] = useState(false);
@@ -65,56 +66,56 @@ const GpsSettingItem = ({detailInput, title, storageKey}) => {
 
 export default GpsSettingItem;
 
-const styles = StyleSheet.create({
-  detailBox: {
-    padding: 15,
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'column',
-    // elevation: 2,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#00000029',
-    borderRadius: 8,
-    width: '48%',
-  },
+// const styles = StyleSheet.create({
+//   detailBox: {
+//     padding: 15,
+//     backgroundColor: '#FFFFFF',
+//     flexDirection: 'column',
+//     // elevation: 2,
+//     marginVertical: 5,
+//     borderWidth: 1,
+//     borderColor: '#00000029',
+//     borderRadius: 8,
+//     width: '48%',
+//   },
 
-  textHeader: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  switchBox: {
-    // flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // borderWidth: 1,
-  },
-  inputBox: {flexDirection: 'row', marginTop: 10, backgroundColor: '#f7f7f7'},
-  inputView: {
-    // borderWidth: 1,
-    width: 100,
-    height: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 2,
-    borderRadius: 8,
-    backgroundColor: '#ffffff',
-  },
-  textInput: {
-    width: 50,
-    // borderWidth: 1,
-    textAlign: 'center',
-    // backgroundColor: '#f7f7f7',
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  textInputCaption: {
-    textAlign: 'center',
-    marginLeft: 5,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Bold',
-    backgroundColor: '#ffffff',
-    // borderWidth: 1,
-  },
-});
+//   textHeader: {
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   switchBox: {
+//     // flex: 1,
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     // borderWidth: 1,
+//   },
+//   inputBox: {flexDirection: 'row', marginTop: 10, backgroundColor: '#f7f7f7'},
+//   inputView: {
+//     // borderWidth: 1,
+//     width: 100,
+//     height: 40,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     elevation: 2,
+//     borderRadius: 8,
+//     backgroundColor: '#ffffff',
+//   },
+//   textInput: {
+//     width: 50,
+//     // borderWidth: 1,
+//     textAlign: 'center',
+//     // backgroundColor: '#f7f7f7',
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//   },
+//   textInputCaption: {
+//     textAlign: 'center',
+//     marginLeft: 5,
+//     fontSize: 12,
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     backgroundColor: '#ffffff',
+//     // borderWidth: 1,
+//   },
+// });

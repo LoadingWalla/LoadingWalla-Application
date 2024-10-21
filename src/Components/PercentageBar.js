@@ -5,6 +5,7 @@ import RightArrow from '../../assets/SVG/svg/RightArrow';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../Constants/Constant';
 import CheckCircle from '../../assets/SVG/svg/CheckCircle';
+import styles from './style'
 
 const PercentageBar = ({
   navigation,
@@ -54,7 +55,7 @@ const PercentageBar = ({
         )}`}</Text>
       )}
       {verify !== 1 && (
-        <View style={styles.arrowView}>
+        <View style={styles.percentagearrowView}>
           <RightArrow size={20} color={GradientColor1} />
         </View>
       )}
@@ -62,61 +63,61 @@ const PercentageBar = ({
   );
 };
 
-const styles = StyleSheet.create({
-  barContainer: {
-    flexDirection: 'row',
-    width: '48%',
-    justifyContent: 'flex-start',
-    borderRadius: 5,
-    overflow: 'hidden',
-    position: 'relative',
-    borderWidth: 1,
-    alignItems: 'center',
-    borderColor: '#00000057',
-  },
-  backgroundBar: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderRadius: 5,
-  },
-  completedBar: {
-    position: 'absolute',
-    left: 0,
-    height: '100%',
-    borderRadius: 5,
-  },
-  barText: {
-    fontSize: 16,
-    position: 'absolute',
-    textAlign: 'center',
-    color: titleColor,
-    fontWeight: '700',
-    fontFamily: 'PlusJakartaSans-Bold',
-    zIndex: 1,
-    marginStart: 15,
-  },
-  arrowView: {
-    marginLeft: 'auto',
-    elevation: 1,
-    // borderWidth: 0,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    right: 10,
-  },
-  completeView: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  completeText: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    marginStart: 15,
-  },
-});
+// const styles = StyleSheet.create({
+//   barContainer: {
+//     flexDirection: 'row',
+//     width: '48%',
+//     justifyContent: 'flex-start',
+//     borderRadius: 5,
+//     overflow: 'hidden',
+//     position: 'relative',
+//     borderWidth: 1,
+//     alignItems: 'center',
+//     borderColor: '#00000057',
+//   },
+//   backgroundBar: {
+//     position: 'absolute',
+//     width: '100%',
+//     height: '100%',
+//     borderRadius: 5,
+//   },
+//   completedBar: {
+//     position: 'absolute',
+//     left: 0,
+//     height: '100%',
+//     borderRadius: 5,
+//   },
+//   barText: {
+//     fontSize: 16,
+//     position: 'absolute',
+//     textAlign: 'center',
+//     color: titleColor,
+//     fontWeight: '700',
+//     fontFamily: 'PlusJakartaSans-Bold',
+//     zIndex: 1,
+//     marginStart: 15,
+//   },
+//   arrowView: {
+//     marginLeft: 'auto',
+//     elevation: 1,
+//     // borderWidth: 0,
+//     backgroundColor: '#FFFFFF',
+//     borderRadius: 10,
+//     right: 10,
+//   },
+//   completeView: {
+//     flexDirection: 'row',
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+//   completeText: {
+//     fontSize: 14,
+//     textAlign: 'center',
+//     color: titleColor,
+//     fontFamily: 'PlusJakartaSans-ExtraBold',
+//     marginStart: 15,
+//   },
+// });
 
 export default PercentageBar;

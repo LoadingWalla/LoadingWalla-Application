@@ -1,18 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {
+  clearGpsStopsData,
   clearGpsTripsData,
   clearSummaryReportData,
   fetchAddressRequest,
+  fetchGpsStopsRequest,
   fetchGpsTripsRequest,
   fetchSummaryReportRequest,
   fetchTokenRequest,
@@ -21,11 +24,20 @@ import moment from 'moment';
 import DownloadIcon from '../../../assets/SVG/svg/DownloadIcon';
 import CalendarIcon from '../../../assets/SVG/CalendarIcon';
 import RightArrow from '../../../assets/SVG/svg/RightArrow';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import {convertToCSV} from '../../Utils/CSVutils';
 import RNFS from 'react-native-fs';
 import Share from 'react-native-share';
+import styles from './style';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
+import {SceneMap, TabView} from 'react-native-tab-view';
+import NotFound from '../../Components/NotFound';
+import MyLorryShimmer from '../../Components/Shimmer/MyLorryShimmer';
+import RenderTabBar from '../Requests/RenderTabBar';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import HistoryStopsShimmer from '../../Components/Shimmer/History&StopsShimmer';
 
 const convertMillisToTime = millis => {
   const hours = Math.floor(millis / (1000 * 60 * 60));
@@ -34,6 +46,7 @@ const convertMillisToTime = millis => {
 };
 
 const TripItem = React.memo(({item, onShowAddress}) => {
+  const {t} = useTranslation();
   console.log(8888888888, item);
   return (
     <View style={styles.tripItemContainer}>
@@ -55,6 +68,8 @@ const TripItem = React.memo(({item, onShowAddress}) => {
           distance={item?.distance}
           averageSpeed={item?.averageSpeed}
           duration={item?.duration}
+          t={t}
+          maxSpeed={item?.maxSpeed}
         />
         <TripDetail
           address={item?.endAddress}
@@ -69,6 +84,50 @@ const TripItem = React.memo(({item, onShowAddress}) => {
   );
 });
 
+const RenderStopsItem = React.memo(({item, index, onShowAddress}) => {
+  // console.log(4444, item, index);
+  console.log('inside renderStopsItem', item);
+  const date = new Date(item.startTime).toLocaleDateString();
+  const lat = item.latitude;
+  const lng = item.longitude;
+  const itemId = item.positionId;
+  const address = item.address;
+  const startTime = new Date(item.startTime).toLocaleTimeString();
+  const endTime = new Date(item.endTime).toLocaleTimeString();
+  const durationInHours = (item.duration / (1000 * 60 * 60)).toFixed(2);
+
+  return (
+    <View style={styles.tripItemContainer} key={index}>
+      <View style={styles.statusIndicatorContainer}>
+        <View style={styles.greenIndicator} />
+        <View style={styles.line} />
+        <View style={styles.redIndicator} />
+      </View>
+      <View style={styles.tripDetailsContainer}>
+        <StopDetail det={'Start Time'} date={date} time={startTime} />
+        <StopStats
+          address={address}
+          lat={lat}
+          lng={lng}
+          itemId={itemId}
+          duration={durationInHours}
+          onShowAddress={onShowAddress}
+        />
+        <StopDetail det={'End Time'} date={date} time={endTime} />
+      </View>
+    </View>
+  );
+});
+
+const StopDetail = ({det, date, time}) => {
+  return (
+    <View style={styles.detailContainer}>
+      <Text style={styles.showTimeText(det)}>{det}</Text>
+      <Text style={styles.locHistoryTimeText}>{`${date} | ${time}`}</Text>
+    </View>
+  );
+};
+
 const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
   const {fullAddressData, fullAddressCustomId} = useSelector(
     state => state.data,
@@ -77,7 +136,9 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
   return (
     <View style={styles.detailContainer}>
       {address || (fullAddressCustomId === itemId && fullAddressData) ? (
-        <Text style={styles.addressText}>{address || fullAddressData}</Text>
+        <Text style={styles.locHistoryAddressText}>
+          {address || fullAddressData}
+        </Text>
       ) : (
         <ShowFullAddress
           lat={lat}
@@ -86,7 +147,7 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
           onShowAddress={onShowAddress}
         />
       )}
-      <Text style={styles.timeText}>
+      <Text style={styles.locHistoryTimeText}>
         {moment(time).utcOffset('+05:30').format('DD/MM/YYYY hh:mm A')}
       </Text>
     </View>
@@ -94,31 +155,97 @@ const TripDetail = ({address, time, lat, lng, itemId, onShowAddress}) => {
 };
 
 const ShowFullAddress = ({lat, lng, itemId, onShowAddress}) => {
+  const {t} = useTranslation();
   return (
     <TouchableOpacity
       style={styles.showAddressContainer}
       onPress={() => onShowAddress(itemId, lat, lng)}>
-      <Text style={styles.showAddressText}>Show full address</Text>
+      <Text style={styles.showAddressText}>
+        {t(Constants.SHOW_FULL_ADDRESS)}
+      </Text>
       <RightArrow size={15} color={'#EF4D23'} />
     </TouchableOpacity>
   );
 };
 
-const TripStats = ({distance, averageSpeed, duration}) => (
-  <View style={styles.tripStatsContainer}>
+function formatDuration(duration) {
+  const hours = Math.floor(duration);
+  const minutes = Math.round((duration - hours) * 60);
+  return `${hours} hr ${minutes} mins`;
+}
+
+const StopStats = ({address, lat, lng, itemId, duration, onShowAddress}) => {
+  const {fullAddressData, fullAddressCustomId} = useSelector(
+    state => state.data,
+  );
+  return (
+    <View style={styles.detailContainer}>
+      {address || (fullAddressCustomId === itemId && fullAddressData) ? (
+        <Text style={styles.locHistoryAddressText}>
+          {address || fullAddressData}
+        </Text>
+      ) : (
+        <ShowFullAddress
+          lat={lat}
+          lng={lng}
+          itemId={itemId}
+          onShowAddress={onShowAddress}
+        />
+      )}
+      <Text style={styles.locHistoryTimeText}>{`Duration: ${formatDuration(
+        duration,
+      )}`}</Text>
+    </View>
+  );
+};
+
+const TripStats = ({distance, averageSpeed, duration, t, maxSpeed}) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    style={{
+      paddingVertical: 10,
+      // borderWidth: 1,
+    }}>
     <StatBox
       value={`${(distance / 1000).toFixed(2)} KM`}
-      label="Total Distance"
+      label={t(Constants.TOT_DIS)}
     />
     <VerticalLine />
     <StatBox
       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
-      label="Avg. Speed"
+      label={t(Constants.AVG_SPEED)}
     />
     <VerticalLine />
-    <StatBox value={convertMillisToTime(duration)} label="Duration" />
-  </View>
+    <StatBox
+      value={convertMillisToTime(duration)}
+      label={t(Constants.DURATION)}
+    />
+    <VerticalLine />
+    <StatBox
+      value={`${(maxSpeed * 1.852).toFixed(2)} km/h`}
+      label={t(Constants.MAXSPD)}
+    />
+  </ScrollView>
 );
+// const TripStats = ({distance, averageSpeed, duration, t}) => (
+//   <View style={styles.tripStatsContainer}>
+//     <StatBox
+//       value={`${(distance / 1000).toFixed(2)} KM`}
+//       label={t(Constants.TOT_DIS)}
+//     />
+//     <VerticalLine />
+//     <StatBox
+//       value={`${(averageSpeed * 1.852).toFixed(2)} km/h`}
+//       label={t(Constants.AVG_SPEED)}
+//     />
+//     <VerticalLine />
+//     <StatBox
+//       value={convertMillisToTime(duration)}
+//       label={t(Constants.DURATION)}
+//     />
+//   </View>
+// );
 
 const StatBox = ({value, label}) => (
   <View style={styles.statBox}>
@@ -127,22 +254,39 @@ const StatBox = ({value, label}) => (
   </View>
 );
 
-const VerticalLine = () => <View style={styles.verticalLine} />;
+const StopBox = ({label, value}) => (
+  <View style={styles.stopBox}>
+    <Text style={styles.locHistoryStopText}>{label}</Text>
+    <Text style={styles.locHistoryStopCount}>{value}</Text>
+  </View>
+);
+
+const VerticalLine = () => <View style={styles.locHistoryVerticalLine} />;
 
 const LocationHistory = ({navigation, route}) => {
+  useTrackScreenTime('LocationHistory');
   const {deviceId, name, from, to} = route?.params;
   // console.log(777777, route);
+  const {t} = useTranslation();
   const dispatch = useDispatch();
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
   const {
     gpsTripsLoading,
     gpsTripsData,
+    gpsStopsData,
+    gpsStopsLoading,
     gpsTokenData,
     gpsSummaryData,
     gpsTripsError,
     gpsSummaryError,
-  } = useSelector(state => state.data);
+  } = useSelector(state => {
+    console.log(444444444, state);
+    return state.data;
+  });
 
   const {wsConnected} = useSelector(state => state.wsData);
 
@@ -191,9 +335,107 @@ const LocationHistory = ({navigation, route}) => {
     }
   }, [gpsTokenData, dispatch]);
 
+  useEffect(() => {
+    switch (index) {
+      case 0:
+        setSelected(1);
+        break;
+      case 1:
+        setSelected(0);
+        break;
+      default:
+        break;
+    }
+  }, [index]);
+
   const handleShowAddress = (itemId, lat, lng) => {
     dispatch(fetchAddressRequest(lat, lng, itemId));
   };
+
+  // tabview
+  const HistoryTab = () => (
+    <View style={styles.contentContainer}>
+      {gpsTripsError || gpsSummaryError ? (
+        <View style={styles.locHistoryErrorContainer}>
+          <Text style={styles.locHistoryErrorText}>
+            Failed to fetch data. Please try again.
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleRetryHistory}>
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : gpsTripsLoading ? (
+        <View>
+          <HistoryStopsShimmer />
+        </View>
+      ) : (
+        <FlatList
+          data={gpsTripsData.slice().reverse()}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.locHistorynoDataText}>
+                {t(Constants.NO_TRIPS)}
+              </Text>
+            </View>
+          }
+          style={styles.tableContainer}
+        />
+      )}
+    </View>
+  );
+
+  // console.log('--------------gpsStopsData---------------', gpsStopsData);
+  const StopsTab = () => (
+    <View style={styles.contentContainer}>
+      {gpsTripsError || gpsSummaryError ? (
+        <View style={styles.locHistoryErrorContainer}>
+          <Text style={styles.locHistoryErrorText}>
+            Failed to fetch data. Please try again.
+          </Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleRetryStops}>
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      ) : gpsStopsLoading ? (
+        <View>
+          <HistoryStopsShimmer />
+        </View>
+      ) : (
+        <FlatList
+          data={gpsStopsData.slice().reverse()}
+          renderItem={({item, index}) => (
+            <RenderStopsItem
+              item={item}
+              index={index}
+              onShowAddress={handleShowAddress}
+            />
+          )}
+          // keyExtractor={item => item.id}
+          keyExtractor={item => `${item.startTime}-${item.endTime}`}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={
+            <View style={styles.noDataView}>
+              <Text style={styles.locHistorynoDataText}>
+                {t(Constants.NO_TRIPS)}
+              </Text>
+            </View>
+          }
+          style={styles.tableContainer}
+        />
+      )}
+    </View>
+  );
+
+  useEffect(() => {
+    setSelected(index + 1);
+  }, [index]);
+  // tabview
 
   useFocusEffect(
     useCallback(() => {
@@ -217,16 +459,32 @@ const LocationHistory = ({navigation, route}) => {
             to,
           ),
         );
+
+        const defaultFrom =
+          from || moment().utcOffset(330).startOf('day').toISOString();
+        const defaultTo =
+          to || moment().utcOffset(330).endOf('day').toISOString();
+
+        dispatch(
+          fetchGpsStopsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
       }
 
       return () => {
         dispatch(clearGpsTripsData());
+        dispatch(clearGpsStopsData());
         dispatch(clearSummaryReportData());
       };
     }, [dispatch, deviceId, from, to, gpsTokenData]),
   );
 
-  const handleRetry = () => {
+  const handleRetryHistory = () => {
     if (gpsTokenData) {
       dispatch(
         fetchSummaryReportRequest(
@@ -245,6 +503,36 @@ const LocationHistory = ({navigation, route}) => {
           deviceId,
           from,
           to,
+        ),
+      );
+    }
+  };
+
+  const handleRetryStops = () => {
+    if (gpsTokenData) {
+      dispatch(
+        fetchSummaryReportRequest(
+          gpsTokenData.email,
+          gpsTokenData.password,
+          deviceId,
+          from,
+          to,
+          false,
+        ),
+      );
+
+      const defaultFrom =
+        from || moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo =
+        to || moment().utcOffset(330).endOf('day').toISOString();
+
+      dispatch(
+        fetchGpsStopsRequest(
+          gpsTokenData?.email,
+          gpsTokenData?.password,
+          deviceId,
+          defaultFrom,
+          defaultTo,
         ),
       );
     }
@@ -286,31 +574,36 @@ const LocationHistory = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerBox}>
+      <View style={styles.locHistoryHeaderBox}>
         <View style={styles.headerTextContainer}>
-          <Text style={styles.timeText}>Trip summary</Text>
-          <Text style={styles.timeText}>
-            Vehicle number: <Text style={styles.vehicleNumberText}>{name}</Text>
+          <Text style={styles.locHistoryTimeText}>{t(Constants.TRIP_SUM)}</Text>
+          <Text style={styles.locHistoryTimeText}>
+            {t(Constants.VEHICLE_NUM)}
+            <Text style={styles.vehicleNumberText}>{name}</Text>
           </Text>
         </View>
         <View style={styles.summaryContainer}>
           <StopBox
-            label="Total distance"
+            label={t(Constants.TOT_DIS)}
             value={
               gpsSummaryData && gpsSummaryData.length > 0
                 ? `${(gpsSummaryData[0]?.distance / 1000).toFixed(2)} KM`
                 : '0.00 KM'
             }
           />
-          <StopBox label="Avg. Speed" value={`${averageSpeed} KM/H`} />
+          <StopBox
+            label={t(Constants.AVG_SPEED)}
+            value={`${averageSpeed} KM/H`}
+          />
           <View style={styles.iconButtonsContainer}>
             <TouchableOpacity
               style={styles.downloadIconBox}
               onPress={handleDownload}>
               <DownloadIcon size={20} />
             </TouchableOpacity>
+            {/* to be done */}
             <TouchableOpacity
-              style={styles.calendarIconBox}
+              style={styles.locHistoryCalendarIconBox}
               onPress={() =>
                 navigation.navigate('quickfilters', {
                   deviceId,
@@ -323,248 +616,22 @@ const LocationHistory = ({navigation, route}) => {
           </View>
         </View>
       </View>
-      {gpsTripsError || gpsSummaryError ? (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>
-            Failed to fetch data. Please try again.
-          </Text>
-          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
-          </TouchableOpacity>
-        </View>
-      ) : gpsTripsLoading ? (
-        <ActivityIndicator
-          size="large"
-          color={backgroundColorNew}
-          style={styles.loader}
+      <View style={styles.tabView}>
+        <TabView
+          navigationState={{
+            index,
+            routes: [
+              {key: 'history', title: 'History'},
+              {key: 'stops', title: 'Stops'},
+            ],
+          }}
+          renderScene={SceneMap({history: HistoryTab, stops: StopsTab})}
+          onIndexChange={setIndex}
+          renderTabBar={RenderTabBar}
         />
-      ) : (
-        <FlatList
-          data={gpsTripsData}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          ListEmptyComponent={
-            <View style={styles.noDataView}>
-              <Text style={styles.noDataText}>No Trips</Text>
-            </View>
-          }
-          style={styles.tableContainer}
-        />
-      )}
+      </View>
     </View>
   );
 };
 
-const StopBox = ({label, value}) => (
-  <View style={styles.stopBox}>
-    <Text style={styles.stopText}>{label}</Text>
-    <Text style={styles.stopCount}>{value}</Text>
-  </View>
-);
-
 export default LocationHistory;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerBox: {
-    backgroundColor: '#FFE9E3',
-    borderRadius: 8,
-    margin: 10,
-  },
-  headerTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  timeText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-    color: '#454545',
-  },
-  vehicleNumberText: {
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    color: titleColor,
-  },
-  summaryContainer: {
-    backgroundColor: '#FFFFFF',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 3,
-    zIndex: 10,
-  },
-  stopBox: {
-    paddingHorizontal: 5,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  stopText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-  },
-  stopCount: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    textAlign: 'left',
-    textTransform: 'uppercase',
-    marginTop: -2,
-  },
-  iconButtonsContainer: {
-    flexDirection: 'row',
-  },
-  downloadIconBox: {
-    padding: 10,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-    marginRight: 10,
-  },
-  calendarIconBox: {
-    padding: 10,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-  },
-  tripItemContainer: {
-    flex: 1,
-    padding: 10,
-    marginHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
-    elevation: 2,
-  },
-  statusIndicatorContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: 17,
-    marginTop: 10,
-  },
-  greenIndicator: {
-    width: 10,
-    height: 10,
-    backgroundColor: '#3BA700',
-  },
-  redIndicator: {
-    width: 10,
-    height: 10,
-    backgroundColor: '#FF0000',
-    borderRadius: 5,
-  },
-  line: {
-    flex: 1,
-    width: 1.5,
-    backgroundColor: '#AFAFAF',
-    marginHorizontal: 5,
-  },
-  tripDetailsContainer: {
-    paddingHorizontal: 10,
-    flex: 1,
-  },
-  detailContainer: {
-    padding: 5,
-  },
-  addressText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: titleColor,
-  },
-  showAddressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  showAddressText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: '#EF4D23',
-    textDecorationLine: 'underline',
-  },
-  tripStatsContainer: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-  },
-  statBox: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  statValue: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 12,
-    color: titleColor,
-  },
-  statLabel: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 10,
-    color: titleColor,
-  },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 1,
-    marginHorizontal: 5,
-    height: '100%',
-  },
-  tableContainer: {
-    flex: 1,
-    paddingVertical: 10,
-    marginBottom: 10,
-  },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noDataView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  noDataText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 16,
-    color: titleColor,
-  },
-  errorContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 50,
-  },
-  errorText: {
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 16,
-    color: '#FF0000',
-    marginBottom: 10,
-  },
-  retryButton: {
-    padding: 10,
-    borderRadius: 5,
-    backgroundColor: backgroundColorNew,
-  },
-  retryButtonText: {
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    color: '#FFFFFF',
-  },
-});

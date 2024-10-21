@@ -1,12 +1,14 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {View, Text} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import Header from '../../Components/Header';
 import PostItem from '../../Components/PostItem';
 import Button from '../../Components/Button';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const LoadPostSuccessfull = ({navigation}) => {
+  useTrackScreenTime('LoadPostSuccessfull');
   return (
     <View style={[styles.backgroundView, {backgroundColor: '#E7E7E7'}]}>
       <Header
@@ -15,7 +17,7 @@ const LoadPostSuccessfull = ({navigation}) => {
       />
       <View>
         <Text style={styles.label}>{Constants.POST_LOOK}</Text>
-        <View style={{marginTop: 18}}>
+        <View style={styles.postItemView}>
           <PostItem />
         </View>
         <View style={[styles.rowDirection]}>

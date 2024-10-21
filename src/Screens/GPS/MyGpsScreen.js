@@ -1,29 +1,29 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-} from 'react-native';
+import {View, FlatList, RefreshControl} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {useTranslation} from 'react-i18next';
 import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import * as Constants from '../../Constants/Constant';
-import DashboardHeader from '../../Components/DashboardHeader';
-import GpsItem from '../../Components/GpsItem';
+import styles from './style';
 import {
   fetchGpsDevicesRequest,
   fetchTokenRequest,
   initProfile,
 } from '../../Store/Actions/Actions';
-import {backgroundColorNew, textColor, titleColor} from '../../Color/color';
+import {backgroundColorNew, GradientColor1} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
-import EmptyListComponent from '../../Components/EmptyListComponent';
+import GpsItem from '../../Components/GpsItem';
+import DashboardHeader from '../../Components/DashboardHeader';
 import SearchBox from '../../Components/SearchBox';
+import EmptyListComponent from '../../Components/EmptyListComponent';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import {AnimatedFAB} from 'react-native-paper';
+import AddIcon from '../../../assets/SVG/svg/AddIcon';
+import MyGPSShimmer from '../../Components/Shimmer/MyGPSShimmer';
 
 const MyGpsScreen = ({navigation}) => {
+  useTrackScreenTime('MyGpsScreen');
   const {t} = useTranslation();
   const dispatch = useDispatch();
   const {
@@ -32,22 +32,25 @@ const MyGpsScreen = ({navigation}) => {
     gpsDeviceData,
     DashboardUser,
     dashboardLoading,
-  } = useSelector(state => {
-    // console.log('My Gps Screen---', state.data);
-    return state.data;
-  });
+  } = useSelector(state => state.data);
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
-    state => {
-      // console.log('WEBSOCKET My Gps Screen---', state.wsData);
-      return state.wsData;
-    },
+    state => state.wsData,
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
+  const [isExtended, setIsExtended] = useState(true);
+
+  const onScroll = ({nativeEvent}) => {
+    const currentScrollPosition =
+      Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+    setIsExtended(currentScrollPosition <= 0);
+  };
+
+  // const fabStyle = {[animateFrom]: 16};
 
   // Fetch GPS data
   const fetchGpsData = useCallback(() => {
@@ -165,20 +168,17 @@ const MyGpsScreen = ({navigation}) => {
     const running = mergedDeviceData.filter(
       device => device.position[0]?.attributes?.motion === true,
     ).length;
-    // console.log(44444444, all, active, inactive, running);
     return {all, active, inactive, running};
   }, [mergedDeviceData]);
 
   const filteredDeviceData = useMemo(() => {
     let filtered = mergedDeviceData;
 
-    // Apply search filter
     if (searchText) {
       filtered = filtered.filter(device =>
         device.name.toLowerCase().includes(searchText.toLowerCase()),
       );
     }
-    // Apply status filter
     if (filterStatus !== 'All') {
       if (filterStatus === 'Active') {
         filtered = filtered.filter(device => device.status === 'online');
@@ -190,21 +190,17 @@ const MyGpsScreen = ({navigation}) => {
         );
       }
     }
-    // console.log(444444444, filtered);
     return filtered;
   }, [mergedDeviceData, searchText, filterStatus]);
 
-  // Handle filter change
   const handleFilterChange = value => {
     setFilterStatus(value);
   };
 
-  // Handle search
   const handleSearch = text => {
     setSearchText(text);
   };
 
-  // Handle toggle of search box
   const handleToggleSearch = isExpanded => {
     if (!isExpanded) {
       setSearchText('');
@@ -218,7 +214,7 @@ const MyGpsScreen = ({navigation}) => {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.myGpsContainer}>
       <View style={styles.dashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -234,126 +230,58 @@ const MyGpsScreen = ({navigation}) => {
           t={t}
         />
       </View>
-      <View style={styles.contentContainer}>
-        <SearchBox
-          onSearch={handleSearch}
-          onToggle={handleToggleSearch}
-          onFilterChange={handleFilterChange}
-          deviceCounts={deviceCounts}
-          onRefresh={onRefresh}
-        />
+      <View style={styles.gpsDataStyle}>
         {gpsDeviceLoading ? (
-          <View style={styles.loadingStyle}>
-            <ActivityIndicator size="large" color={backgroundColorNew} />
+          <View>
+            <MyGPSShimmer />
           </View>
         ) : gpsDeviceData === null ? (
           <View />
         ) : (
-          <FlatList
-            data={filteredDeviceData}
-            initialNumToRender={4}
-            maxToRenderPerBatch={5}
-            windowSize={5}
-            showsVerticalScrollIndicator={false}
-            renderItem={renderGpsItem}
-            keyExtractor={item => item.id.toString()}
-            ListEmptyComponent={
-              filteredDeviceData.length === 0 ? (
-                <EmptyListComponent navigation={navigation} />
-              ) : null
-            }
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          />
+          <>
+            <SearchBox
+              onSearch={handleSearch}
+              onToggle={handleToggleSearch}
+              onFilterChange={handleFilterChange}
+              deviceCounts={deviceCounts}
+              onRefresh={onRefresh}
+            />
+            <FlatList
+              data={filteredDeviceData.slice().reverse()}
+              initialNumToRender={4}
+              maxToRenderPerBatch={5}
+              windowSize={5}
+              showsVerticalScrollIndicator={false}
+              renderItem={renderGpsItem}
+              keyExtractor={item => item.id.toString()}
+              ListEmptyComponent={
+                filteredDeviceData.length === 0 ? (
+                  <EmptyListComponent navigation={navigation} />
+                ) : null
+              }
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              onScroll={onScroll}
+            />
+          </>
         )}
       </View>
+      <AnimatedFAB
+        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
+        label={'Buy Now'}
+        extended={isExtended}
+        onPress={() => navigation.navigate('BuyGPS')}
+        visible={true}
+        animateFrom={'right'}
+        iconMode={'dynamic'}
+        style={[styles.fabStyle]}
+        uppercase={false}
+        color={'#EF4D23'}
+        rippleColor={GradientColor1}
+      />
     </View>
   );
 };
 
 export default MyGpsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  dashboardHeaderView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    elevation: 5,
-    maxHeight: 60,
-    padding: 10,
-    backgroundColor: '#FFFFFF',
-    zIndex: 9999,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-  },
-  contentContainer: {
-    flex: 1,
-    marginVertical: 60,
-    padding: 10,
-  },
-  loadingStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  notFoundText: {
-    color: '#707070',
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 28,
-  },
-
-  btnStyle: {
-    borderWidth: 2,
-    borderRadius: 8,
-    backgroundColor: '#3CA604',
-    borderColor: '#3CA604',
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '50%',
-    alignSelf: 'center',
-  },
-  btnText: {
-    fontSize: 16,
-    color: textColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    textAlign: 'center',
-  },
-  homeView: {
-    flex: 1,
-    marginVertical: 60,
-    justifyContent: 'center',
-  },
-  notFoundView: {
-    flex: 0.75,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  getNowView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 0.25,
-  },
-  offerText: {
-    fontFamily: 'PlusJakartaSans-Medium',
-    fontSize: 14,
-    color: '#3BA700',
-    textAlign: 'center',
-    paddingVertical: 10,
-  },
-  splashImage: (height, width) => ({
-    height: height,
-    width: width,
-  }),
-  subText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 14,
-    marginTop: 15,
-  },
-});

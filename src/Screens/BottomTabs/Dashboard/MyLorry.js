@@ -15,6 +15,10 @@ import RenderTabBar from '../../Requests/RenderTabBar';
 import NotFound from '../../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
+import {AnimatedFAB} from 'react-native-paper';
+import {GradientColor1} from '../../../Color/color';
+import AddIcon from '../../../../assets/SVG/svg/AddIcon';
 
 function getRoutesForUserType(type, t) {
   if (type === '1') {
@@ -38,6 +42,7 @@ function getRoutesForUserType(type, t) {
 }
 
 const MyLorry = ({navigation}) => {
+  useTrackScreenTime('MyLorry');
   const dispatch = useDispatch();
   const {t} = useTranslation();
   const [userType, setUserType] = useState('');
@@ -46,6 +51,13 @@ const MyLorry = ({navigation}) => {
   const [selected, setSelected] = useState(1);
   const [index, setIndex] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [isExtended, setIsExtended] = useState(true);
+
+  const onScroll = ({nativeEvent}) => {
+    const currentScrollPosition =
+      Math.floor(nativeEvent?.contentOffset?.y) ?? 0;
+    setIsExtended(currentScrollPosition <= 0);
+  };
 
   const {
     myLoadTruckData,
@@ -103,7 +115,7 @@ const MyLorry = ({navigation}) => {
   const renderContentOrShimmer = relevantData => {
     if (myLoadLoding || myLorryLoding) {
       return (
-        <View style={{flex: 1}}>
+        <View style={style.contentSimmer}>
           <MyLorryShimmer />
           <MyLorryShimmer />
           <MyLorryShimmer />
@@ -130,7 +142,7 @@ const MyLorry = ({navigation}) => {
     }
 
     return (
-      <View style={{flex: 1, paddingHorizontal: 5}}>
+      <View style={style.myLorryFlatList}>
         <FlatList
           keyExtractor={keyExtractor}
           data={relevantData}
@@ -148,6 +160,7 @@ const MyLorry = ({navigation}) => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          onScroll={onScroll}
         />
       </View>
     );
@@ -230,7 +243,7 @@ const MyLorry = ({navigation}) => {
         />
       </View>
 
-      <Button
+      {/* <Button
         title={
           userType === '1'
             ? t(Constants.POST_LOADS)
@@ -240,6 +253,24 @@ const MyLorry = ({navigation}) => {
         style={style.buttonstyle}
         touchStyle={style.touchStyle}
         onPress={() => bannerButton()}
+      /> */}
+
+      <AnimatedFAB
+        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
+        label={
+          userType === '1'
+            ? t(Constants.POST_LOADS)
+            : t(Constants.ADD_NEW_LORRY)
+        }
+        extended={isExtended}
+        onPress={() => bannerButton()}
+        visible={true}
+        animateFrom={'right'}
+        iconMode={'dynamic'}
+        style={[style.fabStyle]}
+        uppercase={false}
+        color={'#EF4D23'}
+        rippleColor={GradientColor1}
       />
     </View>
   );

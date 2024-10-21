@@ -2,14 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {
   Linking,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import GoToIcon from '../../../assets/SVG/svg/GoToIcon';
-import {PrivacyPolicy} from '../../Color/color';
 import FetchGoogleApi from '../../Utils/FetchGoogleApi';
+import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const fetchData = async (latitude, longitude, type) => {
   try {
@@ -55,14 +55,14 @@ const FuelPumpItem = ({item, distance}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.fuelPumpContainer}>
       <View style={styles.detailBox}>
         <Text style={styles.headerText}>{item.name}</Text>
         <Text style={styles.headerTextValue}>{item?.vicinity}</Text>
         <Text style={styles.headerTextValue}>{distance} away</Text>
       </View>
       <TouchableOpacity style={styles.iconContainer} onPress={handleNavigate}>
-        <View style={{transform: [{rotate: '-45deg'}]}}>
+        <View style={styles.goToIconView}>
           <GoToIcon size={25} />
         </View>
       </TouchableOpacity>
@@ -71,6 +71,7 @@ const FuelPumpItem = ({item, distance}) => {
 };
 
 const FuelPump = ({navigation, route}) => {
+  useTrackScreenTime('FuelPump');
   const {theft, latitude, longitude} = route.params;
   const [locations, setLocations] = useState([]);
   const [distances, setDistances] = useState([]);
@@ -140,47 +141,3 @@ const FuelPump = ({navigation, route}) => {
 };
 
 export default FuelPump;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFFFFF',
-    marginHorizontal: 10,
-    marginVertical: 5,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderRadius: 8,
-    elevation: 2,
-  },
-  iconContainer: {
-    padding: 3,
-    elevation: 2,
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    transform: [{rotate: '45deg'}],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  headerText: {
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  headerTextValue: {
-    fontSize: 14,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    color: PrivacyPolicy,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  detailBox: {maxWidth: '73%'},
-});

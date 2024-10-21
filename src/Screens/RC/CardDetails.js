@@ -15,7 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Gallery from '../../../assets/SVG/Gallery';
 import Cammera from '../../../assets/SVG/Camera';
 import Button from '../../Components/Button';
-import {GradientColor2, GradientColor3, PrivacyPolicy} from '../../Color/color';
+import {GradientColor3, PrivacyPolicy} from '../../Color/color';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   documentVerifyFailure,
@@ -26,8 +26,10 @@ import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import {Picker} from '@react-native-picker/picker';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../Constants/Constant';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const CardDetails = ({route, navigation}) => {
+  useTrackScreenTime('CardDetails');
   const {title, from, headerTitle} = route.params;
   // console.log(9999, route);
   const [aadhaarNumber, setAadhaarNumber] = useState('');
@@ -199,30 +201,14 @@ const CardDetails = ({route, navigation}) => {
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View style={{backgroundColor: 'rgba(0,0,0, 0.5)', flex: 1}}>
-          <View
-            style={{
-              backgroundColor: '#FFFFFF',
-              padding: 10,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              width: '100%',
-              shadowColor: '#000',
-              shadowOffset: {width: 0, height: 2},
-              shadowOpacity: 0.25,
-              shadowRadius: 4,
-              elevation: 5,
-              position: 'absolute',
-              bottom: 0,
-              marginTop: 200,
-            }}>
+        <View style={styles.fullScreenContainer}>
+          <View style={styles.chooseOptionsView1}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <View style={styles.chooseOptionsView2}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.centeredText}>
                   <Cammera />
                   <Text>Camera</Text>
                 </View>
@@ -230,7 +216,7 @@ const CardDetails = ({route, navigation}) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => choosePhoto()}>
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                <View style={styles.centeredText}>
                   <Gallery />
                   <Text>Gallery</Text>
                 </View>
@@ -243,7 +229,7 @@ const CardDetails = ({route, navigation}) => {
   };
 
   const business = [
-    {id: 0, code: '', name: 'Select Document Type'},
+    {id: 0, code: '', name: t(Constants.SEL_DOC_TYPE)},
     {id: 1, code: 'gst', name: 'GST'},
     {id: 2, code: 'udyog', name: 'Udyog Aadhar'},
     {id: 3, code: 'trade', name: 'Trade License'},
@@ -254,19 +240,13 @@ const CardDetails = ({route, navigation}) => {
     <SafeAreaView style={styles.container}>
       {chooseOptions()}
       {from.from === 'business' && (
-        <View
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            borderColor: '#ddd',
-            marginBottom: 10,
-          }}>
+        <View style={styles.docPickerView}>
           <Picker
             selectedValue={selectedDocument}
             onValueChange={(itemValue, itemIndex) =>
               setSelectedDocument(itemValue)
             }
-            style={{color: PrivacyPolicy}}
+            style={styles.setPrivacyPolicy}
             mode="dropdown" // Android only
             dropdownIconColor={PrivacyPolicy}>
             {business?.map(doc => (
@@ -291,7 +271,7 @@ const CardDetails = ({route, navigation}) => {
               ? 'XXXX XXXX XXXX'
               : from.from === 'fromPan'
               ? 'ABCDE1234F'
-              : 'Enter Document Number'
+              : t(Constants.ENTER_DOC_NUM)
           }
           value={aadhaarNumber}
           placeholderTextColor={PrivacyPolicy}
@@ -301,42 +281,21 @@ const CardDetails = ({route, navigation}) => {
             documentTypeMapping[from.from] === 'aadhar' ? 'numeric' : 'default'
           }
         />
-        <View style={{flex: 1}}>
+        <View style={styles.setFlex}>
           <Text style={styles.otpLabel}>{title}</Text>
 
           {from.from === 'fromAadhar' ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                borderWidth: 1.5,
-                borderColor: GradientColor3,
-                borderStyle: 'dotted',
-                padding: 10,
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: 200,
-              }}>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                  marginTop: 5,
-                }}>
+            <View style={styles.fromAadharView}>
+              <View style={styles.frontTxt}>
                 <Text>{t(Constants.FRONT)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
-                  style={{width: '100%', height: '100%', flex: 1}}>
+                  style={styles.touchableOpacityStyle}>
                   {documentUploadLoading ? (
                     <ActivityIndicator
                       size="large"
                       color={GradientColor3}
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
+                      style={styles.docUploadLoading}
                     />
                   ) : (
                     <Image
@@ -350,34 +309,17 @@ const CardDetails = ({route, navigation}) => {
                   )}
                 </TouchableOpacity>
               </View>
-              <View
-                style={{
-                  backgroundColor: '#AFAFAF',
-                  width: 1.5,
-                  height: '100%',
-                  marginHorizontal: 10,
-                }}
-              />
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                  marginTop: 5,
-                }}>
-                <Text style={{textAlign: 'center'}}>{t(Constants.BACK)}</Text>
+              <View style={styles.cardDetailsView} />
+              <View style={styles.backTextView}>
+                <Text style={styles.backTextStyle}>{t(Constants.BACK)}</Text>
                 <TouchableOpacity
                   onPress={() => onClickProfile('back')}
-                  style={{width: '100%', height: '100%', flex: 1}}>
+                  style={styles.touchableOpacityStyle}>
                   {documentUploadLoading ? (
                     <ActivityIndicator
                       size="large"
                       color={GradientColor3}
-                      style={{
-                        flex: 1,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
+                      style={styles.docUploadLoading}
                     />
                   ) : (
                     <Image
@@ -393,25 +335,8 @@ const CardDetails = ({route, navigation}) => {
               </View>
             </View>
           ) : (
-            <View
-              style={{
-                flexDirection: 'row',
-                borderWidth: 1.5,
-                borderColor: GradientColor3,
-                borderStyle: 'dotted',
-                padding: 10,
-                borderRadius: 5,
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                height: 200,
-              }}>
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flex: 1,
-                  marginTop: 5,
-                }}>
+            <View style={styles.frontImgView}>
+              <View style={styles.touchableOpacityView}>
                 <TouchableOpacity
                   onPress={() => onClickProfile('front')}
                   style={styles.activityIndicatorBox}>

@@ -525,7 +525,7 @@ export const getWalletFailure = payload => ({
 });
 
 // Logout
-export const initLogout = amount => ({
+export const initLogout = () => ({
   type: actionTypes.INIT_LOGOUT,
 });
 
@@ -1012,7 +1012,7 @@ export const clearGpsDeviceData = () => ({
 
 // single gps devices
 export const fetchSingleGpsDeviceRequest = (username, password, deviceId) => {
-  console.log(999999, username, password, deviceId);
+  // console.log(999999, username, password, deviceId);
   return {
     type: actionTypes.FETCH_SINGLE_GPS_DEVICE_REQUEST,
     username,
@@ -1257,9 +1257,9 @@ export const placeGpsOrderSuccess = payload => ({
   payload,
 });
 
-export const placeGpsOrderFailure = error => ({
+export const placeGpsOrderFailure = payload => ({
   type: actionTypes.PLACE_GPS_ORDER_FAILURE,
-  payload: error,
+  payload,
 });
 
 // gps order details
@@ -1280,7 +1280,7 @@ export const fetchGpsOrderDetailFailure = error => ({
 
 // Get full address
 export const fetchAddressRequest = (lat, lan, customId) => {
-  console.log(8888888888888, lat, lan, customId);
+  // console.log(8888888888888, lat, lan, customId);
   return {
     type: actionTypes.FETCH_FULLADDRESS_REQUEST,
     lat,
@@ -1435,8 +1435,9 @@ export const removeParkingFailure = payload => ({
 });
 
 // Get Geofence Actions
-export const getGeofenceRequest = () => ({
+export const getGeofenceRequest = deviceId => ({
   type: actionTypes.GET_GEOFENCE_REQUEST,
+  deviceId,
 });
 
 export const getGeofenceSuccess = payload => ({
@@ -1449,13 +1450,21 @@ export const getGeofenceFailure = payload => ({
   payload,
 });
 
-// Add Geofence Actions
-export const addGeofenceRequest = (name, area, deviceId) => ({
-  type: actionTypes.ADD_GEOFENCE_REQUEST,
-  name,
-  area,
-  deviceId,
+export const clearAllGeofenceData = payload => ({
+  type: actionTypes.CLEAR_ALLGEOFENCE_DATA,
+  payload,
 });
+
+// Add Geofence Actions
+export const addGeofenceRequest = (area, deviceId, name) => {
+  // console.log(55555555555, area, deviceId, name);
+  return {
+    type: actionTypes.ADD_GEOFENCE_REQUEST,
+    name,
+    area,
+    deviceId,
+  };
+};
 
 export const addGeofenceSuccess = payload => ({
   type: actionTypes.ADD_GEOFENCE_SUCCESS,
@@ -1464,5 +1473,29 @@ export const addGeofenceSuccess = payload => ({
 
 export const addGeofenceFailure = payload => ({
   type: actionTypes.ADD_GEOFENCE_FAILURE,
+  payload,
+});
+
+export const clearGeofenceAddedData = payload => ({
+  type: actionTypes.CLEAR_GEOFENCE_DATA,
+  payload,
+});
+
+// Remove Geofence
+export const removeGeofenceRequest = deviceId => {
+  // console.log(888888, deviceId);
+  return {
+    type: actionTypes.REMOVE_GEOFENCE_REQUEST,
+    deviceId,
+  };
+};
+
+export const removeGeofenceSuccess = payload => ({
+  type: actionTypes.REMOVE_GEOFENCE_SUCCESS,
+  payload,
+});
+
+export const removeGeofenceFailure = payload => ({
+  type: actionTypes.REMOVE_GEOFENCE_FAILURE,
   payload,
 });

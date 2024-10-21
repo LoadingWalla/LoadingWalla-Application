@@ -1,16 +1,10 @@
-import React, {useContext, useEffect, useState} from 'react';
-import {View, Text, ScrollView, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, ScrollView} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import SearchFilter from '../../Components/SearchFilter';
 import TextInputField from '../../Components/TextInputField';
 import TruckItem from '../../Components/TruckItem';
-import {
-  inputColor,
-  pageBackground,
-  textColor,
-  titleColor,
-} from '../../Color/color';
 import Button from '../../Components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -19,8 +13,11 @@ import {
   myPostLoadFailure,
 } from '../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
+import styles from './style'
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const PostLoads = ({navigation, route}) => {
+  useTrackScreenTime('PostLoads');
   const [searchFrom, setSearchFrom] = useState(
     !!route?.params?.from ? route?.params?.from : '',
   );
@@ -156,8 +153,8 @@ const PostLoads = ({navigation, route}) => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-      style={styleSheet.scrollViewBox}>
-      <View style={styleSheet.backgroundViewContainer}>
+      style={styles.scrollViewBox}>
+      <View style={styles.postLoadBackgroundViewContainer}>
         <View>
           <SearchFilter
             defaultValue={searchFrom}
@@ -174,9 +171,9 @@ const PostLoads = ({navigation, route}) => {
             onSearchPress={() => navigateToSeach()}
           />
         </View>
-        <View style={styleSheet.ItemView}>
+        <View style={styles.ItemView}>
           <View>
-            <Text style={styleSheet.label}>{`${t(
+            <Text style={styles.label}>{`${t(
               Constants.QUANTITY,
             )} (Ton)`}</Text>
             <TextInputField
@@ -190,7 +187,7 @@ const PostLoads = ({navigation, route}) => {
             />
           </View>
           <View>
-            <Text style={styleSheet.label}>{t(Constants.MATERIAL_NAME)}</Text>
+            <Text style={styles.label}>{t(Constants.MATERIAL_NAME)}</Text>
             <TextInputField
               value={materialName}
               // onChangeText={(e) => setMaterialName(e)}
@@ -202,51 +199,36 @@ const PostLoads = ({navigation, route}) => {
             />
           </View>
           <View>
-            <Text style={styleSheet.label}>{t(Constants.SELECT_TRUCK)}</Text>
+            <Text style={styles.label}>{t(Constants.SELECT_TRUCK)}</Text>
             <TruckItem
               click={e => setTruckItem(e?.id)}
-              backgroundStyle={{
-                padding: 20,
-                marginRight: 10,
-                // marginBottom: 10,
-                borderRadius: 8,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              backgroundStyle={styles.truckItemBgStyle}
               imageRequire={true}
               horizontal={true}
               checkIcon={true}
-              unseleckBackground={{
-                padding: 20,
-                backgroundColor: inputColor,
-                borderRadius: 8,
-                marginRight: 10,
-                // marginBottom: 10,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+              unseleckBackground={styles.truckItemUnselectBgStyle}
               renderItem={DashboardData}
             />
           </View>
           <View>
-            <Text style={styleSheet.label}>{t(Constants.PRICE)}</Text>
+            <Text style={styles.label}>{t(Constants.PRICE)}</Text>
             <TextInputField
-              isPhone={true}
+              isPhone={false}
               value={price}
-              // onChangeText={(e) => setPrice(e)}
+              maxLength={6}
               onChangeText={e => {
                 const sanitizedInput = e.replace(/\s+/g, '');
                 setPrice(sanitizedInput);
               }}
             />
           </View>
-          <View style={styleSheet.selectTrucType}>
-            <Text style={styleSheet.label}>
+          <View style={styles.selectTrucType}>
+            <Text style={styles.label}>
               {t(Constants.SELECT_PRICE_TYPE)}
             </Text>
             <TruckItem
-              backgroundStyle={styleSheet.truckTypeItem}
-              unseleckBackground={styleSheet.TyuckTypeUnSelectItem}
+              backgroundStyle={styles.truckTypeItem}
+              unseleckBackground={styles.TyuckTypeUnSelectItem}
               horizontal={true}
               checkIcon={false}
               renderItem={truckLoadCapacity}
@@ -257,8 +239,8 @@ const PostLoads = ({navigation, route}) => {
             loading={myPostLoadLoading}
             onPress={() => postLoadSubmit()}
             title={t(Constants.POST_LOADS)}
-            textStyle={styleSheet.buttonTitile}
-            style={styleSheet.button}
+            textStyle={styles.postLoadButtonTitile}
+            style={styles.postLoadButton}
           />
         </View>
       </View>
@@ -268,62 +250,3 @@ const PostLoads = ({navigation, route}) => {
 
 export default PostLoads;
 
-const styleSheet = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonTitile: {
-    fontWeight: 'bold',
-    color: textColor,
-    fontSize: 16,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  truckTypeItem: {
-    // width: 60,
-    height: 45,
-    paddingHorizontal: 10,
-    minWidth: 45,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f19e72',
-    // borderWidth: 1,
-  },
-  TyuckTypeUnSelectItem: {
-    height: 45,
-    paddingHorizontal: 10,
-    minWidth: 45,
-    marginRight: 10,
-    marginBottom: 10,
-    backgroundColor: inputColor,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  label: {
-    fontWeight: '700',
-    fontSize: 18,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  ItemView: {marginTop: 20},
-  backgroundViewContainer: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'center',
-    // backgroundColor: pageBackground,
-    // height: '100%',
-    // borderWidth: 1,
-  },
-  scrollViewBox: {
-    flex: 1,
-    backgroundColor: '#FDFDFD',
-  },
-  selectTrucType: {minWidth: '45%', maxWidth: '50%'},
-});

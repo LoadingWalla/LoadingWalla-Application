@@ -194,6 +194,7 @@ const initialState = {
   gpsOrderLoading: false,
   gpsOrderData: null,
   gpsOrderStatus: null,
+  gpsOrderErrorStatus: null,
   // gps order Details
   gpsOrderDetailsLoading: false,
   gpsOrderDetailsData: null,
@@ -233,9 +234,14 @@ const initialState = {
   geofenceData: [],
   geofenceError: null,
   // Geofence add
-  addGeofenceLoading: true,
+  addGeofenceLoading: false,
   addGeofenceError: null,
+  addGeofenceStatus: null,
   addGeofenceData: [],
+  // Remove Geozone
+  removeGeozoneLoading: false,
+  removeGeozoneError: null,
+  removeGeozoneData: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -1513,7 +1519,7 @@ const reducer = (state = initialState, action) => {
       return updateState(state, {
         gpsOrderLoading: false,
         gpsOrderStatus: null,
-        // gpsOrderData: null,
+        gpsOrderErrorStatus: payload?.status,
       });
 
     // gps order details
@@ -1653,6 +1659,11 @@ const reducer = (state = initialState, action) => {
         geofenceLoading: true,
         geofenceError: payload?.data,
       });
+    case actionTypes.CLEAR_ALLGEOFENCE_DATA:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        geofenceData: [],
+      });
 
     // Add Geofence
     case actionTypes.ADD_GEOFENCE_REQUEST:
@@ -1660,16 +1671,44 @@ const reducer = (state = initialState, action) => {
         ...state,
         addGeofenceLoading: true,
         addGeofenceError: null,
+        addGeofenceStatus: null,
       };
     case actionTypes.ADD_GEOFENCE_SUCCESS:
       return updateState(state, {
         addGeofenceLoading: false,
-        addGeofenceData: payload?.data,
+        addGeofenceData: payload,
+        addGeofenceStatus: payload?.status,
       });
     case actionTypes.ADD_GEOFENCE_FAILURE:
       return updateState(state, {
         addGeofenceLoading: false,
         addGeofenceErrorData: payload?.data,
+        addGeofenceStatus: payload?.status,
+      });
+    case actionTypes.CLEAR_GEOFENCE_DATA:
+      return updateState(state, {
+        addGeofenceLoading: false,
+        addGeofenceStatus: null,
+        addGeofenceData: null,
+      });
+
+    // Remove Geofencing
+    case actionTypes.REMOVE_GEOFENCE_REQUEST:
+      return {
+        ...state,
+        removeGeozoneLoading: true,
+        removeGeozoneError: null,
+      };
+    case actionTypes.REMOVE_GEOFENCE_SUCCESS:
+      return updateState(state, {
+        removeGeozoneLoading: false,
+        removeGeozoneData: payload?.data,
+      });
+    case actionTypes.REMOVE_GEOFENCE_FAILURE:
+      return updateState(state, {
+        removeGeozoneLoading: false,
+        removeGeozoneError: payload?.data,
+        removeGeozoneData: null,
       });
 
     // Clear Store on logout

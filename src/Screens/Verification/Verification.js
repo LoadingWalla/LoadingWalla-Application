@@ -1,17 +1,18 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Text, TouchableOpacity, View, FlatList} from 'react-native';
 import styles from './style';
 import * as Constants from '../../Constants/Constant';
 import {useFocusEffect} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {initDocumentVerification} from '../../Store/Actions/Actions';
-import {titleColor} from '../../Color/color';
 import Button from '../../Components/Button';
 import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import UploadIcon from '../../../assets/SVG/svg/UploadIcon';
 import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Verification = ({navigation, route}) => {
+  useTrackScreenTime('Verification');
   const dispatch = useDispatch();
   const {t} = useTranslation();
 
@@ -75,9 +76,7 @@ const Verification = ({navigation, route}) => {
         <View style={styles.stepContainer}>
           <View style={styles.circleContainer}>
             <View style={styles.circle(item.status)} />
-            <Text style={{color: titleColor, fontSize: 18, marginLeft: 8}}>
-              {item.title}
-            </Text>
+            <Text style={styles.itemTitleTxt}>{item.title}</Text>
           </View>
           {item.status === 'Verified' ? (
             <CheckCircle size={30} color="green" strokeColor="#FFFFFF" />

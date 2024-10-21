@@ -16,6 +16,7 @@ const TextInputField = ({
   isText,
   onSearchPress,
   capital,
+  maxLength
 }) => {
   return (
     <View style={[style.inputLabel, {height: isMultiLine ? 150 : null}]}>
@@ -46,7 +47,7 @@ const TextInputField = ({
           }}
           value={value}
           defaultValue={defaultValue}
-          maxLength={isPhone ? 10 : null}
+          maxLength={isPhone ? 10 : maxLength ? maxLength : null}
           keyboardType={isPhone ? 'numeric' : 'default'}
           textAlignVertical={isMultiLine ? 'top' : 'auto'}
           multiline={isMultiLine === true ? true : false}

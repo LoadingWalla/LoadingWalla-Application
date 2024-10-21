@@ -1,47 +1,56 @@
-import React, {useState} from 'react';
-import {View, SafeAreaView, Text, Alert} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, SafeAreaView, Text} from 'react-native';
 import Switch from 'toggle-switch-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import * as Constants from '../../../Constants/Constant';
-
-import {
-  GradientColor2,
-  pageBackground,
-  seperator,
-  titleColor,
-} from '../../../Color/color';
+import {GradientColor2, seperator} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
+import AlertBox from '../../../Components/AlertBox';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const WhatsAppAlert = ({navigation}) => {
+  useTrackScreenTime('WhatsAppAlert');
   const {t} = useTranslation();
-  const [switchOn, setSwitchOn] = useState(true);
+  const [switchOn, setSwitchOn] = useState(false);
 
-  const toggleSwitch = () => {
+  // Function to check AsyncStorage and get the saved value
+  const getSwitchValue = async () => {
+    try {
+      const storedValue = await AsyncStorage.getItem('whatsAppAlert');
+      console.log('------------ whatsapp alert ------------', storedValue);
+      if (storedValue !== null) {
+        setSwitchOn(JSON.parse(storedValue));
+      }
+    } catch (error) {
+      console.error('Failed to fetch WhatsApp Alert state from storage', error);
+    }
+  };
+
+  useEffect(() => {
+    getSwitchValue();
+  }, []);
+
+  const toggleSwitch = async () => {
     const newSwitchState = !switchOn;
     setSwitchOn(newSwitchState);
-    Alert.alert(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
+
+    try {
+      await AsyncStorage.setItem(
+        'whatsAppAlert',
+        JSON.stringify(newSwitchState),
+      );
+      AlertBox(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
+    } catch (error) {
+      console.error('Failed to save WhatsApp Alert state in storage', error);
+    }
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={styles.whatsappContainer}>
       <View style={[styles.backgroundView, {backgroundColor: 'white'}]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            paddingTop: 30,
-            backgroundColor: pageBackground,
-          }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: '700',
-              color: titleColor,
-              fontFamily: 'PlusJakartaSans-Bold',
-            }}>
-            {t(Constants.WHATSAPP_ALERT)}
-          </Text>
+        <View style={styles.whatsappView}>
+          <Text style={styles.whatsappText}>{t(Constants.WHATSAPP_ALERT)}</Text>
           <Switch
             isOn={switchOn}
             onColor={GradientColor2}

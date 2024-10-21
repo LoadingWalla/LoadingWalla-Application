@@ -3,9 +3,10 @@ import {View, StatusBar, Animated} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
 import {backgroundColorNew} from '../../Color/color';
-import LottieView from 'lottie-react-native';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Splash = ({navigation: {replace}}) => {
+  useTrackScreenTime('Splash');
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {

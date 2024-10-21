@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {Animated, View, StyleSheet, Dimensions} from 'react-native';
 import TextTicker from 'react-native-text-ticker';
+import styles from './style';
 
 const AnimatedText = ({text, style, showAnimation}) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
@@ -51,14 +52,5 @@ const AnimatedText = ({text, style, showAnimation}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-    flex: 1,
-    // maxWidth: 200,
-    // borderWidth: 1,
-  },
-});
 
 export default AnimatedText;

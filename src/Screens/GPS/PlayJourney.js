@@ -1,14 +1,7 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react';
-import {
-  ActivityIndicator,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
-import {backgroundColorNew, titleColor} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
@@ -28,12 +21,18 @@ import NextIcon from '../../../assets/SVG/svg/NextIcon';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
 import useConvertMillisToTime from '../../hooks/useConvertMillisToTime';
-import ActiveLocation from '../../../assets/SVG/svg/ActiveLocation';
+import styles from './style';
+import * as Constants from '../../Constants/Constant';
+import {useTranslation} from 'react-i18next';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 
 export default function PlayJourney({navigation, route}) {
+  useTrackScreenTime('PlayJourney');
   const {deviceId, from, to, name, item} = route.params;
-  console.log(1111, 'PlayJourney Parmas----->', route);
-
+  // console.log(1111, 'PlayJourney Parmas----->', route);
+  const {t} = useTranslation();
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -76,9 +75,7 @@ export default function PlayJourney({navigation, route}) {
   }, [wsConnected]);
 
   const toggleMapType = () => {
-    setMapType(prevType =>
-      prevType === 'standard' ? 'satellite' : 'standard',
-    );
+    setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
   };
 
   useFocusEffect(
@@ -295,52 +292,6 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
-  // const goToNextStop = () => {
-  //   if (currentStopIndex < gpsStopsData?.length - 1) {
-  //     const newIndex = currentStopIndex + 1;
-  //     setCurrentStopIndex(newIndex);
-  //     const nextStop = gpsStopsData[newIndex];
-  //     animatedMarkerPosition
-  //       .timing({
-  //         latitude: nextStop.latitude,
-  //         longitude: nextStop.longitude,
-  //         duration: 500,
-  //         useNativeDriver: true,
-  //       })
-  //       .start();
-  //     setCurrentStop(nextStop);
-  //     mapRef.current?.animateToRegion({
-  //       latitude: nextStop.latitude,
-  //       longitude: nextStop.longitude,
-  //       latitudeDelta: 0.0922,
-  //       longitudeDelta: 0.0421,
-  //     });
-  //   }
-  // };
-
-  // const goToPrevStop = () => {
-  //   if (currentStopIndex > 0) {
-  //     const newIndex = currentStopIndex - 1;
-  //     setCurrentStopIndex(newIndex);
-  //     const prevStop = gpsStopsData[newIndex];
-  //     animatedMarkerPosition
-  //       .timing({
-  //         latitude: prevStop.latitude,
-  //         longitude: prevStop.longitude,
-  //         duration: 1000,
-  //         useNativeDriver: true,
-  //       })
-  //       .start();
-  //     setCurrentStop(prevStop);
-  //     mapRef.current?.animateToRegion({
-  //       latitude: prevStop.latitude,
-  //       longitude: prevStop.longitude,
-  //       latitudeDelta: 0.0922,
-  //       longitudeDelta: 0.0421,
-  //     });
-  //   }
-  // };
-
   const totalStops = gpsStopsData ? gpsStopsData.length : 0;
   const totalRun = gpsSummaryData[0]?.distance / 1000;
 
@@ -382,13 +333,14 @@ export default function PlayJourney({navigation, route}) {
   return (
     <View style={styles.container}>
       {loading && (
-        <View style={styles.loaderOverlay}>
-          <ActivityIndicator size="large" color={backgroundColorNew} />
+        <View style={styles.playJourneyBottomContainer}>
+          <View style={styles.controlsContainer}>
+            <PlayJourneyShimmer />
+          </View>
         </View>
       )}
       {!loading && !isDataAvailable() && (
         <View style={styles.noDataContainer}>
-          {/* <Text style={styles.noDataText}>No data available</Text> */}
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
@@ -415,7 +367,7 @@ export default function PlayJourney({navigation, route}) {
             }>
             <FilterIcon size={25} color={backgroundColorNew} />
           </TouchableOpacity>
-          <View style={styles.mapContainer}>
+          <View style={styles.container}>
             {!loading && (
               <View style={styles.mapView}>
                 {initialRegion && (
@@ -451,9 +403,9 @@ export default function PlayJourney({navigation, route}) {
                           </View>
                           <View style={styles.arrowBottom} />
                           <View style={styles.truckIconContainer}>
-                            <ActiveLocation
-                              size={40}
-                              course={currentPosition.course || 0}
+                            <TruckNavigationIcon
+                              size={50}
+                              course={currentPosition.course}
                             />
                           </View>
                         </View>
@@ -494,15 +446,19 @@ export default function PlayJourney({navigation, route}) {
                         ? require('../../../assets/satellite-view.png')
                         : require('../../../assets/satellites.png')
                     }
-                    style={{width: 40, height: 40}}
+                    style={styles.playJourneyTouchableOpacityStyle}
                   />
                 </TouchableOpacity>
                 <View style={styles.extraButtonBox}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('stops')}
+                    onPress={() =>
+                      navigation.navigate('stops', {deviceId, from, to})
+                    }
                     style={styles.stopsBtnStyle}>
                     <AlertsIcon size={20} />
-                    <Text style={styles.alertButtonText}>Stops</Text>
+                    <Text style={styles.alertButtonText}>
+                      {t(Constants.STOPS)}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.ctrlBtn}
@@ -518,7 +474,7 @@ export default function PlayJourney({navigation, route}) {
               </View>
             )}
           </View>
-          <View style={styles.bottomContainer}>
+          <View style={styles.playJourneyBottomContainer}>
             <View style={styles.controlsContainer}>
               <TouchableOpacity
                 style={styles.playPauseButton}
@@ -529,9 +485,9 @@ export default function PlayJourney({navigation, route}) {
                   <PlayIcon size={20} color={backgroundColorNew} />
                 )}
               </TouchableOpacity>
-              <View style={styles.sliderContainer}>
+              <View style={styles.playJourneySliderContainer}>
                 <Slider
-                  style={styles.slider}
+                  style={styles.playJourneySlider}
                   minimumValue={0}
                   maximumValue={1}
                   minimumTrackTintColor={backgroundColorNew}
@@ -599,7 +555,7 @@ export default function PlayJourney({navigation, route}) {
             <View style={styles.totalBox}>
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#3BA700'}]}>
-                  Total Distance
+                  {t(Constants.TOT_DIS)}
                 </Text>
                 <Text style={styles.stopCount}>
                   {Math.abs(totalRun).toFixed(2)} KM
@@ -608,7 +564,7 @@ export default function PlayJourney({navigation, route}) {
               <View style={styles.verticalLine} />
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#F50000'}]}>
-                  Total Stops: {totalStops}
+                  {t(Constants.TOT_STOPS)}: {totalStops}
                 </Text>
                 <Text style={styles.stopCount}>
                   {formatDuration(totalDuration)}
@@ -617,7 +573,7 @@ export default function PlayJourney({navigation, route}) {
               <View style={styles.verticalLine} />
               <View style={styles.stopBox}>
                 <Text style={[styles.stopText, {color: '#E0BD00'}]}>
-                  Engine Hours
+                  {t(Constants.ENG_HRS)}
                 </Text>
                 <Text style={styles.stopCount}>
                   {convertMillisToTime(gpsSummaryData[0]?.engineHours)}
@@ -630,227 +586,3 @@ export default function PlayJourney({navigation, route}) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  loaderOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 10,
-  },
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 1,
-    marginHorizontal: 5,
-    height: '90%',
-  },
-  extraButtonBox: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 130,
-    right: 0,
-    zIndex: 10,
-  },
-  addressText: {
-    flex: 1,
-    fontSize: 10,
-    fontFamily: 'PlusJakartaSans-Italic',
-    // color: titleColor,
-    color: '#FFFFFF',
-  },
-  topContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    elevation: 2,
-  },
-  mapContainer: {flex: 1},
-  mapView: {flex: 1, width: '100%', height: '100%'},
-  bottomContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    position: 'absolute',
-    bottom: 0,
-    padding: 10,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#F7F7F7',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: '100%',
-  },
-  alertButtonText: {
-    marginLeft: 10,
-    textAlign: 'center',
-    fontSize: 14,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  stopBox: {
-    paddingHorizontal: 5,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stopText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 10,
-    textAlign: 'center',
-  },
-  stopCount: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: -5,
-  },
-  totalBox: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-evenly',
-    paddingVertical: 10,
-    marginTop: 10,
-  },
-  stopsBtnStyle: {
-    flexDirection: 'row',
-    elevation: 3,
-    backgroundColor: '#ffffff',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  ctrlBtn: {
-    elevation: 3,
-    backgroundColor: '#ffffff',
-    padding: 5,
-    borderRadius: 40,
-    marginRight: 10,
-  },
-  controlsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  playPauseButton: {
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: 5,
-    borderColor: backgroundColorNew,
-  },
-  sliderContainer: {
-    flex: 1,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slider: {
-    flex: 1,
-    width: '100%',
-  },
-  speedButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  speedButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 5,
-    marginRight: 5,
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
-  },
-  activeSpeedButton: {
-    backgroundColor: backgroundColorNew,
-  },
-  speedButtonText: {
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    color: backgroundColorNew,
-  },
-  activeSpeedButtonText: {
-    color: '#FFF',
-  },
-  calendarIconBox: {
-    position: 'absolute',
-    zIndex: 99,
-    right: 10,
-    top: 10,
-    padding: 8,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-  },
-  noDataContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noDataText: {
-    fontSize: 18,
-    color: '#555',
-    fontFamily: 'PlusJakartaSans-Bold',
-    marginBottom: 20,
-  },
-  calloutView: {
-    width: 300,
-    borderRadius: 5,
-    borderWidth: 1,
-  },
-  calloutText: {
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  markerContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    // borderWidth: 1,
-  },
-  addressContainer: {
-    borderRadius: 5,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    elevation: 5,
-    backgroundColor: 'rgba(1, 1, 0, 0.5)',
-    maxWidth: 300,
-    // borderWidth: 1,
-  },
-  kmText: {
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-SemiBoldItalic',
-    color: '#FFFFFF',
-  },
-  arrowBottom: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 5,
-    borderRightWidth: 5,
-    borderBottomWidth: 10,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    borderBottomColor: 'rgba(1, 1, 0, 0.5)',
-    transform: [{rotate: '180deg'}],
-    alignSelf: 'center',
-  },
-  mapToggleButton: {
-    position: 'absolute',
-    top: 60,
-    right: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 50,
-    elevation: 3,
-  },
-});

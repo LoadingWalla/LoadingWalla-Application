@@ -17,10 +17,13 @@ import Button from '../../../Components/Button';
 import {GradientColor2} from '../../../Color/color';
 import {useTranslation} from 'react-i18next';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
+
 
 const {width} = Dimensions.get('window');
 
 const Dashboard = ({navigation}) => {
+  useTrackScreenTime('Dashboard');
   const {t} = useTranslation();
   const [allLocation, setAllLocation] = useState([]);
   const [searchFrom, setSearchFrom] = useState('');
@@ -83,7 +86,7 @@ const Dashboard = ({navigation}) => {
         if (val === 'from') {
           setSearchFromId(item.id);
           setSearchFrom(item?.place_name);
-          setSearchTo('Anywhere');
+          setSearchTo(t(Constants.ANYWHERE));
           setSearchToId(0);
           return;
         }
@@ -107,11 +110,11 @@ const Dashboard = ({navigation}) => {
 
   const searchLoad = () => {
     if (searchFrom === '') {
-      Toast.show('Enter Location', Toast.LONG);
+      Toast.show(t(Constants.ENTER_LOC), Toast.LONG);
       return;
     }
     if (truckItem === '') {
-      Toast.show('Select Truck', Toast.LONG);
+      Toast.show(t(Constants.TRUCK_TYPE), Toast.LONG);
       return;
     }
     handleNavigate.current = true;
@@ -138,7 +141,7 @@ const Dashboard = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 60}}>
+    <View style={style.dashboardContainer}>
       <View style={style.DashboardHeaderView}>
         <DashboardHeader
           img={DashboardUser?.profile_img}
@@ -168,11 +171,11 @@ const Dashboard = ({navigation}) => {
               <View>
                 {DashboardBanner?.length > 0 && (
                   <Swiper
-                    style={{height: width / 2}}
+                    style={style.dashboardSwiper(width)}
                     showsButtons={false}
                     activeDotColor={GradientColor2}
                     autoplay
-                    activeDotStyle={{width: 15}}
+                    activeDotStyle={style.activeDotStyle}
                     autoplayTimeout={3}>
                     {DashboardBanner?.map((item, index) => {
                       return (
@@ -202,7 +205,7 @@ const Dashboard = ({navigation}) => {
                   closeIconClick={() => closeIconClick('to')}
                   placeholder={t(Constants.SELECT_LOCATION_TITLE)}
                 />
-                <View style={{marginTop: 30}}>
+                <View style={style.truckTypeView}>
                   <Text style={style.locationTitle}>
                     {t(Constants.TRUCK_TYPE)}
                   </Text>

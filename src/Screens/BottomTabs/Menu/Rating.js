@@ -1,18 +1,15 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import React from 'react';
-import style from './style';
-import {PrivacyPolicy} from '../../../Color/color';
+import styles from './style';
+import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
 const Rating = () => {
+  useTrackScreenTime('Rating');
   return (
     <View>
-      <Text style={style.colotss}>Rating</Text>
+      <Text style={styles.colotss}>Rating</Text>
     </View>
   );
 };
 
 export default Rating;
-
-const styles = StyleSheet.create({
-  colotss: {color: PrivacyPolicy},
-});

@@ -9,8 +9,11 @@ import FindLoadHeader from '../../Components/FindLoadHeader';
 import FindLoadShimmer from '../../Components/Shimmer/FindLoadShimmer';
 import NotFound from '../../Components/NotFound';
 import {useTranslation} from 'react-i18next';
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const FindLoads = ({navigation, route}) => {
+  useTrackScreenTime('FindLoads');
   // console.log(22222, route.params);
   const {Owner, userType} = route?.params;
   const animationProgress = useRef(new Animated.Value(0));
@@ -56,11 +59,7 @@ const FindLoads = ({navigation, route}) => {
 
   return (
     <View
-      style={{
-        flex: 1,
-        justifyContent: 'flex-start',
-        backgroundColor: '#FFFDFD',
-      }}>
+      style={styles.findLoadsContainer}>
       <FindLoadHeader
         title={`${t(Constants.RESULTS)} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length
@@ -95,7 +94,7 @@ const FindLoads = ({navigation, route}) => {
       ) : (
         <NotFound
           imageName="noLoadFound"
-          title={'No Load Found'}
+          title={t(Constants.NO_LOAD_FOUND)}
           height={200}
           width={300}
         />
