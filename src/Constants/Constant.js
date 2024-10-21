@@ -23,6 +23,7 @@ export const iam = 'I am';
 export const MATERIAL_NAME = 'Material name';
 export const GPS = 'GPS';
 export const NO_LOAD_FOUND = 'No Load Found';
+export const NO_LORRY_FOUND = 'No Lorry Found';
 export const NO_ADDR_FOUND = 'No Addresses Found';
 export const ADD_NEW_ADDR = 'Add New Address';
 export const NO_TRANSCATION_FOUND = 'No Transaction Found';
