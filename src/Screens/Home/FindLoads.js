@@ -90,17 +90,17 @@ const FindLoads = ({navigation, route}) => {
           keyExtractor={item => item?.load_id || item?.truck_id}
           showsVerticalScrollIndicator={false}
         />
-      ) : userType === 1 ? (
+      ) : userType === '1' ? (
         <NotFound
           imageName="noLoadFound"
-          title={t(Constants.NO_LOAD_FOUND)}
+          title={t(Constants.NO_LORRY_FOUND)}
           height={200}
           width={300}
         />
       ) : (
         <NotFound
           imageName="noLoadFound"
-          title={t(Constants.NO_LORRY_FOUND)}
+          title={t(Constants.NO_LOAD_FOUND)}
           height={200}
           width={300}
         />

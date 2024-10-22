@@ -13,7 +13,7 @@ import moment from 'moment';
 import VehicleIcon from './GpsVehicleIcon';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
 import * as Constants from '../Constants/Constant';
-import styles from './style'
+import styles from './style';
 
 const GpsItem = ({navigation, item}) => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -81,7 +81,9 @@ const GpsItem = ({navigation, item}) => {
 
   const renderStatus = useMemo(() => {
     if (status === 'online') {
-      return <Text style={styles.ignitionText(true)}>GPS {t(Constants.ACTIVE)}</Text>;
+      return (
+        <Text style={styles.ignitionText(true)}>GPS {t(Constants.ACTIVE)}</Text>
+      );
     }
     if (status === 'offline') {
       return (
@@ -107,7 +109,9 @@ const GpsItem = ({navigation, item}) => {
 
   return (
     <View style={styles.cardContainer}>
-      <TouchableOpacity style={styles.gpsItemcontainer} onPress={handleNavigation}>
+      <TouchableOpacity
+        style={styles.gpsItemcontainer}
+        onPress={handleNavigation}>
         <View style={styles.itemContainer}>
           <View style={styles.imgContainer}>
             <View style={styles.imgBox}>
@@ -127,7 +131,9 @@ const GpsItem = ({navigation, item}) => {
                 {renderStatus}
                 <View style={styles.gpsItemverticalLine} />
                 <View style={styles.row}>
-                  <Text style={styles.distanceText}>{t(Constants.IGNITION)}</Text>
+                  <Text style={styles.distanceText}>
+                    {t(Constants.IGNITION)}
+                  </Text>
                   <Text
                     style={[
                       styles.ignitionText(ignition || motion),
