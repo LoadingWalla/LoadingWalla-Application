@@ -11,7 +11,6 @@ import {
 import MapView, {Marker, Callout, Polyline} from 'react-native-maps';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchAddressRequest} from '../Store/Actions/Actions';
-import ActiveLocation from '../../assets/SVG/svg/ActiveLocation';
 import PlayIcon from '../../assets/SVG/svg/PlayIcon';
 import {backgroundColorNew} from '../Color/color';
 import AlertsIcon from '../../assets/SVG/svg/AlertsIcon';
