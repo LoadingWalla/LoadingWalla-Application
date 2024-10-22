@@ -13,22 +13,32 @@ import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
   const {t} = useTranslation();
   const [mobileNumber, setMobileNumber] = useState('+91');
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
   const dispatch = useDispatch();
-  const {data, loading, dashboardStatus} = useSelector(state => state.data);
+  const {data, loading, dashboardStatus} = useSelector(state => {
+    console.log(11111, 'SignIn Screen here store is empty ---->', state);
+    return state.data;
+  });
+
+  useEffect(() => {
+    printAllAsyncStorageData();
+  }, []);
 
   const handleCheckBoxChange = useCallback(async () => {
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
-    await AsyncStorage.setItem(
-      'whatsAppAlert',
-      JSON.stringify(newCheckedState),
-    );
+    if (newCheckedState) {
+      await AsyncStorage.setItem(
+        'whatsAppAlert',
+        JSON.stringify(newCheckedState),
+      );
+    }
   }, [isChecked]);
 
   useEffect(() => {
@@ -48,25 +58,6 @@ const Signup = ({navigation}) => {
     }
   }, [dashboardStatus, data, dispatch, mobileNumber, navigation]);
 
-  const setDefaultWhatsAppAlert = async () => {
-    try {
-      // Check if the value is already set
-      const existingValue = await AsyncStorage.getItem('whatsAppAlert');
-
-      if (existingValue === null) {
-        // If not set, set the default value
-        const defaultValue = JSON.stringify(true);
-        await AsyncStorage.setItem('whatsAppAlert', defaultValue);
-      }
-    } catch (error) {
-      console.error('Error setting default WhatsApp alert:', error);
-    }
-  };
-
-  useEffect(() => {
-    setDefaultWhatsAppAlert();
-  }, []);
-
   const sendOtp = () => {
     if (!mobileNumber) {
       Toast.show(t('Enter mobile number'), Toast.LONG);
@@ -75,6 +66,13 @@ const Signup = ({navigation}) => {
     const regex = /^(?:\+91)?[6-9]\d{9}$/;
     if (!regex.test(mobileNumber)) {
       Toast.show(t('Enter a valid mobile number'), Toast.LONG);
+      return;
+    }
+    if (!isChecked) {
+      Toast.show(
+        t('Please check the box to receive WhatsApp alerts! 📬'),
+        Toast.LONG,
+      );
       return;
     }
     dispatch(initLogin(mobileNumber));
@@ -168,6 +166,7 @@ const Signup = ({navigation}) => {
           title={t(Constants.SEND_OTP)}
           textStyle={styles.buttonTitile}
           style={styles.button}
+          touchStyle={isChecked ? {opacity: 1} : {opacity: 0.5}}
         />
       </View>
     </View>

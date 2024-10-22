@@ -121,11 +121,11 @@ const instanceFunction = instanceObj => {
     async config => {
       console.log('Request Interceptor:', config);
 
-      // Check if the URL contains 'logout', then skip the interceptor for it
-      if (config.url && config.url.includes('logout')) {
-        console.log('Skipping interceptor for logout URL:', config.url);
-        return config; // Skip without changing anything
-      }
+      // // Check if the URL contains 'logout', then skip the interceptor for it
+      // if (config.url && config.url.includes('logout')) {
+      //   console.log('Skipping interceptor for logout URL:', config.url);
+      //   return config; // Skip without changing anything
+      // }
 
       try {
         const token = await AsyncStorage.getItem('auth-token');
@@ -156,15 +156,15 @@ const instanceFunction = instanceObj => {
     async function (error) {
       console.error('Response Interceptor Error:', error);
 
-      // If it's a logout request, we just skip handling errors
-      if (
-        error.config &&
-        error.config.url &&
-        error.config.url.includes('logout')
-      ) {
-        console.log('Skipping retry for logout URL:', error.config.url);
-        return Promise.reject(error); // Skip retry for logout URL
-      }
+      // // If it's a logout request, we just skip handling errors
+      // if (
+      //   error.config &&
+      //   error.config.url &&
+      //   error.config.url.includes('logout')
+      // ) {
+      //   console.log('Skipping retry for logout URL:', error.config.url);
+      //   return Promise.reject(error); // Skip retry for logout URL
+      // }
 
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         Snackbar.show({

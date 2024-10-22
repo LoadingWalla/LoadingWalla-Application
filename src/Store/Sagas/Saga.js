@@ -612,7 +612,7 @@ export function* logout() {
     // const apiTask = yield fork(apiCall);
     console.log(11111, 'Logout api');
     const data = yield API.get('logout');
-    console.log(11111, 'Logout api', data);
+    console.log(22222, 'Logout api', data);
     if (data?.data?.status === 200) {
       // yield cancel(apiTask);
       yield put(actions.logoutSuccess(data));
@@ -1096,7 +1096,7 @@ export function* fetchTranscations() {
 export function* fetchTokenSaga() {
   try {
     const data = yield API.get('gps/get-token');
-    // console.log('Gps Token------------------------', data);
+    console.log(3333, 'Gps Token--------------------->>>', data);
     if (data?.data?.status === 200) {
       // console.log('success', data);
       yield put(actions.fetchTokenSuccess(data?.data?.data));

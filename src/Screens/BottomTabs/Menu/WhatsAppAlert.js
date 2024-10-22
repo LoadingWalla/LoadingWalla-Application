@@ -9,42 +9,42 @@ import {useTranslation} from 'react-i18next';
 import AlertBox from '../../../Components/AlertBox';
 import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
 
-const WhatsAppAlert = ({navigation}) => {
+const STORAGE_KEY = 'whatsAppAlert';
+
+const WhatsAppAlert = () => {
   useTrackScreenTime('WhatsAppAlert');
   const {t} = useTranslation();
   const [switchOn, setSwitchOn] = useState(false);
 
-  // Function to check AsyncStorage and get the saved value
-  const getSwitchValue = async () => {
+  const fetchSwitchValue = async () => {
     try {
-      const storedValue = await AsyncStorage.getItem('whatsAppAlert');
-      console.log('------------ whatsapp alert ------------', storedValue);
+      const storedValue = await AsyncStorage.getItem(STORAGE_KEY);
       if (storedValue !== null) {
         setSwitchOn(JSON.parse(storedValue));
       }
     } catch (error) {
-      console.error('Failed to fetch WhatsApp Alert state from storage', error);
+      console.error('Error fetching WhatsApp Alert value:', error);
     }
+  };
+
+  const saveSwitchValue = async newValue => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newValue));
+      AlertBox(`WhatsApp Notification: ${newValue ? 'Yes' : 'No'}`);
+    } catch (error) {
+      console.error('Error saving WhatsApp Alert value:', error);
+    }
+  };
+
+  const toggleSwitch = () => {
+    const newSwitchState = !switchOn;
+    setSwitchOn(newSwitchState);
+    saveSwitchValue(newSwitchState);
   };
 
   useEffect(() => {
-    getSwitchValue();
+    fetchSwitchValue();
   }, []);
-
-  const toggleSwitch = async () => {
-    const newSwitchState = !switchOn;
-    setSwitchOn(newSwitchState);
-
-    try {
-      await AsyncStorage.setItem(
-        'whatsAppAlert',
-        JSON.stringify(newSwitchState),
-      );
-      AlertBox(`WhatsApp Notification : ${newSwitchState ? 'Yes' : 'No'}`);
-    } catch (error) {
-      console.error('Failed to save WhatsApp Alert state in storage', error);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.whatsappContainer}>
