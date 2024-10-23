@@ -4,7 +4,7 @@ import {GradientColor1, titleColor} from '../Color/color';
 import RightArrow from '../../assets/SVG/svg/RightArrow';
 import styles from './style'
 
-const MenuItem = ({title, onPress, Icon}) => {
+const MenuItem = ({title, onPress, Icon, arrowColor = GradientColor1}) => {
   return (
     <View>
       <TouchableOpacity style={styles.detailItem} onPress={() => onPress()}>
@@ -13,7 +13,7 @@ const MenuItem = ({title, onPress, Icon}) => {
           <Text style={styles.detailText}>{title}</Text>
         </View>
         <View style={styles.arrowView}>
-          <RightArrow size={20} color={GradientColor1} />
+          <RightArrow size={20} color={arrowColor} />
         </View>
       </TouchableOpacity>
     </View>

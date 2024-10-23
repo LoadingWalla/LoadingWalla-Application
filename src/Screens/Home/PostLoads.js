@@ -13,7 +13,7 @@ import {
   myPostLoadFailure,
 } from '../../Store/Actions/Actions';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const PostLoads = ({navigation, route}) => {
@@ -173,9 +173,7 @@ const PostLoads = ({navigation, route}) => {
         </View>
         <View style={styles.ItemView}>
           <View>
-            <Text style={styles.label}>{`${t(
-              Constants.QUANTITY,
-            )} (Ton)`}</Text>
+            <Text style={styles.label}>{`${t(Constants.QUANTITY)} (Ton)`}</Text>
             <TextInputField
               isPhone
               value={quantity}
@@ -192,8 +190,10 @@ const PostLoads = ({navigation, route}) => {
               value={materialName}
               // onChangeText={(e) => setMaterialName(e)}
               onChangeText={e => {
-                // const sanitizedInput = e.replace(/\s+/g, '');
-                const sanitizedInput = e.replace(/[^a-zA-Z0-9]/g, '');
+                // Remove leading spaces and ensure only one space between words
+                const sanitizedInput = e
+                  .replace(/^\s+/, '') // Remove leading spaces
+                  .replace(/\s{2,}/g, ' '); // Replace multiple spaces with a single space
                 setMaterialName(sanitizedInput);
               }}
             />
@@ -223,9 +223,7 @@ const PostLoads = ({navigation, route}) => {
             />
           </View>
           <View style={styles.selectTrucType}>
-            <Text style={styles.label}>
-              {t(Constants.SELECT_PRICE_TYPE)}
-            </Text>
+            <Text style={styles.label}>{t(Constants.SELECT_PRICE_TYPE)}</Text>
             <TruckItem
               backgroundStyle={styles.truckTypeItem}
               unseleckBackground={styles.TyuckTypeUnSelectItem}
@@ -249,4 +247,3 @@ const PostLoads = ({navigation, route}) => {
 };
 
 export default PostLoads;
-

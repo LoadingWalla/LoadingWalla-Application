@@ -19,8 +19,8 @@ const PostItem = ({navigate, call, item, owner, userType}) => {
         to={item?.to}
         icon={
           item?.image || item.user_type === '1'
-            ? 'https://loadingwalla.com/public/loado.png'
-            : 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png'
+            ? 'https://loadingwalla.com/public/truck_tyre/18%20Tyre.png'
+            : 'https://loadingwalla.com/public/loado.png'
         }
         t={t}
       />
