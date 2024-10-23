@@ -1,20 +1,35 @@
 import * as React from 'react';
 import Svg, {Path} from 'react-native-svg';
 
-function NavigationIcon({size, color}) {
+function NavigateIcon(props) {
   return (
     <Svg
+      width={23}
+      height={23}
+      viewBox="0 0 23 23"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="ionicon"
-      viewBox="0 0 512 512"
-      height={size}
-      width={size}>
+      {...props}>
       <Path
-        d="M258.9 48C141.92 46.42 46.42 141.92 48 258.9c1.56 112.19 92.91 203.54 205.1 205.1 117 1.6 212.48-93.9 210.88-210.88C462.44 140.91 371.09 49.56 258.9 48zM351 175.24l-82.24 186.52c-4.79 10.47-20.78 7-20.78-4.56V268a4 4 0 00-4-4H154.8c-11.52 0-15-15.87-4.57-20.67L336.76 161A10.73 10.73 0 01351 175.24z"
-        fill={color}
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.664.552c-6.065 0-11 4.934-11 11 0 6.065 4.935 11 11 11 6.066 0 11-4.935 11-11 0-6.066-4.935-11-11-11z"
+        fill="#0CB0FF"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M17.803 20.675l.035-.024a10.998 10.998 0 004.821-8.778l-5.212-6.25-4.167 10.596-3.303-3.212-.023-.022-.023-.02-.025-.02-.026-.018-.027-.017-.029-.016-.028-.015-.03-.013-5.173-2.19 7.945 7.43-.16.407 3.466 3.213a11.008 11.008 0 001.959-1.05z"
+        fill="#0092D8"
+      />
+      <Path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12.378 18.513l-2.259-5.295a.655.655 0 00-.353-.352l-5.173-2.19 12.854-5.054-5.069 12.89z"
+        fill="#fff"
       />
     </Svg>
   );
 }
 
-export default NavigationIcon;
+export default NavigateIcon;

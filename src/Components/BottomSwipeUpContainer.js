@@ -23,7 +23,7 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
-import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';2
 import {useDispatch} from 'react-redux';
 import {
   addParkingRequest,
@@ -31,7 +31,9 @@ import {
 } from '../Store/Actions/Actions';
 import * as Constants from '../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
+import ButtonComponent from './ButtonComponent';
+import Geozone from '../../assets/SVG/svg/Geozone';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -305,7 +307,7 @@ const BottomSwipeUpContainer = React.memo(
         {...panResponder.panHandlers}>
         <View style={styles.swipeIndicator} />
         <View style={styles.iconRow}>
-          {ICONS(item, positions,t).map((iconItem, index) => (
+          {ICONS(item, positions, t).map((iconItem, index) => (
             <View key={index} style={styles.iconContainer}>
               <IconWithNameBelow
                 IconComponent={iconItem.icon}
@@ -318,15 +320,6 @@ const BottomSwipeUpContainer = React.memo(
         </View>
 
         <View style={styles.infoSection}>
-          {/* {renderButtonSections({
-            onNavigatePress,
-            onHistoryPress,
-            onGeozonePress,
-            onTheftPress,
-            onRelayPress,
-            onFuelPumpPress,
-            gpsRelayData,
-          })} */}
           <View style={styles.buttonRow}>
             <ButtonComponent
               icon={NavigationIcon}
@@ -340,15 +333,11 @@ const BottomSwipeUpContainer = React.memo(
               size={20}
             />
             <ButtonComponent
-              icon={RelayIcon}
-              label={t(Constants.RELAY)}
-              dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-              dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-              onPress={onRelayPress}
-              size={20}
-              color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-              bgcolor={gpsRelayData?.relay}
+              icon={Geozone}
+              label={t(Constants.GEOZONE)}
+              onPress={onGeozonePress}
             />
+            
           </View>
           <View style={styles.buttonRow}>
             <ButtonComponent
@@ -364,9 +353,14 @@ const BottomSwipeUpContainer = React.memo(
               size={20}
             />
             <ButtonComponent
-              icon={GeoFencingIcon}
-              label={t(Constants.GEOZONE)}
-              onPress={onGeozonePress}
+              icon={RelayIcon}
+              label={t(Constants.RELAY)}
+              dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+              dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+              onPress={onRelayPress}
+              size={20}
+              color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+              bgcolor={gpsRelayData?.relay}
             />
           </View>
         </View>
@@ -381,188 +375,9 @@ const BottomSwipeUpContainer = React.memo(
             onToggle={toggleSwitch}
           />
         </View>
-        {/* {children && (
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'transparent',
-              zIndex: 10,
-              height: SCREEN_HEIGHT / 4,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {children}
-          </View>
-        )} */}
       </Animated.View>
     );
   },
 );
 
 export default BottomSwipeUpContainer;
-
-// const renderButtonSections = ({
-//   onNavigatePress,
-//   onHistoryPress,
-//   onGeozonePress,
-//   onTheftPress,
-//   onRelayPress,
-//   onFuelPumpPress,
-//   gpsRelayData,
-// }) => (
-//   <>
-//     <View style={styles.buttonRow}>
-//       <ButtonComponent
-//         icon={NavigationIcon}
-//         label={Constants.NAVIGATE}
-//         onPress={onNavigatePress}
-//       />
-//       <ButtonComponent
-//         icon={LocationHistory}
-//         label="History here"
-//         onPress={onHistoryPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={RelayIcon}
-//         label="Relay here"
-//         dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-//         dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-//         onPress={onRelayPress}
-//         size={20}
-//         color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-//         bgcolor={gpsRelayData?.relay}
-//       />
-//     </View>
-//     <View style={styles.buttonRow}>
-//       <ButtonComponent
-//         icon={TheftIcon}
-//         label="Theft"
-//         onPress={onTheftPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={FuelPumpIcon}
-//         label="Fuel Pump"
-//         onPress={onFuelPumpPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={GeoFencingIcon}
-//         label="Geozone"
-//         onPress={onGeozonePress}
-//       />
-//     </View>
-//   </>
-// );
-
-const ButtonComponent = ({
-  icon: Icon,
-  label,
-  onPress,
-  dynamicTitleColor,
-  dynamicTitle,
-  color = '#ff7753',
-  size = 25,
-  bgcolor = false,
-}) => (
-  <TouchableOpacity style={styles.button(bgcolor)} onPress={onPress}>
-    <Icon size={size} color={color} />
-    <Text style={styles.buttonText}>
-      {label}
-      <Text style={{color: dynamicTitleColor}}>{dynamicTitle}</Text>
-    </Text>
-  </TouchableOpacity>
-);
-
-// const styles = StyleSheet.create({
-//   bottomContainer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     backgroundColor: '#FFF7F5',
-//     flex: 1,
-//     borderTopLeftRadius: 20,
-//     borderTopRightRadius: 20,
-//     elevation: 3,
-//     borderWidth: 1,
-//     borderColor: '#F7F7F7',
-//     zIndex: 1,
-//   },
-//   swipeIndicator: {
-//     width: 40,
-//     height: 5,
-//     backgroundColor: '#CCCCCC',
-//     borderRadius: 3,
-//     alignSelf: 'center',
-//     marginVertical: 10,
-//   },
-//   iconRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-evenly',
-//     alignItems: 'center',
-//     borderWidth: 1,
-//     marginHorizontal: 10,
-//     paddingVertical: 5,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   iconContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   infoSection: {
-//     borderWidth: 1,
-//     margin: 10,
-//     padding: 10,
-//     paddingVertical: 5,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   buttonRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     marginVertical: 5,
-//   },
-//   button: color => ({
-//     backgroundColor: color ? '#F7FFF2' : '#FFF7F5',
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     alignItems: 'center',
-//     paddingHorizontal: 15,
-//     paddingVertical: 10,
-//     elevation: 1,
-//     borderRadius: 5,
-//     minWidth: '30%',
-//     maxWidth: '32%',
-//   }),
-//   buttonText: {
-//     marginLeft: 10,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 10,
-//     color: titleColor,
-//   },
-//   parkingAlarm: {
-//     borderWidth: 1,
-//     marginHorizontal: 10,
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-//   parkingText: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 12,
-//     color: '#696969',
-//   },
-// });
