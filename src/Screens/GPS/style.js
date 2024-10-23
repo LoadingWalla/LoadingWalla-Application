@@ -1694,6 +1694,41 @@ export default StyleSheet.create({
     color: '#FF0000',
     marginBottom: 10,
   },
+  parent: {
+    flex: 0.3,
+  },
+  headerBackground: {
+    flex: 1,
+    resizeMode: 'cover', // Ensures the image covers the entire view
+    justifyContent: 'center', // Vertically centers the text
+    margin: 8,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  headerContantContainer: {
+    alignItems: 'center', // Horizontally centers the text
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  headerText1: {
+    fontSize: 16,
+    color: 'white',
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  headerText2: {
+    fontSize: 26,
+    color: 'white',
+    fontFamily: 'PlusJakartaSans-Bold',
+  },
+  vDocMenu: {
+    marginHorizontal: 10,
+    marginVertical: 4,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: pageBackground,
+    padding: 4,
+  },
   errorText: {
     fontSize: 16,
     color: 'red',

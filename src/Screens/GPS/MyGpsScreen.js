@@ -35,7 +35,10 @@ const MyGpsScreen = ({navigation}) => {
   } = useSelector(state => state.data);
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
-    state => state.wsData,
+    state => {
+      // console.log('-----------------MyGpsScreen Message22-----------------', state.wsData);
+      return state.wsData;
+    },
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
