@@ -16,13 +16,11 @@ import {
 } from '../../Store/Actions/Actions';
 import CardHeader from '../../Components/CardHeader';
 import InnerButton from '../../Components/InnerButton';
-import {
-  GradientColor2,
-} from '../../Color/color';
+import {GradientColor2} from '../../Color/color';
 import CloseCircle from '../../../assets/SVG/svg/CloseCircle';
 import Button from '../../Components/Button';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
 const Negotiation = ({navigation, route}) => {
@@ -43,7 +41,7 @@ const Negotiation = ({navigation, route}) => {
     loading,
     requestLorrydata,
   } = useSelector(state => {
-    console.log('confirmation987', state.data.requestSendStatus);
+    // console.log('confirmation987', state.data.requestSendStatus);
     return state.data;
   });
 
@@ -181,4 +179,3 @@ const Negotiation = ({navigation, route}) => {
 };
 
 export default Negotiation;
-

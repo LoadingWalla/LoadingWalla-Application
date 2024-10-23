@@ -26,106 +26,10 @@ const setCurrentBaseUrl = async url => {
   }
 };
 
-// const instanceFunction = instanceObj => {
-//   instanceObj.interceptors.request.use(
-//     async config => {
-//       console.log('Request Interceptor:', config);
-//       try {
-//         const token = await AsyncStorage.getItem('auth-token');
-//         // console.log('Auth Token:', token);
-//         if (token) {
-//           config.headers['Authorization'] = `Bearer ${token}`;
-//         }
-//         return config;
-//       } catch (error) {
-//         console.error('Error in request interceptor:', error);
-//         return config;
-//       }
-//     },
-//     error => {
-//       console.error('Request Interceptor Error:', error);
-//       return Promise.reject(error);
-//     },
-//   );
-
-//   instanceObj.interceptors.response.use(
-//     function (response) {
-//       console.log('Response Interceptor:', response);
-//       let respObj = {
-//         data: response.data ? response.data : [],
-//         status: response.status,
-//       };
-//       return respObj;
-//     },
-//     async function (error) {
-//       console.error('Response Interceptor Error:', error);
-//       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
-//         // console.log('Network Request Error:', error);
-//         Snackbar.show({
-//           text: 'Slow Internet Connection.',
-//           duration: Snackbar.LENGTH_LONG,
-//           fontFamily: 'PlusJakartaSans-SemiBold',
-//           textColor: '#000000',
-//           backgroundColor: '#FFD7CC',
-//         });
-//       } else if (error.response && error.response.status === 401) {
-//         // console.log('Unauthorized Error:', error.response);
-//         await AsyncStorage.removeItem('UserType');
-//         await AsyncStorage.removeItem('auth-token');
-//         navigate('Signup');
-//       } else if (error.response && error.response.status === 500) {
-//         // console.log('Internal Server Error:', error.response);
-//         Snackbar.show({
-//           text: 'Internal Server Error.',
-//           duration: Snackbar.LENGTH_LONG,
-//           fontFamily: 'PlusJakartaSans-SemiBold',
-//           textColor: '#000000',
-//           backgroundColor: '#FFD7CC',
-//         });
-//       }
-
-//       const config = error.config;
-//       if (!config || !config.retry) {
-//         // console.log('No Retry Config Found:', config);
-//         return Promise.reject(error);
-//       }
-
-//       config.__retryCount = config.__retryCount || 0;
-//       // console.log('Retry Count:', config.__retryCount);
-
-//       if (config.__retryCount >= config.retry) {
-//         const currentUrl = await getCurrentBaseUrl();
-//         const newUrl = currentUrl === URL.URL ? URL.NEWURL : URL.URL;
-//         // console.log('Switching Base URL:', newUrl);
-//         await setCurrentBaseUrl(newUrl);
-
-//         config.baseURL = newUrl;
-//         config.__retryCount = 0; // Reset retry count for the new URL
-
-//         return instanceObj(config);
-//       }
-
-//       config.__retryCount += 1;
-//       // console.log('Retrying Request:', config.__retryCount);
-
-//       await new Promise(res => setTimeout(res, config.retryDelay));
-//       return instanceObj(config);
-//     },
-//   );
-
-//   return instanceObj;
-// };
-
 const instanceFunction = instanceObj => {
   instanceObj.interceptors.request.use(
     async config => {
       console.log('Request Interceptor:', config);
-
-      // // Check if the URL contains 'logout', then skip the interceptor for it
-      // if (config.url && config.url.includes('logout')) {
-      //   console.log('Skipping interceptor for logout URL:', config.url);
-      //   return config; // Skip without changing anything
-      // }
 
       try {
         const token = await AsyncStorage.getItem('auth-token');
@@ -154,17 +58,7 @@ const instanceFunction = instanceObj => {
       return respObj;
     },
     async function (error) {
-      console.error('Response Interceptor Error:', error);
-
-      // // If it's a logout request, we just skip handling errors
-      // if (
-      //   error.config &&
-      //   error.config.url &&
-      //   error.config.url.includes('logout')
-      // ) {
-      //   console.log('Skipping retry for logout URL:', error.config.url);
-      //   return Promise.reject(error); // Skip retry for logout URL
-      // }
+      console.error(500400, 'Response Interceptor Error:', error);
 
       if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
         Snackbar.show({
@@ -174,10 +68,14 @@ const instanceFunction = instanceObj => {
           textColor: '#000000',
           backgroundColor: '#FFD7CC',
         });
-      } else if (error.response && error.response.status === 401) {
-        await AsyncStorage.removeItem('UserType');
-        await AsyncStorage.removeItem('auth-token');
-        navigate('Signup');
+      } else if (
+        error.code === 'ERR_BAD_RESPONSE' ||
+        (error.response && error.response.status === 401) ||
+        (error.response && error.response.status === 403)
+      ) {
+        await AsyncStorage.clear();
+        navigate('Splash');
+        return Promise.reject(error);
       } else if (error.response && error.response.status === 500) {
         Snackbar.show({
           text: 'Internal Server Error.',
@@ -201,7 +99,7 @@ const instanceFunction = instanceObj => {
         await setCurrentBaseUrl(newUrl);
 
         config.baseURL = newUrl;
-        config.__retryCount = 0; // Reset retry count for the new URL
+        config.__retryCount = 0;
 
         return instanceObj(config);
       }

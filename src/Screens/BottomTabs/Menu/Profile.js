@@ -96,19 +96,30 @@ const Profile = ({navigation, route}) => {
   useEffect(() => {
     const handleLogout = async () => {
       if (logoutStatus === 200) {
-        await Promise.all([
-          AsyncStorage.removeItem('UserType'),
-          AsyncStorage.removeItem('auth-token'),
-          AsyncStorage.removeItem('whatsAppAlert'),
-          AsyncStorage.removeItem('deviceMoving'),
-          AsyncStorage.removeItem('geofence'),
-          AsyncStorage.removeItem('ignition'),
-          AsyncStorage.removeItem('overspeeding'),
-        ]);
+        // await Promise.all([
+        //   AsyncStorage.removeItem('UserType'),
+        //   AsyncStorage.removeItem('auth-token'),
+        //   AsyncStorage.removeItem('whatsAppAlert'),
+        //   AsyncStorage.removeItem('deviceMoving'),
+        //   AsyncStorage.removeItem('geofence'),
+        //   AsyncStorage.removeItem('ignition'),
+        //   AsyncStorage.removeItem('overspeeding'),
+        // ]);
+        // await AsyncStorage.multiRemove([
+        //   'UserType',
+        //   'auth-token',
+        //   'whatsAppAlert',
+        //   'deviceMoving',
+        //   'geofence',
+        //   'ignition',
+        //   'overspeeding',
+        // ]);
+        await AsyncStorage.clear();
         dispatch(clearStore());
         navigation.reset({
           index: 0,
-          routes: [{name: 'Signup', params: {fromLogout: true}}],
+          // routes: [{name: 'Signup', params: {fromLogout: true}}],
+          routes: [{name: 'Splash'}],
         });
       }
     };
