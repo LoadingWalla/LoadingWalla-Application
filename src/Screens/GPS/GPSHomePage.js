@@ -110,7 +110,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Driving License'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<DrivingLicense size={30} />}
                 arrowColor={'black'}
               />
@@ -118,7 +118,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Pollution'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<Pollution size={30} />}
                 arrowColor={'black'}
               />
@@ -126,7 +126,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Insurance'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<Insurance size={30} />}
                 arrowColor={'black'}
               />
@@ -134,7 +134,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Registration Certificate'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<RegistrationCert size={30} />}
                 arrowColor={'black'}
               />
@@ -142,7 +142,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Fitness Certificate'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<FitnessCert size={30} />}
                 arrowColor={'black'}
               />
@@ -150,35 +150,13 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Other Documents'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<OtherDocs size={30} />}
                 arrowColor={'black'}
               />
             </View>
           </ScrollView>
         </View>
-        {/* <View style={styles.notFoundView}>
-          <Image
-            source={require('../../../assets/noGps.png')}
-            resizeMode="contain"
-            style={styles.splashImage(250, 250)}
-          />
-          <Text style={styles.noGpsAvailTxt}>
-            {t(Constants.NO_GPS_AVAILABLE)}
-          </Text>
-          <Text style={styles.getGpsPlanTxt}>
-            {t(Constants.GET_GPS_FOR_YOUR_VEHICLE)}
-          </Text>
-        </View>
-        <View style={styles.getNowView}>
-          <Text style={styles.offerText}>{t(Constants.BUY_AND_SAVE)}</Text>
-          <InnerButton
-            navigation={() => navigation.navigate('BuyGPS')}
-            title={t(Constants.GET_NOW)}
-            enabledStyle={styles.btnStyle}
-            textStyle={styles.btnText}
-          />
-        </View> */}
       </View>
     </View>
   );

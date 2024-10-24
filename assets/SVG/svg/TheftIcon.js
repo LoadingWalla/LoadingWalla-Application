@@ -4,8 +4,8 @@ import Svg, { Path } from "react-native-svg"
 function TheftIcon(props) {
   return (
     <Svg
-      width={25}
-      height={23}
+      width={props.size}
+      height={props.size}
       viewBox="0 0 25 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

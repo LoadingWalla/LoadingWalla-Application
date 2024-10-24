@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import IconWithNameBelow from './IconWithNameBelow';
-import {GradientColor2, seperator, titleColor} from '../Color/color';
+import {btnGreen, GradientColor2, seperator, titleColor} from '../Color/color';
 import NavigationIcon from '../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../assets/SVG/svg/LocationHistory';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
@@ -23,7 +23,8 @@ import GeoFencingIcon from '../../assets/SVG/svg/GeoFencingIcon';
 import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
-import KeyIcon from '../../assets/SVG/svg/KeyIcon';2
+import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+2;
 import {useDispatch} from 'react-redux';
 import {
   addParkingRequest,
@@ -321,59 +322,78 @@ const BottomSwipeUpContainer = React.memo(
 
         <View style={styles.infoSection}>
           <View style={styles.buttonRow}>
-            <ButtonComponent
-              icon={NavigationIcon}
-              label={t(Constants.NAVIGATE)}
-              onPress={onNavigatePress}
-            />
-            <ButtonComponent
-              icon={LocationHistory}
-              label={t(Constants.HISTORY)}
-              onPress={onHistoryPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={Geozone}
-              label={t(Constants.GEOZONE)}
-              onPress={onGeozonePress}
-            />
-            
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={NavigationIcon}
+                label={t(Constants.NAVIGATE)}
+                onPress={onNavigatePress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={LocationHistory}
+                label={t(Constants.HISTORY)}
+                onPress={onHistoryPress}
+                size={25}
+              />
+            </View>
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={Geozone}
+                label={t(Constants.GEOZONE)}
+                onPress={onGeozonePress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={TheftIcon}
+                label={t(Constants.THEFT)}
+                onPress={onTheftPress}
+                size={25}
+              />
+            </View>
           </View>
           <View style={styles.buttonRow}>
-            <ButtonComponent
-              icon={TheftIcon}
-              label={t(Constants.THEFT)}
-              onPress={onTheftPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={FuelPumpIcon}
-              label={t(Constants.FUEL_PUMP)}
-              onPress={onFuelPumpPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={RelayIcon}
-              label={t(Constants.RELAY)}
-              dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-              dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-              onPress={onRelayPress}
-              size={20}
-              color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-              bgcolor={gpsRelayData?.relay}
-            />
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={FuelPumpIcon}
+                label={t(Constants.FUEL_PUMP)}
+                onPress={onFuelPumpPress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={RelayIcon}
+                label={t(Constants.RELAY)}
+                dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+                dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+                onPress={onRelayPress}
+                size={25}
+                color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+                bgcolor={gpsRelayData?.relay}
+              />
+            </View>
+            <View style={{flexDirection: 'row', flex: 1}}>
+              {/* to add additional features */}
+            </View>
           </View>
         </View>
 
         <View style={styles.parkingAlarm}>
           <Text style={styles.parkingText}>{t(Constants.PARKING_ALARM)}</Text>
-          <Switch
-            isOn={!!switchOn}
-            onColor={GradientColor2}
-            offColor={seperator}
-            size="small"
-            onToggle={toggleSwitch}
-          />
+          <View>
+            <Switch
+              isOn={!!switchOn}
+              onColor={'white'}
+              circleColor={switchOn ? btnGreen : 'white'}
+              offColor={seperator}
+              size="small"
+              onToggle={toggleSwitch}
+              style={{
+                borderWidth: 1,
+                borderColor: switchOn ? btnGreen : 'white',
+                borderRadius: 16,
+                overflow: 'hidden',
+              }}
+            />
+          </View>
         </View>
       </Animated.View>
     );

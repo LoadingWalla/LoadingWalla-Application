@@ -17,6 +17,7 @@ export const white = '#FFFFFF';
 export const black = '#000000';
 export const seperator = '#c8c8c8';
 export const divider = '#CDCDCD';
+export const btnGreen = '#3BA700';
 
 //  New Color
 // export const backgroundColorNew = '#ED1C24';

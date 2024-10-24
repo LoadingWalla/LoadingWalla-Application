@@ -1068,6 +1068,7 @@ export default StyleSheet.create({
 
   bottomContainer: {
     position: 'absolute',
+    paddingBottom: 8,
     bottom: 0,
     left: 0,
     right: 0,
@@ -1089,6 +1090,7 @@ export default StyleSheet.create({
     marginVertical: 10,
   },
   iconRow: {
+    // flex: 0.4,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -1106,6 +1108,7 @@ export default StyleSheet.create({
   },
   infoSection: {
     borderWidth: 1,
+    flex: 0.7,
     margin: 10,
     padding: 10,
     paddingVertical: 5,
@@ -1114,21 +1117,19 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   buttonRow: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginVertical: 5,
   },
   button: color => ({
     backgroundColor: `${color}`,
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 10,
-    minWidth: '30%',
-    maxWidth: '32%',
-    borderWidth: 1,
-    borderColor: 'black'
+    flex: 1,
   }),
   buttonText: {
     // marginLeft: 10,
@@ -1137,6 +1138,7 @@ export default StyleSheet.create({
     color: titleColor,
   },
   parkingAlarm: {
+    // flex: 0.2,
     borderWidth: 1,
     marginHorizontal: 10,
     paddingVertical: 10,

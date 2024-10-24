@@ -8,7 +8,7 @@ const ButtonComponent = ({
   dynamicTitleColor,
   dynamicTitle,
   color = '#ff7753',
-  size = 25,
+  size,
   bgcolor = 'white',
 }) => (
   <TouchableOpacity style={styles.button(bgcolor)} onPress={onPress}>
