@@ -5,6 +5,7 @@ export const GradientColor1 = '#FF6D4D';
 export const GradientColor2 = '#E85839';
 export const GradientColor3 = '#D94828';
 export const GradientColor4 = '#FB6C4D';
+export const GradientColor5 = '#EF4D23';
 export const pageBackground = '#FFFFFF';
 export const inputColor = '#E7E7E7';
 export const back_color = '#F2EFEF';
@@ -20,6 +21,7 @@ export const divider = '#CDCDCD';
 export const btnGreen = '#3BA700';
 export const grayBg = '#E9E9E9';
 export const darkGrayBg = '#A6A6A6';
+export const sliderColor = '#FFDCD3';
 //  New Color
 // export const backgroundColorNew = '#ED1C24';
 export const backgroundColorNew = '#EF4D23';

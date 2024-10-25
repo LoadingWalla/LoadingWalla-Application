@@ -15,6 +15,7 @@ import {
   textColor,
   backgroundColorNew,
   GradientColor1,
+  GradientColor5,
 } from '../Color/color';
 
 export default StyleSheet.create({
@@ -144,7 +145,7 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   activeButton: {
-    backgroundColor: GradientColor1,
+    backgroundColor: GradientColor5,
   },
   searchbuttonText: {
     fontSize: 12,

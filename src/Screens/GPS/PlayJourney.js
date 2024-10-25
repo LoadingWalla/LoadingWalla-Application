@@ -1,7 +1,12 @@
 import React, {useEffect, useState, useMemo, useRef} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
-import {backgroundColorNew} from '../../Color/color';
+import {
+  backgroundColorNew,
+  GradientColor1,
+  GradientColor5,
+  sliderColor,
+} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
@@ -313,6 +318,7 @@ export default function PlayJourney({navigation, route}) {
   };
 
   const isDataAvailable = () => {
+    console.log('----------- gpsReplayData ------------', gpsReplayData);
     return (
       gpsTokenData &&
       gpsReplayData?.length > 0 &&
@@ -330,6 +336,8 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
+  console.log();
+
   return (
     <View style={styles.container}>
       {loading && (
@@ -341,6 +349,14 @@ export default function PlayJourney({navigation, route}) {
       )}
       {!loading && !isDataAvailable() && (
         <View style={styles.noDataContainer}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'PlusJakartaSans-Bold',
+              color: GradientColor1,
+            }}>
+            No Data Available...
+          </Text>
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
@@ -476,23 +492,26 @@ export default function PlayJourney({navigation, route}) {
           </View>
           <View style={styles.playJourneyBottomContainer}>
             <View style={styles.controlsContainer}>
-              <TouchableOpacity
-                style={styles.playPauseButton}
-                onPress={togglePlayback}>
-                {isPlaying ? (
-                  <PauseIcon size={20} color={backgroundColorNew} />
-                ) : (
-                  <PlayIcon size={20} color={backgroundColorNew} />
-                )}
-              </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  style={styles.playPauseButton}
+                  onPress={togglePlayback}>
+                  {isPlaying ? (
+                    <PauseIcon size={20} color={backgroundColorNew} />
+                  ) : (
+                    <PlayIcon size={20} color={backgroundColorNew} />
+                  )}
+                </TouchableOpacity>
+              </View>
               <View style={styles.playJourneySliderContainer}>
                 <Slider
                   style={styles.playJourneySlider}
                   minimumValue={0}
                   maximumValue={1}
-                  minimumTrackTintColor={backgroundColorNew}
-                  maximumTrackTintColor="#FFDCD3"
-                  thumbTintColor={backgroundColorNew}
+                  thumbImage={require('../../../assets/slider2.png')}
+                  minimumTrackTintColor={sliderColor}
+                  maximumTrackTintColor={sliderColor}
+                  // thumbTintColor={backgroundColorNew}
                   value={sliderValue}
                   onValueChange={value => {
                     setSliderValue(value);
@@ -520,6 +539,54 @@ export default function PlayJourney({navigation, route}) {
                     }
                   }}
                 />
+                <View
+                  style={{
+                    flex: 1,
+                    // borderWidth: 1,
+                    flexDirection: 'row',
+                    paddingHorizontal: 4,
+                  }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${currentIndex + 1}/${
+                      gpsReplayData?.length || 0
+                    }`}</Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      width: '100%',
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                      justifyContent: 'flex-end',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                        paddingRight: 4,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('DD/MM/YY')}`}</Text>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('hh:mm A')}`}</Text>
+                  </View>
+                </View>
               </View>
               <View style={styles.speedButtonsContainer}>
                 <TouchableOpacity

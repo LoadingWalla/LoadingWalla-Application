@@ -1,7 +1,9 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {
   backgroundColorNew,
+  GradientColor5,
   pageBackground,
+  sliderColor,
   textColor,
   titleColor,
 } from '../../Color/color';
@@ -459,7 +461,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 130,
+    bottom: 175,
     right: 0,
     zIndex: 10,
   },
@@ -618,8 +620,9 @@ export default StyleSheet.create({
   controlsContainer: {
     flex: 1,
     flexDirection: 'row',
+    // borderWidth: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   playPauseButton: {
     borderWidth: 1,
@@ -628,12 +631,14 @@ export default StyleSheet.create({
     borderColor: backgroundColorNew,
   },
   playJourneySliderContainer: {
-    flex: 1,
+    flex: 0.9,
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   speedButtonsContainer: {
+    // flex: 0.1,
+    // borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -1552,6 +1557,10 @@ export default StyleSheet.create({
   slider: {width: '75%'},
   playJourneySlider: {
     flex: 1,
+    // borderWidth: 2,
+    height: 30,
+    borderRadius: 5,
+    backgroundColor: sliderColor,
     width: '100%',
   },
   textvalue: {
