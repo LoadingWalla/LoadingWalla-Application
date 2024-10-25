@@ -95,8 +95,8 @@ const GPSHomePage = ({navigation}) => {
               </View>
               <View>
                 <ImageBackground
-                  source={require('./../../../assets/bike.png')}
-                  style={{width: 97, height: 97}} // Add width and height to the inner ImageBackground
+                  source={require('./../../../assets/art.png')}
+                  style={{width: 170, height: 80}} // Add width and height to the inner ImageBackground
                 />
               </View>
             </View>

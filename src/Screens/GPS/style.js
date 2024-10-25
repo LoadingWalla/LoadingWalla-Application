@@ -776,13 +776,13 @@ export default StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
-    backgroundColor: '#FDFDFD',
+    // backgroundColor: '#FDFDFD',
   },
   quickFilterContainer: {
-    flex: 0.4,
-    // backgroundColor: '#FFE9E3',
+    // borderWidth: 1,
+    // borderColor: 'red',
+    flex: 0.2,
     flexDirection: 'row',
-    padding: 10,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -792,7 +792,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     margin: 5,
-    elevation: 3,
+    elevation: 7,
     alignItems: 'center',
     justifyContent: 'center',
     width: '30%', // Adjust based on the number of buttons in a row
@@ -806,7 +806,8 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   buttonText: {
-    fontSize: 11,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBold',
     textAlign: 'center',
   },
   activeText: {
@@ -816,8 +817,8 @@ export default StyleSheet.create({
     color: '#000',
   },
   customFilterContainer: {
-    flex: 0.7,
-    paddingHorizontal: 10,
+    flex: 0.8,
+    paddingHorizontal: 8,
   },
   customFilterText: {
     fontSize: 16,
