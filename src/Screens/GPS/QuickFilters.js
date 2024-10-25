@@ -143,17 +143,17 @@ const QuickFilters = ({navigation, route}) => {
     if (selectedDate && selectedDate <= new Date()) {
       const formattedDate = moment(selectedDate)
         .utcOffset(330)
-        .format('DD-MM-YYYY'); // Only take the date, no time component
+        .format('YYYY-MM-DD'); // Only take the date, no time component
 
       if (type === 'startDate') {
         setDateRange(prev => ({
           ...prev,
-          startDate: formattedDate, // Store only the date part
+          startDate: formattedDate,
         }));
       } else if (type === 'endDate') {
         setDateRange(prev => ({
           ...prev,
-          endDate: formattedDate, // Store only the date part
+          endDate: formattedDate,
         }));
       }
     } else if (selectedDate > new Date()) {
@@ -227,7 +227,7 @@ const QuickFilters = ({navigation, route}) => {
                     // borderWidth:1,
                     flexDirection: 'row',
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}>
                   <View style={{paddingRight: 10}}>
                     <Calender />
