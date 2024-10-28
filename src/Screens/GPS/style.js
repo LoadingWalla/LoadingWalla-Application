@@ -461,7 +461,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 175,
+    bottom: 140,
     right: 0,
     zIndex: 10,
   },
