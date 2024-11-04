@@ -19,6 +19,7 @@ import * as Constants from '../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
 import TruckNavigationIcon from '../../assets/SVG/svg/TruckNavigationIcon';
+import VehicleIcon from '../../assets/SVG/svg/VehicleIcon';
 
 const {width, height} = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -158,6 +159,7 @@ const MapComponent = React.memo(
             ref={markerRef}>
             {/* <ActiveLocation size={40} course={50} /> */}
             <TruckNavigationIcon size={40} course={position.course} />
+            {/* <VehicleIcon width={40} height={40} /> */}
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>

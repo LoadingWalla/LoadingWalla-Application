@@ -3,7 +3,6 @@ import {
   View,
   BackHandler,
   Text,
-  Image,
   ScrollView,
   ImageBackground,
   StyleSheet,
@@ -14,20 +13,17 @@ import {useFocusEffect} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {fetchTokenRequest, initDashboard} from '../../Store/Actions/Actions';
 import DashboardHeader from '../../Components/DashboardHeader';
-import InnerButton from '../../Components/InnerButton';
 import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import MenuItem from '../../Components/MenuItem';
-import ContactUsIcon from '../../../assets/SVG/svg/ContactUsIcon';
-import {GradientColor1, pageBackground} from '../../Color/color';
 import DrivingLicense from '../../../assets/SVG/svg/DrivingLicense';
 import Pollution from '../../../assets/SVG/svg/Pollution';
 import Insurance from '../../../assets/SVG/svg/Insurance';
 import RegistrationCert from '../../../assets/SVG/svg/RegistrationCert';
 import FitnessCert from '../../../assets/SVG/svg/FitnessCert';
 import OtherDocs from '../../../assets/SVG/svg/OtherDocs';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {pageBackground} from '../../Color/color';
 
 const GPSHomePage = ({navigation}) => {
   useTrackScreenTime('GPSHomePage');
@@ -190,7 +186,7 @@ const stylesg = StyleSheet.create({
     fontFamily: 'PlusJakartaSans-ExtraBold',
   },
   scroll: {
-    flex: 1
+    flex: 1,
   },
   vDocMenu: {
     marginHorizontal: 10,
