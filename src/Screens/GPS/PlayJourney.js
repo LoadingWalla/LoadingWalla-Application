@@ -45,14 +45,6 @@ export default function PlayJourney({navigation, route}) {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [currentStop, setCurrentStop] = useState(null);
-  const [mapType, setMapType] = useState('standard');
-
-  const {convertMillisToTime} = useConvertMillisToTime();
-
-  const mapRef = useRef(null);
-  const markerRefs = useRef([]);
-
-  const dispatch = useDispatch();
   const {
     gpsTokenData,
     gpsReplayLoading,
@@ -68,7 +60,7 @@ export default function PlayJourney({navigation, route}) {
 
     return state.data;
   });
-
+  const dispatch = useDispatch();
   const {wsConnected} = useSelector(state => state.wsData);
 
   const loading = gpsReplayLoading || gpsStopsLoading || gpsSummaryLoading;
