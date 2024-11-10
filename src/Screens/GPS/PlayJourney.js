@@ -1,5 +1,13 @@
-import React, {useEffect, useState, useMemo, useRef} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState, useMemo, useRef, useCallback} from 'react';
+import {
+  Animated,
+  Easing,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
 import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
@@ -27,25 +35,26 @@ import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
 import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import VehicleIconSvg from '../../../assets/SVG/svg/VehicleIconSvg';
 
 export default function PlayJourney({navigation, route}) {
   useTrackScreenTime('PlayJourney');
   const {deviceId, from, to, name, item} = route.params;
   // console.log(1111, 'PlayJourney Parmas----->', route);
   const {t} = useTranslation();
+
   const [sliderValue, setSliderValue] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
-  const [currentStop, setCurrentStop] = useState(null);
   const [mapType, setMapType] = useState('standard');
+  const [currentStop, setCurrentStop] = useState(null);
 
   const {convertMillisToTime} = useConvertMillisToTime();
-
   const mapRef = useRef(null);
-  const markerRefs = useRef([]);
+  // const markerRefs = useRef([]);
 
   const dispatch = useDispatch();
   const {
@@ -59,8 +68,7 @@ export default function PlayJourney({navigation, route}) {
     gpsSummaryLoading,
     gpsSummaryData,
   } = useSelector(state => {
-    console.log(55555, 'playJourney---->', state.data);
-
+    // console.log(55555, 'playJourney---->', state.data);
     return state.data;
   });
 
@@ -78,8 +86,53 @@ export default function PlayJourney({navigation, route}) {
     setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
   };
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const defaultFrom =
+  //       from || moment().utcOffset(330).startOf('day').toISOString();
+  //     const defaultTo =
+  //       to || moment().utcOffset(330).endOf('day').toISOString();
+
+  //     const fetchData = async () => {
+  //       await dispatch(
+  //         fetchPositionsRequest(
+  //           gpsTokenData?.email,
+  //           gpsTokenData?.password,
+  //           deviceId,
+  //           defaultFrom,
+  //           defaultTo,
+  //         ),
+  //       );
+
+  //       await dispatch(
+  //         fetchGpsStopsRequest(
+  //           gpsTokenData?.email,
+  //           gpsTokenData?.password,
+  //           deviceId,
+  //           defaultFrom,
+  //           defaultTo,
+  //         ),
+  //       );
+
+  //       await dispatch(
+  //         fetchSummaryReportRequest(
+  //           gpsTokenData?.email,
+  //           gpsTokenData?.password,
+  //           deviceId,
+  //           defaultFrom,
+  //           defaultTo,
+  //           false,
+  //         ),
+  //       );
+  //     };
+
+  //     fetchData();
+
+  //     return () => {};
+  //   }, [dispatch, from, to, deviceId, gpsTokenData]),
+  // );
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const defaultFrom =
         from || moment().utcOffset(330).startOf('day').toISOString();
       const defaultTo =
@@ -95,7 +148,6 @@ export default function PlayJourney({navigation, route}) {
             defaultTo,
           ),
         );
-
         await dispatch(
           fetchGpsStopsRequest(
             gpsTokenData?.email,
@@ -105,7 +157,6 @@ export default function PlayJourney({navigation, route}) {
             defaultTo,
           ),
         );
-
         await dispatch(
           fetchSummaryReportRequest(
             gpsTokenData?.email,
@@ -119,8 +170,6 @@ export default function PlayJourney({navigation, route}) {
       };
 
       fetchData();
-
-      return () => {};
     }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
 
@@ -130,49 +179,11 @@ export default function PlayJourney({navigation, route}) {
     }
   }, [gpsStopsData]);
 
-  useEffect(() => {
-    if (markerRefs.current[currentStopIndex]) {
-      markerRefs.current[currentStopIndex].showCallout();
-    }
-  }, [currentStopIndex, gpsStopsData]);
-
-  useEffect(() => {
-    let interval = null;
-
-    if (isPlaying && currentIndex < coordinates?.length) {
-      const adjustedPlaybackSpeed = playbackSpeed * 1000; // Adjust playback speed
-
-      interval = setInterval(() => {
-        setCurrentIndex(prevIndex => {
-          const newIndex = prevIndex + 1;
-          const newPosition = coordinates[newIndex];
-
-          if (newPosition) {
-            // Set the new currentPosition
-            setCurrentPosition(newPosition);
-
-            // Animate marker movement
-            animatedMarkerPosition
-              .timing({
-                latitude: newPosition.latitude,
-                longitude: newPosition.longitude,
-                duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
-                useNativeDriver: true,
-              })
-              .start();
-
-            setSliderValue(newIndex / (coordinates?.length - 1));
-          }
-
-          return newIndex;
-        });
-      }, 1000 / adjustedPlaybackSpeed); // Interval based on adjusted speed
-    } else {
-      clearInterval(interval);
-    }
-
-    return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+  // useEffect(() => {
+  //   if (markerRefs.current[currentStopIndex]) {
+  //     markerRefs.current[currentStopIndex].showCallout();
+  //   }
+  // }, [currentStopIndex, gpsStopsData]);
 
   const coordinates = useMemo(
     () =>
@@ -186,18 +197,108 @@ export default function PlayJourney({navigation, route}) {
     [gpsReplayData],
   );
 
-  const initialRegion = useMemo(
-    () =>
-      coordinates?.length > 0
-        ? {
-            latitude: coordinates[0].latitude,
-            longitude: coordinates[0].longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }
-        : null,
-    [coordinates],
-  );
+  const initialRegion = useMemo(() => {
+    if (coordinates?.length) {
+      const {latitude, longitude} = coordinates[0];
+      return {
+        latitude,
+        longitude,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
+      };
+    }
+    return null;
+  }, [coordinates]);
+
+  const animation = useState(new Animated.Value(0))[0];
+
+  useEffect(() => {
+    if (isPlaying) {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: playbackSpeed * 1000 * coordinates.length, // Adjust duration
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      animation.stopAnimation(); // Pause the animation
+    }
+  }, [isPlaying, playbackSpeed, coordinates.length]);
+
+  useEffect(() => {
+    animation.addListener(({value}) => {
+      const totalSegments = coordinates.length - 1;
+      const currentSegmentIndex = Math.floor(value * totalSegments);
+      const nextSegmentIndex = currentSegmentIndex + 1;
+
+      if (nextSegmentIndex < coordinates.length) {
+        const start = coordinates[currentSegmentIndex];
+        const end = coordinates[nextSegmentIndex];
+        const segmentProgress = (value * totalSegments) % 1;
+
+        const newPosition = {
+          latitude:
+            start.latitude + (end.latitude - start.latitude) * segmentProgress,
+          longitude:
+            start.longitude +
+            (end.longitude - start.longitude) * segmentProgress,
+          course: start.course,
+        };
+
+        setCurrentPosition(newPosition);
+
+        if (mapRef.current) {
+          mapRef.current.animateToRegion(
+            {
+              latitude: newPosition.latitude,
+              longitude: newPosition.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
+            },
+            1000,
+          );
+        }
+      }
+    });
+  }, [animation, coordinates]);
+
+  // useEffect(() => {
+  //   let interval = null;
+
+  //   if (isPlaying && currentIndex < coordinates?.length) {
+  //     const adjustedPlaybackSpeed = playbackSpeed * 1000; // Adjust playback speed
+
+  //     interval = setInterval(() => {
+  //       setCurrentIndex(prevIndex => {
+  //         const newIndex = prevIndex + 1;
+  //         const newPosition = coordinates[newIndex];
+
+  //         if (newPosition) {
+  //           // Set the new currentPosition
+  //           setCurrentPosition(newPosition);
+
+  //           // Animate marker movement
+  //           animatedMarkerPosition
+  //             .timing({
+  //               latitude: newPosition.latitude,
+  //               longitude: newPosition.longitude,
+  //               duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
+  //               useNativeDriver: true,
+  //             })
+  //             .start();
+
+  //           setSliderValue(newIndex / (coordinates?.length - 1));
+  //         }
+
+  //         return newIndex;
+  //       });
+  //     }, 1000 / adjustedPlaybackSpeed); // Interval based on adjusted speed
+  //   } else {
+  //     clearInterval(interval);
+  //   }
+
+  //   return () => clearInterval(interval);
+  // }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
 
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
@@ -211,6 +312,7 @@ export default function PlayJourney({navigation, route}) {
   const togglePlayback = () => {
     setIsPlaying(!isPlaying);
   };
+  const handleTogglePlayback = () => setIsPlaying(prev => !prev);
 
   const changePlaybackSpeed = speed => {
     setPlaybackSpeed(speed);
@@ -286,8 +388,8 @@ export default function PlayJourney({navigation, route}) {
       mapRef.current?.animateToRegion({
         latitude: prevStop.latitude,
         longitude: prevStop.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 1,
+        longitudeDelta: 1,
       });
     }
   };
@@ -371,68 +473,102 @@ export default function PlayJourney({navigation, route}) {
             {!loading && (
               <View style={styles.mapView}>
                 {initialRegion && (
+                  // <MapView
+                  //   ref={mapRef}
+                  //   style={StyleSheet.absoluteFillObject}
+                  //   initialRegion={initialRegion}
+                  //   // onLayout={handleMapLayout}
+                  //   mapType={mapType}>
+                  //   <Polyline
+                  //     coordinates={coordinates}
+                  //     strokeColor="blue"
+                  //     strokeWidth={3}
+                  //   />
+                  //   {currentPosition && (
+                  //     <Marker.Animated
+                  //       coordinate={{
+                  //         latitude: currentPosition.latitude,
+                  //         longitude: currentPosition.longitude,
+                  //       }}>
+                  //       <View style={styles.markerContainer}>
+                  //         <View style={styles.addressContainer}>
+                  //           <Text style={styles.kmText}>
+                  //             {`${Math.floor(
+                  //               currentPosition.speed * 1.852,
+                  //             )} km/h`}
+                  //           </Text>
+                  //           <Text style={styles.kmText}>
+                  //             {`${moment(currentPosition.time)
+                  //               .utcOffset(330)
+                  //               .format('D MMM YYYY, h:mm A')}`}
+                  //           </Text>
+                  //         </View>
+                  //         <View style={styles.arrowBottom} />
+                  //         <View style={styles.truckIconContainer}>
+                  //           <TruckNavigationIcon
+                  //             size={50}
+                  //             course={currentPosition.course}
+                  //           />
+                  //         </View>
+                  //       </View>
+                  //     </Marker.Animated>
+                  //   )}
+                  //   {gpsStopsData?.map((stop, index) => (
+                  //     <Marker
+                  //       key={`stop-${index}`}
+                  //       ref={el => (markerRefs.current[index] = el)}
+                  //       coordinate={{
+                  //         latitude: stop.latitude,
+                  //         longitude: stop.longitude,
+                  //       }}
+                  //       onPress={() => handleMarkerPress(stop, index)}>
+                  //       <View style={styles.markerContainer}>
+                  //         <View style={styles.addressContainer}>
+                  //           <Text style={styles.kmText}>
+                  //             {fullAddressCustomId === stop.positionId
+                  //               ? fullAddressData
+                  //               : stop.address || 'Click below to Show Address'}
+                  //           </Text>
+                  //         </View>
+                  //         <View style={styles.arrowBottom} />
+                  //         <View style={styles.truckIconContainer}>
+                  //           <StopsIcon size={40} number={index + 1} />
+                  //         </View>
+                  //       </View>
+                  //     </Marker>
+                  //   ))}
+                  // </MapView>
+
                   <MapView
                     ref={mapRef}
                     style={StyleSheet.absoluteFillObject}
                     initialRegion={initialRegion}
-                    // onLayout={handleMapLayout}
                     mapType={mapType}>
                     <Polyline
                       coordinates={coordinates}
-                      strokeColor="#0158AF"
+                      strokeColor="blue"
                       strokeWidth={3}
                     />
                     {currentPosition && (
-                      <Marker.Animated
+                      <Marker
                         coordinate={{
                           latitude: currentPosition.latitude,
                           longitude: currentPosition.longitude,
-                        }}>
-                        <View style={styles.markerContainer}>
-                          <View style={styles.addressContainer}>
-                            <Text style={styles.kmText}>
-                              {`${Math.floor(
-                                currentPosition.speed * 1.852,
-                              )} km/h`}
-                            </Text>
-                            <Text style={styles.kmText}>
-                              {`${moment(currentPosition.time)
-                                .utcOffset(330)
-                                .format('D MMM YYYY, h:mm A')}`}
-                            </Text>
-                          </View>
-                          <View style={styles.arrowBottom} />
-                          <View style={styles.truckIconContainer}>
-                            <TruckNavigationIcon
-                              size={50}
-                              course={currentPosition.course}
-                            />
-                          </View>
-                        </View>
-                      </Marker.Animated>
+                        }}
+                        rotation={currentPosition.course}
+                        anchor={{x: 0.5, y: 0.5}}>
+                        <VehicleIconSvg width={50} height={50} />
+                      </Marker>
                     )}
+                    {/* Render Stops */}
                     {gpsStopsData?.map((stop, index) => (
                       <Marker
                         key={`stop-${index}`}
-                        ref={el => (markerRefs.current[index] = el)}
                         coordinate={{
                           latitude: stop.latitude,
                           longitude: stop.longitude,
-                        }}
-                        onPress={() => handleMarkerPress(stop, index)}>
-                        <View style={styles.markerContainer}>
-                          <View style={styles.addressContainer}>
-                            <Text style={styles.kmText}>
-                              {fullAddressCustomId === stop.positionId
-                                ? fullAddressData
-                                : stop.address || 'Click below to Show Address'}
-                            </Text>
-                          </View>
-                          <View style={styles.arrowBottom} />
-                          <View style={styles.truckIconContainer}>
-                            <StopsIcon size={40} number={index + 1} />
-                          </View>
-                        </View>
+                        }}>
+                        <StopsIcon size={40} number={index + 1} />
                       </Marker>
                     ))}
                   </MapView>
@@ -478,7 +614,8 @@ export default function PlayJourney({navigation, route}) {
             <View style={styles.controlsContainer}>
               <TouchableOpacity
                 style={styles.playPauseButton}
-                onPress={togglePlayback}>
+                // onPress={togglePlayback}>
+                onPress={handleTogglePlayback}>
                 {isPlaying ? (
                   <PauseIcon size={20} color={backgroundColorNew} />
                 ) : (

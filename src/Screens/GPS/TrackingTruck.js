@@ -113,6 +113,7 @@ const TrackingTruck = ({navigation, route}) => {
           initialRegion={{
             latitude: lat,
             longitude: long,
+            course: item?.position[0]?.course || 0,
           }}
           item={item}
           positions={filteredPositions}
