@@ -8,7 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import MapView, {
+  AnimatedRegion,
+  Callout,
+  Marker,
+  Polyline,
+} from 'react-native-maps';
 import {backgroundColorNew} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
@@ -34,7 +39,6 @@ import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
-import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
 import VehicleIconSvg from '../../../assets/SVG/svg/VehicleIconSvg';
 
 export default function PlayJourney({navigation, route}) {
@@ -48,13 +52,15 @@ export default function PlayJourney({navigation, route}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [animationDuration, setAnimationDuration] = useState(50);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [mapType, setMapType] = useState('standard');
+  const [isFollowingVehicle, setIsFollowingVehicle] = useState(true);
   const [currentStop, setCurrentStop] = useState(null);
 
   const {convertMillisToTime} = useConvertMillisToTime();
   const mapRef = useRef(null);
-  // const markerRefs = useRef([]);
+  const markerRefs = useRef([]);
 
   const dispatch = useDispatch();
   const {
@@ -86,51 +92,6 @@ export default function PlayJourney({navigation, route}) {
     setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
   };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const defaultFrom =
-  //       from || moment().utcOffset(330).startOf('day').toISOString();
-  //     const defaultTo =
-  //       to || moment().utcOffset(330).endOf('day').toISOString();
-
-  //     const fetchData = async () => {
-  //       await dispatch(
-  //         fetchPositionsRequest(
-  //           gpsTokenData?.email,
-  //           gpsTokenData?.password,
-  //           deviceId,
-  //           defaultFrom,
-  //           defaultTo,
-  //         ),
-  //       );
-
-  //       await dispatch(
-  //         fetchGpsStopsRequest(
-  //           gpsTokenData?.email,
-  //           gpsTokenData?.password,
-  //           deviceId,
-  //           defaultFrom,
-  //           defaultTo,
-  //         ),
-  //       );
-
-  //       await dispatch(
-  //         fetchSummaryReportRequest(
-  //           gpsTokenData?.email,
-  //           gpsTokenData?.password,
-  //           deviceId,
-  //           defaultFrom,
-  //           defaultTo,
-  //           false,
-  //         ),
-  //       );
-  //     };
-
-  //     fetchData();
-
-  //     return () => {};
-  //   }, [dispatch, from, to, deviceId, gpsTokenData]),
-  // );
   useFocusEffect(
     useCallback(() => {
       const defaultFrom =
@@ -179,12 +140,6 @@ export default function PlayJourney({navigation, route}) {
     }
   }, [gpsStopsData]);
 
-  // useEffect(() => {
-  //   if (markerRefs.current[currentStopIndex]) {
-  //     markerRefs.current[currentStopIndex].showCallout();
-  //   }
-  // }, [currentStopIndex, gpsStopsData]);
-
   const coordinates = useMemo(
     () =>
       gpsReplayData?.map(point => ({
@@ -203,8 +158,8 @@ export default function PlayJourney({navigation, route}) {
       return {
         latitude,
         longitude,
-        latitudeDelta: 1,
-        longitudeDelta: 1,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.09,
       };
     }
     return null;
@@ -216,7 +171,7 @@ export default function PlayJourney({navigation, route}) {
     if (isPlaying) {
       Animated.timing(animation, {
         toValue: 1,
-        duration: playbackSpeed * 1000 * coordinates.length, // Adjust duration
+        duration: animationDuration * coordinates.length, // Adjust duration
         easing: Easing.linear,
         useNativeDriver: false,
       }).start();
@@ -225,101 +180,83 @@ export default function PlayJourney({navigation, route}) {
     }
   }, [isPlaying, playbackSpeed, coordinates.length]);
 
+  const changePlaybackSpeed = speed => {
+    const newDuration = speed === 1 ? 50 : 10;
+    setPlaybackSpeed(speed);
+    setAnimationDuration(newDuration);
+
+    if (isPlaying) {
+      animation.stopAnimation(() => {
+        Animated.timing(animation, {
+          toValue: 1,
+          duration: newDuration * coordinates.length,
+          easing: Easing.linear,
+          useNativeDriver: false,
+        }).start();
+      });
+    }
+  };
+
   useEffect(() => {
-    animation.addListener(({value}) => {
+    const updateAnimation = () => {
       const totalSegments = coordinates.length - 1;
-      const currentSegmentIndex = Math.floor(value * totalSegments);
-      const nextSegmentIndex = currentSegmentIndex + 1;
-
-      if (nextSegmentIndex < coordinates.length) {
-        const start = coordinates[currentSegmentIndex];
-        const end = coordinates[nextSegmentIndex];
-        const segmentProgress = (value * totalSegments) % 1;
-
-        const newPosition = {
-          latitude:
-            start.latitude + (end.latitude - start.latitude) * segmentProgress,
-          longitude:
-            start.longitude +
-            (end.longitude - start.longitude) * segmentProgress,
-          course: start.course,
-        };
-
-        setCurrentPosition(newPosition);
-
-        if (mapRef.current) {
-          mapRef.current.animateToRegion(
-            {
-              latitude: newPosition.latitude,
-              longitude: newPosition.longitude,
-              latitudeDelta: 0.1,
-              longitudeDelta: 0.1,
-            },
-            1000,
-          );
+      // console.log(5555, totalSegments);
+      animation.addListener(({value}) => {
+        setSliderValue(value);
+        const currentSegmentIndex = Math.floor(value * totalSegments);
+        // console.log(6666, currentSegmentIndex);
+        const nextSegmentIndex = currentSegmentIndex + 1;
+        if (nextSegmentIndex < coordinates.length) {
+          const start = coordinates[currentSegmentIndex];
+          const end = coordinates[nextSegmentIndex];
+          const segmentProgress = (value * totalSegments) % 1;
+          // console.log(88888, start, end, segmentProgress);
+          const newPosition = {
+            latitude:
+              start.latitude +
+              (end.latitude - start.latitude) * segmentProgress,
+            longitude:
+              start.longitude +
+              (end.longitude - start.longitude) * segmentProgress,
+            course: start.course,
+            speed: start.speed + (end.speed - start.speed) * segmentProgress,
+            time: start.time + (end.time - start.time) * segmentProgress,
+          };
+          // console.log(99999, newPosition);
+          setCurrentPosition(newPosition);
+          // Only animate map if following vehicle is true
+          if (isFollowingVehicle && mapRef.current) {
+            mapRef.current.animateToRegion(
+              {
+                latitude: newPosition.latitude,
+                longitude: newPosition.longitude,
+                latitudeDelta: 0.09,
+                longitudeDelta: 0.09,
+              },
+              500 / playbackSpeed, // Adjust animation duration based on playbackSpeed
+            );
+          }
         }
-      }
-    });
-  }, [animation, coordinates]);
-
-  // useEffect(() => {
-  //   let interval = null;
-
-  //   if (isPlaying && currentIndex < coordinates?.length) {
-  //     const adjustedPlaybackSpeed = playbackSpeed * 1000; // Adjust playback speed
-
-  //     interval = setInterval(() => {
-  //       setCurrentIndex(prevIndex => {
-  //         const newIndex = prevIndex + 1;
-  //         const newPosition = coordinates[newIndex];
-
-  //         if (newPosition) {
-  //           // Set the new currentPosition
-  //           setCurrentPosition(newPosition);
-
-  //           // Animate marker movement
-  //           animatedMarkerPosition
-  //             .timing({
-  //               latitude: newPosition.latitude,
-  //               longitude: newPosition.longitude,
-  //               duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
-  //               useNativeDriver: true,
-  //             })
-  //             .start();
-
-  //           setSliderValue(newIndex / (coordinates?.length - 1));
-  //         }
-
-  //         return newIndex;
-  //       });
-  //     }, 1000 / adjustedPlaybackSpeed); // Interval based on adjusted speed
-  //   } else {
-  //     clearInterval(interval);
-  //   }
-
-  //   return () => clearInterval(interval);
-  // }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+      });
+    };
+    // Run updateAnimation initially and whenever playbackSpeed or animation changes
+    updateAnimation();
+    // Clear and reset the listener on unmount or when playbackSpeed changes
+    return () => animation.removeAllListeners();
+  }, [animation, coordinates, isFollowingVehicle, playbackSpeed]);
 
   const animatedMarkerPosition = useRef(
     new AnimatedRegion({
       latitude: coordinates?.[0]?.latitude || 0,
       longitude: coordinates?.[0]?.longitude || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
+      latitudeDelta: 0.09,
+      longitudeDelta: 0.09,
     }),
   ).current;
 
-  const togglePlayback = () => {
-    setIsPlaying(!isPlaying);
-  };
   const handleTogglePlayback = () => setIsPlaying(prev => !prev);
-
-  const changePlaybackSpeed = speed => {
-    setPlaybackSpeed(speed);
-    if (isPlaying) {
-      togglePlayback();
-      togglePlayback();
-    }
+  const toggleFollowVehicle = () => {
+    setIsFollowingVehicle(prevState => !prevState);
   };
 
   const goToNextStop = () => {
@@ -344,7 +281,7 @@ export default function PlayJourney({navigation, route}) {
           latitude: nextStop.latitude,
           longitude: nextStop.longitude,
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver: false,
         })
         .start();
 
@@ -352,8 +289,8 @@ export default function PlayJourney({navigation, route}) {
       mapRef.current?.animateToRegion({
         latitude: nextStop.latitude,
         longitude: nextStop.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.09,
       });
     }
   };
@@ -388,8 +325,8 @@ export default function PlayJourney({navigation, route}) {
       mapRef.current?.animateToRegion({
         latitude: prevStop.latitude,
         longitude: prevStop.longitude,
-        latitudeDelta: 1,
-        longitudeDelta: 1,
+        latitudeDelta: 0.09,
+        longitudeDelta: 0.09,
       });
     }
   };
@@ -473,72 +410,6 @@ export default function PlayJourney({navigation, route}) {
             {!loading && (
               <View style={styles.mapView}>
                 {initialRegion && (
-                  // <MapView
-                  //   ref={mapRef}
-                  //   style={StyleSheet.absoluteFillObject}
-                  //   initialRegion={initialRegion}
-                  //   // onLayout={handleMapLayout}
-                  //   mapType={mapType}>
-                  //   <Polyline
-                  //     coordinates={coordinates}
-                  //     strokeColor="blue"
-                  //     strokeWidth={3}
-                  //   />
-                  //   {currentPosition && (
-                  //     <Marker.Animated
-                  //       coordinate={{
-                  //         latitude: currentPosition.latitude,
-                  //         longitude: currentPosition.longitude,
-                  //       }}>
-                  //       <View style={styles.markerContainer}>
-                  //         <View style={styles.addressContainer}>
-                  //           <Text style={styles.kmText}>
-                  //             {`${Math.floor(
-                  //               currentPosition.speed * 1.852,
-                  //             )} km/h`}
-                  //           </Text>
-                  //           <Text style={styles.kmText}>
-                  //             {`${moment(currentPosition.time)
-                  //               .utcOffset(330)
-                  //               .format('D MMM YYYY, h:mm A')}`}
-                  //           </Text>
-                  //         </View>
-                  //         <View style={styles.arrowBottom} />
-                  //         <View style={styles.truckIconContainer}>
-                  //           <TruckNavigationIcon
-                  //             size={50}
-                  //             course={currentPosition.course}
-                  //           />
-                  //         </View>
-                  //       </View>
-                  //     </Marker.Animated>
-                  //   )}
-                  //   {gpsStopsData?.map((stop, index) => (
-                  //     <Marker
-                  //       key={`stop-${index}`}
-                  //       ref={el => (markerRefs.current[index] = el)}
-                  //       coordinate={{
-                  //         latitude: stop.latitude,
-                  //         longitude: stop.longitude,
-                  //       }}
-                  //       onPress={() => handleMarkerPress(stop, index)}>
-                  //       <View style={styles.markerContainer}>
-                  //         <View style={styles.addressContainer}>
-                  //           <Text style={styles.kmText}>
-                  //             {fullAddressCustomId === stop.positionId
-                  //               ? fullAddressData
-                  //               : stop.address || 'Click below to Show Address'}
-                  //           </Text>
-                  //         </View>
-                  //         <View style={styles.arrowBottom} />
-                  //         <View style={styles.truckIconContainer}>
-                  //           <StopsIcon size={40} number={index + 1} />
-                  //         </View>
-                  //       </View>
-                  //     </Marker>
-                  //   ))}
-                  // </MapView>
-
                   <MapView
                     ref={mapRef}
                     style={StyleSheet.absoluteFillObject}
@@ -549,26 +420,79 @@ export default function PlayJourney({navigation, route}) {
                       strokeColor="blue"
                       strokeWidth={3}
                     />
+
                     {currentPosition && (
                       <Marker
                         coordinate={{
                           latitude: currentPosition.latitude,
                           longitude: currentPosition.longitude,
                         }}
-                        rotation={currentPosition.course}
+                        key={currentPosition.time} // Use currentPosition.time to force re-render
                         anchor={{x: 0.5, y: 0.5}}>
-                        <VehicleIconSvg width={50} height={50} />
+                        <View style={{alignItems: 'center'}}>
+                          <Animated.View
+                            style={{
+                              transform: [
+                                {rotate: `${currentPosition.course}deg`},
+                              ],
+                            }}>
+                            <VehicleIconSvg width={50} height={50} />
+                          </Animated.View>
+                          <Callout tooltip>
+                            <View
+                              style={[
+                                styles.addressContainer,
+                                {
+                                  minWidth: 250,
+                                  justifyContent: 'space-between',
+                                  flexDirection: 'column',
+                                  alignItems: 'center',
+                                },
+                              ]}>
+                              <Text style={styles.kmText}>
+                                {`${Math.floor(
+                                  currentPosition.speed * 1.852,
+                                )} km/h`}
+                                {', '}
+                                {(() => {
+                                  const cleanedTime =
+                                    currentPosition.time.replace(/NaN$/, ''); // Remove 'NaN' at the end
+                                  return moment(cleanedTime).isValid()
+                                    ? moment(cleanedTime)
+                                        .utcOffset(330)
+                                        .format('D MMM YY, h:mm:ss A')
+                                    : 'Invalid date';
+                                })()}
+                              </Text>
+                            </View>
+                          </Callout>
+                        </View>
                       </Marker>
                     )}
+
                     {/* Render Stops */}
                     {gpsStopsData?.map((stop, index) => (
                       <Marker
                         key={`stop-${index}`}
+                        ref={el => (markerRefs.current[index] = el)}
                         coordinate={{
                           latitude: stop.latitude,
                           longitude: stop.longitude,
-                        }}>
-                        <StopsIcon size={40} number={index + 1} />
+                        }}
+                        onPress={() => handleMarkerPress(stop, index)}>
+                        <View style={styles.markerContainer}>
+                          <View style={styles.addressContainer}>
+                            <Text style={styles.kmText}>
+                              {fullAddressCustomId === stop.positionId
+                                ? fullAddressData
+                                : stop.address || 'Click below to Show Address'}
+                            </Text>
+                          </View>
+                          <View style={styles.arrowBottom} />
+                          <View style={styles.truckIconContainer}>
+                            <StopsIcon size={40} number={index + 1} />
+                          </View>
+                        </View>
                       </Marker>
                     ))}
                   </MapView>
@@ -586,6 +510,13 @@ export default function PlayJourney({navigation, route}) {
                   />
                 </TouchableOpacity>
                 <View style={styles.extraButtonBox}>
+                  <TouchableOpacity
+                    onPress={toggleFollowVehicle}
+                    style={styles.stopsBtnStyle}>
+                    <Text style={styles.alertButtonText}>
+                      {isFollowingVehicle ? 'Stop Following' : 'Follow Vehicle'}
+                    </Text>
+                  </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate('stops', {deviceId, from, to})
@@ -631,30 +562,55 @@ export default function PlayJourney({navigation, route}) {
                   maximumTrackTintColor="#FFDCD3"
                   thumbTintColor={backgroundColorNew}
                   value={sliderValue}
+                  // onValueChange={value => {
+                  //   setSliderValue(value);
+                  //   const newIndex = Math.round(
+                  //     value * (coordinates?.length - 1),
+                  //   );
+                  //   setCurrentIndex(newIndex);
+                  //   const newPosition = coordinates[newIndex];
+                  //   setCurrentPosition(newPosition);
+                  //   animatedMarkerPosition
+                  //     .timing({
+                  //       latitude: newPosition.latitude,
+                  //       longitude: newPosition.longitude,
+                  //       duration: 100,
+                  //       easing: Easing.linear,
+                  //       useNativeDriver: false,
+                  //     })
+                  //     .start();
+                  //   if (mapRef.current && newPosition) {
+                  //     mapRef.current.animateToRegion({
+                  //       latitude: newPosition?.latitude,
+                  //       longitude: newPosition?.longitude,
+                  //       latitudeDelta: 0.09,
+                  //       longitudeDelta: 0.09,
+                  //     });
+                  //   }
+                  // }}
                   onValueChange={value => {
-                    setSliderValue(value);
-                    const newIndex = Math.round(
-                      value * (coordinates?.length - 1),
-                    );
-                    setCurrentIndex(newIndex);
-                    const newPosition = coordinates[newIndex];
+                    const totalSegments = coordinates.length - 1;
+                    const newSegmentIndex = Math.floor(value * totalSegments);
+                    const newPosition = coordinates[newSegmentIndex];
                     setCurrentPosition(newPosition);
                     animatedMarkerPosition
                       .timing({
                         latitude: newPosition.latitude,
                         longitude: newPosition.longitude,
                         duration: 500,
-                        useNativeDriver: true,
+                        easing: Easing.linear,
+                        useNativeDriver: false,
                       })
                       .start();
                     if (mapRef.current && newPosition) {
                       mapRef.current.animateToRegion({
                         latitude: newPosition?.latitude,
                         longitude: newPosition?.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.09,
+                        longitudeDelta: 0.09,
                       });
                     }
+                    setSliderValue(value);
                   }}
                 />
               </View>

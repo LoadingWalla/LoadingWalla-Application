@@ -10,7 +10,6 @@ import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 
-
 const GpsRelay = ({navigation, route}) => {
   useTrackScreenTime('GpsRelay');
   const {t} = useTranslation();
@@ -28,7 +27,7 @@ const GpsRelay = ({navigation, route}) => {
   }, [wsConnected]);
 
   const handleRelayToggle = () => {
-    dispatch(setGpsRelayRequest(deviceId, gpsRelayData.relay ? 2 : 1));
+    dispatch(setGpsRelayRequest(deviceId, gpsRelayData?.relay ? 2 : 1));
     setTimeout(() => {
       navigation.goBack();
     }, 1000);
@@ -56,7 +55,8 @@ const GpsRelay = ({navigation, route}) => {
         </View>
         <View style={styles.descriptionBox}>
           <Text style={styles.descriptionText}>
-            {t(Constants.BY_CLICK)}{'  '}
+            {t(Constants.BY_CLICK)}
+            {'  '}
             <Text style={styles.descriptionTextBold(gpsRelayData.relay)}>
               {gpsRelayData.relay
                 ? t(Constants.TURN_OFF_RELAY)
@@ -71,7 +71,8 @@ const GpsRelay = ({navigation, route}) => {
           title={
             gpsRelayData.relay
               ? t(Constants.TURN_OFF_RELAY)
-              : t(Constants.TURN_ON_RELAY)}
+              : t(Constants.TURN_ON_RELAY)
+          }
           enabledStyle={styles.gpsRelayBtnStyle(gpsRelayData.relay)}
           textStyle={styles.gpsRelayBtnText}
         />

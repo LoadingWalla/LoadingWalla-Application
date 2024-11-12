@@ -36,7 +36,7 @@ const QuickFilters = ({navigation, route}) => {
     'Last 7 Days',
     'Last 1 Month',
     'Last 3 Months',
-];
+  ];
 
   const [activeFilter, setActiveFilter] = useState('Today');
   const [date, setDate] = useState(new Date());
@@ -122,29 +122,53 @@ const QuickFilters = ({navigation, route}) => {
 
     const rangeMap = {
       Today: {
-          start: moment().utcOffset(330).startOf('day').toISOString(),
-          end: moment().utcOffset(330).endOf('day').toISOString(),
+        start: moment().utcOffset(330).startOf('day').toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
       },
       Yesterday: {
-          start: moment().utcOffset(330).subtract(1, 'days').startOf('day').toISOString(),
-          end: moment().utcOffset(330).subtract(1, 'days').endOf('day').toISOString(),
+        start: moment()
+          .utcOffset(330)
+          .subtract(1, 'days')
+          .startOf('day')
+          .toISOString(),
+        end: moment()
+          .utcOffset(330)
+          .subtract(1, 'days')
+          .endOf('day')
+          .toISOString(),
       },
       'Last 3 Days': {
-          start: moment().utcOffset(330).subtract(3, 'days').startOf('day').toISOString(),
-          end: moment().utcOffset(330).endOf('day').toISOString(),
+        start: moment()
+          .utcOffset(330)
+          .subtract(3, 'days')
+          .startOf('day')
+          .toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
       },
       'Last 7 Days': {
-          start: moment().utcOffset(330).subtract(7, 'days').startOf('day').toISOString(),
-          end: moment().utcOffset(330).endOf('day').toISOString(),
+        start: moment()
+          .utcOffset(330)
+          .subtract(7, 'days')
+          .startOf('day')
+          .toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
       },
       'Last 1 Month': {
-          start: moment().utcOffset(330).subtract(1, 'months').startOf('day').toISOString(),
-          end: moment().utcOffset(330).endOf('day').toISOString(),
+        start: moment()
+          .utcOffset(330)
+          .subtract(1, 'months')
+          .startOf('day')
+          .toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
       },
       'Last 3 Months': {
-          start: moment().utcOffset(330).subtract(3, 'months').startOf('day').toISOString(),
-          end: moment().utcOffset(330).endOf('day').toISOString(),
-      }
+        start: moment()
+          .utcOffset(330)
+          .subtract(3, 'months')
+          .startOf('day')
+          .toISOString(),
+        end: moment().utcOffset(330).endOf('day').toISOString(),
+      },
     };
 
     return rangeMap[filter] || {start: '', end: ''};
@@ -206,7 +230,7 @@ const QuickFilters = ({navigation, route}) => {
       style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View>
-        <Text style={{ margin: 5, fontWeight: 'bold', fontSize: 11 }}>
+        <Text style={{margin: 5, fontWeight: 'bold', fontSize: 11}}>
           Show previous data by:
         </Text>
       </View>
@@ -232,7 +256,7 @@ const QuickFilters = ({navigation, route}) => {
             </Text>
           </TouchableOpacity>
         ))}
-      </View>      
+      </View>
       <View style={styles.customFilterContainer}>
         {activeFilter === 'Custom' && (
           <>
@@ -349,4 +373,3 @@ const QuickFilters = ({navigation, route}) => {
 };
 
 export default QuickFilters;
-
