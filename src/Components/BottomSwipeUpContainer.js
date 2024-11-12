@@ -185,8 +185,8 @@ const BottomSwipeUpContainer = React.memo(
     const [parkingAlarmHeight, setParkingAlarmHeight] = useState(0);
     const [bottomSpace, setBottomSpace] = useState(0);
 
-    const [total, setTotal] = useState(SCREEN_HEIGHT / 2.1);
-    const [limit, setLimit] = useState(MAX_HEIGHT);
+    const [totalScreenHeight, setTotalScreenHeight] = useState(MAX_HEIGHT);
+    // const [limit, setLimit] = useState(MAX_HEIGHT);
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
@@ -211,7 +211,7 @@ const BottomSwipeUpContainer = React.memo(
             }
             const newHeight = Math.max(
               MIN_HEIGHT,
-              Math.min(limit, MIN_HEIGHT - gestureState.dy),
+              Math.min(totalScreenHeight, MIN_HEIGHT - gestureState.dy),
             );
             animatedHeight.setValue(newHeight);
           },
@@ -221,7 +221,7 @@ const BottomSwipeUpContainer = React.memo(
               setIsExpanded(true);
               Animated.timing(animatedHeight, {
                 // toValue: MAX_HEIGHT,
-                toValue: total,
+                toValue: totalScreenHeight,
                 duration: 300,
                 easing: Easing.out(Easing.ease),
                 useNativeDriver: false,
@@ -238,18 +238,13 @@ const BottomSwipeUpContainer = React.memo(
             }
           },
         }),
-      [isExpanded, animatedHeight, total],
+      [isExpanded, animatedHeight, totalScreenHeight],
     );
 
     useEffect(() => {
-      const calculatedMaxHeight =
-        swipeIndicatorHeight +
-        iconRowHeight +
-        infoSectionHeight +
-        parkingAlarmHeight +
-        bottomSpace;
-      setTotal(calculatedMaxHeight);
-      setLimit(calculatedMaxHeight);
+      const calculatedMaxHeight = swipeIndicatorHeight + iconRowHeight +
+                                  infoSectionHeight + parkingAlarmHeight + bottomSpace;
+      setTotalScreenHeight(calculatedMaxHeight);
     }, [
       swipeIndicatorHeight,
       iconRowHeight,
@@ -336,7 +331,7 @@ const BottomSwipeUpContainer = React.memo(
         {/* 1 */}
         <View
           onLayout={event => {
-            console.log('-------- 0-------->', event.nativeEvent.layout.height);
+            // console.log('-------- 0-------->', event.nativeEvent.layout.height);aa
             setSwipeIndicatorHeight(event.nativeEvent.layout.height);
           }}
           style={styles.swipeIndicator}
@@ -345,7 +340,7 @@ const BottomSwipeUpContainer = React.memo(
         {/* 2 */}
         <View
           onLayout={event => {
-            console.log('-------- 1-------->', event.nativeEvent.layout.height);
+            // console.log('-------- 1-------->', event.nativeEvent.layout.height);
             setIconRowHeight(event.nativeEvent.layout.height);
           }}
           style={styles.iconRow}>
@@ -364,7 +359,7 @@ const BottomSwipeUpContainer = React.memo(
         {/* 3 */}
         <View
           onLayout={event => {
-            console.log('-------- 2-------->', event.nativeEvent.layout.height);
+            // console.log('-------- 2-------->', event.nativeEvent.layout.height);
             setInfoSectionHeight(event.nativeEvent.layout.height);
           }}
           style={styles.infoSection}>
@@ -451,7 +446,7 @@ const BottomSwipeUpContainer = React.memo(
 
         <View
           onLayout={event => {
-            console.log('-------- 5-------->', event.nativeEvent.layout.height);
+            // console.log('-------- 5-------->', event.nativeEvent.layout.height);
             setBottomSpace(event.nativeEvent.layout.height);
           }}
           style={{
