@@ -11,7 +11,7 @@ import {
   fetchTokenRequest,
   initProfile,
 } from '../../Store/Actions/Actions';
-import {backgroundColorNew, GradientColor1, GradientColor5} from '../../Color/color';
+import {GradientColor1, GradientColor5} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import GpsItem from '../../Components/GpsItem';
 import DashboardHeader from '../../Components/DashboardHeader';

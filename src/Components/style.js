@@ -1130,12 +1130,11 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 15,
     paddingVertical: 10,
     flex: 1,
   }),
   buttonText: {
-    // marginLeft: 10,
+    // borderWidth: 2,
     fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 10,
     color: titleColor,

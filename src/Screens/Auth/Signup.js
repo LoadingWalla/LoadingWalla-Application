@@ -87,7 +87,8 @@ const Signup = ({navigation}) => {
       );
       return;
     }
-    dispatch(initLogin(mobileNumber));
+    console.log(mobileNumber);
+    // dispatch(initLogin(mobileNumber));
   };
 
   useEffect(() => {

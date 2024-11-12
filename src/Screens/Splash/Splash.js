@@ -53,8 +53,8 @@ const Splash = ({navigation: {replace}}) => {
     <>
       <StatusBar
         barStyle={'dark-content'}
-        backgroundColor={white}
-        hidden={false}
+        backgroundColor="transparent"
+        // hidden={false}
       />
       <View style={styles.splashContainer}>
         {/* <Animated.Image
@@ -65,7 +65,7 @@ const Splash = ({navigation: {replace}}) => {
         <LottieView
           source={require('../../../assets/GIFs/LoadingWallaSplashScreen.json')}
           autoPlay
-          loop
+          loop={false}
           // resizeMode="contain"
           style={styles.splashImage}
         />
