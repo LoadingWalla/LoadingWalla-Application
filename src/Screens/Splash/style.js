@@ -9,6 +9,6 @@ export default StyleSheet.create({
   },
   splashImage: {
     height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width / 1.3,
+    width: Dimensions.get('window').width / 0.5,
   },
 });

@@ -22,6 +22,14 @@ export const btnGreen = '#3BA700';
 export const grayBg = '#E9E9E9';
 export const darkGrayBg = '#A6A6A6';
 export const sliderColor = '#FFDCD3';
+export const textRed = '#F50000';
+export const grayColor = '#7E7E7E';
+export const grayColorOutline = '#595959';
+export const arrowBtnFill = '#EC1C24';
+export const countryCode = '#595959';
+export const phonePlaceholder = '#636363';
+export const warningTxt = '#E10000';
+export const verifyOtpNumber = '#F50000';
 //  New Color
 // export const backgroundColorNew = '#ED1C24';
 export const backgroundColorNew = '#EF4D23';

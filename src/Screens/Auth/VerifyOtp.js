@@ -1,5 +1,11 @@
 import React, {useEffect, useState, useLayoutEffect} from 'react';
-import {View, Text, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import styles from './style';
@@ -10,19 +16,25 @@ import {
   VerifyOtpFailure,
   initLogin,
 } from '../../Store/Actions/Actions';
+import {StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
-import {backgroundColorNew} from '../../Color/color';
+import {backgroundColorNew, pageBackground} from '../../Color/color';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import Edit from '../../../assets/SVG/svg/Edit';
+import Wrong from '../../../assets/SVG/svg/Wrong';
+import Correct from '../../../assets/SVG/svg/Correct';
+import GradientStatusBar from '../../Components/GradientStatusBar';
 
 const VerifyOtp = ({navigation, route}) => {
   useTrackScreenTime('VerifyOtp');
   const {t} = useTranslation();
   const {userId, mobileNumber} = route?.params;
-  const [otpValue, setOtpvalue] = useState('');
+  const [otpValue, setOtpValue] = useState('');
+  const [isCodeCorrect, setIsCodeCorrect] = useState(null);
   const [isCodeFill, setCodeFill] = useState(false);
   const [devicetoken, setDeviceToken] = useState(false);
   const [delay, setDelay] = useState('');
@@ -34,6 +46,14 @@ const VerifyOtp = ({navigation, route}) => {
     // console.log('Verify Otp', state.data);
     return state.data;
   });
+
+  // useEffect(() => {
+  //   // Hide the status bar when this screen is focused
+  //   StatusBar.setHidden(true);
+
+  //   // Clean up to reset status bar visibility when leaving the screen
+  //   return () => StatusBar.setHidden(false);
+  // }, []);
 
   useEffect(() => {
     setDelay('599');
@@ -52,11 +72,13 @@ const VerifyOtp = ({navigation, route}) => {
     }
 
     if (status === 200) {
-      if (otpdata?.data?.data?.user[0]?.new_user === 0) {
-        navigation.replace('Landing');
-      } else {
-        navigation.replace('companyDetails', {userId});
-      }
+      setTimeout(() => {
+        if (otpdata?.data?.data?.user[0]?.new_user === 0) {
+          navigation.replace('Landing');
+        } else {
+          navigation.replace('companyDetails', {userId});
+        }
+      }, 1000);
       dispatch(VerifyOtpFailure());
     } else {
       dispatch(VerifyOtpFailure());
@@ -97,6 +119,29 @@ const VerifyOtp = ({navigation, route}) => {
     verifyOtp(otpValue);
   };
 
+  const handleOtpChange = code => {
+    setIsCodeCorrect(null);
+    setOtpValue(code);
+    if (code.length === 4) {
+      // Call verifyOtp function to check if OTP is correct
+      verifyOtp(code);
+    }
+  };
+
+  // useEffect to watch for changes in `status`
+  useEffect(() => {
+    console.log('----------- isCodeFill ----------->', isCodeFill);
+    if (isCodeFill === true) {
+      console.log('----------- otp status ----------->', status);
+      if (status === 200) {
+        setIsCodeCorrect(true); // Correct OTP, set color to green
+      } else if (status === 201) {
+        setIsCodeCorrect(false); // Incorrect OTP, set color to red
+      }
+    }
+    console.log('----------- isOTPCorrect ----------->', isCodeCorrect);
+  }, [status, isCodeFill]); // Run effect whenever `status` changes
+
   const resendCode = () => {
     dispatch(initLogin(mobileNumber));
     setDelay('599');
@@ -118,65 +163,153 @@ const VerifyOtp = ({navigation, route}) => {
 
   return (
     <KeyboardAvoidingView style={styles.Container}>
+      <GradientStatusBar
+        colors={[
+          '#F7F7F7',
+          '#F5F5F5',
+          '#F4F4F4',
+          '#F5F5F5',
+          '#F3F3F3',
+          '#F4F4F4',
+          '#F5F5F5',
+          '#F3F3F3',
+          '#F4F4F4',
+          '#F6F6F6',
+          '#F7F7F7',
+          '#FAFAFA',
+          '#FBFBFB',
+          '#FEFEFE',
+        ]}
+      />
       <View style={styles.signupBackground}>
+        <View style={styles.loadingWallaImg}>
+          <Image
+            source={require('../../../assets/LoadingWallaBG.png')}
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+          />
+        </View>
         <View style={styles.otpResendView}>
-          <Text style={styles.signupTopTitle}>
-            {`${t(Constants.ENTER_OTP_TITLE)} ${mobileNumber} `}
-            <Text
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <Text style={styles.verifyOtpNumber}>{`+91 ${mobileNumber} `}</Text>
+            <TouchableOpacity
               onPress={() => navigation.replace('Signup')}
-              style={styles.policyLinkTitle(true)}>
-              Edit
-            </Text>
-          </Text>
+              style={{marginLeft: 10}}>
+              <Edit />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={styles.enterOtp}>Enter OTP</Text>
+          </View>
         </View>
         <View style={styles.otpContainer}>
           <OtpInput
             numberOfDigits={4}
             focusColor={backgroundColorNew}
             focusStickBlinkingDuration={500}
-            onTextChange={code => setOtpvalue(code)}
+            onTextChange={handleOtpChange}
             onFilled={code => {
               setCodeFill(true);
             }}
             theme={{
               containerStyle: styles.otpView,
               inputsContainerStyle: styles.inputsContainer,
-              pinCodeContainerStyle: styles.pinCodeContainer,
-              pinCodeTextStyle: styles.pinCodeText,
+              pinCodeContainerStyle: [
+                styles.pinCodeContainer,
+                {
+                  backgroundColor:
+                    isCodeCorrect === true
+                      ? 'rgba(50, 186, 124, 0.1)'
+                      : isCodeCorrect === false
+                      ? 'rgba(255,  0,   0, 0.1)'
+                      : '#FFFFFF',
+                },
+              ],
+              pinCodeTextStyle: [
+                styles.pinCodeText,
+                {
+                  color:
+                    isCodeCorrect === true
+                      ? '#32BA7C'
+                      : isCodeCorrect === false
+                      ? '#FF270E'
+                      : '#595959',
+                },
+              ],
               focusStickStyle: styles.focusStick,
               focusedPinCodeContainerStyle: styles.activePinCodeContainer,
             }}
           />
-          <Text style={styles.signupTopTitle}>
-            Expires in{' '}
-            {
-              <Text style={styles.timer}>
-                {minutes.toLocaleString(undefined, {
-                  minimumIntegerDigits: 2,
-                }) +
-                  ':' +
-                  seconds.toLocaleString(undefined, {
-                    minimumIntegerDigits: 2,
-                  })}
-              </Text>
-            }
-          </Text>
         </View>
         <View style={styles.otpResendView}>
-          <Text style={styles.policyTitle}>
-            {t(Constants.DID_NOT_RECIEVE_OTP)}{' '}
-          </Text>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            disabled={minutes < 4 ? false : true}
-            onPress={() => (minutes < 4 ? resendCode() : {})}>
-            <Text style={styles.policyLinkTitle(minutes < 4 ? true : false)}>
-              {t(Constants.RESEND_CODE)}
-            </Text>
-          </TouchableOpacity>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              alignContent: 'space-around',
+              // borderWidth: 2,
+            }}>
+            <View style={{width: '50%', alignItems: 'flex-start'}}>
+              {isCodeCorrect === false ? (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Wrong />
+                  <Text
+                    style={{
+                      color: '#FF270E',
+                      fontFamily: 'PlusJakartaSans-SemiBold',
+                      fontSize: 12,
+                      marginLeft: 4,
+                    }}>
+                    Wrong OTP, Try again!
+                  </Text>
+                </View>
+              ) : isCodeCorrect === true ? (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Correct />
+                  <Text
+                    style={{
+                      color: '#32BA7C',
+                      fontFamily: 'PlusJakartaSans-SemiBold',
+                      fontSize: 12,
+                      marginLeft: 4,
+                    }}>
+                    OTP Success, Please wait!
+                  </Text>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  disabled={minutes < 4 ? false : true}
+                  onPress={() => (minutes < 4 ? resendCode() : {})}>
+                  <Text
+                    style={[
+                      styles.policyLinkTitle(minutes < 4 ? true : false),
+                      {textDecorationLine: 'none'},
+                    ]}>
+                    {t(Constants.RESEND_CODE)}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            {isCodeCorrect === null || isCodeCorrect === undefined ? (
+              <View style={{width: '50%', alignItems: 'flex-end'}}>
+                <Text style={styles.timer}>
+                  {minutes.toLocaleString(undefined, {
+                    minimumIntegerDigits: 2,
+                  }) +
+                    ':' +
+                    seconds.toLocaleString(undefined, {
+                      minimumIntegerDigits: 2,
+                    })}
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
 
-        <View style={styles.buttonBox}>
+        {/* <View style={styles.buttonBox}>
           <Button
             loading={otpLoading}
             onPress={() => verify()}
@@ -184,7 +317,7 @@ const VerifyOtp = ({navigation, route}) => {
             textStyle={styles.buttonTitile}
             style={styles.button}
           />
-        </View>
+        </View> */}
       </View>
     </KeyboardAvoidingView>
   );

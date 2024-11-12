@@ -16,7 +16,9 @@ import {
   backgroundColorNew,
   GradientColor1,
   GradientColor5,
+  grayColor,
 } from '../Color/color';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
 
@@ -704,29 +706,29 @@ export default StyleSheet.create({
   inputBox: {flexDirection: 'row', marginTop: 10, backgroundColor: '#f7f7f7'},
   inputView: {
     // borderWidth: 1,
-    width: 100,
+    width: '100%',
     height: 40,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
-    borderRadius: 8,
+    // borderRadius: 8,
     backgroundColor: '#ffffff',
   },
   textInput: {
     width: 50,
-    // borderWidth: 1,
     textAlign: 'center',
-    // backgroundColor: '#f7f7f7',
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   textInputCaption: {
+    padding: 2,
     textAlign: 'center',
-    marginLeft: 5,
+    // marginLeft: 5,
     fontSize: 12,
+    color: grayColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
     // borderWidth: 1,
   },
 

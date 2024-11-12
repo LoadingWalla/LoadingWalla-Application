@@ -2,8 +2,9 @@ import React, {useEffect, useRef} from 'react';
 import {View, StatusBar, Animated} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
-import {backgroundColorNew} from '../../Color/color';
+import {backgroundColorNew, white} from '../../Color/color';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import LottieView from 'lottie-react-native';
 
 const Splash = ({navigation: {replace}}) => {
   useTrackScreenTime('Splash');
@@ -35,7 +36,7 @@ const Splash = ({navigation: {replace}}) => {
         } else {
           replace('Language');
         }
-      }, 3500);
+      }, 6900);
     };
 
     getUserStatus();
@@ -52,21 +53,22 @@ const Splash = ({navigation: {replace}}) => {
     <>
       <StatusBar
         barStyle={'dark-content'}
-        backgroundColor={backgroundColorNew}
+        backgroundColor={white}
+        hidden={false}
       />
       <View style={styles.splashContainer}>
-        <Animated.Image
+        {/* <Animated.Image
           resizeMode="contain"
           style={[styles.splashImage, {opacity}]}
-          source={require('../../../assets/Logo.png')}
-        />
-        {/* <LottieView
-          source={require('../../../assets/GIFs/SPLASH SCREEN.json')}
+          source={require('../../../assets/SVG/svg/LoadingWallaSplashScreen')}
+        /> */}
+        <LottieView
+          source={require('../../../assets/GIFs/LoadingWallaSplashScreen.json')}
           autoPlay
           loop
-          resizeMode="contain"
+          // resizeMode="contain"
           style={styles.splashImage}
-        /> */}
+        />
       </View>
     </>
   );
