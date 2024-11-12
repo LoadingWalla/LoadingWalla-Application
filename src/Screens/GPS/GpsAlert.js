@@ -1,6 +1,13 @@
-import React, {useCallback} from 'react';
-import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import React, {useCallback, useEffect} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import PhoneCall from '../../../assets/SVG/svg/PhoneCall';
 import GpsSettingItem from '../../Components/GpsSettingItem';
 import {backgroundColorNew} from '../../Color/color';
@@ -10,6 +17,8 @@ import {useTranslation} from 'react-i18next';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import GPSNotificationShimmer from '../../Components/Shimmer/GPSNotificationShimmer';
+import * as actions from '../../Store/Actions/Actions';
+import {useFocusEffect} from '@react-navigation/native';
 
 // Memoized NotificationItem component
 const NotificationItem = React.memo(({call, item}) => {
@@ -38,42 +47,88 @@ const NotificationItem = React.memo(({call, item}) => {
 });
 
 // Memoized SettingsSection component
-const SettingsSection = React.memo(({t}) => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    style={styles.settingsContainer}>
-    <View style={styles.settingsRow}>
-      <GpsSettingItem
-        detailInput={false}
-        title={t(Constants.IG_ON_OFF)}
-        storageKey="ignition"
-      />
-      <GpsSettingItem
-        detailInput={false}
-        title={t(Constants.GEOF)}
-        storageKey="geofence"
-      />
-    </View>
-    <View style={styles.settingsRow}>
-      <GpsSettingItem
-        detailInput={false}
-        title={t(Constants.OVERSPEED_ALERT)}
-        storageKey="overspeeding"
-      />
-      <GpsSettingItem
-        detailInput={false}
-        title={t(Constants.DEV_MOV)}
-        storageKey="deviceMoving"
-      />
-    </View>
-  </ScrollView>
-));
+const SettingsSection = React.memo(
+  ({t, notifSettingData, dispatch, gps_id}) => (
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.settingsContainer}>
+      <View style={styles.settingsRow}>
+        {/* <GpsSettingItem
+          detailInput={true}
+          title={t(Constants.VEH_STOP_ALRT)}
+          storageKey="vehiclestop"
+        /> */}
+        <GpsSettingItem
+          detailInput={true}
+          title={t(Constants.OVERSPEED_ALERT)}
+          storageKey="overspeeding"
+          isEnabled={notifSettingData?.overspeed}
+          value={notifSettingData?.overspeed_limit}
+          dispatch={dispatch}
+          gps_id={gps_id}
+        />
+      </View>
+      <View style={styles.settingsRow}>
+        <GpsSettingItem
+          detailInput={false}
+          title={t(Constants.IG_ON_OFF)}
+          storageKey="ignition"
+          isEnabled={notifSettingData?.ignition}
+          dispatch={dispatch}
+          gps_id={gps_id}
+        />
+        {/* <GpsSettingItem
+          detailInput={false}
+          title={t(Constants.GPS_REMOVE)}
+          storageKey="gpsremove"
+          isEnabled={notifSettingData?.ignition}
+        /> */}
+      </View>
+      <View style={styles.settingsRow}>
+        <GpsSettingItem
+          detailInput={false}
+          title={t(Constants.GEOF)}
+          storageKey="geofence"
+          isEnabled={notifSettingData?.geofencing}
+          dispatch={dispatch}
+          gps_id={gps_id}
+        />
+        <GpsSettingItem
+          detailInput={false}
+          title={t(Constants.DEV_MOV)}
+          storageKey="deviceMoving"
+          isEnabled={notifSettingData?.device_moving}
+          dispatch={dispatch}
+          gps_id={gps_id}
+        />
+      </View>
+    </ScrollView>
+  ),
+);
 
 const GpsAlert = ({route}) => {
   useTrackScreenTime('GpsAlert');
+  const dispatch = useDispatch();
   const {eventData} = route.params;
   const {t} = useTranslation();
-  const {gpsNotificationLoading} = useSelector(state => state.data);
+  const {notifSettingData, notifSettingLoading} = useSelector(state => {
+    console.log('id---------->', eventData[0]?.deviceId);
+    console.log(
+      'Gps Notification Setting Data in GpsAlert -------------->',
+      state.data.notifSettingData,
+    );
+    return state.data;
+  });
+
+  useEffect(() => {
+    const id = eventData[0]?.deviceId;
+    dispatch(actions.getInitNotifSetting(id));
+  }, []);
+
+  // useEffect(() => {
+  //   const id = eventData[0]?.deviceId;
+  //   dispatch(actions.getInitNotifSetting(id));
+  // }, [dispatch, notifSettingData]);
 
   // Memoized renderItem function for FlatList
   const renderItem = useCallback(
@@ -86,10 +141,23 @@ const GpsAlert = ({route}) => {
 
   return (
     <View style={styles.container}>
-      <SettingsSection t={t} />
+      {/* Conditionally render SettingsSection or loading indicator */}
+      {notifSettingLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={backgroundColorNew} />
+          <Text style={styles.loadingText}>Loading Settings...</Text>
+        </View>
+      ) : (
+        <SettingsSection
+          t={t}
+          notifSettingData={notifSettingData?.data}
+          dispatch={dispatch}
+          gps_id={eventData[0]?.deviceId}
+        />
+      )}
       <View style={styles.notificationContainer}>
         <Text style={styles.notificationHeader}>{t(Constants.GPS_NOTIFI)}</Text>
-        {gpsNotificationLoading ? (
+        {notifSettingLoading ? (
           <View>
             <GPSNotificationShimmer />
           </View>

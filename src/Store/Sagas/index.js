@@ -25,6 +25,11 @@ function* rootSaga() {
   yield takeLatest(actions.INIT_ACCEPT_REJECT, saga.acceptReject);
   yield takeLatest(actions.INIT_NOTIFICATION, saga.notification);
   yield takeLatest(actions.INIT_MYPOST_LOAD, saga.myPostLoad);
+  // post notification setting
+  yield takeLatest(actions.INIT_NOTIF_SETTING, saga.postNotificationSetting);
+  // get notification setting
+  yield takeLatest(actions.GET_INIT_NOTIF_SETTING, saga.getNotificationSetting);
+  //
   yield takeLatest(actions.INIT_WALLET, saga.wallet);
   yield takeLatest(actions.INIT_GET_WALLET, saga.getWallet);
   yield takeLatest(actions.INIT_LOGOUT, saga.logout);

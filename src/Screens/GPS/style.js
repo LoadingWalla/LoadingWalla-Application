@@ -1291,7 +1291,7 @@ export default StyleSheet.create({
   settingsContainer: {
     flex: 1,
     padding: 10,
-    paddingBottom: 50,
+    paddingBottom: 150,
     backgroundColor: '#ffffff',
     marginBottom: 10,
     elevation: 2,

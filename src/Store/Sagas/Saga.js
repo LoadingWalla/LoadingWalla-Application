@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import gpsApi from '../../Utils/gpsApi';
 import googleApi from '../../Utils/FetchGoogleApi';
 import FetchNominatimApi from '../../Utils/FetchNominatiApi';
+import notifSettingApi from '../../Utils/notifSettingApi';
 
 // Saga Login or Signup
 export function* authenticate({mobile}) {
@@ -511,6 +512,57 @@ export function* myPostLoad({
     yield put(actions.myPostLoadFailure());
     //yield put(actions.VerifyOtpFailure(error.message));
     // console.log("error", error);
+  }
+}
+
+// notification-setting
+export function* getNotificationSetting({id}) {
+  try {
+    // Make an API call to get notification settings for the provided ID
+    console.log('recieved data----------->', id);
+    const response = yield notifSettingApi.get(`notification-setting/${id}`);
+    console.log('-------- get notif-setting response -------->', response);
+
+    if (response?.data?.status === 200) {
+      // If successful, dispatch the success action with the data
+      yield put(actions.getNotifSettingSuccess(response.data));
+    } else {
+      // Dispatch failure action with error status if request fails
+      yield put(actions.getNotifSettingFailure(response.data.status));
+    }
+  } catch (error) {
+    // Catch any errors and dispatch failure action with error message
+    yield put(actions.getNotifSettingFailure(error.message));
+    console.error('Failed to fetch notification settings:', error);
+  }
+}
+
+export function* postNotificationSetting({
+  id,
+  ignition,
+  overspeed,
+  overspeed_limit,
+  geofencing,
+  device_moving,
+}) {
+  const body = {
+    ignition,
+    overspeed,
+    overspeed_limit,
+    geofencing,
+    device_moving,
+  };
+  console.log('-------- post notif-setting body recieved --------->', body);
+  try {
+    const data = yield notifSettingApi.post(`notification-setting/${id}`, body);
+    console.log('-------- post notif-setting response recieved ------->', data);
+    if (data?.data?.status === 200) {
+      yield put(actions.postNotifSettingSuccess(data));
+    } else {
+      yield put(actions.postNotifSettingFailure(data.status));
+    }
+  } catch (error) {
+    yield put(actions.postNotifSettingFailure());
   }
 }
 
