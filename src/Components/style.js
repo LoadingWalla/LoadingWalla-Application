@@ -1113,6 +1113,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     flex: 0.7,
     margin: 10,
+    minHeight: 150,
     padding: 10,
     paddingVertical: 5,
     borderRadius: 8,
@@ -1141,6 +1142,7 @@ export default StyleSheet.create({
   },
   parkingAlarm: {
     // flex: 0.2,
+    minHeight: 40,
     borderWidth: 1,
     marginHorizontal: 10,
     paddingVertical: 10,

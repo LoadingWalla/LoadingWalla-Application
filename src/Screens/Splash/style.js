@@ -5,10 +5,10 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: backgroundColorNew,
+    backgroundColor: backgroundColorNew,
   },
   splashImage: {
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height / 0.9,
     width: Dimensions.get('window').width / 0.3,
   },
 });

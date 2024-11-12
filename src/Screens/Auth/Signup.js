@@ -24,6 +24,7 @@ import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
 import GradientStatusBar from '../../Components/GradientStatusBar';
+import PhoneInput from 'react-native-phone-number-input';
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
@@ -88,7 +89,7 @@ const Signup = ({navigation}) => {
       return;
     }
     console.log(mobileNumber);
-    // dispatch(initLogin(mobileNumber));
+    dispatch(initLogin(mobileNumber));
   };
 
   useEffect(() => {
@@ -150,9 +151,22 @@ const Signup = ({navigation}) => {
             }}>
             <View style={styles.phoneNumberInput}>
               <View style={styles.mbContainer}>
-                <Text style={styles.mbcountryCode}>+91</Text>
+                <PhoneInput
+                  defaultCode="IN"
+                  layout="first"
+                  textInputProps={{
+                    maxLength: 10,
+                    placeholderTextColor: PrivacyPolicy,
+                  }}
+                  withShadow
+                  placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
+                  containerStyle={styles.phoneContainer}
+                  textContainerStyle={styles.textInput}
+                  onChangeFormattedText={text => setMobileNumber(text)}
+                />
+                {/* <Text style={styles.mbcountryCode}>+91</Text>
                 <View style={styles.mbdivider} />
-{/* hello world */}
+
                 <TextInput
                   style={styles.mbphoneInput}
                   autoFocus={true}
@@ -163,7 +177,7 @@ const Signup = ({navigation}) => {
                   onChangeText={text => {
                     setMobileNumber(text);
                   }}
-                />
+                /> */}
               </View>
               <View
                 style={[
