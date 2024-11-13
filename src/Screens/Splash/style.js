@@ -8,7 +8,7 @@ export default StyleSheet.create({
     backgroundColor: backgroundColorNew,
   },
   splashImage: {
-    height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width / 1.3,
+    height: Dimensions.get('window').height / 0.9,
+    width: Dimensions.get('window').width / 0.3,
   },
 });

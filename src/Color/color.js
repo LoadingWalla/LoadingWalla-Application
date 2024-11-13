@@ -5,6 +5,7 @@ export const GradientColor1 = '#FF6D4D';
 export const GradientColor2 = '#E85839';
 export const GradientColor3 = '#D94828';
 export const GradientColor4 = '#FB6C4D';
+export const GradientColor5 = '#EF4D23';
 export const pageBackground = '#FFFFFF';
 export const inputColor = '#E7E7E7';
 export const back_color = '#F2EFEF';
@@ -17,7 +18,18 @@ export const white = '#FFFFFF';
 export const black = '#000000';
 export const seperator = '#c8c8c8';
 export const divider = '#CDCDCD';
-
+export const btnGreen = '#3BA700';
+export const grayBg = '#E9E9E9';
+export const darkGrayBg = '#A6A6A6';
+export const sliderColor = '#FFDCD3';
+export const textRed = '#F50000';
+export const grayColor = '#7E7E7E';
+export const grayColorOutline = '#595959';
+export const arrowBtnFill = '#EC1C24';
+export const countryCode = '#595959';
+export const phonePlaceholder = '#636363';
+export const warningTxt = '#E10000';
+export const verifyOtpNumber = '#F50000';
 //  New Color
 // export const backgroundColorNew = '#ED1C24';
 export const backgroundColorNew = '#EF4D23';

@@ -1,10 +1,20 @@
 import React, {useState, useEffect} from 'react';
-import {Animated, Button, Easing, StyleSheet, View} from 'react-native';
+import {
+  Animated,
+  Button,
+  Easing,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MapView, {Polyline, Marker} from 'react-native-maps';
 import VehicleIcon from '../../../assets/SVG/svg/VehicleIcon';
 import StopsIcon from '../../../assets/SVG/svg/StopsIcon';
+import styles from './style';
 
 const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
+  console.log('--------routeData--------->', routeData);
   const [carPosition, setCarPosition] = useState({
     latitude: routeData[0].latitude,
     longitude: routeData[0].longitude,
@@ -19,7 +29,7 @@ const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
     if (isPlaying) {
       Animated.timing(animation, {
         toValue: 1,
-        duration: 1000, // Adjust duration for the journey
+        duration: routeData.length * 1000, // Adjust duration for the journey
         easing: Easing.linear,
         useNativeDriver: false,
       }).start();
@@ -34,9 +44,12 @@ const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
       const totalSegments = routeData.length - 1;
       // Find which segment we are in (between two points)
       const currentSegmentIndex = Math.floor(value * totalSegments);
+      console.log('------currentSegmentIndex------', currentSegmentIndex);
       const nextSegmentIndex = currentSegmentIndex + 1;
+      console.log('-------nextSegmentIndex--------', nextSegmentIndex);
 
       if (nextSegmentIndex < routeData.length) {
+        console.log('----inside nextSegmentIndex loop----', nextSegmentIndex);
         // Get the starting and ending points for the current segment
         const start = routeData[currentSegmentIndex];
         const end = routeData[nextSegmentIndex];
@@ -47,8 +60,7 @@ const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
           latitude:
             start.latitude + (end.latitude - start.latitude) * segmentProgress,
           longitude:
-            start.longitude +
-            (end.longitude - start.longitude) * segmentProgress,
+            start.longitude + (end.longitude - start.longitude) * segmentProgress,
           heading: start.course,
         };
 
@@ -68,6 +80,10 @@ const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
       }
     });
   }, [animation, followVehicle]);
+
+  const toggleMapType = () => {
+    setMapType(prevType => (prevType === 'standard' ? 'hybrid' : 'standard'));
+  };
 
   return (
     <View style={StyleSheet.absoluteFillObject}>
@@ -105,18 +121,17 @@ const JourneyMap = ({routeData, isPlaying, followVehicle, stops = []}) => {
           </Marker>
         ))}
       </MapView>
-      <View style={{position: 'absolute', top: 20, right: 20}}>
-        <Button
-          title={`Switch to ${
-            mapType === 'standard' ? 'Hybrid' : 'Standard'
-          } Mode`}
-          onPress={() =>
-            setMapType(prevType =>
-              prevType === 'standard' ? 'hybrid' : 'standard',
-            )
+      {/* <View style={{position: 'absolute', top: 20, right: 20}}> */}
+      <TouchableOpacity style={styles.mapToggleButton} onPress={toggleMapType}>
+        <Image
+          source={
+            mapType === 'standard'
+              ? require('../../../assets/satellite-view.png')
+              : require('../../../assets/satellites.png')
           }
+          style={styles.playJourneyTouchableOpacityStyle}
         />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

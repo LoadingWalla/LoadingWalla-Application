@@ -91,8 +91,8 @@ const GPSHomePage = ({navigation}) => {
               </View>
               <View>
                 <ImageBackground
-                  source={require('./../../../assets/bike.png')}
-                  style={{width: 97, height: 97}} // Add width and height to the inner ImageBackground
+                  source={require('./../../../assets/art.png')}
+                  style={{width: 170, height: 80}} // Add width and height to the inner ImageBackground
                 />
               </View>
             </View>
@@ -106,7 +106,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Driving License'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<DrivingLicense size={30} />}
                 arrowColor={'black'}
               />
@@ -114,7 +114,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Pollution'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<Pollution size={30} />}
                 arrowColor={'black'}
               />
@@ -122,7 +122,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Insurance'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<Insurance size={30} />}
                 arrowColor={'black'}
               />
@@ -130,7 +130,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Registration Certificate'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<RegistrationCert size={30} />}
                 arrowColor={'black'}
               />
@@ -138,7 +138,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Fitness Certificate'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<FitnessCert size={30} />}
                 arrowColor={'black'}
               />
@@ -146,7 +146,7 @@ const GPSHomePage = ({navigation}) => {
             <View style={stylesg.vDocMenu}>
               <MenuItem
                 title={'Other Documents'}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Inconvenience')}
                 Icon={<OtherDocs size={30} />}
                 arrowColor={'black'}
               />

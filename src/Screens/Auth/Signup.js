@@ -1,12 +1,20 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ActivityIndicator,
+  StatusBar,
+} from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
-import PhoneInput from 'react-native-phone-number-input';
 import CheckBox from '@react-native-community/checkbox';
-import {PrivacyPolicy, backgroundColorNew} from '../../Color/color';
+import {PrivacyPolicy, backgroundColorNew, textRed} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
 import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
@@ -14,12 +22,16 @@ import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
+import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
+import GradientStatusBar from '../../Components/GradientStatusBar';
+import PhoneInput from 'react-native-phone-number-input';
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
   const {t} = useTranslation();
-  const [mobileNumber, setMobileNumber] = useState('+91');
-  const [isChecked, setIsChecked] = useState(false);
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [isCorrect, setIsCorrect] = useState(null);
+  const [isChecked, setIsChecked] = useState(true);
   const dispatch = useDispatch();
   const {data, loading, dashboardStatus} = useSelector(state => {
     console.log(11111, 'SignIn Screen here store is empty ---->', state);
@@ -65,7 +77,8 @@ const Signup = ({navigation}) => {
     }
     const regex = /^(?:\+91)?[6-9]\d{9}$/;
     if (!regex.test(mobileNumber)) {
-      Toast.show(t('Enter a valid mobile number'), Toast.LONG);
+      setIsCorrect(false);
+      // Toast.show(t('Enter a valid mobile number'), Toast.LONG);
       return;
     }
     if (!isChecked) {
@@ -75,53 +88,119 @@ const Signup = ({navigation}) => {
       );
       return;
     }
+    console.log(mobileNumber);
     dispatch(initLogin(mobileNumber));
   };
 
+  useEffect(() => {
+    const regex = /^(?:\+91)?[6-9]\d{9}$/;
+
+    if (mobileNumber.length > 0 && !regex.test(mobileNumber)) {
+      console.log('wrong number');
+      setIsCorrect(false);
+    } else {
+      console.log('correct number');
+      setIsCorrect(true);
+    }
+  }, [mobileNumber]);
+
   return (
     <View style={styles.Container}>
+      <GradientStatusBar
+        colors={[
+          '#F7F7F7',
+          '#F5F5F5',
+          '#F4F4F4',
+          '#F5F5F5',
+          '#F3F3F3',
+          '#F4F4F4',
+          '#F5F5F5',
+          '#F3F3F3',
+          '#F4F4F4',
+          '#F6F6F6',
+          '#F7F7F7',
+          '#FAFAFA',
+          '#FBFBFB',
+          '#FEFEFE',
+        ]}
+      />
       <View style={styles.flexs}>
-        <View style={styles.topRow}>
-          <TouchableOpacity style={styles.hiddenButton} />
-          <TouchableOpacity onPress={() => navigation.navigate('Contactus')}>
-            <Text style={styles.helpText}>{t(Constants.NEED_HELP)}</Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <Text style={styles.WelcomeTruckTitle}>
-            <Text style={styles.LoadingWalla}>
-              {t(Constants.LOADING_WALLA)}{' '}
-            </Text>
-            {t(Constants.WELCOME_TO_TRUCK)}
-          </Text>
-        </View>
-        <View style={styles.phoneInputContainer}>
-          <Text style={styles.signupTopTitle}>
-            {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
-          </Text>
-          <Text style={styles.label}>{t(Constants.MOBILE_NUMBER)}</Text>
-          <PhoneInput
-            defaultCode="IN"
-            layout="first"
-            textInputProps={{
-              maxLength: 10,
-              placeholderTextColor: PrivacyPolicy,
+        <View style={styles.loadingWallaImg}>
+          <Image
+            source={require('../../../assets/LoadingWallaBG.png')}
+            style={{
+              width: '100%',
+              height: '100%',
             }}
-            withShadow
-            placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
-            containerStyle={styles.phoneContainer}
-            textContainerStyle={styles.textInput}
-            onChangeFormattedText={text => setMobileNumber(text)}
           />
         </View>
-      </View>
-      <View>
+        <View style={styles.phoneInputContainer}>
+          <View style={styles.signupTextContainer}>
+            <Text style={styles.signupWelcomeTitle}>
+              {t(Constants.WELCOME_TXT)}
+            </Text>
+            <Text style={styles.signupTopTitle}>
+              {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: '95%',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+            }}>
+            <View style={styles.phoneNumberInput}>
+              <PhoneInput
+                defaultCode="IN"
+                layout="second"
+                textInputProps={{
+                  maxLength: 10,
+                  placeholderTextColor: '#636363',
+                }}
+                placeholder={t(Constants.PHONE_PLACEHOLDER)}
+                containerStyle={styles.mbContainer}
+                textContainerStyle={styles.mbphoneInput}
+                onChangeFormattedText={text => setMobileNumber(text)}
+              />
+              <View
+                style={[
+                  styles.mbArrowContainer,
+                  {
+                    opacity:
+                      mobileNumber.length !== 0 &&
+                      isChecked &&
+                      isCorrect === true
+                        ? 1
+                        : 0.5,
+                  },
+                ]}>
+                <TouchableOpacity onPress={sendOtp} style={styles.mbbutton}>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#ffffff" />
+                  ) : (
+                    <ArrowIcon />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+            {isCorrect === false ? (
+              <View style={styles.phoneNumberWarningCtn}>
+                <Text style={styles.phoneNumberWarningTxt}>
+                  Enter correct phone number !
+                </Text>
+              </View>
+            ) : null}
+          </View>
+        </View>
         <View style={styles.centerItem}>
           <View style={styles.checkBoxContainer}>
             <CheckBox
               value={isChecked}
               onValueChange={handleCheckBoxChange}
-              tintColors={{true: backgroundColorNew, false: backgroundColorNew}}
+              tintColors={{
+                true: backgroundColorNew,
+                false: backgroundColorNew,
+              }}
               style={styles.checkBoxStyle}
             />
             <Text style={styles.setPrivacyStyle}>
@@ -160,14 +239,16 @@ const Signup = ({navigation}) => {
             <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
           </View>
         </View>
-        <Button
+      </View>
+      <View>
+        {/* <Button
           loading={loading}
           onPress={sendOtp}
           title={t(Constants.SEND_OTP)}
           textStyle={styles.buttonTitile}
           style={styles.button}
           touchStyle={isChecked ? {opacity: 1} : {opacity: 0.5}}
-        />
+        /> */}
       </View>
     </View>
   );

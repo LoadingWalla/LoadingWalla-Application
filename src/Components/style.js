@@ -15,7 +15,10 @@ import {
   textColor,
   backgroundColorNew,
   GradientColor1,
+  GradientColor5,
+  grayColor,
 } from '../Color/color';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
   webmodal: {
@@ -143,7 +146,7 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   activeButton: {
-    backgroundColor: GradientColor1,
+    backgroundColor: GradientColor5,
   },
   searchbuttonText: {
     fontSize: 12,
@@ -700,29 +703,29 @@ export default StyleSheet.create({
   inputBox: {flexDirection: 'row', marginTop: 10, backgroundColor: '#f7f7f7'},
   inputView: {
     // borderWidth: 1,
-    width: 100,
+    width: '100%',
     height: 40,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
-    borderRadius: 8,
+    // borderRadius: 8,
     backgroundColor: '#ffffff',
   },
   textInput: {
     width: 50,
-    // borderWidth: 1,
     textAlign: 'center',
-    // backgroundColor: '#f7f7f7',
     fontSize: 12,
     fontFamily: 'PlusJakartaSans-Bold',
   },
   textInputCaption: {
+    padding: 2,
     textAlign: 'center',
-    marginLeft: 5,
+    // marginLeft: 5,
     fontSize: 12,
+    color: grayColor,
     fontFamily: 'PlusJakartaSans-Bold',
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
     // borderWidth: 1,
   },
 
@@ -1065,6 +1068,7 @@ export default StyleSheet.create({
 
   bottomContainer: {
     position: 'absolute',
+    paddingBottom: 8,
     bottom: 0,
     left: 0,
     right: 0,
@@ -1086,6 +1090,7 @@ export default StyleSheet.create({
     marginVertical: 10,
   },
   iconRow: {
+    // flex: 0.4,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -1103,7 +1108,9 @@ export default StyleSheet.create({
   },
   infoSection: {
     borderWidth: 1,
+    flex: 0.7,
     margin: 10,
+    minHeight: 150,
     padding: 10,
     paddingVertical: 5,
     borderRadius: 8,
@@ -1111,29 +1118,28 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   buttonRow: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginVertical: 5,
   },
   button: color => ({
-    backgroundColor: color ? '#F7FFF2' : '#FFF7F5',
-    flexDirection: 'row',
+    backgroundColor: `${color}`,
+    flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 15,
     paddingVertical: 10,
-    elevation: 1,
-    borderRadius: 5,
-    minWidth: '30%',
-    maxWidth: '32%',
+    flex: 1,
   }),
   buttonText: {
-    marginLeft: 10,
-    fontFamily: 'PlusJakartaSans-Bold',
+    // borderWidth: 2,
+    fontFamily: 'PlusJakartaSans-SemiBold',
     fontSize: 10,
     color: titleColor,
   },
   parkingAlarm: {
+    // flex: 0.2,
+    minHeight: 40,
     borderWidth: 1,
     marginHorizontal: 10,
     paddingVertical: 10,

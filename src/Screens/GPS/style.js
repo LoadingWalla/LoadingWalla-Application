@@ -1,7 +1,9 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import {
   backgroundColorNew,
+  GradientColor5,
   pageBackground,
+  sliderColor,
   textColor,
   titleColor,
 } from '../../Color/color';
@@ -459,7 +461,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 130,
+    bottom: 140,
     right: 0,
     zIndex: 10,
   },
@@ -618,8 +620,9 @@ export default StyleSheet.create({
   controlsContainer: {
     flex: 1,
     flexDirection: 'row',
+    // borderWidth: 1,
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   playPauseButton: {
     borderWidth: 1,
@@ -628,12 +631,14 @@ export default StyleSheet.create({
     borderColor: backgroundColorNew,
   },
   playJourneySliderContainer: {
-    flex: 1,
+    flex: 0.9,
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   speedButtonsContainer: {
+    // flex: 0.1,
+    // borderWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -776,13 +781,13 @@ export default StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
-    backgroundColor: '#FDFDFD',
+    // backgroundColor: '#FDFDFD',
   },
   quickFilterContainer: {
-    flex: 0.4,
-    // backgroundColor: '#FFE9E3',
+    // borderWidth: 1,
+    // borderColor: 'red',
+    flex: 0.2,
     flexDirection: 'row',
-    padding: 10,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -792,7 +797,7 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     margin: 5,
-    elevation: 3,
+    elevation: 7,
     alignItems: 'center',
     justifyContent: 'center',
     width: '30%', // Adjust based on the number of buttons in a row
@@ -806,7 +811,8 @@ export default StyleSheet.create({
     borderColor: '#ddd',
   },
   buttonText: {
-    fontSize: 11,
+    fontSize: 12,
+    fontFamily: 'PlusJakartaSans-SemiBold',
     textAlign: 'center',
   },
   activeText: {
@@ -816,8 +822,8 @@ export default StyleSheet.create({
     color: '#000',
   },
   customFilterContainer: {
-    flex: 0.7,
-    paddingHorizontal: 10,
+    flex: 0.8,
+    paddingHorizontal: 8,
   },
   customFilterText: {
     fontSize: 16,
@@ -1285,7 +1291,7 @@ export default StyleSheet.create({
   settingsContainer: {
     flex: 1,
     padding: 10,
-    paddingBottom: 50,
+    paddingBottom: 150,
     backgroundColor: '#ffffff',
     marginBottom: 10,
     elevation: 2,
@@ -1551,6 +1557,10 @@ export default StyleSheet.create({
   slider: {width: '75%'},
   playJourneySlider: {
     flex: 1,
+    // borderWidth: 2,
+    height: 30,
+    borderRadius: 5,
+    backgroundColor: sliderColor,
     width: '100%',
   },
   textvalue: {

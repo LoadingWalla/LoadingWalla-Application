@@ -64,6 +64,13 @@ const initialState = {
   myPostLoadData: null,
   myPostLoadStatus: null,
   myfindLoadLoading: false,
+
+  // notifSetting
+  notifSettingData: [],
+  notifSettingStatus: null,
+  notifSettingLoading: false,
+  //
+
   wallletData: null,
   walletStatus: null,
   walletLoading: false,
@@ -764,6 +771,47 @@ const reducer = (state = initialState, action) => {
         myPostLoadData: payload,
         myPostLoadStatus: payload,
         myfindLoadLoading: false,
+      });
+
+    // notification setting
+    case actionTypes.INIT_NOTIF_SETTING:
+      return {
+        ...state,
+        notifSettingData: [],
+        notifSettingLoading: true,
+        notifSettingStatus: null,
+      };
+    case actionTypes.POST_NOTIF_SETTING_SUCCESS:
+      return updateState(state, {
+        notifSettingData: payload,
+        notifSettingStatus: payload?.data?.status,
+        notifSettingLoading: false,
+      });
+    case actionTypes.POST_NOTIF_SETTING_FAILURE:
+      return updateState(state, {
+        notifSettingData: payload,
+        notifSettingStatus: payload,
+        notifSettingLoading: false,
+      });
+
+    case actionTypes.GET_INIT_NOTIF_SETTING:
+      return {
+        ...state,
+        notifSettingData: [],
+        notifSettingLoading: true,
+        notifSettingStatus: null,
+      };
+    case actionTypes.GET_NOTIF_SETTING_SUCCESS:
+      return updateState(state, {
+        notifSettingData: payload,
+        notifSettingStatus: payload?.data?.status,
+        notifSettingLoading: false,
+      });
+    case actionTypes.GET_NOTIF_SETTING_FAILURE:
+      return updateState(state, {
+        notifSettingData: payload,
+        notifSettingStatus: payload,
+        notifSettingLoading: false,
       });
 
     case actionTypes.INIT_WALLET:

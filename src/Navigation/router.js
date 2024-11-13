@@ -196,7 +196,7 @@ const Navigation = ({language}) => {
         component={VerifyOtp}
         // options={{ headerShown: false }}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: t(Constants.VERIFY_NUMBER_TITLE),
