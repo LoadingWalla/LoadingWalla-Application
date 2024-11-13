@@ -14,26 +14,84 @@ import Background from '../../Components/BackgroundGradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initLanguage} from '../../Store/Actions/Actions';
 import styles from './style';
-import CheckCircle from '../../../assets/SVG/svg/CheckCircle';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import EnglishIcon from '../../../assets/SVG/svg/EnglishIcon';
+import HindiIcon from '../../../assets/SVG/svg/HindiIcon';
+import OK from '../../../assets/SVG/svg/ok';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
     {selected === data?.id ? (
-      <Background style={styles.gridbox}>
-        <CheckCircle style={styles.checkIconStyle} size={25} color="white" />
-        <View>
-          <Text style={[styles.gridText]}>{data?.languageName}</Text>
+      <Background style={styles.gridbox} bgcolors={['white', 'white']}>
+        <OK style={styles.checkIconStyle} size={25} />
+        <View
+          style={{
+            paddingBottom: 2,
+            width: '100%',
+            // borderWidth: 1,
+            // borderColor: 'red',
+            height: '90%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              // borderWidth: 1,
+              // borderColor: 'blue',
+              height: '75%',
+            }}>
+            <Text style={[styles.gridText]}>{data?.languageName}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#FAFAFA',
+              borderBottomRightRadius: 12,
+              borderBottomLeftRadius: 12,
+              height: '25%',
+              // borderWidth: 1,
+              width: '98%',
+            }}>
+            <Text style={styles.gridText}>{data?.language}</Text>
+          </View>
         </View>
-        <Text style={styles.gridText}>{data?.language}</Text>
       </Background>
     ) : (
       <View style={styles.gridGreyBox}>
-        <View>
-          <Text style={[styles.gridGreyText]}>{data?.languageName}</Text>
+        <View
+          style={{
+            paddingVertical: 2,
+            width: '100%',
+            // borderWidth: 1,
+            // borderColor: 'red',
+            height: '90%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View
+            style={{
+              justifyContent: 'center',
+              // borderWidth: 1,
+              // borderColor: 'blue',
+              height: '75%',
+            }}>
+            <Text style={[styles.gridGreyText]}>{data?.languageName}</Text>
+          </View>
+          <View
+            style={{
+              justifyContent: 'center',
+              backgroundColor: '#FAFAFA',
+              borderBottomRightRadius: 12,
+              borderBottomLeftRadius: 12,
+              height: '25%',
+              // borderWidth: 1,
+              width: '98%',
+            }}>
+            <Text style={styles.gridGreyText}>{data?.language}</Text>
+          </View>
         </View>
-        <Text style={styles.gridGreyText}>{data?.language}</Text>
       </View>
     )}
   </TouchableOpacity>
@@ -50,32 +108,18 @@ const Language = ({navigation, route}) => {
   const languages = [
     {
       id: 1,
-      languageName: 'English',
-      language: 'English',
-      code: 'en',
+      languageName: <HindiIcon />,
+      language: 'हिन्दी',
+      code: 'hi',
       langId: 1,
     },
     {
       id: 2,
-      languageName: 'Hindi',
-      language: 'हिन्दी',
-      code: 'hi',
+      languageName: <EnglishIcon />,
+      language: 'English',
+      code: 'en',
       langId: 2,
     },
-    // {
-    //   id: 3,
-    //   languageName: 'Punjabi',
-    //   language: 'ਪੰਜਾਬੀ',
-    //   code: 'pn',
-    //   langId: 3,
-    // },
-    // {
-    //   id: 4,
-    //   languageName: 'Gujrati',
-    //   language: 'ગુજરાતી',
-    //   code: 'gj',
-    //   langId: 4,
-    // },
   ];
 
   const getLanguageId = async () => {
@@ -106,6 +150,7 @@ const Language = ({navigation, route}) => {
   //     navigation.replace('Signup');
   //   }
   // };
+
   const navigate = () => {
     if (!selected) {
       Toast.show(t('Please select a language before continuing.'), Toast.LONG);
@@ -120,10 +165,24 @@ const Language = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{flex: 2, backgroundColor: 'pink'}}>{/* header */}</View>
       <View style={styles.part1}>
-        <Text style={styles.languageTitle}>
-          {t(Constants.SELECT_LANGUAGE_TITLE)}
-        </Text>
+        <View>
+          <Text
+            style={{
+              color: '#F50000',
+              fontSize: 16,
+              fontFamily: 'PlusJakartaSans-SemiBold',
+              // borderWidth: 1,
+            }}>
+            नमस्ते | Hello
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.languageTitle}>
+            {t(Constants.SELECT_LANGUAGE_TITLE)}
+          </Text>
+        </View>
       </View>
       <View style={styles.part2}>
         <FlatList
@@ -139,6 +198,15 @@ const Language = ({navigation, route}) => {
           numColumns={2}
         />
       </View>
+      {/* <View style={styles.part3}>
+        <Button
+          onPress={() => navigate()}
+          title={t(Constants.CONTINUE)}
+          textStyle={styles.buttonTitile}
+          style={styles.button}
+          touchStyle={selected ? {opacity: 1} : {opacity: 0.5}}
+        />
+      </View> */}
       {params?.fromMenu ? null : (
         <View style={styles.part3}>
           <Button

@@ -40,8 +40,7 @@ export const DID_NOT_RECIEVE_OTP = 'Didn’t receive the code?';
 export const RESEND_CODE = 'Resend OTP in';
 export const VERIFY_NUMBER_TITLE = 'Verify Phone Number';
 export const SELECT_LANGUAGE = 'Select Language';
-export const SELECT_LANGUAGE_TITLE =
-  'Select a language, this can be changed later in settings.';
+export const SELECT_LANGUAGE_TITLE = 'Please select your language';
 export const CONTINUE = 'Continue';
 export const UPDATE = 'Update';
 export const CHOOSE_ONE = 'Choose one';

@@ -63,8 +63,6 @@ export default function PlayJourney({navigation, route}) {
   const mapRef = useRef(null);
   const markerRefs = useRef([]);
 
-  const dispatch = useDispatch();
-
   const {
     gpsTokenData,
     gpsReplayLoading,
