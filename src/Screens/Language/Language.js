@@ -150,6 +150,7 @@ const Language = ({navigation, route}) => {
   //     navigation.replace('Signup');
   //   }
   // };
+
   const navigate = () => {
     if (!selected) {
       Toast.show(t('Please select a language before continuing.'), Toast.LONG);
@@ -164,6 +165,7 @@ const Language = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={{flex: 2, backgroundColor: 'pink'}}>{/* header */}</View>
       <View style={styles.part1}>
         <View>
           <Text
