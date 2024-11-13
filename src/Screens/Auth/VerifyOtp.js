@@ -193,12 +193,14 @@ const VerifyOtp = ({navigation, route}) => {
         </View>
         <View style={styles.otpResendView}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.verifyOtpNumber}>{`+91 ${mobileNumber} `}</Text>
-            <TouchableOpacity
-              onPress={() => navigation.replace('Signup')}
-              style={{marginLeft: 10}}>
-              <Edit />
-            </TouchableOpacity>
+            <Text style={styles.verifyOtpNumber}>{`${mobileNumber} `}</Text>
+            {isCodeCorrect === false || isCodeCorrect === null ? (
+              <TouchableOpacity
+                onPress={() => navigation.replace('Signup')}
+                style={{marginLeft: 10}}>
+                <Edit />
+              </TouchableOpacity>
+            ) : null}
           </View>
           <View>
             <Text style={styles.enterOtp}>Enter OTP</Text>

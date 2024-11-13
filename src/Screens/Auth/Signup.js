@@ -150,35 +150,18 @@ const Signup = ({navigation}) => {
               alignItems: 'flex-end',
             }}>
             <View style={styles.phoneNumberInput}>
-              <View style={styles.mbContainer}>
-                <PhoneInput
-                  defaultCode="IN"
-                  layout="first"
-                  textInputProps={{
-                    maxLength: 10,
-                    placeholderTextColor: PrivacyPolicy,
-                  }}
-                  withShadow
-                  placeholder={t(Constants.ENTER_MOBILE_NUMBER)}
-                  containerStyle={styles.phoneContainer}
-                  textContainerStyle={styles.textInput}
-                  onChangeFormattedText={text => setMobileNumber(text)}
-                />
-                {/* <Text style={styles.mbcountryCode}>+91</Text>
-                <View style={styles.mbdivider} />
-
-                <TextInput
-                  style={styles.mbphoneInput}
-                  autoFocus={true}
-                  keyboardType="phone-pad"
-                  placeholder="00000 00000"
-                  maxLength={10}
-                  value={mobileNumber}
-                  onChangeText={text => {
-                    setMobileNumber(text);
-                  }}
-                /> */}
-              </View>
+              <PhoneInput
+                defaultCode="IN"
+                layout="second"
+                textInputProps={{
+                  maxLength: 10,
+                  placeholderTextColor: '#636363',
+                }}
+                placeholder={t(Constants.PHONE_PLACEHOLDER)}
+                containerStyle={styles.mbContainer}
+                textContainerStyle={styles.mbphoneInput}
+                onChangeFormattedText={text => setMobileNumber(text)}
+              />
               <View
                 style={[
                   styles.mbArrowContainer,

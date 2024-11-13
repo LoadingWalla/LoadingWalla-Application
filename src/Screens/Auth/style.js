@@ -96,7 +96,7 @@ export default StyleSheet.create({
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
     paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingVertical: 1,
   },
   mbArrowContainer: {
     width: '18%',
@@ -122,7 +122,9 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: 20,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    color: phonePlaceholder,
+    color: '#636363',
+    // borderWidth: 1,
+    backgroundColor: 'white',
   },
   mbbutton: {
     alignItems: 'center',
