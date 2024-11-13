@@ -80,8 +80,8 @@ android {
         applicationId "com.loadingwalla"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 26
-        versionName "7.4"
+        versionCode 27
+        versionName "7.6"
     }
     signingConfigs {
         debug {

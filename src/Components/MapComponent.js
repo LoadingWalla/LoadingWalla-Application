@@ -18,13 +18,10 @@ import StopsIcon from '../../assets/SVG/svg/StopsIcon';
 import * as Constants from '../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import styles from './style';
-import TruckNavigationIcon from '../../assets/SVG/svg/TruckNavigationIcon';
-import VehicleIcon from '../../assets/SVG/svg/VehicleIcon';
+import VehicleIconSvg from '../../assets/SVG/svg/VehicleIconSvg';
 
-const {width, height} = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.05;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const LATITUDE_DELTA = 0.09;
+const LONGITUDE_DELTA = 0.09;
 
 const MapComponent = React.memo(
   ({
@@ -136,9 +133,10 @@ const MapComponent = React.memo(
               latitude: initialRegion.latitude,
               longitude: initialRegion.longitude,
             }}
+            rotation={initialRegion.course}
+            anchor={{x: 0.5, y: 0.5}}
             ref={markerRef}>
-            {/* <ActiveLocation size={40} course={50} /> */}
-            <TruckNavigationIcon size={40} course={0} />
+            <VehicleIconSvg width={50} height={50} />
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>
@@ -156,10 +154,9 @@ const MapComponent = React.memo(
               latitude: position.latitude,
               longitude: position.longitude,
             }}
+            anchor={{x: 0.5, y: 0.5}}
+            rotation={position.course}
             ref={markerRef}>
-            {/* <ActiveLocation size={40} course={50} /> */}
-            <TruckNavigationIcon size={40} course={position.course} />
-            {/* <VehicleIcon width={40} height={40} /> */}
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>
@@ -206,7 +203,9 @@ const MapComponent = React.memo(
               coordinate={{
                 latitude: stop.latitude,
                 longitude: stop.longitude,
-              }}>
+              }}
+              rotation={stop.course}
+              anchor={{x: 0.5, y: 0.5}}>
               <StopsIcon size={40} number={index + 1} />
             </Marker>
           ))}
