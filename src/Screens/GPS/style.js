@@ -725,7 +725,7 @@ export default StyleSheet.create({
   calloutView: {
     width: 300,
     borderRadius: 5,
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   calloutText: {
     fontSize: 14,
