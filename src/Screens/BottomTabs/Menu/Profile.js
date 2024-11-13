@@ -58,6 +58,7 @@ import {useTranslation} from 'react-i18next';
 import GpsTrackingIcon from '../../../../assets/SVG/svg/GpsTrackingIcon';
 import {websocketDisconnect} from '../../../Store/Actions/WebSocketActions';
 import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
+import {printAllAsyncStorageData} from '../../../Utils/asyncStorageUtils';
 
 const hei = Dimensions.get('window').height;
 const wid = Dimensions.get('window').width;
@@ -75,113 +76,109 @@ const Profile = ({navigation, route}) => {
     profileLoading,
     profileSetupData,
     Userdata,
-    logoutData,
     logoutStatus,
-    logoutLoading,
-  } = useSelector(state => {
-    console.log('profile Data', state.data);
-    return state.data;
-  });
-  const {wsConnected} = useSelector(state => {
-    console.log('WEBSOCKET profile ----', state.wsData);
-    return state.wsData;
-  });
+  } = useSelector(state => state.data);
 
+  const {wsConnected} = useSelector(state => state.wsData);
+
+  // Disconnect WebSocket if connected
   useEffect(() => {
     if (wsConnected) {
       dispatch(websocketDisconnect());
     }
-  }, [wsConnected]);
+  }, [wsConnected, dispatch]);
 
+  useEffect(() => {
+    printAllAsyncStorageData();
+  }, []);
+
+  // Logout effect when status is 200
+  useEffect(() => {
+    const handleLogout = async () => {
+      if (logoutStatus === 200) {
+        // await Promise.all([
+        //   AsyncStorage.removeItem('UserType'),
+        //   AsyncStorage.removeItem('auth-token'),
+        //   AsyncStorage.removeItem('whatsAppAlert'),
+        //   AsyncStorage.removeItem('deviceMoving'),
+        //   AsyncStorage.removeItem('geofence'),
+        //   AsyncStorage.removeItem('ignition'),
+        //   AsyncStorage.removeItem('overspeeding'),
+        // ]);
+        // await AsyncStorage.multiRemove([
+        //   'UserType',
+        //   'auth-token',
+        //   'whatsAppAlert',
+        //   'deviceMoving',
+        //   'geofence',
+        //   'ignition',
+        //   'overspeeding',
+        // ]);
+        await AsyncStorage.clear();
+        dispatch(clearStore());
+        navigation.reset({
+          index: 0,
+          // routes: [{name: 'Signup', params: {fromLogout: true}}],
+          routes: [{name: 'Splash'}],
+        });
+      }
+    };
+    handleLogout();
+  }, [logoutStatus, dispatch, navigation]);
+
+  // Fetch profile data when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       dispatch(initProfile());
     }, [dispatch, profileSetupData]),
   );
 
-  const profileImg = (hei, wid) => ({
-    height: hei / 2.5,
-    width: wid,
-  });
-
-  const bigImage = () => {
-    return (
-      <Modal animationType="slide" transparent={true} visible={isBigImage}>
-        <View style={style.bigImageStyle}>
-          <TouchableOpacity
-            onPress={() => setBigImage(!isBigImage)}
-            style={style.closeIcon}>
-            <CloseCircle size={30} color={'white'} />
-          </TouchableOpacity>
-          <View style={style.imageContainer}>
-            <Image
-              style={style.profileImg(hei, wid)}
-              source={
-                Userdata?.profile_img
-                  ? {uri: Userdata?.profile_img}
-                  : require('../../../../assets/placeholder.png')
-              }
-              resizeMode={'contain'}
-            />
-          </View>
+  // Display large profile image
+  const bigImage = () => (
+    <Modal animationType="slide" transparent={true} visible={isBigImage}>
+      <View style={style.bigImageStyle}>
+        <TouchableOpacity
+          onPress={() => setBigImage(!isBigImage)}
+          style={style.closeIcon}>
+          <CloseCircle size={30} color={'white'} />
+        </TouchableOpacity>
+        <View style={style.imageContainer}>
+          <Image
+            style={style.profileImg(hei, wid)}
+            source={
+              Userdata?.profile_img
+                ? {uri: Userdata?.profile_img}
+                : require('../../../../assets/placeholder.png')
+            }
+            resizeMode={'contain'}
+          />
         </View>
-      </Modal>
-    );
-  };
+      </View>
+    </Modal>
+  );
 
+  // Logout confirmation and process
   const logout = () => {
     Alert.alert(
       t(Constants.LOGOUT),
       t(Constants.LOGOUT_CONFIRM),
       [
-        {
-          text: t(Constants.CANCEL),
-          style: t(Constants.CANCEL),
-        },
+        {text: t(Constants.CANCEL), style: 'cancel'},
         {
           text: t(Constants.LOGOUT),
-          onPress: async () => {
-            try {
-              dispatch(initLogout());
-              // Run all AsyncStorage operations in parallel
-              await Promise.all([
-                AsyncStorage.removeItem('UserType'),
-                AsyncStorage.removeItem('auth-token'),
-                AsyncStorage.removeItem('whatsAppAlert'),
-                AsyncStorage.removeItem('deviceMoving'),
-                AsyncStorage.removeItem('geofence'),
-                AsyncStorage.removeItem('ignition'),
-                AsyncStorage.removeItem('overspeeding'),
-              ]);
-              dispatch(clearStore());
-
-              navigation.reset({
-                index: 0,
-                routes: [{name: 'Signup', params: {fromLogout: true}}],
-              });
-            } catch (error) {
-              console.error('Logout failed', error);
-            }
-          },
+          onPress: () => dispatch(initLogout()),
         },
       ],
       {cancelable: false},
     );
   };
 
+  // Rate app on Play Store (Android only)
   const handleRateUs = () => {
     if (Platform.OS === 'android') {
-      const url = playStoreLink;
-
-      Linking.canOpenURL(url)
-        .then(supported => {
-          if (supported) {
-            Linking.openURL(url);
-          } else {
-            console.log("Don't know how to open URI: " + url);
-          }
-        })
-        .catch(err => console.error('An error occurred', err));
+      Linking.openURL(playStoreLink).catch(err =>
+        console.error('Failed to open Play Store URL', err),
+      );
     } else {
       console.log('This feature is only available on Android.');
     }

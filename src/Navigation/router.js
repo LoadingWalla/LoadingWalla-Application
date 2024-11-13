@@ -93,7 +93,26 @@ const Navigation = ({language}) => {
   }, []);
 
   function handleBackButton() {
+    const state = navigation.getState();
+    const routes = state.routes;
+
     if (navigation.canGoBack()) {
+      const previousRoute = routes[routes.length - 1];
+      const {Owner} = previousRoute?.params;
+      if (previousRoute?.name === 'Previous Bookings') {
+        console.log('User Type:', Owner.user_type);
+        if (Owner.user_type === 1) {
+          navigation.navigate('LoadHome', {
+            screen: 'Menu',
+          });
+        } else if (Owner.user_type === 2) {
+          navigation.navigate('Home', {
+            screen: 'Menu',
+          });
+        }
+        return true;
+      }
+
       navigation.goBack();
       return true;
     } else {
@@ -177,7 +196,7 @@ const Navigation = ({language}) => {
         component={VerifyOtp}
         // options={{ headerShown: false }}
         options={{
-          headerShown: true,
+          headerShown: false,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
           title: t(Constants.VERIFY_NUMBER_TITLE),
@@ -1178,8 +1197,8 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="PlayJourney"
-        component={PlayJourney}
-        // component={PlayJourneyNew}
+        // component={PlayJourney}
+        component={PlayJourneyNew}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',

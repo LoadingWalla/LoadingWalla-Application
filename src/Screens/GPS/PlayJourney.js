@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState, useMemo, useRef, useCallback} from 'react';
 import {
   Animated,
@@ -63,6 +64,7 @@ export default function PlayJourney({navigation, route}) {
   const markerRefs = useRef([]);
 
   const dispatch = useDispatch();
+
   const {
     gpsTokenData,
     gpsReplayLoading,
@@ -77,7 +79,7 @@ export default function PlayJourney({navigation, route}) {
     // console.log(55555, 'playJourney---->', state.data);
     return state.data;
   });
-
+  const dispatch = useDispatch();
   const {wsConnected} = useSelector(state => state.wsData);
 
   const loading = gpsReplayLoading || gpsStopsLoading || gpsSummaryLoading;
@@ -352,6 +354,7 @@ export default function PlayJourney({navigation, route}) {
   };
 
   const isDataAvailable = () => {
+    console.log('----------- gpsReplayData ------------', gpsReplayData);
     return (
       gpsTokenData &&
       gpsReplayData?.length > 0 &&
@@ -369,6 +372,8 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
+  console.log();
+
   return (
     <View style={styles.container}>
       {loading && (
@@ -380,6 +385,14 @@ export default function PlayJourney({navigation, route}) {
       )}
       {!loading && !isDataAvailable() && (
         <View style={styles.noDataContainer}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'PlusJakartaSans-Bold',
+              color: GradientColor1,
+            }}>
+            No Data Available...
+          </Text>
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
@@ -543,6 +556,7 @@ export default function PlayJourney({navigation, route}) {
           </View>
           <View style={styles.playJourneyBottomContainer}>
             <View style={styles.controlsContainer}>
+
               <TouchableOpacity
                 style={styles.playPauseButton}
                 // onPress={togglePlayback}>
@@ -558,9 +572,10 @@ export default function PlayJourney({navigation, route}) {
                   style={styles.playJourneySlider}
                   minimumValue={0}
                   maximumValue={1}
-                  minimumTrackTintColor={backgroundColorNew}
-                  maximumTrackTintColor="#FFDCD3"
-                  thumbTintColor={backgroundColorNew}
+                  thumbImage={require('../../../assets/slider2.png')}
+                  minimumTrackTintColor={sliderColor}
+                  maximumTrackTintColor={sliderColor}
+                  // thumbTintColor={backgroundColorNew}
                   value={sliderValue}
                   // onValueChange={value => {
                   //   setSliderValue(value);
@@ -613,6 +628,54 @@ export default function PlayJourney({navigation, route}) {
                     setSliderValue(value);
                   }}
                 />
+                <View
+                  style={{
+                    flex: 1,
+                    // borderWidth: 1,
+                    flexDirection: 'row',
+                    paddingHorizontal: 4,
+                  }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${currentIndex + 1}/${
+                      gpsReplayData?.length || 0
+                    }`}</Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      width: '100%',
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                      justifyContent: 'flex-end',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                        paddingRight: 4,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('DD/MM/YY')}`}</Text>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('hh:mm A')}`}</Text>
+                  </View>
+                </View>
               </View>
               <View style={styles.speedButtonsContainer}>
                 <TouchableOpacity

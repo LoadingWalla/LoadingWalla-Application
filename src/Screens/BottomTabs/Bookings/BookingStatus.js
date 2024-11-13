@@ -7,8 +7,9 @@ import Information from '../../../../assets/SVG/svg/Information';
 import {useTranslation} from 'react-i18next';
 import * as Constants from '../../../Constants/Constant';
 import NotFound from '../../../Components/NotFound';
-import styles from './style'
+import styles from './style';
 import useTrackScreenTime from '../../../hooks/useTrackScreenTime';
+import CloseCircle from '../../../../assets/SVG/svg/CloseCircle';
 
 const BookingStatus = ({navigation, route}) => {
   useTrackScreenTime('BookingStatus');
@@ -102,9 +103,11 @@ const BookingStatus = ({navigation, route}) => {
                     : renter?.vehicle_number}
                 </Text>
                 {userType === '1' && renter?.verified ? (
-                  <CheckCircle size={20} color={'#119500'} />
+                  // <CheckCircle size={20} color={'#119500'} />
+                  <Shield size={20} verified={1} />
                 ) : (
-                  <Information size={20} color={'#e5b900'} />
+                  // <Information size={20} color={'#e5b900'} />
+                  <Shield size={20} verified={0} />
                 )}
               </View>
               <Text style={styles.truckType}>
@@ -139,7 +142,11 @@ const BookingStatus = ({navigation, route}) => {
               userType: userType,
             })
           }
-          title={t(Constants.FIND_MORE_LOADS)}
+          title={
+            userType === '1'
+              ? `${t(Constants.FIND_MORE_LORRYS)}`
+              : `${t(Constants.FIND_MORE_LOADS)}`
+          }
           style={styles.buttonstyle}
           textStyle={styles.buttonTextStyle}
           touchStyle={styles.touchStyle}

@@ -489,6 +489,51 @@ export const myPostLoadFailure = payload => ({
   payload,
 });
 
+// Notification-setting
+export const initNotifSetting = (
+  id,
+  ignition,
+  overspeed,
+  overspeed_limit,
+  geofencing,
+  device_moving,
+) => ({
+  type: actionTypes.INIT_NOTIF_SETTING,
+  id,
+  ignition,
+  overspeed,
+  overspeed_limit,
+  geofencing,
+  device_moving,
+});
+
+export const postNotifSettingSuccess = payload => ({
+  type: actionTypes.POST_NOTIF_SETTING_SUCCESS,
+  payload,
+});
+
+export const postNotifSettingFailure = payload => ({
+  type: actionTypes.POST_NOTIF_SETTING_FAILURE,
+  payload,
+});
+
+// get notif setting
+
+export const getInitNotifSetting = id => ({
+  type: actionTypes.GET_INIT_NOTIF_SETTING,
+  id,
+});
+
+export const getNotifSettingSuccess = payload => ({
+  type: actionTypes.GET_NOTIF_SETTING_SUCCESS,
+  payload,
+});
+
+export const getNotifSettingFailure = payload => ({
+  type: actionTypes.GET_NOTIF_SETTING_FAILURE,
+  payload,
+});
+
 // Wallet
 export const initWallet = amount => ({
   type: actionTypes.INIT_WALLET,

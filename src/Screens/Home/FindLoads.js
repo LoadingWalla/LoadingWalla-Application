@@ -58,8 +58,7 @@ const FindLoads = ({navigation, route}) => {
   const isLoading = userType === '1' ? findLorryLoading : findLoadLoading;
 
   return (
-    <View
-      style={styles.findLoadsContainer}>
+    <View style={styles.findLoadsContainer}>
       <FindLoadHeader
         title={`${t(Constants.RESULTS)} (${
           userType === '2' ? findLoadData?.length : findLorryData?.length
@@ -90,6 +89,13 @@ const FindLoads = ({navigation, route}) => {
           renderItem={({item}) => renderItem(item)}
           keyExtractor={item => item?.load_id || item?.truck_id}
           showsVerticalScrollIndicator={false}
+        />
+      ) : userType === '1' ? (
+        <NotFound
+          imageName="noLoadFound"
+          title={t(Constants.NO_LORRY_FOUND)}
+          height={200}
+          width={300}
         />
       ) : (
         <NotFound

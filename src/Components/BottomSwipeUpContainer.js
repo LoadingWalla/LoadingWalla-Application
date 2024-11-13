@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import Switch from 'toggle-switch-react-native';
 import IconWithNameBelow from './IconWithNameBelow';
-import {GradientColor2, seperator, titleColor} from '../Color/color';
+import {btnGreen, GradientColor2, seperator, titleColor} from '../Color/color';
 import NavigationIcon from '../../assets/SVG/svg/NavigationIcon';
 import LocationHistory from '../../assets/SVG/svg/LocationHistory';
 import RelayIcon from '../../assets/SVG/svg/RelayIcon';
@@ -24,6 +24,7 @@ import BatteryIcon from '../../assets/SVG/svg/BatteryIcon';
 import NetworkIcon from '../../assets/SVG/svg/NetworkIcon';
 import AlertIcon from '../../assets/SVG/AlertIcon';
 import KeyIcon from '../../assets/SVG/svg/KeyIcon';
+2;
 import {useDispatch} from 'react-redux';
 import {
   addParkingRequest,
@@ -31,11 +32,13 @@ import {
 } from '../Store/Actions/Actions';
 import * as Constants from '../Constants/Constant';
 import {useTranslation} from 'react-i18next';
-import styles from './style'
+import styles from './style';
+import ButtonComponent from './ButtonComponent';
+import Geozone from '../../assets/SVG/svg/Geozone';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const MIN_HEIGHT = 110;
+const MIN_HEIGHT = 101;
 const MAX_HEIGHT = SCREEN_HEIGHT / 2.1;
 
 const calculateSignalStrength = cellTowers => {
@@ -164,6 +167,8 @@ const ICONS = (item, positions, t) =>
     ];
   }, [item, positions]);
 
+//item - gpsDeviceData
+//positions - wsMessages22
 const BottomSwipeUpContainer = React.memo(
   ({
     navigation,
@@ -174,12 +179,23 @@ const BottomSwipeUpContainer = React.memo(
     gpsRelayData,
     children,
   }) => {
+    const [swipeIndicatorHeight, setSwipeIndicatorHeight] = useState(0);
+    const [iconRowHeight, setIconRowHeight] = useState(0);
+    const [infoSectionHeight, setInfoSectionHeight] = useState(0);
+    const [parkingAlarmHeight, setParkingAlarmHeight] = useState(0);
+    const [bottomSpace, setBottomSpace] = useState(0);
+
+    const [totalScreenHeight, setTotalScreenHeight] = useState(MAX_HEIGHT);
+    // const [limit, setLimit] = useState(MAX_HEIGHT);
+
     const [isExpanded, setIsExpanded] = useState(false);
     const [switchOn, setSwitchOn] = useState(gpsRelayData?.parking);
     const animatedHeight = useRef(new Animated.Value(MIN_HEIGHT)).current;
     const dispatch = useDispatch();
     const {t} = useTranslation();
     // console.log(444, item);
+    console.log('------------BottomSwipeUpItem--------------', item);
+    console.log('---------BottomSwipeUpWsMessage22----------', positions[0]);
 
     const panResponder = useMemo(
       () =>
@@ -195,7 +211,7 @@ const BottomSwipeUpContainer = React.memo(
             }
             const newHeight = Math.max(
               MIN_HEIGHT,
-              Math.min(MAX_HEIGHT, MIN_HEIGHT - gestureState.dy),
+              Math.min(totalScreenHeight, MIN_HEIGHT - gestureState.dy),
             );
             animatedHeight.setValue(newHeight);
           },
@@ -204,7 +220,8 @@ const BottomSwipeUpContainer = React.memo(
               // Swipe up to expand
               setIsExpanded(true);
               Animated.timing(animatedHeight, {
-                toValue: MAX_HEIGHT,
+                // toValue: MAX_HEIGHT,
+                toValue: totalScreenHeight,
                 duration: 300,
                 easing: Easing.out(Easing.ease),
                 useNativeDriver: false,
@@ -221,8 +238,20 @@ const BottomSwipeUpContainer = React.memo(
             }
           },
         }),
-      [isExpanded, animatedHeight],
+      [isExpanded, animatedHeight, totalScreenHeight],
     );
+
+    useEffect(() => {
+      const calculatedMaxHeight = swipeIndicatorHeight + iconRowHeight +
+                                  infoSectionHeight + parkingAlarmHeight + bottomSpace;
+      setTotalScreenHeight(calculatedMaxHeight);
+    }, [
+      swipeIndicatorHeight,
+      iconRowHeight,
+      infoSectionHeight,
+      parkingAlarmHeight,
+      bottomSpace,
+    ]);
 
     useEffect(() => {
       setSwitchOn(gpsRelayData?.parking === 1);
@@ -299,9 +328,23 @@ const BottomSwipeUpContainer = React.memo(
       <Animated.View
         style={[styles.bottomContainer, {height: animatedHeight}]}
         {...panResponder.panHandlers}>
-        <View style={styles.swipeIndicator} />
-        <View style={styles.iconRow}>
-          {ICONS(item, positions,t).map((iconItem, index) => (
+        {/* 1 */}
+        <View
+          onLayout={event => {
+            // console.log('-------- 0-------->', event.nativeEvent.layout.height);aa
+            setSwipeIndicatorHeight(event.nativeEvent.layout.height);
+          }}
+          style={styles.swipeIndicator}
+        />
+
+        {/* 2 */}
+        <View
+          onLayout={event => {
+            // console.log('-------- 1-------->', event.nativeEvent.layout.height);
+            setIconRowHeight(event.nativeEvent.layout.height);
+          }}
+          style={styles.iconRow}>
+          {ICONS(item, positions, t).map((iconItem, index) => (
             <View key={index} style={styles.iconContainer}>
               <IconWithNameBelow
                 IconComponent={iconItem.icon}
@@ -313,252 +356,109 @@ const BottomSwipeUpContainer = React.memo(
           ))}
         </View>
 
-        <View style={styles.infoSection}>
-          {/* {renderButtonSections({
-            onNavigatePress,
-            onHistoryPress,
-            onGeozonePress,
-            onTheftPress,
-            onRelayPress,
-            onFuelPumpPress,
-            gpsRelayData,
-          })} */}
+        {/* 3 */}
+        <View
+          onLayout={event => {
+            // console.log('-------- 2-------->', event.nativeEvent.layout.height);
+            setInfoSectionHeight(event.nativeEvent.layout.height);
+          }}
+          style={styles.infoSection}>
           <View style={styles.buttonRow}>
-            <ButtonComponent
-              icon={NavigationIcon}
-              label={t(Constants.NAVIGATE)}
-              onPress={onNavigatePress}
-            />
-            <ButtonComponent
-              icon={LocationHistory}
-              label={t(Constants.HISTORY)}
-              onPress={onHistoryPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={RelayIcon}
-              label={t(Constants.RELAY)}
-              dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-              dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-              onPress={onRelayPress}
-              size={20}
-              color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-              bgcolor={gpsRelayData?.relay}
-            />
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={NavigationIcon}
+                label={t(Constants.NAVIGATE)}
+                onPress={onNavigatePress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={LocationHistory}
+                label={t(Constants.HISTORY)}
+                onPress={onHistoryPress}
+                size={25}
+              />
+            </View>
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={Geozone}
+                label={t(Constants.GEOZONE)}
+                onPress={onGeozonePress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={TheftIcon}
+                label={t(Constants.THEFT)}
+                onPress={onTheftPress}
+                size={25}
+              />
+            </View>
           </View>
           <View style={styles.buttonRow}>
-            <ButtonComponent
-              icon={TheftIcon}
-              label={t(Constants.THEFT)}
-              onPress={onTheftPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={FuelPumpIcon}
-              label={t(Constants.FUEL_PUMP)}
-              onPress={onFuelPumpPress}
-              size={20}
-            />
-            <ButtonComponent
-              icon={GeoFencingIcon}
-              label={t(Constants.GEOZONE)}
-              onPress={onGeozonePress}
+            <View style={{flexDirection: 'row', flex: 1}}>
+              <ButtonComponent
+                icon={FuelPumpIcon}
+                label={t(Constants.FUEL_PUMP)}
+                onPress={onFuelPumpPress}
+                size={25}
+              />
+              <ButtonComponent
+                icon={RelayIcon}
+                label={t(Constants.RELAY)}
+                dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
+                dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
+                onPress={onRelayPress}
+                size={25}
+                color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
+                bgcolor={gpsRelayData?.relay}
+              />
+            </View>
+            <View style={{flexDirection: 'row', flex: 1}}>
+              {/* to add additional features */}
+            </View>
+          </View>
+        </View>
+
+        {/* 4 */}
+        <View
+          onLayout={event => {
+            console.log('-------- 3-------->', event.nativeEvent.layout.height);
+            setParkingAlarmHeight(event.nativeEvent.layout.height);
+          }}
+          style={styles.parkingAlarm}>
+          <Text style={styles.parkingText}>{t(Constants.PARKING_ALARM)}</Text>
+          <View>
+            <Switch
+              isOn={!!switchOn}
+              onColor={'white'}
+              circleColor={switchOn ? btnGreen : 'white'}
+              offColor={seperator}
+              size="small"
+              onToggle={toggleSwitch}
+              style={{
+                borderWidth: 1,
+                borderColor: switchOn ? btnGreen : 'white',
+                borderRadius: 16,
+                overflow: 'hidden',
+              }}
             />
           </View>
         </View>
 
-        <View style={styles.parkingAlarm}>
-          <Text style={styles.parkingText}>{t(Constants.PARKING_ALARM)}</Text>
-          <Switch
-            isOn={!!switchOn}
-            onColor={GradientColor2}
-            offColor={seperator}
-            size="small"
-            onToggle={toggleSwitch}
-          />
+        <View
+          onLayout={event => {
+            // console.log('-------- 5-------->', event.nativeEvent.layout.height);
+            setBottomSpace(event.nativeEvent.layout.height);
+          }}
+          style={{
+            minHeight: 15,
+            width: '100%',
+            paddingVertical: 15,
+          }}>
+          <Text />
         </View>
-        {/* {children && (
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'transparent',
-              zIndex: 10,
-              height: SCREEN_HEIGHT / 4,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            {children}
-          </View>
-        )} */}
       </Animated.View>
     );
   },
 );
 
 export default BottomSwipeUpContainer;
-
-// const renderButtonSections = ({
-//   onNavigatePress,
-//   onHistoryPress,
-//   onGeozonePress,
-//   onTheftPress,
-//   onRelayPress,
-//   onFuelPumpPress,
-//   gpsRelayData,
-// }) => (
-//   <>
-//     <View style={styles.buttonRow}>
-//       <ButtonComponent
-//         icon={NavigationIcon}
-//         label={Constants.NAVIGATE}
-//         onPress={onNavigatePress}
-//       />
-//       <ButtonComponent
-//         icon={LocationHistory}
-//         label="History here"
-//         onPress={onHistoryPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={RelayIcon}
-//         label="Relay here"
-//         dynamicTitleColor={gpsRelayData?.relay ? '#3BA700' : 'red'}
-//         dynamicTitle={gpsRelayData?.relay ? '(ON)' : '(OFF)'}
-//         onPress={onRelayPress}
-//         size={20}
-//         color={gpsRelayData?.relay ? '#3BA700' : '#ff7753'}
-//         bgcolor={gpsRelayData?.relay}
-//       />
-//     </View>
-//     <View style={styles.buttonRow}>
-//       <ButtonComponent
-//         icon={TheftIcon}
-//         label="Theft"
-//         onPress={onTheftPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={FuelPumpIcon}
-//         label="Fuel Pump"
-//         onPress={onFuelPumpPress}
-//         size={20}
-//       />
-//       <ButtonComponent
-//         icon={GeoFencingIcon}
-//         label="Geozone"
-//         onPress={onGeozonePress}
-//       />
-//     </View>
-//   </>
-// );
-
-const ButtonComponent = ({
-  icon: Icon,
-  label,
-  onPress,
-  dynamicTitleColor,
-  dynamicTitle,
-  color = '#ff7753',
-  size = 25,
-  bgcolor = false,
-}) => (
-  <TouchableOpacity style={styles.button(bgcolor)} onPress={onPress}>
-    <Icon size={size} color={color} />
-    <Text style={styles.buttonText}>
-      {label}
-      <Text style={{color: dynamicTitleColor}}>{dynamicTitle}</Text>
-    </Text>
-  </TouchableOpacity>
-);
-
-// const styles = StyleSheet.create({
-//   bottomContainer: {
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     right: 0,
-//     backgroundColor: '#FFF7F5',
-//     flex: 1,
-//     borderTopLeftRadius: 20,
-//     borderTopRightRadius: 20,
-//     elevation: 3,
-//     borderWidth: 1,
-//     borderColor: '#F7F7F7',
-//     zIndex: 1,
-//   },
-//   swipeIndicator: {
-//     width: 40,
-//     height: 5,
-//     backgroundColor: '#CCCCCC',
-//     borderRadius: 3,
-//     alignSelf: 'center',
-//     marginVertical: 10,
-//   },
-//   iconRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-evenly',
-//     alignItems: 'center',
-//     borderWidth: 1,
-//     marginHorizontal: 10,
-//     paddingVertical: 5,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   iconContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   infoSection: {
-//     borderWidth: 1,
-//     margin: 10,
-//     padding: 10,
-//     paddingVertical: 5,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   buttonRow: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     marginVertical: 5,
-//   },
-//   button: color => ({
-//     backgroundColor: color ? '#F7FFF2' : '#FFF7F5',
-//     flexDirection: 'row',
-//     justifyContent: 'space-around',
-//     alignItems: 'center',
-//     paddingHorizontal: 15,
-//     paddingVertical: 10,
-//     elevation: 1,
-//     borderRadius: 5,
-//     minWidth: '30%',
-//     maxWidth: '32%',
-//   }),
-//   buttonText: {
-//     marginLeft: 10,
-//     fontFamily: 'PlusJakartaSans-Bold',
-//     fontSize: 10,
-//     color: titleColor,
-//   },
-//   parkingAlarm: {
-//     borderWidth: 1,
-//     marginHorizontal: 10,
-//     paddingVertical: 10,
-//     paddingHorizontal: 20,
-//     borderRadius: 8,
-//     borderColor: '#00000029',
-//     backgroundColor: '#FFFFFF',
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//   },
-//   parkingText: {
-//     fontFamily: 'PlusJakartaSans-SemiBold',
-//     fontSize: 12,
-//     color: '#696969',
-//   },
-// });

@@ -39,7 +39,10 @@ const TrackingTruck = ({navigation, route}) => {
     return state.data;
   });
   const {wsMessages22} = useSelector(state => {
-    // console.log('WEBSOCKET Tracking Truck -------------->>>>>', state.wsData);
+    console.log(
+      'WEBSOCKET TrackingTruck -------------->>>>>',
+      state.wsData.wsMessages22,
+    );
     return state.wsData;
   });
 

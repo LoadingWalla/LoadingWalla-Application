@@ -1,630 +1,556 @@
+import React, {useState, useEffect, useMemo, useRef} from 'react';
 import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  Button,
+  StyleSheet,
+  Animated,
+  Easing,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
-import React, {useEffect, useState, useMemo, useRef} from 'react';
-import {AnimatedRegion} from 'react-native-maps';
-import {backgroundColorNew, titleColor} from '../../Color/color';
-import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
-import Slider from '@react-native-community/slider';
-import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import {
+  fetchAddressRequest,
   fetchGpsStopsRequest,
   fetchPositionsRequest,
+  fetchSummaryReportRequest,
 } from '../../Store/Actions/Actions';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
 import moment from 'moment';
-import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
+import JourneyMap from './JourneyMap';
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import VehicleIcon from '../../../assets/SVG/svg/VehicleIcon';
+import data from './routeData.json';
+import * as Constants from '../../Constants/Constant';
 import FilterIcon from '../../../assets/SVG/svg/FilterIcon';
+import {
+  backgroundColorNew,
+  GradientColor1,
+  sliderColor,
+} from '../../Color/color';
+import styles from './style';
+import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
+import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
+import {useFocusEffect} from '@react-navigation/native';
+import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
+import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
 import PrevIcon from '../../../assets/SVG/svg/PrevIcon';
 import NextIcon from '../../../assets/SVG/svg/NextIcon';
-import {websocketDisconnect} from '../../Store/Actions/WebSocketActions';
-import MapComponent from '../../Components/MapComponent';
+import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
+import PauseIcon from '../../../assets/SVG/svg/PauseIcon';
+import Slider from '@react-native-community/slider';
 
-export default function PlayJourneyNew({navigation, route}) {
-  const {deviceId, from, to} = route.params;
-  const [sliderValue, setSliderValue] = useState(0);
+const PlayJourneyNew = ({navigation, route}) => {
+  useTrackScreenTime('PlayJourneyNew');
+  const {deviceId, from, to, name, item} = route.params;
+  const {t} = useTranslation();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [mapType, setMapType] = useState('standard');
+  const [sliderValue, setSliderValue] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentPosition, setCurrentPosition] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [currentPosition, setCurrentPosition] = useState(null);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
+  const [followVehicle, setFollowVehicle] = useState(false);
   const [currentStop, setCurrentStop] = useState(null);
+  // console.log(44444, data);
 
-  const mapRef = useRef(null);
-
-  const dispatch = useDispatch();
+  const [routeData] = useState(data);
   const {
     gpsTokenData,
     gpsReplayLoading,
-    gpsReplayError,
     gpsReplayData,
-    gpsStopsLoading,
-    gpsStopsError,
     gpsStopsData,
+    gpsStopsLoading,
+    fullAddressCustomId,
+    fullAddressData,
+    gpsSummaryLoading,
+    gpsSummaryData,
   } = useSelector(state => {
-    console.log('Play Journey ----------------->', state.data);
+    console.log('--------playJourneyNew-------->', state.data);
+
     return state.data;
   });
-
+  const dispatch = useDispatch();
   const {wsConnected} = useSelector(state => state.wsData);
+  // const mapRef = React.useRef(null);
 
-  // Consolidate data fetching logic
-  const fetchData = React.useCallback(() => {
-    const defaultFrom =
-      from || moment().utcOffset(330).startOf('day').toISOString();
-    const defaultTo = to || moment().utcOffset(330).endOf('day').toISOString();
+  const loading = gpsReplayLoading || gpsStopsLoading || gpsSummaryLoading;
 
+  useEffect(() => {
     if (wsConnected) {
       dispatch(websocketDisconnect());
     }
+  }, [wsConnected]);
 
-    if (!gpsReplayData || gpsReplayData.length === 0) {
-      dispatch(
-        fetchPositionsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
-    }
+  useFocusEffect(
+    React.useCallback(() => {
+      const defaultFrom =
+        from || moment().utcOffset(330).startOf('day').toISOString();
+      const defaultTo =
+        to || moment().utcOffset(330).endOf('day').toISOString();
 
-    if (!gpsStopsData || gpsStopsData.length === 0) {
-      dispatch(
-        fetchGpsStopsRequest(
-          gpsTokenData?.email,
-          gpsTokenData?.password,
-          deviceId,
-          defaultFrom,
-          defaultTo,
-        ),
-      );
-    }
-  }, [
-    dispatch,
-    deviceId,
-    from,
-    to,
-    gpsTokenData,
-    wsConnected,
-    gpsReplayData,
-    gpsStopsData,
-  ]);
+      const fetchData = async () => {
+        await dispatch(
+          fetchPositionsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
 
-  useFocusEffect(fetchData);
+        await dispatch(
+          fetchGpsStopsRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+          ),
+        );
 
-  useEffect(() => {
-    let interval = null;
-    if (isPlaying && currentIndex < coordinates?.length) {
-      interval = setInterval(() => {
-        setCurrentIndex(prevIndex => {
-          const newIndex = prevIndex + 1;
-          const newPosition = coordinates[newIndex];
-          setCurrentPosition(newPosition);
-          animatedMarkerPosition
-            .timing({
-              latitude: newPosition?.latitude,
-              longitude: newPosition?.longitude,
-              duration: 1000 / playbackSpeed,
-              useNativeDriver: true,
-            })
-            .start();
+        await dispatch(
+          fetchSummaryReportRequest(
+            gpsTokenData?.email,
+            gpsTokenData?.password,
+            deviceId,
+            defaultFrom,
+            defaultTo,
+            false,
+          ),
+        );
+      };
 
-          setSliderValue(newIndex / (coordinates?.length - 1));
-          if (mapRef.current && newPosition) {
-            mapRef.current.animateCamera({
-              center: {
-                latitude: newPosition.latitude,
-                longitude: newPosition.longitude,
-              },
-              zoom: 15,
-              duration: 1000 / playbackSpeed,
-            });
-          }
-          return newIndex;
-        });
-      }, 1000 / playbackSpeed);
-    } else {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+      fetchData();
 
-  useEffect(() => {
-    if (gpsStopsData && gpsStopsData?.length > 0) {
-      setCurrentStop(gpsStopsData[0]);
-    }
-  }, [gpsStopsData]);
-
-  const coordinates = useMemo(
-    () =>
-      gpsReplayData?.map(point => ({
-        latitude: point.latitude,
-        longitude: point.longitude,
-        course: point.course,
-        speed: point.speed,
-      })),
-    [gpsReplayData],
+      return () => {};
+    }, [dispatch, from, to, deviceId, gpsTokenData]),
   );
 
-  const initialRegion = useMemo(
-    () =>
-      coordinates?.length > 0
-        ? {
-            latitude: coordinates[0].latitude,
-            longitude: coordinates[0].longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }
-        : null,
-    [coordinates],
-  );
+  // useEffect(() => {
+  //   if (gpsStopsData && gpsStopsData.length > 0) {
+  //     setCurrentStop(gpsStopsData[0]);
+  //   }
+  // }, [gpsStopsData]);
 
-  const animatedMarkerPosition = useRef(
-    new AnimatedRegion({
-      latitude: coordinates?.[0]?.latitude || 0,
-      longitude: coordinates?.[0]?.longitude || 0,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }),
-  ).current;
+  // useEffect(() => {
+  //   let interval = null;
 
-  const goToNextStop = () => {
-    if (currentStopIndex < gpsStopsData?.length - 1) {
-      const newIndex = currentStopIndex + 1;
-      setCurrentStopIndex(newIndex);
-      const nextStop = gpsStopsData[newIndex];
-      animatedMarkerPosition
-        .timing({
-          latitude: nextStop.latitude,
-          longitude: nextStop.longitude,
-          duration: 500,
-          useNativeDriver: true,
-        })
-        .start();
-      setCurrentStop(nextStop);
-      mapRef.current?.animateToRegion({
-        latitude: nextStop.latitude,
-        longitude: nextStop.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    }
-  };
+  //   if (isPlaying && currentIndex < coordinates?.length) {
+  //     const adjustedPlaybackSpeed = playbackSpeed * 1000; // Adjust playback speed
 
-  const goToPrevStop = () => {
-    if (currentStopIndex > 0) {
-      const newIndex = currentStopIndex - 1;
-      setCurrentStopIndex(newIndex);
-      const prevStop = gpsStopsData[newIndex];
-      animatedMarkerPosition
-        .timing({
-          latitude: prevStop.latitude,
-          longitude: prevStop.longitude,
-          duration: 1000,
-          useNativeDriver: true,
-        })
-        .start();
-      setCurrentStop(prevStop);
-      mapRef.current?.animateToRegion({
-        latitude: prevStop.latitude,
-        longitude: prevStop.longitude,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    }
-  };
+  //     interval = setInterval(() => {
+  //       setCurrentIndex(prevIndex => {
+  //         const newIndex = prevIndex + 1;
+  //         const newPosition = coordinates[newIndex];
+
+  //         if (newPosition) {
+  //           // Set the new currentPosition
+  //           setCurrentPosition(newPosition);
+
+  //           // Animate marker movement
+  //           animatedMarkerPosition
+  //             .timing({
+  //               latitude: newPosition.latitude,
+  //               longitude: newPosition.longitude,
+  //               duration: 4000 / adjustedPlaybackSpeed, // Adjusted duration for smoother movement
+  //               useNativeDriver: true,
+  //             })
+  //             .start();
+
+  //           setSliderValue(newIndex / (coordinates?.length - 1));
+  //         }
+
+  //         return newIndex;
+  //       });
+  //     }, 1000 / adjustedPlaybackSpeed); // Interval based on adjusted speed
+  //   } else {
+  //     clearInterval(interval);
+  //   }
+
+  //   return () => clearInterval(interval);
+  // }, [isPlaying, currentIndex, coordinates, playbackSpeed]);
+
+  // const coordinates = useMemo(
+  //   () =>
+  //     gpsReplayData?.map(point => ({
+  //       latitude: point.latitude,
+  //       longitude: point.longitude,
+  //       course: point.course,
+  //       speed: point.speed,
+  //       time: point.deviceTime,
+  //     })),
+  //   [gpsReplayData],
+  // );
+
+  // const initialRegion = useMemo(
+  //   () =>
+  //     coordinates?.length > 0
+  //       ? {
+  //           latitude: coordinates[0].latitude,
+  //           longitude: coordinates[0].longitude,
+  //           latitudeDelta: 0.0922,
+  //           longitudeDelta: 0.0421,
+  //         }
+  //       : null,
+  //   [coordinates],
+  // );
+
+  // const animatedMarkerPosition = useRef(
+  //   new AnimatedRegion({
+  //     latitude: coordinates?.[0]?.latitude || 0,
+  //     longitude: coordinates?.[0]?.longitude || 0,
+  //     latitudeDelta: 0.0922,
+  //     longitudeDelta: 0.0421,
+  //   }),
+  // ).current;
 
   const togglePlayback = () => {
     setIsPlaying(!isPlaying);
   };
 
-  const changePlaybackSpeed = speed => {
-    setPlaybackSpeed(speed);
-    if (isPlaying) {
-      togglePlayback();
-      togglePlayback();
-    }
-  };
+  // const changePlaybackSpeed = speed => {
+  //   setPlaybackSpeed(speed);
+  //   if (isPlaying) {
+  //     togglePlayback();
+  //     togglePlayback();
+  //   }
+  // };
 
-  const totalStops = gpsStopsData ? gpsStopsData.length : 0;
-  const totalRun =
-    gpsStopsData && gpsStopsData.length > 0
-      ? (gpsStopsData[gpsStopsData.length - 1].endOdometer -
-          gpsStopsData[0].startOdometer) /
-        1000
-      : 0;
+  // const goToNextStop = () => {
+  //   if (currentStopIndex < gpsStopsData?.length - 1) {
+  //     const newIndex = currentStopIndex + 1;
+  //     setCurrentStopIndex(newIndex);
+  //     const nextStop = gpsStopsData[newIndex];
 
-  const totalDuration =
-    gpsStopsData && gpsStopsData.length > 0
-      ? gpsStopsData.reduce((acc, stop) => acc + stop.duration, 0)
-      : 0;
+  //     // Fetch the address for the next stop if not already fetched
+  //     if (!nextStop.address && fullAddressCustomId !== nextStop.positionId) {
+  //       dispatch(
+  //         fetchAddressRequest(
+  //           nextStop.latitude,
+  //           nextStop.longitude,
+  //           nextStop.positionId,
+  //         ),
+  //       );
+  //     }
 
-  const formatDuration = duration => {
-    const seconds = Math.floor((duration / 1000) % 60);
-    const minutes = Math.floor((duration / (1000 * 60)) % 60);
-    const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+  //     animatedMarkerPosition
+  //       .timing({
+  //         latitude: nextStop.latitude,
+  //         longitude: nextStop.longitude,
+  //         duration: 500,
+  //         useNativeDriver: true,
+  //       })
+  //       .start();
 
-    return `${hours < 10 ? `0${hours}` : hours}:${
-      minutes < 10 ? `0${minutes}` : minutes
-    }:${seconds < 10 ? `0${seconds}` : seconds}`;
-  };
+  //     setCurrentStop(nextStop);
+  //     mapRef.current?.animateToRegion({
+  //       latitude: nextStop.latitude,
+  //       longitude: nextStop.longitude,
+  //       latitudeDelta: 0.0922,
+  //       longitudeDelta: 0.0421,
+  //     });
+  //   }
+  // };
 
-  if (gpsReplayLoading || gpsStopsLoading || !gpsReplayData || !gpsStopsData) {
+  // const goToPrevStop = () => {
+  //   if (currentStopIndex > 0) {
+  //     const newIndex = currentStopIndex - 1;
+  //     setCurrentStopIndex(newIndex);
+  //     const prevStop = gpsStopsData[newIndex];
+
+  //     // Fetch the address for the previous stop if not already fetched
+  //     if (!prevStop.address && fullAddressCustomId !== prevStop.positionId) {
+  //       dispatch(
+  //         fetchAddressRequest(
+  //           prevStop.latitude,
+  //           prevStop.longitude,
+  //           prevStop.positionId,
+  //         ),
+  //       );
+  //     }
+
+  //     animatedMarkerPosition
+  //       .timing({
+  //         latitude: prevStop.latitude,
+  //         longitude: prevStop.longitude,
+  //         duration: 1000,
+  //         useNativeDriver: false,
+  //       })
+  //       .start();
+
+  //     setCurrentStop(prevStop);
+  //     mapRef.current?.animateToRegion({
+  //       latitude: prevStop.latitude,
+  //       longitude: prevStop.longitude,
+  //       latitudeDelta: 0.0922,
+  //       longitudeDelta: 0.0421,
+  //     });
+  //   }
+  // };
+
+  // const totalStops = gpsStopsData ? gpsStopsData.length : 0;
+  // const totalRun = gpsSummaryData[0]?.distance / 1000;
+  // const totalDuration =
+  //   gpsStopsData && gpsStopsData.length > 0
+  //     ? gpsStopsData.reduce((acc, stop) => acc + stop.duration, 0)
+  //     : 0;
+
+  // const formatDuration = duration => {
+  //   const seconds = Math.floor((duration / 1000) % 60);
+  //   const minutes = Math.floor((duration / (1000 * 60)) % 60);
+  //   const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  //   const hoursStr = hours < 10 ? `0${hours}` : hours;
+  //   const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+  //   const secondsStr = seconds < 10 ? `0${seconds}` : seconds;
+
+  //   return `${hoursStr}:${minutesStr}:${secondsStr}`;
+  // };
+
+  const isDataAvailable = () => {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color={backgroundColorNew} />
-      </View>
+      gpsTokenData &&
+      gpsReplayData?.length > 0 &&
+      gpsStopsData?.length > 0 &&
+      gpsSummaryData?.length > 0
     );
-  }
+  };
+
+  // const convertMillisToTime = millis => {
+  //   const hours = Math.floor(millis / (1000 * 60 * 60));
+  //   const minutes = Math.floor((millis % (1000 * 60 * 60)) / (1000 * 60));
+  //   return `${hours}h ${minutes}m`;
+  // };
+
+  // const handleMarkerPress = (stop, index) => {
+  //   // Fetch the address if it's not available and not already being fetched
+  //   if (!stop.address && fullAddressCustomId !== stop.positionId) {
+  //     dispatch(
+  //       fetchAddressRequest(stop.latitude, stop.longitude, stop.positionId),
+  //     );
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={styles.stopBox}>
-          <Text style={styles.stopText}>Stop</Text>
-          <Text style={styles.stopCount}>{currentStopIndex + 1}</Text>
+      {loading && (
+        <View style={styles.playJourneyBottomContainer}>
+          <View style={styles.controlsContainer}>
+            <PlayJourneyShimmer />
+          </View>
         </View>
-        <View style={styles.verticalLine} />
-        <Text style={styles.addressText}>
-          {currentStop && currentStop.address
-            ? `${currentStop.address}`
-            : 'No address available'}
-        </Text>
-        <View>
+      )}
+      {!loading && !isDataAvailable() && (
+        <View style={styles.noDataContainer}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: 'PlusJakartaSans-Bold',
+              color: GradientColor1,
+            }}>
+            No Data Available...
+          </Text>
           <TouchableOpacity
             style={styles.calendarIconBox}
             onPress={() =>
               navigation.navigate('quickfilters', {
                 deviceId,
                 navigationPath: 'PlayJourney',
+                name,
               })
             }>
-            <FilterIcon size={30} color={backgroundColorNew} />
+            <FilterIcon size={20} color={backgroundColorNew} />
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.mapContainer}>
-        {/* <View style={styles.mapView}>
-            {initialRegion && (
-              <MapView
-                ref={mapRef}
-                style={StyleSheet.absoluteFillObject}
-                initialRegion={initialRegion}>
-                <MapViewDirections
-                  origin={simplifiedCoordinates[0]}
-                  destination={
-                    simplifiedCoordinates[simplifiedCoordinates.length - 1]
-                  }
-                  waypoints={simplifiedCoordinates.slice(1, -1)}
-                  apikey={'AIzaSyC_QRJv6btTEpYsBdlsf075Ppdd6Vh-MJE'}
-                  strokeWidth={3}
-                  strokeColor="blue"
-                  optimizeWaypoints={true}
-                  onReady={result => {
-                    console.log(`Distance: ${result.distance} km`);
-                    console.log(`Duration: ${result.duration} min.`);
-                  }}
-                  onError={errorMessage => {
-                    console.error('Error in MapViewDirections:', errorMessage);
-                  }}
-                />
-                <Marker
-                  coordinate={coordinates[0]}
-                  title="Start Point"
-                  pinColor="green"
-                />
-                <Marker
-                  coordinate={coordinates[coordinates.length - 1]}
-                  title="End Point"
-                  pinColor="red"
-                />
-                {currentPosition && (
-                  <Marker.Animated
-                    coordinate={animatedMarkerPosition}
-                    title="Speed"
-                    description={`${(currentPosition.speed * 1.852).toFixed(
-                      2,
-                    )} km/h`}
-                    rotation={currentPosition.course || 0}>
-                    <TruckNavigationIcon width={50} height={50} />
-                  </Marker.Animated>
-                )}
-                {gpsStopsData?.map((stop, index) => (
-                  <Marker
-                    key={index}
-                    coordinate={{
-                      latitude: stop.latitude,
-                      longitude: stop.longitude,
-                    }}
-                    pinColor={index === currentStopIndex ? 'blue' : 'orange'}
-                    title={`Stop ${index + 1}`}
-                    description={stop.address}
-                  />
-                ))}
-              </MapView>
-            )}
-          </View> */}
-        <MapComponent
-          gpsData={gpsReplayData}
-          stops={gpsStopsData}
-          currentPosition={currentPosition}
-        />
-        <View style={styles.extraButtonBox}>
+      )}
+      {!loading && isDataAvailable() && (
+        <>
           <TouchableOpacity
-            onPress={() => navigation.navigate('stops', {deviceId, from, to})}
-            style={styles.stopsBtnStyle}>
-            <AlertsIcon size={20} />
-            <Text style={styles.alertButtonText}>Stops</Text>
+            style={styles.calendarIconBox}
+            onPress={() =>
+              navigation.navigate('quickfilters', {
+                deviceId,
+                navigationPath: 'PlayJourney',
+                name,
+              })
+            }>
+            <FilterIcon size={25} color={backgroundColorNew} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.ctrlBtn} onPress={goToPrevStop}>
-            <PrevIcon size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.ctrlBtn} onPress={goToNextStop}>
-            <NextIcon size={30} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.bottomContainer}>
-        <View style={styles.controlsContainer}>
-          <TouchableOpacity
-            style={styles.playPauseButton}
-            onPress={togglePlayback}>
-            {isPlaying ? (
-              <PauseIcon size={20} color={backgroundColorNew} />
-            ) : (
-              <PlayIcon size={20} color={backgroundColorNew} />
-            )}
-          </TouchableOpacity>
-          <View style={styles.sliderContainer}>
-            <Slider
-              style={styles.slider}
-              minimumValue={0}
-              maximumValue={1}
-              minimumTrackTintColor={backgroundColorNew}
-              maximumTrackTintColor="#FFDCD3"
-              thumbTintColor={backgroundColorNew}
-              value={sliderValue}
-              onValueChange={value => {
-                setSliderValue(value);
-                const newIndex = Math.round(value * (coordinates?.length - 1));
-                setCurrentIndex(newIndex);
-                const newPosition = coordinates[newIndex];
-                setCurrentPosition(newPosition);
-                animatedMarkerPosition
-                  .timing({
-                    latitude: newPosition.latitude,
-                    longitude: newPosition.longitude,
-                    duration: 500,
-                    useNativeDriver: true,
-                  })
-                  .start();
-                if (mapRef.current && newPosition) {
-                  mapRef.current.animateToRegion({
-                    latitude: newPosition?.latitude,
-                    longitude: newPosition?.longitude,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  });
-                }
-              }}
+          <View style={styles.mapView}>
+            <JourneyMap
+              routeData={gpsReplayData}
+              isPlaying={isPlaying}
+              followVehicle={followVehicle}
+              stops={gpsStopsData}
             />
           </View>
-          <View style={styles.speedButtonsContainer}>
-            <TouchableOpacity
-              style={[
-                styles.speedButton,
-                playbackSpeed === 1 && styles.activeSpeedButton,
-              ]}
-              onPress={() => changePlaybackSpeed(1)}>
-              <Text
-                style={[
-                  styles.speedButtonText,
-                  playbackSpeed === 1 && styles.activeSpeedButtonText,
-                ]}>
-                1X
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.speedButton,
-                playbackSpeed === 2 && styles.activeSpeedButton,
-              ]}
-              onPress={() => changePlaybackSpeed(2)}>
-              <Text
-                style={[
-                  styles.speedButtonText,
-                  playbackSpeed === 2 && styles.activeSpeedButtonText,
-                ]}>
-                2X
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.totalBox}>
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#3BA700'}]}>
-              Total run: {Math.ceil(totalRun)} KM
-            </Text>
-            <Text style={styles.stopCount}>00:00:00</Text>
-          </View>
-          <View style={styles.verticalLine} />
-          <View style={styles.stopBox}>
-            <Text style={[styles.stopText, {color: '#F50000'}]}>
-              Total Stops: {totalStops}
-            </Text>
-            <Text style={styles.stopCount}>
-              {formatDuration(totalDuration)}
-            </Text>
-          </View>
-          {/* <View style={styles.verticalLine} />
-            <View style={styles.stopBox}>
-              <Text style={[styles.stopText, {color: '#E0BD00'}]}>
-                Signal Losts: 0 KM
-              </Text>
-              <Text style={styles.stopCount}>00:00:00</Text>
+          <View style={styles.playJourneyBottomContainer}>
+            <View style={styles.controlsContainer}>
+              <View>
+                <TouchableOpacity
+                  style={styles.playPauseButton}
+                  onPress={togglePlayback}>
+                  {isPlaying ? (
+                    <PauseIcon size={20} color={backgroundColorNew} />
+                  ) : (
+                    <PlayIcon size={20} color={backgroundColorNew} />
+                  )}
+                </TouchableOpacity>
+              </View>
+              {/* <View style={styles.playJourneySliderContainer}>
+                <Slider
+                  style={styles.playJourneySlider}
+                  minimumValue={0}
+                  maximumValue={1}
+                  thumbImage={require('../../../assets/slider2.png')}
+                  minimumTrackTintColor={sliderColor}
+                  maximumTrackTintColor={sliderColor}
+                  // thumbTintColor={backgroundColorNew}
+                  value={sliderValue}
+                  onValueChange={value => {
+                    setSliderValue(value);
+                    const newIndex = Math.round(
+                      value * (coordinates?.length - 1),
+                    );
+                    setCurrentIndex(newIndex);
+                    const newPosition = coordinates[newIndex];
+                    setCurrentPosition(newPosition);
+                    animatedMarkerPosition
+                      .timing({
+                        latitude: newPosition.latitude,
+                        longitude: newPosition.longitude,
+                        duration: 500,
+                        useNativeDriver: true,
+                      })
+                      .start();
+                    if (mapRef.current && newPosition) {
+                      mapRef.current.animateToRegion({
+                        latitude: newPosition?.latitude,
+                        longitude: newPosition?.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                      });
+                    }
+                  }}
+                />
+                <View
+                  style={{
+                    flex: 1,
+                    // borderWidth: 1,
+                    flexDirection: 'row',
+                    paddingHorizontal: 4,
+                  }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${currentIndex + 1}/${
+                      gpsReplayData?.length || 0
+                    }`}</Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      width: '100%',
+                      // borderWidth: 1,
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                      justifyContent: 'flex-end',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                        paddingRight: 4,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('DD/MM/YY')}`}</Text>
+                    <Text
+                      style={{
+                        fontFamily: 'PlusJakartaSans-SemiBold',
+                        fontSize: 10,
+                      }}>{`${moment(
+                      gpsReplayData[currentIndex]?.serverTime,
+                    ).format('hh:mm A')}`}</Text>
+                  </View>
+                </View>
+              </View> */}
+              {/* <View style={styles.speedButtonsContainer}>
+                <TouchableOpacity
+                  style={[
+                    styles.speedButton,
+                    playbackSpeed === 1 && styles.activeSpeedButton,
+                  ]}
+                  onPress={() => changePlaybackSpeed(1)}>
+                  <Text
+                    style={[
+                      styles.speedButtonText,
+                      playbackSpeed === 1 && styles.activeSpeedButtonText,
+                    ]}>
+                    1X
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.speedButton,
+                    playbackSpeed === 2 && styles.activeSpeedButton,
+                  ]}
+                  onPress={() => changePlaybackSpeed(2)}>
+                  <Text
+                    style={[
+                      styles.speedButtonText,
+                      playbackSpeed === 2 && styles.activeSpeedButtonText,
+                    ]}>
+                    2X
+                  </Text>
+                </TouchableOpacity>
+              </View> */}
+            </View>
+            {/* <View style={styles.totalBox}>
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#3BA700'}]}>
+                  {t(Constants.TOT_DIS)}
+                </Text>
+                <Text style={styles.stopCount}>
+                  {Math.abs(totalRun).toFixed(2)} KM
+                </Text>
+              </View>
+              <View style={styles.verticalLine} />
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#F50000'}]}>
+                  {t(Constants.TOT_STOPS)}: {totalStops}
+                </Text>
+                <Text style={styles.stopCount}>
+                  {formatDuration(totalDuration)}
+                </Text>
+              </View>
+              <View style={styles.verticalLine} />
+              <View style={styles.stopBox}>
+                <Text style={[styles.stopText, {color: '#E0BD00'}]}>
+                  {t(Constants.ENG_HRS)}
+                </Text>
+                <Text style={styles.stopCount}>
+                  {convertMillisToTime(gpsSummaryData[0]?.engineHours)}
+                </Text>
+              </View>
             </View> */}
-        </View>
-      </View>
+          </View>
+        </>
+      )}
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  loader: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-  verticalLine: {
-    backgroundColor: '#AFAFAF',
-    width: 1,
-    marginHorizontal: 5,
-    height: '100%',
-  },
-  extraButtonBox: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 130,
-    right: 0,
-    zIndex: 10,
-  },
-  addressText: {
-    flex: 1,
-    fontSize: 12,
-    fontFamily: 'PlusJakartaSans-Italic',
-    color: titleColor,
-  },
-  topContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 10,
-    elevation: 2,
-  },
-  mapContainer: {flex: 1},
-  mapView: {flex: 1, width: '100%', height: '100%'},
-  bottomContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    position: 'absolute',
-    bottom: 0,
-    padding: 10,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: '#F7F7F7',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: '100%',
-  },
-  alertButtonText: {
-    marginLeft: 10,
-    textAlign: 'center',
-    fontSize: 14,
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-  },
-  stopBox: {
-    paddingHorizontal: 5,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stopText: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-SemiBold',
-    fontSize: 10,
-    textAlign: 'center',
-  },
-  stopCount: {
-    color: titleColor,
-    fontFamily: 'PlusJakartaSans-Bold',
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: -5,
-  },
-  totalBox: {
-    flexDirection: 'row',
-    flex: 1,
-    justifyContent: 'space-evenly',
-    paddingVertical: 10,
-    marginTop: 10,
-  },
-  stopsBtnStyle: {
-    flexDirection: 'row',
-    elevation: 3,
-    backgroundColor: '#ffffff',
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  ctrlBtn: {
-    elevation: 3,
-    backgroundColor: '#ffffff',
-    padding: 5,
-    borderRadius: 40,
-    marginRight: 10,
-  },
-  controlsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  playPauseButton: {
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: 5,
-    borderColor: backgroundColorNew,
-  },
-  sliderContainer: {
-    flex: 1,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slider: {
-    flex: 1,
-    width: '100%',
-  },
-  speedButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  speedButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 8,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 5,
-    marginRight: 5,
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
-  },
-  activeSpeedButton: {
-    backgroundColor: backgroundColorNew,
-  },
-  speedButtonText: {
-    fontFamily: 'PlusJakartaSans-ExtraBold',
-    color: backgroundColorNew,
-  },
-  activeSpeedButtonText: {
-    color: '#FFF',
-  },
-  calendarIconBox: {
-    padding: 8,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#f7f7f7',
-    elevation: 2,
-  },
-});
+export default PlayJourneyNew;

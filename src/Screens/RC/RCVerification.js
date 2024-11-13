@@ -161,14 +161,14 @@ const RCVerification = ({navigation, route}) => {
         transparent={true}
         visible={isCameraOptions}
         onRequestClose={() => {}}>
-        <View style={stylesss.modalContainer}>
-          <View style={stylesss.modalChildContainer}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalChildContainer}>
             <TouchableOpacity onPress={() => setCameraOptions(false)}>
               <CloseCircle color="#252B41" size={26} />
             </TouchableOpacity>
-            <View style={stylesss.optionBox}>
+            <View style={styles.optionBox}>
               <TouchableOpacity activeOpacity={0.5} onPress={() => takePhoto()}>
-                <View style={stylesss.iconBox}>
+                <View style={styles.iconBox}>
                   <Cammera />
                   <Text>Camera</Text>
                 </View>
@@ -176,7 +176,7 @@ const RCVerification = ({navigation, route}) => {
               <TouchableOpacity
                 activeOpacity={0.5}
                 onPress={() => choosePhoto()}>
-                <View style={stylesss.iconBox}>
+                <View style={styles.iconBox}>
                   <Gallery />
                   <Text>Gallery</Text>
                 </View>
@@ -192,14 +192,14 @@ const RCVerification = ({navigation, route}) => {
     <KeyboardAvoidingView style={styles.container}>
       {chooseOptions()}
       <View style={styles.setFlex}>
-        <View style={stylesss.paramBox}>
+        <View style={styles.paramBox}>
           <Text style={styles.RCText}>{t(Constants.RCV_TRUCK)}</Text>
           <Text style={styles.label}>{RC}</Text>
         </View>
-        <View style={stylesss.imageBox}>
+        <View style={styles.imageBox}>
           <Text style={styles.label}>Upload your {title}*</Text>
-          <View style={stylesss.borderLineContainer}>
-            <View style={stylesss.innerContainer}>
+          <View style={styles.borderLineContainer}>
+            <View style={styles.innerContainer}>
               <Text>Front Side</Text>
               <TouchableOpacity
                 onPress={() => onClickProfile('front')}
@@ -254,10 +254,10 @@ const RCVerification = ({navigation, route}) => {
         </View>
       </View>
 
-      <View style={stylesss.seperatorBox}>
-        <View style={stylesss.halfHorizontalLine} />
-        <Text style={stylesss.orText}>OR</Text>
-        <View style={stylesss.halfHorizontalLine} />
+      <View style={styles.seperatorBox}>
+        <View style={styles.halfHorizontalLine} />
+        <Text style={styles.orText}>OR</Text>
+        <View style={styles.halfHorizontalLine} />
       </View>
 
       <TouchableOpacity

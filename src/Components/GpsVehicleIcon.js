@@ -6,7 +6,7 @@ import BusGpsIcon from '../../assets/SVG/svg/BusGpsIcon';
 import CarGpsIcon from '../../assets/SVG/svg/CarGpsIcon';
 import TruckGpsIcon from '../../assets/SVG/svg/TruckGpsIcon';
 
-const VehicleIcon = ({category, size = 50}) => {
+const GpsVehicleIcon = ({category, size = 50}) => {
   switch (category?.toLowerCase()) {
     case 'truck':
       return <TruckGpsIcon width={size} height={size} />;
@@ -23,4 +23,4 @@ const VehicleIcon = ({category, size = 50}) => {
   }
 };
 
-export default VehicleIcon;
+export default GpsVehicleIcon;

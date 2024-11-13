@@ -7,27 +7,25 @@ import {
   Platform,
   TextInput,
 } from 'react-native';
-import {backgroundColorNew} from '../../Color/color';
+import {
+  backgroundColorNew,
+  black,
+  darkGrayBg,
+  grayBg,
+  pageBackground,
+} from '../../Color/color';
 import Button from '../../Components/Button';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import AlertBox from '../../Components/AlertBox';
 import styles from './style';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
+import Calender from '../../../assets/SVG/svg/Calender';
+// import Search from '../../../assets/SVG/svg/search';
 
 const QuickFilters = ({navigation, route}) => {
   useTrackScreenTime('QuickFilters');
   const {deviceId, name, navigationPath} = route.params;
-
-  // const filters = [
-  //   'Yesterday',
-  //   'Today',
-  //   'This Week',
-  //   'Previous Week',
-  //   'This Month',
-  //   'Previous Month',
-  //   'Custom',
-  // ];
 
   const filters = [
     'Yesterday',
@@ -35,7 +33,7 @@ const QuickFilters = ({navigation, route}) => {
     'Last 3 Days',
     'Last 7 Days',
     'Last 1 Month',
-    'Last 3 Months',
+    'Custom',
   ];
 
   const [activeFilter, setActiveFilter] = useState('Today');
@@ -69,57 +67,6 @@ const QuickFilters = ({navigation, route}) => {
   };
 
   const getDateRange = filter => {
-    // const rangeMap = {
-    //   Today: {
-    //     start: moment().utcOffset(330).startOf('day').toISOString(),
-    //     end: moment().utcOffset(330).endOf('day').toISOString(),
-    //   },
-    //   Yesterday: {
-    //     start: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'days')
-    //       .startOf('day')
-    //       .toISOString(),
-    //     end: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'days')
-    //       .endOf('day')
-    //       .toISOString(),
-    //   },
-    //   'This Week': {
-    //     start: moment().utcOffset(330).startOf('week').toISOString(),
-    //     end: moment().utcOffset(330).endOf('week').toISOString(),
-    //   },
-    //   'Previous Week': {
-    //     start: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'weeks')
-    //       .startOf('week')
-    //       .toISOString(),
-    //     end: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'weeks')
-    //       .endOf('week')
-    //       .toISOString(),
-    //   },
-    //   'This Month': {
-    //     start: moment().utcOffset(330).startOf('month').toISOString(),
-    //     end: moment().utcOffset(330).endOf('month').toISOString(),
-    //   },
-    //   'Previous Month': {
-    //     start: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'months')
-    //       .startOf('month')
-    //       .toISOString(),
-    //     end: moment()
-    //       .utcOffset(330)
-    //       .subtract(1, 'months')
-    //       .endOf('month')
-    //       .toISOString(),
-    //   },
-    // };
-
     const rangeMap = {
       Today: {
         start: moment().utcOffset(330).startOf('day').toISOString(),
@@ -161,14 +108,6 @@ const QuickFilters = ({navigation, route}) => {
           .toISOString(),
         end: moment().utcOffset(330).endOf('day').toISOString(),
       },
-      'Last 3 Months': {
-        start: moment()
-          .utcOffset(330)
-          .subtract(3, 'months')
-          .startOf('day')
-          .toISOString(),
-        end: moment().utcOffset(330).endOf('day').toISOString(),
-      },
     };
 
     return rangeMap[filter] || {start: '', end: ''};
@@ -178,8 +117,9 @@ const QuickFilters = ({navigation, route}) => {
     let from, to;
 
     if (activeFilter === 'Custom') {
-      const startDateTime = `${dateRange.startDate}T${dateRange.startTime}`;
-      const endDateTime = `${dateRange.endDate}T${dateRange.endTime}`;
+      // Hardcoding startTime to 12 AM and endTime to 12 PM
+      const startDateTime = `${dateRange.startDate}T00:00:00`;
+      const endDateTime = `${dateRange.endDate}T12:00:00`;
       from = moment(startDateTime)
         .utcOffset(330)
         .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -191,6 +131,7 @@ const QuickFilters = ({navigation, route}) => {
       from = start;
       to = end;
     }
+
     console.log(`From: ${from}`);
     console.log(`To: ${to}`);
     navigation.navigate(navigationPath, {from, to, deviceId, name});
@@ -200,24 +141,19 @@ const QuickFilters = ({navigation, route}) => {
     setShowDatePicker(prev => ({...prev, [type]: false}));
 
     if (selectedDate && selectedDate <= new Date()) {
-      // Use moment to ensure date and time are in the correct UTC format
       const formattedDate = moment(selectedDate)
         .utcOffset(330)
-        .format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+        .format('YYYY-MM-DD'); // Only take the date, no time component
 
-      if (type.includes('Date')) {
+      if (type === 'startDate') {
         setDateRange(prev => ({
           ...prev,
-          [type]: formattedDate.split('T')[0], // Store only the date part
+          startDate: formattedDate,
         }));
-        setShowDatePicker(prev => ({
-          ...prev,
-          [type.replace('Date', 'Time')]: true, // Show time picker after date selection
-        }));
-      } else {
+      } else if (type === 'endDate') {
         setDateRange(prev => ({
           ...prev,
-          [type]: formattedDate.split('T')[1]?.split('Z')[0], // Store only the time part
+          endDate: formattedDate,
         }));
       }
     } else if (selectedDate > new Date()) {
@@ -230,7 +166,12 @@ const QuickFilters = ({navigation, route}) => {
       style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View>
-        <Text style={{margin: 5, fontWeight: 'bold', fontSize: 11}}>
+        <Text
+          style={{
+            padding: 8,
+            fontFamily: 'PlusJakartaSans-SemiBold',
+            fontSize: 12,
+          }}>
           Show previous data by:
         </Text>
       </View>
@@ -260,60 +201,82 @@ const QuickFilters = ({navigation, route}) => {
       <View style={styles.customFilterContainer}>
         {activeFilter === 'Custom' && (
           <>
-            <Text style={styles.customFilterText}>Pickup Dates and Times</Text>
-            <View style={styles.dateTimeContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  setShowDatePicker(prev => ({...prev, startDate: true}))
-                }>
-                <TextInput
-                  style={styles.input}
-                  placeholder="--/--/--"
-                  placeholderTextColor={backgroundColorNew}
-                  value={dateRange.startDate}
-                  editable={false}
-                />
-              </TouchableOpacity>
-              <Text style={styles.separatorText}>--</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  setShowDatePicker(prev => ({...prev, endDate: true}))
-                }>
-                <TextInput
-                  style={styles.input}
-                  placeholder="--/--/--"
-                  placeholderTextColor={backgroundColorNew}
-                  value={dateRange.endDate}
-                  editable={false}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.dateTimeContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  setShowDatePicker(prev => ({...prev, startTime: true}))
-                }>
-                <TextInput
-                  style={styles.input}
-                  placeholder="--:--"
-                  placeholderTextColor={backgroundColorNew}
-                  value={dateRange.startTime}
-                  editable={false}
-                />
-              </TouchableOpacity>
-              <Text style={styles.separatorText}>--</Text>
-              <TouchableOpacity
-                onPress={() =>
-                  setShowDatePicker(prev => ({...prev, endTime: true}))
-                }>
-                <TextInput
-                  style={styles.input}
-                  placeholder="--:--"
-                  placeholderTextColor={backgroundColorNew}
-                  value={dateRange.endTime}
-                  editable={false}
-                />
-              </TouchableOpacity>
+            <View
+              style={{
+                paddingVertical: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 6,
+                alignItems: 'center',
+                backgroundColor: grayBg,
+                borderWidth: 1,
+                borderRadius: 30,
+                borderColor: darkGrayBg,
+              }}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingHorizontal: 10,
+                  // borderWidth: 1,
+                }}>
+                <View
+                  style={{
+                    flex: 1,
+                    // borderWidth:1,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{paddingRight: 10}}>
+                    <Calender />
+                  </View>
+                  <View style={{flex: 1}}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setShowDatePicker(prev => ({...prev, startDate: true}))
+                      }>
+                      <TextInput
+                        style={{
+                          fontSize: 14,
+                          color: black,
+                          fontStyle: 'normal',
+                          fontWeight: '600',
+                          fontFamily: 'PlusJakartaSans-SemiBold',
+                        }}
+                        placeholder="Start date"
+                        placeholderTextColor={black}
+                        value={dateRange.startDate}
+                        editable={false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{paddingRight: 10}}>
+                    <Calender />
+                  </View>
+                  <View style={{flex: 1}}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        setShowDatePicker(prev => ({...prev, endDate: true}))
+                      }>
+                      <TextInput
+                        style={{
+                          fontSize: 14,
+                          color: black,
+                          fontStyle: 'normal',
+                          fontWeight: '600',
+                          fontFamily: 'PlusJakartaSans-SemiBold',
+                        }}
+                        placeholder="End date"
+                        placeholderTextColor={black}
+                        value={dateRange.endDate}
+                        editable={false}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
             </View>
           </>
         )}
@@ -336,7 +299,7 @@ const QuickFilters = ({navigation, route}) => {
           minimumDate={new Date(2024, 7, 14)} // Minimum date set to 14/08/2024
         />
       )}
-      {showDatePicker.startTime && (
+      {/* {showDatePicker.startTime && (
         <DateTimePicker
           value={date}
           mode="time"
@@ -345,7 +308,7 @@ const QuickFilters = ({navigation, route}) => {
             handleDateChange('startTime', e, selectedDate)
           }
         />
-      )}
+      )} */}
       {showDatePicker.endDate && (
         <DateTimePicker
           value={date}
@@ -358,7 +321,7 @@ const QuickFilters = ({navigation, route}) => {
           minimumDate={new Date(2024, 7, 14)}
         />
       )}
-      {showDatePicker.endTime && (
+      {/* {showDatePicker.endTime && (
         <DateTimePicker
           value={date}
           mode="time"
@@ -367,7 +330,7 @@ const QuickFilters = ({navigation, route}) => {
             handleDateChange('endTime', e, selectedDate)
           }
         />
-      )}
+      )} */}
     </KeyboardAvoidingView>
   );
 };

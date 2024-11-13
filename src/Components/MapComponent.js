@@ -157,7 +157,6 @@ const MapComponent = React.memo(
             anchor={{x: 0.5, y: 0.5}}
             rotation={position.course}
             ref={markerRef}>
-            <VehicleIconSvg width={50} height={50} />
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>

@@ -11,7 +11,7 @@ import {
   fetchTokenRequest,
   initProfile,
 } from '../../Store/Actions/Actions';
-import {backgroundColorNew, GradientColor1} from '../../Color/color';
+import {GradientColor1, GradientColor5} from '../../Color/color';
 import {websocketConnect} from '../../Store/Actions/WebSocketActions';
 import GpsItem from '../../Components/GpsItem';
 import DashboardHeader from '../../Components/DashboardHeader';
@@ -35,7 +35,10 @@ const MyGpsScreen = ({navigation}) => {
   } = useSelector(state => state.data);
 
   const {wsConnected, wsPositions, wsDevices, wsEvents, wsError} = useSelector(
-    state => state.wsData,
+    state => {
+      // console.log('-----------------MyGpsScreen Message22-----------------', state.wsData);
+      return state.wsData;
+    },
   );
 
   const [mergedDeviceData, setMergedDeviceData] = useState([]);
@@ -79,6 +82,9 @@ const MyGpsScreen = ({navigation}) => {
   useFocusEffect(
     useCallback(() => {
       fetchGpsData();
+
+      setFilterStatus('All');
+
       if (!DashboardUser) {
         dispatch(initProfile());
       }
@@ -268,7 +274,7 @@ const MyGpsScreen = ({navigation}) => {
         )}
       </View>
       <AnimatedFAB
-        icon={() => <AddIcon size={35} color={'#EF4D23'} />}
+        icon={() => <AddIcon size={35} color={GradientColor5} />}
         label={'Buy Now'}
         extended={isExtended}
         onPress={() => navigation.navigate('BuyGPS')}
@@ -277,7 +283,7 @@ const MyGpsScreen = ({navigation}) => {
         iconMode={'dynamic'}
         style={[styles.fabStyle]}
         uppercase={false}
-        color={'#EF4D23'}
+        color={GradientColor5}
         rippleColor={GradientColor1}
       />
     </View>

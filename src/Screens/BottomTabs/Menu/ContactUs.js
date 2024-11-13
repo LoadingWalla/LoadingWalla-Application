@@ -68,7 +68,7 @@ const ContactUs = ({navigation}) => {
   };
 
   const isValidEmail = mail => {
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
     return emailRegex.test(mail);
   };
 
