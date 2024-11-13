@@ -18,7 +18,6 @@ import {
 } from '../Color/color';
 
 export default StyleSheet.create({
-
   webmodal: {
     flex: 1,
     justifyContent: 'center',
@@ -244,7 +243,6 @@ export default StyleSheet.create({
   },
   purchasefooterText: {marginLeft: 5, color: '#3BA700'},
 
-
   barContainer: {
     flexDirection: 'row',
     width: '48%',
@@ -318,7 +316,6 @@ export default StyleSheet.create({
     fontFamily: 'PlusJakartaSans-Bold',
     textAlign: 'center',
   },
-
 
   centeredView: {
     flex: 1,

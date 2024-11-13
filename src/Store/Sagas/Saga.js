@@ -1444,7 +1444,7 @@ export function* setGpsRelayData({deviceId, types}) {
     // console.log(4444, deviceId, types);
     // Make the API call
     const data = yield API.get(`gps/relay?device_id=${deviceId}&type=${types}`);
-    // console.log('set Gps relay', data);
+    console.log('set Gps relay', data);
     // Handle the response based on the status code
     if (data?.data?.status === 200) {
       yield put(actions.setGpsRelaySuccess(data?.data));
