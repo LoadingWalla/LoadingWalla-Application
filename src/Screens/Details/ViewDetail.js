@@ -177,7 +177,7 @@ const ViewDetail = ({navigation, route}) => {
         <View style={styles.backButton}>
           <CommonToolbar goBack={() => navigation.goBack()} isBack={true} />
         </View>
-        {mapLoading ? (
+        {mapLoading || !origin || !destination ? (
           <ActivityIndicator
             size="large"
             color={GradientColor1}

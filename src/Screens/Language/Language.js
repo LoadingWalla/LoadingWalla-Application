@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 import * as Constants from '../../Constants/Constant';
 import Button from '../../Components/Button';
 import Background from '../../Components/BackgroundGradient';
@@ -41,10 +42,9 @@ const GridView = ({data, index, selected, onPress}) => (
 const Language = ({navigation, route}) => {
   useTrackScreenTime('Language');
   const {params} = route;
-  console.log('Language Screen ', route);
 
   const {t, i18n} = useTranslation();
-  const [selected, setSelected] = useState(1);
+  const [selected, setSelected] = useState(null);
   const dispatch = useDispatch();
 
   const languages = [
@@ -98,12 +98,23 @@ const Language = ({navigation, route}) => {
     await AsyncStorage.setItem('language', data?.code);
   };
 
+  // const navigate = () => {
+  //   if (params?.fromMenu) {
+  //     navigation.goBack();
+  //     // navigation.navigate('Menu');
+  //   } else {
+  //     navigation.replace('Signup');
+  //   }
+  // };
   const navigate = () => {
-    if (params?.fromMenu) {
-      navigation.goBack();
-      // navigation.navigate('Menu');
+    if (!selected) {
+      Toast.show(t('Please select a language before continuing.'), Toast.LONG);
     } else {
-      navigation.replace('Signup');
+      if (params?.fromMenu) {
+        navigation.goBack();
+      } else {
+        navigation.replace('Signup');
+      }
     }
   };
 
@@ -135,6 +146,7 @@ const Language = ({navigation, route}) => {
             title={t(Constants.CONTINUE)}
             textStyle={styles.buttonTitile}
             style={styles.button}
+            touchStyle={selected ? {opacity: 1} : {opacity: 0.5}}
           />
         </View>
       )}

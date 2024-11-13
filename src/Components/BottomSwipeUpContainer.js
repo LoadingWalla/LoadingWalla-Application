@@ -164,6 +164,8 @@ const ICONS = (item, positions, t) =>
     ];
   }, [item, positions]);
 
+//item - gpsDeviceData
+//positions - wsMessages22
 const BottomSwipeUpContainer = React.memo(
   ({
     navigation,
@@ -180,6 +182,8 @@ const BottomSwipeUpContainer = React.memo(
     const dispatch = useDispatch();
     const {t} = useTranslation();
     // console.log(444, item);
+    console.log('------------BottomSwipeUpItem--------------', item);
+    console.log('---------BottomSwipeUpWsMessage22----------', positions[0]);
 
     const panResponder = useMemo(
       () =>

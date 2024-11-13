@@ -34,6 +34,22 @@ const PreviousBookings = ({navigation, route}) => {
     return state.data;
   });
 
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const onBackPress = () => {
+  //       console.log('-------------------navigation-------------------', navigation);
+  //       // navigation.navigate('Menu');
+  //       // return true;
+  //     };
+
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  //     return () => {
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //     };
+  //   }, [navigation]),
+  // );
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     dispatch(initBooking(3));

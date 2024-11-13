@@ -71,7 +71,7 @@ const CompleteBooking = ({navigation, route}) => {
   useEffect(() => {
     if (completeDocumentStatus === 200) {
       Toast.show(`${completeDocumentData?.message}`, Toast.LONG);
-      navigation.navigate('Previous Bookings',{
+      navigation.navigate('Previous Bookings', {
         Owner: Userdata,
       });
     }
