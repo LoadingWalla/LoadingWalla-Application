@@ -8,6 +8,7 @@ import {
   TextInput,
   ActivityIndicator,
   StatusBar,
+  Dimensions,
 } from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
@@ -25,6 +26,7 @@ import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
 import GradientStatusBar from '../../Components/GradientStatusBar';
 import PhoneInput from 'react-native-phone-number-input';
+
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
