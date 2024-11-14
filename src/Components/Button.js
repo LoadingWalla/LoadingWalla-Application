@@ -22,11 +22,11 @@ const Button = ({style, textStyle, title, onPress, loading, touchStyle}) => {
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'space-evenly',
             // borderWidth: 1,
-            width: '30%',
+            // width: '30%',
           }}>
-          <View>
+          <View style={{marginRight: 10}}>
             <Text style={textStyle}>{title}</Text>
           </View>
           <SmallArrow />

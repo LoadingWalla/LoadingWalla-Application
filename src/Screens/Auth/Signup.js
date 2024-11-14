@@ -27,7 +27,6 @@ import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
 import GradientStatusBar from '../../Components/GradientStatusBar';
 import PhoneInput from 'react-native-phone-number-input';
 
-
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
   const {t} = useTranslation();

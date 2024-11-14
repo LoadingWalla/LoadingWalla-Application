@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState, useMemo, useRef, useCallback} from 'react';
 import {
   Animated,
@@ -15,7 +14,7 @@ import MapView, {
   Marker,
   Polyline,
 } from 'react-native-maps';
-import {backgroundColorNew} from '../../Color/color';
+import {backgroundColorNew, GradientColor1} from '../../Color/color';
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
@@ -554,7 +553,6 @@ export default function PlayJourney({navigation, route}) {
           </View>
           <View style={styles.playJourneyBottomContainer}>
             <View style={styles.controlsContainer}>
-
               <TouchableOpacity
                 style={styles.playPauseButton}
                 // onPress={togglePlayback}>
@@ -571,8 +569,8 @@ export default function PlayJourney({navigation, route}) {
                   minimumValue={0}
                   maximumValue={1}
                   thumbImage={require('../../../assets/slider2.png')}
-                  minimumTrackTintColor={sliderColor}
-                  maximumTrackTintColor={sliderColor}
+                  // minimumTrackTintColor={sliderColor}
+                  // maximumTrackTintColor={sliderColor}
                   // thumbTintColor={backgroundColorNew}
                   value={sliderValue}
                   // onValueChange={value => {

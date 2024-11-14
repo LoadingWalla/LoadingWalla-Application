@@ -18,16 +18,17 @@ import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import EnglishIcon from '../../../assets/SVG/svg/EnglishIcon';
 import HindiIcon from '../../../assets/SVG/svg/HindiIcon';
-import OK from '../../../assets/SVG/svg/ok';
+import OkSvg from '../../../assets/SVG/svg/OkSvg';
+import HeaderWithLogo from '../../Components/HeaderWithLogo';
 
 const GridView = ({data, index, selected, onPress}) => (
   <TouchableOpacity onPress={() => onPress(data, index)}>
     {selected === data?.id ? (
       <Background style={styles.gridbox} bgcolors={['white', 'white']}>
-        <OK style={styles.checkIconStyle} size={25} />
+        <OkSvg style={styles.checkIconStyle} />
         <View
           style={{
-            paddingBottom: 2,
+            // paddingBottom: 2,
             width: '100%',
             // borderWidth: 1,
             // borderColor: 'red',
@@ -40,7 +41,8 @@ const GridView = ({data, index, selected, onPress}) => (
               justifyContent: 'center',
               // borderWidth: 1,
               // borderColor: 'blue',
-              height: '75%',
+              height: '70%',
+              width: '100%',
             }}>
             <Text style={[styles.gridText]}>{data?.languageName}</Text>
           </View>
@@ -48,9 +50,10 @@ const GridView = ({data, index, selected, onPress}) => (
             style={{
               justifyContent: 'center',
               backgroundColor: '#FAFAFA',
-              borderBottomRightRadius: 12,
-              borderBottomLeftRadius: 12,
-              height: '25%',
+              // backgroundColor: 'red',
+              borderBottomRightRadius: 10,
+              borderBottomLeftRadius: 10,
+              height: '30%',
               // borderWidth: 1,
               width: '98%',
             }}>
@@ -62,7 +65,7 @@ const GridView = ({data, index, selected, onPress}) => (
       <View style={styles.gridGreyBox}>
         <View
           style={{
-            paddingVertical: 2,
+            // paddingVertical: 2,
             width: '100%',
             // borderWidth: 1,
             // borderColor: 'red',
@@ -75,19 +78,21 @@ const GridView = ({data, index, selected, onPress}) => (
               justifyContent: 'center',
               // borderWidth: 1,
               // borderColor: 'blue',
-              height: '75%',
+              height: '70%',
+              width: '100%',
             }}>
             <Text style={[styles.gridGreyText]}>{data?.languageName}</Text>
           </View>
           <View
             style={{
               justifyContent: 'center',
+              // backgroundColor: 'red',
               backgroundColor: '#FAFAFA',
-              borderBottomRightRadius: 12,
-              borderBottomLeftRadius: 12,
-              height: '25%',
+              borderBottomRightRadius: 10,
+              borderBottomLeftRadius: 10,
+              height: '30%',
               // borderWidth: 1,
-              width: '98%',
+              width: '100%',
             }}>
             <Text style={styles.gridGreyText}>{data?.language}</Text>
           </View>
@@ -120,6 +125,20 @@ const Language = ({navigation, route}) => {
       code: 'en',
       langId: 2,
     },
+    // {
+    //   id: 3,
+    //   languageName: <HindiIcon />,
+    //   language: 'हिन्दी',
+    //   code: 'hi',
+    //   langId: 1,
+    // },
+    // {
+    //   id: 4,
+    //   languageName: <EnglishIcon />,
+    //   language: 'English',
+    //   code: 'en',
+    //   langId: 2,
+    // },
   ];
 
   const getLanguageId = async () => {
@@ -165,59 +184,73 @@ const Language = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flex: 2, backgroundColor: 'pink'}}>{/* header */}</View>
-      <View style={styles.part1}>
-        <View>
-          <Text
-            style={{
-              color: '#F50000',
-              fontSize: 16,
-              fontFamily: 'PlusJakartaSans-SemiBold',
-              // borderWidth: 1,
-            }}>
-            नमस्ते | Hello
-          </Text>
-        </View>
-        <View>
-          <Text style={styles.languageTitle}>
-            {t(Constants.SELECT_LANGUAGE_TITLE)}
-          </Text>
-        </View>
+      <View style={{flex: 1, zIndex: 1}}>
+        <HeaderWithLogo />
       </View>
-      <View style={styles.part2}>
-        <FlatList
-          data={languages}
-          renderItem={({item, index}) => (
-            <GridView
-              data={item}
-              index={index}
-              selected={selected}
-              onPress={selectLanguage}
+      <View style={{flex: 2}}>
+        <View
+          style={{
+            flex: 1,
+            // backgroundColor: 'pink',
+            width: '85%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+          }}>
+          <View style={styles.part1}>
+            <View>
+              <Text
+                style={{
+                  color: '#F50000',
+                  fontSize: 16,
+                  fontFamily: 'PlusJakartaSans-SemiBold',
+                  // borderWidth: 1,
+                }}>
+                नमस्ते | Hello
+              </Text>
+            </View>
+            <View>
+              <Text style={styles.languageTitle}>
+                {t(Constants.SELECT_LANGUAGE_TITLE)}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.part2}>
+            <FlatList
+              data={languages}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              columnWrapperStyle={{
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                // borderWidth: 1,
+                width: '100%',
+                marginBottom: 30,
+              }}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item, index}) => (
+                <GridView
+                  data={item}
+                  index={index}
+                  selected={selected}
+                  onPress={selectLanguage}
+                />
+              )}
             />
+          </View>
+          {params?.fromMenu ? null : (
+            <View style={styles.part3}>
+              <Button
+                onPress={() => navigate()}
+                title={t(Constants.CONTINUE)}
+                textStyle={styles.buttonTitile}
+                style={styles.button}
+                touchStyle={selected ? {opacity: 1} : {opacity: 0.5}}
+              />
+            </View>
           )}
-          numColumns={2}
-        />
-      </View>
-      {/* <View style={styles.part3}>
-        <Button
-          onPress={() => navigate()}
-          title={t(Constants.CONTINUE)}
-          textStyle={styles.buttonTitile}
-          style={styles.button}
-          touchStyle={selected ? {opacity: 1} : {opacity: 0.5}}
-        />
-      </View> */}
-      {params?.fromMenu ? null : (
-        <View style={styles.part3}>
-          <Button
-            onPress={() => navigate()}
-            title={t(Constants.CONTINUE)}
-            textStyle={styles.buttonTitile}
-            style={styles.button}
-            touchStyle={selected ? {opacity: 1} : {opacity: 0.5}}
-          />
         </View>
-      )}
+      </View>
     </SafeAreaView>
   );
 };
