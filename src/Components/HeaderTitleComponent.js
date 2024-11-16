@@ -1,11 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React from 'react';
+import Edit from '../../assets/SVG/svg/Edit';
 
-const HeaderTitleComponent = ({text1, text2}) => {
+const HeaderTitleComponent = ({text1, text2, onPress, isButton = false}) => {
   return (
     <View style={styles.box}>
-      <View>
+      <View style={styles.boxChild1}>
         <Text style={styles.text1Style}>{text1}</Text>
+        {isButton && (
+          <TouchableOpacity onPress={onPress} style={styles.iconView}>
+            <Edit size={15} />
+          </TouchableOpacity>
+        )}
       </View>
       <View>
         <Text style={styles.languageTitle}>{text2}</Text>
@@ -33,6 +39,10 @@ const styles = StyleSheet.create({
     color: '#F50000',
     fontSize: 16,
     fontFamily: 'PlusJakartaSans-SemiBold',
-    width: '100%',
   },
+  boxChild1: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+  },
+  iconView: {marginLeft: 10},
 });

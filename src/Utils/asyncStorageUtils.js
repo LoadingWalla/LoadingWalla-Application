@@ -13,7 +13,7 @@ export const printAllAsyncStorageData = async () => {
         storageData[key] = value; // Add key-value pair to the object
       });
       // Print the object containing all keys and values
-      console.log(1111111, 'All stored data in AsyncStorage:', storageData);
+      // console.log(1111111, 'All stored data in AsyncStorage:', storageData);
     } else {
       console.log('No keys found in AsyncStorage.');
     }

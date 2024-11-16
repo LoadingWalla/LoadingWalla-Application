@@ -3,18 +3,16 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   TextInput,
   ActivityIndicator,
-  StatusBar,
-  Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import CheckBox from '@react-native-community/checkbox';
-import {PrivacyPolicy, backgroundColorNew, textRed} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
@@ -22,7 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
-import GradientStatusBar from '../../Components/GradientStatusBar';
 import HeaderWithLogo from '../../Components/HeaderWithLogo';
 import HeaderTitleComponent from '../../Components/HeaderTitleComponent';
 
@@ -34,7 +31,7 @@ const Signup = ({navigation}) => {
   const [isChecked, setIsChecked] = useState(true);
   const dispatch = useDispatch();
   const {data, loading, dashboardStatus} = useSelector(state => {
-    console.log(11111, 'SignIn Screen here store is empty ---->', state);
+    // console.log(11111, 'SignIn Screen here store is empty ---->', state);
     return state.data;
   });
 
@@ -54,6 +51,7 @@ const Signup = ({navigation}) => {
   }, [isChecked]);
 
   useEffect(() => {
+    const fullMobileNumber = `+91${mobileNumber}`;
     if (data?.data?.status === 201) {
       Toast.show(data?.data?.message, Toast.LONG);
       dispatch(loginFailure());
@@ -64,7 +62,7 @@ const Signup = ({navigation}) => {
       Toast.show(data?.message, Toast.LONG);
       navigation.replace('VerifyOtp', {
         userId: data?.user_id,
-        mobileNumber,
+        mobileNumber: fullMobileNumber,
       });
       dispatch(loginFailure());
     }
@@ -78,7 +76,6 @@ const Signup = ({navigation}) => {
     const regex = /^(?:\+91)?[6-9]\d{9}$/;
     if (!regex.test(mobileNumber)) {
       setIsCorrect(false);
-      // Toast.show(t('Enter a valid mobile number'), Toast.LONG);
       return;
     }
     if (!isChecked) {
@@ -88,8 +85,8 @@ const Signup = ({navigation}) => {
       );
       return;
     }
-    console.log(mobileNumber);
-    dispatch(initLogin(mobileNumber));
+    const fullMobileNumber = `+91${mobileNumber}`;
+    dispatch(initLogin(fullMobileNumber));
   };
 
   useEffect(() => {
@@ -105,110 +102,53 @@ const Signup = ({navigation}) => {
   }, [mobileNumber]);
 
   return (
-    <View style={styles.Container}>
-      <GradientStatusBar
-        colors={[
-          '#F7F7F7',
-          '#F5F5F5',
-          '#F4F4F4',
-          '#F5F5F5',
-          '#F3F3F3',
-          '#F4F4F4',
-          '#F5F5F5',
-          '#F3F3F3',
-          '#F4F4F4',
-          '#F6F6F6',
-          '#F7F7F7',
-          '#FAFAFA',
-          '#FBFBFB',
-          '#FEFEFE',
-        ]}
-      />
+    <KeyboardAvoidingView style={styles.Container}>
       <View style={styles.loadingWallaImg}>
         <HeaderWithLogo
           path={require('../../../assets/newAssets/Header.json')}
         />
       </View>
-      <View style={{flex: 2, paddingHorizontal: 20}}>
-        <View style={{flex: 1}}>
+      <View style={styles.contentContainer}>
+        <View style={styles.innerContentContainer}>
           <View style={{flex: 1.5}}>
             <HeaderTitleComponent
               text1={t(Constants.WELCOME_TXT)}
               text2={'Enter phone number to get started.'}
             />
-            <View
-              style={{
-                // width: '100%',
-                minHeight: 65,
-                flexDirection: 'row',
-                // borderWidth: 1,
-                justifyContent: 'space-between',
-              }}>
-              <View
-                style={{
-                  width: '83%',
-                  height: 65,
-                  borderWidth: 0.5,
-                  borderTopLeftRadius: 10,
-                  borderBottomLeftRadius: 10,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  paddingLeft: 15,
-                  elevation: 1,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    color: '#636363',
-                    fontFamily: 'PlusJakartaSans-Bold',
-                    // borderWidth: 1,
-                  }}>
-                  +91
-                </Text>
-                <View
-                  style={{
-                    height: '70%',
-                    borderLeftWidth: 0.5,
-                    marginHorizontal: 10,
-                    borderColor: '#595959',
-                  }}
-                />
+            <View style={styles.phoneNumberContainer}>
+              <View style={styles.phoneInput}>
+                <Text style={styles.countryCode}>+91</Text>
+                <View style={styles.separator} />
                 <TextInput
-                  style={{
-                    // borderWidth: 1,
-                    flex: 1,
-                    fontSize: 20,
-                    color: '#636363',
-                    fontFamily: 'PlusJakartaSans-Bold',
-                  }}
+                  style={styles.phoneInputField}
                   autoFocus={true}
                   placeholder={t(Constants.PHONE_PLACEHOLDER)}
                   keyboardType="numeric"
                   placeholderTextColor={'#636363'}
                   maxLength={10}
+                  value={mobileNumber}
+                  onChangeText={text => {
+                    setMobileNumber(text);
+                  }}
                 />
               </View>
-              <View
+              <TouchableOpacity
+                onPress={sendOtp}
                 style={[
-                  styles.mbArrowContainer,
+                  styles.sendOtpButton,
                   {
                     opacity:
-                      mobileNumber.length !== 0 &&
-                      isChecked &&
-                      isCorrect === true
+                      mobileNumber.length !== 0 && isChecked && isCorrect
                         ? 1
                         : 0.5,
                   },
                 ]}>
-                <TouchableOpacity onPress={sendOtp} style={styles.mbbutton}>
-                  {loading ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
-                  ) : (
-                    <ArrowIcon />
-                  )}
-                </TouchableOpacity>
-              </View>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#ffffff" />
+                ) : (
+                  <ArrowIcon />
+                )}
+              </TouchableOpacity>
             </View>
             <View style={styles.phoneNumberWarningCtn}>
               {isCorrect === false ? (
@@ -261,17 +201,15 @@ const Signup = ({navigation}) => {
                   <Text style={styles.policyLinkTitle(true)}>
                     {' '}
                     {t(Constants.TERMS_CONDITION_TITLE3)}
-                    {'  '}
                   </Text>
                 </TouchableOpacity>
-                <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
               </View>
             </View>
           </View>
-          <View style={{flex: 1}}></View>
+          <View style={{flex: 1}} />
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

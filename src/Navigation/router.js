@@ -154,7 +154,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Signup"
         component={Signup}
-        options={{headerShown: false}}
+        options={{headerShown: false, animation: 'slide_from_right'}}
         listeners={() => ({
           focus: () => {
             Animated.spring(tabOffsetValue, {
@@ -176,6 +176,7 @@ const Navigation = ({language}) => {
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'center',
+          animation: 'slide_from_right',
           title: route.params?.headerTitle || t(Constants.LEGAL_POLICIES),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
@@ -200,6 +201,7 @@ const Navigation = ({language}) => {
           headerShown: false,
           headerTitleAlign: 'center',
           headerShadowVisible: false,
+          animation: 'slide_from_right',
           title: t(Constants.VERIFY_NUMBER_TITLE),
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',

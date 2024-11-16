@@ -7,7 +7,6 @@ import {
   Image,
 } from 'react-native';
 import * as Constants from '../../Constants/Constant';
-import Button from '../../Components/Button';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
@@ -16,18 +15,18 @@ import {
   VerifyOtpFailure,
   initLogin,
 } from '../../Store/Actions/Actions';
-import {StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {requestUserPermission} from '../../Utils/Notification_helper';
 import BackgroundTimer from 'react-native-background-timer';
 import {OtpInput} from 'react-native-otp-entry';
-import {backgroundColorNew, pageBackground} from '../../Color/color';
+import {backgroundColorNew} from '../../Color/color';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import Edit from '../../../assets/SVG/svg/Edit';
 import Wrong from '../../../assets/SVG/svg/Wrong';
 import Correct from '../../../assets/SVG/svg/Correct';
-import GradientStatusBar from '../../Components/GradientStatusBar';
+import HeaderWithLogo from '../../Components/HeaderWithLogo';
+import HeaderTitleComponent from '../../Components/HeaderTitleComponent';
 
 const VerifyOtp = ({navigation, route}) => {
   useTrackScreenTime('VerifyOtp');
@@ -163,163 +162,121 @@ const VerifyOtp = ({navigation, route}) => {
 
   return (
     <KeyboardAvoidingView style={styles.Container}>
-      <GradientStatusBar
-        colors={[
-          '#F7F7F7',
-          '#F5F5F5',
-          '#F4F4F4',
-          '#F5F5F5',
-          '#F3F3F3',
-          '#F4F4F4',
-          '#F5F5F5',
-          '#F3F3F3',
-          '#F4F4F4',
-          '#F6F6F6',
-          '#F7F7F7',
-          '#FAFAFA',
-          '#FBFBFB',
-          '#FEFEFE',
-        ]}
-      />
-      <View style={styles.signupBackground}>
-        <View style={styles.loadingWallaImg}>
-          <Image
-            source={require('../../../assets/LoadingWallaBG.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </View>
-        <View style={styles.otpResendView}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.verifyOtpNumber}>{`${mobileNumber} `}</Text>
-            {isCodeCorrect === false || isCodeCorrect === null ? (
-              <TouchableOpacity
-                onPress={() => navigation.replace('Signup')}
-                style={{marginLeft: 10}}>
-                <Edit />
-              </TouchableOpacity>
-            ) : null}
-          </View>
-          <View>
-            <Text style={styles.enterOtp}>Enter OTP</Text>
-          </View>
-        </View>
-        <View style={styles.otpContainer}>
-          <OtpInput
-            numberOfDigits={4}
-            focusColor={backgroundColorNew}
-            focusStickBlinkingDuration={500}
-            onTextChange={handleOtpChange}
-            onFilled={code => {
-              setCodeFill(true);
-            }}
-            theme={{
-              containerStyle: styles.otpView,
-              inputsContainerStyle: styles.inputsContainer,
-              pinCodeContainerStyle: [
-                styles.pinCodeContainer,
-                {
-                  backgroundColor:
-                    isCodeCorrect === true
-                      ? 'rgba(50, 186, 124, 0.1)'
-                      : isCodeCorrect === false
-                      ? 'rgba(255,  0,   0, 0.1)'
-                      : '#FFFFFF',
-                },
-              ],
-              pinCodeTextStyle: [
-                styles.pinCodeText,
-                {
-                  color:
-                    isCodeCorrect === true
-                      ? '#32BA7C'
-                      : isCodeCorrect === false
-                      ? '#FF270E'
-                      : '#595959',
-                },
-              ],
-              focusStickStyle: styles.focusStick,
-              focusedPinCodeContainerStyle: styles.activePinCodeContainer,
-            }}
-          />
-        </View>
-        <View style={styles.otpResendView}>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              alignContent: 'space-around',
-              // borderWidth: 2,
-            }}>
-            <View style={{width: '50%', alignItems: 'flex-start'}}>
-              {isCodeCorrect === false ? (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Wrong />
-                  <Text
-                    style={{
-                      color: '#FF270E',
-                      fontFamily: 'PlusJakartaSans-SemiBold',
-                      fontSize: 12,
-                      marginLeft: 4,
-                    }}>
-                    Wrong OTP, Try again!
-                  </Text>
-                </View>
-              ) : isCodeCorrect === true ? (
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <Correct />
-                  <Text
-                    style={{
-                      color: '#32BA7C',
-                      fontFamily: 'PlusJakartaSans-SemiBold',
-                      fontSize: 12,
-                      marginLeft: 4,
-                    }}>
-                    OTP Success, Please wait!
-                  </Text>
-                </View>
-              ) : (
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  disabled={minutes < 4 ? false : true}
-                  onPress={() => (minutes < 4 ? resendCode() : {})}>
-                  <Text
-                    style={[
-                      styles.policyLinkTitle(minutes < 4 ? true : false),
-                      {textDecorationLine: 'none'},
-                    ]}>
-                    {t(Constants.RESEND_CODE)}
-                  </Text>
-                </TouchableOpacity>
-              )}
+      <View style={styles.loadingWallaImg}>
+        <HeaderWithLogo
+          path={require('../../../assets/newAssets/Header.json')}
+        />
+      </View>
+      <View style={styles.contentContainer}>
+        <View style={styles.innerContentContainer}>
+          <View style={{flex: 1.5}}>
+            <HeaderTitleComponent
+              text1={`${mobileNumber} `}
+              text2={'Enter OTP'}
+              onPress={() => navigation.replace('Signup')}
+              isButton={isCodeCorrect === false || isCodeCorrect === null}
+            />
+            <View style={styles.phoneNumberContainer}>
+              <OtpInput
+                numberOfDigits={4}
+                focusColor={backgroundColorNew}
+                focusStickBlinkingDuration={500}
+                onTextChange={handleOtpChange}
+                onFilled={code => {
+                  setCodeFill(true);
+                }}
+                theme={{
+                  containerStyle: styles.otpView,
+                  inputsContainerStyle: styles.inputsContainer,
+                  pinCodeContainerStyle: [
+                    styles.pinCodeContainer,
+                    {
+                      backgroundColor:
+                        isCodeCorrect === true
+                          ? 'rgba(50, 186, 124, 0.1)'
+                          : isCodeCorrect === false
+                          ? 'rgba(255,  0,   0, 0.1)'
+                          : '#FFFFFF',
+                      borderColor:
+                        isCodeCorrect === true
+                          ? '#32BA7C'
+                          : isCodeCorrect === false
+                          ? '#FF270E'
+                          : '#000000',
+                      elevation:
+                        isCodeCorrect === true
+                          ? 0
+                          : isCodeCorrect === false
+                          ? 0
+                          : 2,
+                    },
+                  ],
+                  pinCodeTextStyle: [
+                    styles.pinCodeText,
+                    {
+                      color:
+                        isCodeCorrect === true
+                          ? '#32BA7C'
+                          : isCodeCorrect === false
+                          ? '#FF270E'
+                          : '#595959',
+                    },
+                  ],
+                  focusStickStyle: styles.focusStick,
+                  focusedPinCodeContainerStyle: styles.activePinCodeContainer,
+                }}
+              />
             </View>
-            {isCodeCorrect === null || isCodeCorrect === undefined ? (
-              <View style={{width: '50%', alignItems: 'flex-end'}}>
-                <Text style={styles.timer}>
-                  {minutes.toLocaleString(undefined, {
-                    minimumIntegerDigits: 2,
-                  }) +
-                    ':' +
-                    seconds.toLocaleString(undefined, {
-                      minimumIntegerDigits: 2,
-                    })}
-                </Text>
+            <View style={styles.phoneNumberWarningCtn}>
+              <View style={styles.otpResendView}>
+                <View style={styles.otpResendChild}>
+                  {isCodeCorrect === false ? (
+                    <View style={styles.otpResponseView}>
+                      <Wrong />
+                      <Text style={styles.otpResponseText(isCodeCorrect)}>
+                        Wrong OTP, Try again!
+                      </Text>
+                    </View>
+                  ) : isCodeCorrect === true ? (
+                    <View style={styles.otpResponseView}>
+                      <Correct />
+                      <Text style={styles.otpResponseText(isCodeCorrect)}>
+                        OTP Success, Please wait!
+                      </Text>
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      disabled={minutes < 4 ? false : true}
+                      onPress={() => (minutes < 4 ? resendCode() : {})}>
+                      <Text
+                        style={[
+                          styles.policyLinkTitle(minutes < 4 ? true : false),
+                          {textDecorationLine: 'none'},
+                        ]}>
+                        {t(Constants.RESEND_CODE)}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+                {isCodeCorrect === null || isCodeCorrect === undefined ? (
+                  <View style={{width: '50%', alignItems: 'flex-end'}}>
+                    <Text style={styles.timer}>
+                      {minutes.toLocaleString(undefined, {
+                        minimumIntegerDigits: 2,
+                      }) +
+                        ':' +
+                        seconds.toLocaleString(undefined, {
+                          minimumIntegerDigits: 2,
+                        })}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
-            ) : null}
+            </View>
           </View>
+          <View style={{flex: 1}} />
         </View>
-
-        {/* <View style={styles.buttonBox}>
-          <Button
-            loading={otpLoading}
-            onPress={() => verify()}
-            title={t(Constants.VERIFY)}
-            textStyle={styles.buttonTitile}
-            style={styles.button}
-          />
-        </View> */}
       </View>
     </KeyboardAvoidingView>
   );

@@ -1,16 +1,14 @@
-import * as React from "react"
-import Svg, { G, Path, Defs, ClipPath } from "react-native-svg"
+import * as React from 'react';
+import Svg, {G, Path, Defs, ClipPath} from 'react-native-svg';
 
 function Edit(props) {
   return (
     <Svg
-      width={20}
-      height={20}
-      viewBox="0 0 20 20"
-      fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+      width={16}
+      height={16}
+      viewBox="0 0 16 16"
+      fill="none">
       <G clipPath="url(#clip0_404_31942)" fill="#000">
         <Path d="M14.767 10.051a.398.398 0 00-.398.399v3.538c0 .66-.536 1.194-1.196 1.195H1.993c-.66 0-1.195-.535-1.196-1.195V3.604c0-.66.535-1.195 1.195-1.196h3.539a.398.398 0 100-.797H1.992A1.995 1.995 0 000 3.604v10.384a1.995 1.995 0 001.992 1.992h11.181a1.995 1.995 0 001.993-1.992V10.45a.398.398 0 00-.399-.399z" />
         <Path d="M15.008.586c-.7-.7-1.835-.7-2.536 0l-7.109 7.11a.398.398 0 00-.102.175l-.935 3.375a.398.398 0 00.49.49l3.375-.935a.399.399 0 00.176-.102l7.109-7.11c.699-.7.699-1.835 0-2.536l-.468-.467zM6.231 7.954l5.819-5.818 1.876 1.876-5.818 5.819L6.23 7.954zm-.375.752l1.5 1.5-2.074.574.574-2.074zm9.056-5.68l-.422.423-1.877-1.877.423-.423a.996.996 0 011.409 0l.467.468a.998.998 0 010 1.409z" />
@@ -21,7 +19,7 @@ function Edit(props) {
         </ClipPath>
       </Defs>
     </Svg>
-  )
+  );
 }
 
-export default Edit
+export default Edit;
