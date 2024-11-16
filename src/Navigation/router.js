@@ -126,7 +126,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Splash"
         component={Splash}
-        options={{headerShown: false}}
+        options={{headerShown: false, animation: 'slide_from_right'}}
       />
       <Stack.Screen
         name="Language"
@@ -222,7 +222,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="Landing"
         component={Landing}
-        options={{headerShown: false}}
+        options={{headerShown: false, animation: 'slide_from_right'}}
         listeners={({navigation, route}) => ({
           // Onpress Update....
           focus: () =>
@@ -237,7 +237,7 @@ const Navigation = ({language}) => {
       <Stack.Screen
         name="companyDetails"
         component={CompanyDetails}
-        options={{headerShown: false}}
+        options={{headerShown: false, animation: 'slide_from_right'}}
         listeners={({navigation, route}) => ({
           focus: () =>
             BackHandler.addEventListener('hardwareBackPress', handleBackButton),

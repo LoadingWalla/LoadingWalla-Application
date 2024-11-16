@@ -334,7 +334,7 @@ export default StyleSheet.create({
     color: '#636363',
     fontFamily: 'PlusJakartaSans-Bold',
   },
-  sendOtpButton: {
+  sendOtpButton: value => ({
     width: '16%',
     height: 65,
     backgroundColor: arrowBtnFill,
@@ -343,7 +343,8 @@ export default StyleSheet.create({
     elevation: 2,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
-  },
+    opacity: value ? 1 : 0.5,
+  }),
   phoneNumberWarningTxt: {
     color: warningTxt,
     fontSize: 12,
@@ -353,21 +354,6 @@ export default StyleSheet.create({
   phoneNumberWarningCtn: {
     height: 20,
     marginTop: 5,
-  },
-  checkBoxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    // borderWidth: 1,
-  },
-  checkBoxStyle: {
-    marginRight: 5,
-    transform: [{scaleX: 0.8}, {scaleY: 0.8}],
-  },
-  setPrivacyStyle: {
-    fontSize: 12,
-    color: PrivacyPolicy,
-    fontFamily: 'PlusJakartaSans-Regular',
   },
   policyContainer: {
     flexDirection: 'row',

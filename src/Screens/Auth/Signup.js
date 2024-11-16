@@ -11,8 +11,6 @@ import * as Constants from '../../Constants/Constant';
 import styles from './style';
 import {useDispatch, useSelector} from 'react-redux';
 import {initLogin, loginFailure} from '../../Store/Actions/Actions';
-import CheckBox from '@react-native-community/checkbox';
-import {backgroundColorNew} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
@@ -22,6 +20,8 @@ import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
 import HeaderWithLogo from '../../Components/HeaderWithLogo';
 import HeaderTitleComponent from '../../Components/HeaderTitleComponent';
+import CheckboxWithText from '../../Components/CheckboxWithText';
+import PolicyLinkText from '../../Components/PolicyLinkText';
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
@@ -51,7 +51,6 @@ const Signup = ({navigation}) => {
   }, [isChecked]);
 
   useEffect(() => {
-    const fullMobileNumber = `+91${mobileNumber}`;
     if (data?.data?.status === 201) {
       Toast.show(data?.data?.message, Toast.LONG);
       dispatch(loginFailure());
@@ -59,6 +58,7 @@ const Signup = ({navigation}) => {
     }
 
     if (dashboardStatus === 200) {
+      const fullMobileNumber = `+91${mobileNumber}`;
       Toast.show(data?.message, Toast.LONG);
       navigation.replace('VerifyOtp', {
         userId: data?.user_id,
@@ -91,12 +91,9 @@ const Signup = ({navigation}) => {
 
   useEffect(() => {
     const regex = /^(?:\+91)?[6-9]\d{9}$/;
-
     if (mobileNumber.length > 0 && !regex.test(mobileNumber)) {
-      console.log('wrong number');
       setIsCorrect(false);
     } else {
-      console.log('correct number');
       setIsCorrect(true);
     }
   }, [mobileNumber]);
@@ -134,15 +131,9 @@ const Signup = ({navigation}) => {
               </View>
               <TouchableOpacity
                 onPress={sendOtp}
-                style={[
-                  styles.sendOtpButton,
-                  {
-                    opacity:
-                      mobileNumber.length !== 0 && isChecked && isCorrect
-                        ? 1
-                        : 0.5,
-                  },
-                ]}>
+                style={styles.sendOtpButton(
+                  mobileNumber.length !== 0 && isChecked && isCorrect,
+                )}>
                 {loading ? (
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
@@ -158,55 +149,41 @@ const Signup = ({navigation}) => {
               ) : null}
             </View>
             <View style={styles.centerItem}>
-              <View style={styles.checkBoxContainer}>
-                <CheckBox
-                  value={isChecked}
-                  onValueChange={handleCheckBoxChange}
-                  tintColors={{
-                    true: backgroundColorNew,
-                    false: backgroundColorNew,
-                  }}
-                  style={styles.checkBoxStyle}
-                />
-                <Text style={styles.setPrivacyStyle}>
-                  {t(Constants.WHATSAPP_ALERT_CHECK)}
-                </Text>
-              </View>
+              <CheckboxWithText
+                isChecked={isChecked}
+                onValueChange={handleCheckBoxChange}
+                text={t(Constants.WHATSAPP_ALERT_CHECK)}
+              />
               <View style={styles.policyContainer}>
                 <Text style={styles.policyTitle}>
                   {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
                 </Text>
-                <TouchableOpacity
+                <PolicyLinkText
+                  text={t(Constants.TERMS_CONDITION_TITLE2)}
                   onPress={() =>
                     navigation.navigate('Legal Policies', {
                       headerTitle: t(Constants.TERMS_CONDITION_TITLE2),
                       uri: uriTermsCondition3,
                     })
-                  }>
-                  <Text style={styles.policyLinkTitle(true)}>
-                    {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
-                  </Text>
-                </TouchableOpacity>
+                  }
+                />
                 <Text style={styles.policyTitle}>
                   {' '}
                   {` ${t(Constants.AND)} `}{' '}
                 </Text>
-                <TouchableOpacity
+                <PolicyLinkText
+                  text={t(Constants.TERMS_CONDITION_TITLE3)}
                   onPress={() =>
                     navigation.navigate('Legal Policies', {
                       headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
                       uri: uriTermsCondition2,
                     })
-                  }>
-                  <Text style={styles.policyLinkTitle(true)}>
-                    {' '}
-                    {t(Constants.TERMS_CONDITION_TITLE3)}
-                  </Text>
-                </TouchableOpacity>
+                  }
+                />
               </View>
             </View>
           </View>
-          <View style={{flex: 1}} />
+          <View style={styles.flexs} />
         </View>
       </View>
     </KeyboardAvoidingView>
