@@ -12,7 +12,7 @@ import HeaderLogo from '../../assets/newAssets/HeaderLogo';
 
 const {width, height} = Dimensions.get('window');
 
-const HeaderWithLogo = () => {
+const HeaderWithLogo = ({path}) => {
   return (
     <View style={{flex: 1, backgroundColor: '#FFFFFF'}}>
       <ImageBackground
@@ -25,7 +25,7 @@ const HeaderWithLogo = () => {
         </View>
         <View style={styles.roadContainer}>
           <LottieView
-            source={require('../../assets/newAssets/Header.json')}
+            source={path}
             autoPlay
             loop={false}
             resizeMode="contain"
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     width: width * 1,
     height: height * 0.4,
     position: 'absolute',
-    bottom: -110,
+    bottom: -112,
   },
   bottomSectionPink: {
     flex: 1.5,

@@ -1,14 +1,12 @@
-import React, {useEffect, useRef} from 'react';
-import {View, StatusBar, Animated} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, StatusBar} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './style';
-import {backgroundColorNew, white} from '../../Color/color';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import LottieView from 'lottie-react-native';
 
 const Splash = ({navigation: {replace}}) => {
   useTrackScreenTime('Splash');
-  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const getUserStatus = async () => {
@@ -16,7 +14,6 @@ const Splash = ({navigation: {replace}}) => {
       const userType = await AsyncStorage.getItem('UserType');
       const userId = await AsyncStorage.getItem('user_id');
 
-      // Delayed navigation logic
       setTimeout(() => {
         if (newUser === '0') {
           if (userType === null || userType === undefined || userType === '') {
@@ -40,33 +37,16 @@ const Splash = ({navigation: {replace}}) => {
     };
 
     getUserStatus();
-
-    // Start the fade-in animation
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start();
-  }, [replace, opacity]);
+  }, [replace]);
 
   return (
     <>
-      <StatusBar
-        barStyle={'dark-content'}
-        backgroundColor="transparent"
-        // hidden={false}
-      />
+      <StatusBar hidden />
       <View style={styles.splashContainer}>
-        {/* <Animated.Image
-          resizeMode="contain"
-          style={[styles.splashImage, {opacity}]}
-          source={require('../../../assets/SVG/svg/LoadingWallaSplashScreen')}
-        /> */}
         <LottieView
           source={require('../../../assets/GIFs/LoadingWallaSplashScreen.json')}
           autoPlay
           loop={false}
-          // resizeMode="contain"
           style={styles.splashImage}
         />
       </View>

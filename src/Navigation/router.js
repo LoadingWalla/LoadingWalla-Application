@@ -135,6 +135,7 @@ const Navigation = ({language}) => {
           headerShown: route?.params?.fromMenu ? true : false,
           headerTitleAlign: 'center',
           title: t(Constants.SELECT_LANGUAGE),
+          animation: 'slide_from_right',
           headerTitleStyle: {
             fontFamily: 'PlusJakartaSans-Bold',
             fontSize: 16,

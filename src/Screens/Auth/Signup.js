@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
@@ -17,7 +16,6 @@ import {initLogin, loginFailure} from '../../Store/Actions/Actions';
 import CheckBox from '@react-native-community/checkbox';
 import {PrivacyPolicy, backgroundColorNew, textRed} from '../../Color/color';
 import Toast from 'react-native-simple-toast';
-import Button from '../../Components/Button';
 import {uriTermsCondition2, uriTermsCondition3} from '../../Utils/Url';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,7 +23,8 @@ import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import {printAllAsyncStorageData} from '../../Utils/asyncStorageUtils';
 import ArrowIcon from '../../../assets/SVG/svg/ArrowIcon';
 import GradientStatusBar from '../../Components/GradientStatusBar';
-import PhoneInput from 'react-native-phone-number-input';
+import HeaderWithLogo from '../../Components/HeaderWithLogo';
+import HeaderTitleComponent from '../../Components/HeaderTitleComponent';
 
 const Signup = ({navigation}) => {
   useTrackScreenTime('Signup');
@@ -125,44 +124,71 @@ const Signup = ({navigation}) => {
           '#FEFEFE',
         ]}
       />
-      <View style={styles.flexs}>
-        <View style={styles.loadingWallaImg}>
-          <Image
-            source={require('../../../assets/LoadingWallaBG.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-          />
-        </View>
-        <View style={styles.phoneInputContainer}>
-          <View style={styles.signupTextContainer}>
-            <Text style={styles.signupWelcomeTitle}>
-              {t(Constants.WELCOME_TXT)}
-            </Text>
-            <Text style={styles.signupTopTitle}>
-              {t(Constants.ENTER_MOBILE_NUMBER_TITLE)}
-            </Text>
-          </View>
-          <View
-            style={{
-              width: '95%',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-            }}>
-            <View style={styles.phoneNumberInput}>
-              <PhoneInput
-                defaultCode="IN"
-                layout="second"
-                textInputProps={{
-                  maxLength: 10,
-                  placeholderTextColor: '#636363',
-                }}
-                placeholder={t(Constants.PHONE_PLACEHOLDER)}
-                containerStyle={styles.mbContainer}
-                textContainerStyle={styles.mbphoneInput}
-                onChangeFormattedText={text => setMobileNumber(text)}
-              />
+      <View style={styles.loadingWallaImg}>
+        <HeaderWithLogo
+          path={require('../../../assets/newAssets/Header.json')}
+        />
+      </View>
+      <View style={{flex: 2, paddingHorizontal: 20}}>
+        <View style={{flex: 1}}>
+          <View style={{flex: 1.5}}>
+            <HeaderTitleComponent
+              text1={t(Constants.WELCOME_TXT)}
+              text2={'Enter phone number to get started.'}
+            />
+            <View
+              style={{
+                // width: '100%',
+                minHeight: 65,
+                flexDirection: 'row',
+                // borderWidth: 1,
+                justifyContent: 'space-between',
+              }}>
+              <View
+                style={{
+                  width: '83%',
+                  height: 65,
+                  borderWidth: 0.5,
+                  borderTopLeftRadius: 10,
+                  borderBottomLeftRadius: 10,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingLeft: 15,
+                  elevation: 1,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: '#636363',
+                    fontFamily: 'PlusJakartaSans-Bold',
+                    // borderWidth: 1,
+                  }}>
+                  +91
+                </Text>
+                <View
+                  style={{
+                    height: '70%',
+                    borderLeftWidth: 0.5,
+                    marginHorizontal: 10,
+                    borderColor: '#595959',
+                  }}
+                />
+                <TextInput
+                  style={{
+                    // borderWidth: 1,
+                    flex: 1,
+                    fontSize: 20,
+                    color: '#636363',
+                    fontFamily: 'PlusJakartaSans-Bold',
+                  }}
+                  autoFocus={true}
+                  placeholder={t(Constants.PHONE_PLACEHOLDER)}
+                  keyboardType="numeric"
+                  placeholderTextColor={'#636363'}
+                  maxLength={10}
+                />
+              </View>
               <View
                 style={[
                   styles.mbArrowContainer,
@@ -184,72 +210,66 @@ const Signup = ({navigation}) => {
                 </TouchableOpacity>
               </View>
             </View>
-            {isCorrect === false ? (
-              <View style={styles.phoneNumberWarningCtn}>
+            <View style={styles.phoneNumberWarningCtn}>
+              {isCorrect === false ? (
                 <Text style={styles.phoneNumberWarningTxt}>
                   Enter correct phone number !
                 </Text>
+              ) : null}
+            </View>
+            <View style={styles.centerItem}>
+              <View style={styles.checkBoxContainer}>
+                <CheckBox
+                  value={isChecked}
+                  onValueChange={handleCheckBoxChange}
+                  tintColors={{
+                    true: backgroundColorNew,
+                    false: backgroundColorNew,
+                  }}
+                  style={styles.checkBoxStyle}
+                />
+                <Text style={styles.setPrivacyStyle}>
+                  {t(Constants.WHATSAPP_ALERT_CHECK)}
+                </Text>
               </View>
-            ) : null}
+              <View style={styles.policyContainer}>
+                <Text style={styles.policyTitle}>
+                  {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Legal Policies', {
+                      headerTitle: t(Constants.TERMS_CONDITION_TITLE2),
+                      uri: uriTermsCondition3,
+                    })
+                  }>
+                  <Text style={styles.policyLinkTitle(true)}>
+                    {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.policyTitle}>
+                  {' '}
+                  {` ${t(Constants.AND)} `}{' '}
+                </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate('Legal Policies', {
+                      headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
+                      uri: uriTermsCondition2,
+                    })
+                  }>
+                  <Text style={styles.policyLinkTitle(true)}>
+                    {' '}
+                    {t(Constants.TERMS_CONDITION_TITLE3)}
+                    {'  '}
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
+              </View>
+            </View>
           </View>
+          <View style={{flex: 1}}></View>
         </View>
-        <View style={styles.centerItem}>
-          <View style={styles.checkBoxContainer}>
-            <CheckBox
-              value={isChecked}
-              onValueChange={handleCheckBoxChange}
-              tintColors={{
-                true: backgroundColorNew,
-                false: backgroundColorNew,
-              }}
-              style={styles.checkBoxStyle}
-            />
-            <Text style={styles.setPrivacyStyle}>
-              {t(Constants.WHATSAPP_ALERT_CHECK)}
-            </Text>
-          </View>
-          <View style={styles.policyContainer}>
-            <Text style={styles.policyTitle}>
-              {t(Constants.TERMS_CONDITION_TITLE1)}{' '}
-            </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Legal Policies', {
-                  headerTitle: t(Constants.TERMS_CONDITION_TITLE2),
-                  uri: uriTermsCondition3,
-                })
-              }>
-              <Text style={styles.policyLinkTitle(true)}>
-                {t(Constants.TERMS_CONDITION_TITLE2)}{' '}
-              </Text>
-            </TouchableOpacity>
-            <Text style={styles.policyTitle}> {` ${t(Constants.AND)} `} </Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Legal Policies', {
-                  headerTitle: t(Constants.TERMS_CONDITION_TITLE3),
-                  uri: uriTermsCondition2,
-                })
-              }>
-              <Text style={styles.policyLinkTitle(true)}>
-                {' '}
-                {t(Constants.TERMS_CONDITION_TITLE3)}
-                {'  '}
-              </Text>
-            </TouchableOpacity>
-            <Text style={styles.policyTitle}> {t(Constants.DOT)}</Text>
-          </View>
-        </View>
-      </View>
-      <View>
-        {/* <Button
-          loading={loading}
-          onPress={sendOtp}
-          title={t(Constants.SEND_OTP)}
-          textStyle={styles.buttonTitile}
-          style={styles.button}
-          touchStyle={isChecked ? {opacity: 1} : {opacity: 0.5}}
-        /> */}
       </View>
     </View>
   );

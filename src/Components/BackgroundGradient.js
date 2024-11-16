@@ -1,13 +1,7 @@
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  backgroundColorNew,
-  // GradientColor1,
-  // GradientColor2,
-  // GradientColor3,
-} from '../Color/color';
 
-const Background = ({style, children, bgcolors }) => {
+const Background = ({style, children, bgcolors}) => {
   return (
     <LinearGradient
       // colors={[GradientColor1, GradientColor2, GradientColor3]}
