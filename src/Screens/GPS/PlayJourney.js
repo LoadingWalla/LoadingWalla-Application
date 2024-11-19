@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import React, {useEffect, useState, useMemo, useRef, useCallback} from 'react';
+=======
+import React, {useEffect, useState, useMemo, useRef} from 'react';
+>>>>>>> Stashed changes
 import {
   Animated,
   Easing,
@@ -8,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+<<<<<<< Updated upstream
 import MapView, {
   AnimatedRegion,
   Callout,
@@ -15,6 +20,10 @@ import MapView, {
   Polyline,
 } from 'react-native-maps';
 import {backgroundColorNew, GradientColor1} from '../../Color/color';
+=======
+import MapView, {AnimatedRegion, Marker, Polyline} from 'react-native-maps';
+import {backgroundColorNew} from '../../Color/color';
+>>>>>>> Stashed changes
 import PlayIcon from '../../../assets/SVG/svg/PlayIcon';
 import Slider from '@react-native-community/slider';
 import AlertsIcon from '../../../assets/SVG/svg/AlertsIcon';
@@ -39,7 +48,12 @@ import * as Constants from '../../Constants/Constant';
 import {useTranslation} from 'react-i18next';
 import useTrackScreenTime from '../../hooks/useTrackScreenTime';
 import PlayJourneyShimmer from '../../Components/Shimmer/PlayJourneyShimmer';
+<<<<<<< Updated upstream
 import VehicleIconSvg from '../../../assets/SVG/svg/VehicleIconSvg';
+=======
+import TruckNavigationIcon from '../../../assets/SVG/svg/TruckNavigationIcon';
+import VehicleIcon from '../../../assets/SVG/svg/VehicleIcon';
+>>>>>>> Stashed changes
 
 export default function PlayJourney({navigation, route}) {
   useTrackScreenTime('PlayJourney');
@@ -55,12 +69,17 @@ export default function PlayJourney({navigation, route}) {
   const [animationDuration, setAnimationDuration] = useState(50);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [mapType, setMapType] = useState('standard');
+<<<<<<< Updated upstream
   const [isFollowingVehicle, setIsFollowingVehicle] = useState(true);
   const [currentStop, setCurrentStop] = useState(null);
+=======
+  const [followVehicle, setFollowVehicle] = useState(true);
+>>>>>>> Stashed changes
 
   const {convertMillisToTime} = useConvertMillisToTime();
   const mapRef = useRef(null);
   const markerRefs = useRef([]);
+  const animation = useRef(new Animated.Value(0)).current;
 
   const {
     gpsTokenData,
@@ -369,7 +388,63 @@ export default function PlayJourney({navigation, route}) {
     }
   };
 
+<<<<<<< Updated upstream
   console.log();
+=======
+  const [carPosition, setCarPosition] = useState({
+    latitude: coordinates?.[0]?.latitude || 0,
+    longitude: coordinates?.[0]?.longitude || 0,
+    heading: coordinates?.[0]?.course || 0,
+  });
+
+  useEffect(() => {
+    if (isPlaying) {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 10000, // Adjust for journey length
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }).start(({finished}) => {
+        if (finished) {
+          animation.setValue(0);
+        } // Reset to loop
+      });
+    } else {
+      animation.stopAnimation();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    animation.addListener(({value}) => {
+      const segmentIndex = Math.floor(value * (coordinates.length - 1));
+      const nextSegmentIndex = segmentIndex + 1;
+
+      if (nextSegmentIndex < coordinates.length) {
+        const start = coordinates[segmentIndex];
+        const end = coordinates[nextSegmentIndex];
+        const progress = (value * (coordinates.length - 1)) % 1;
+
+        const newPosition = {
+          latitude: start.latitude + (end.latitude - start.latitude) * progress,
+          longitude:
+            start.longitude + (end.longitude - start.longitude) * progress,
+          heading: start.course,
+        };
+
+        setCarPosition(newPosition);
+
+        if (followVehicle && mapRef.current) {
+          mapRef.current.animateToRegion({
+            latitude: newPosition.latitude,
+            longitude: newPosition.longitude,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          });
+        }
+      }
+    });
+  }, [animation, coordinates, followVehicle]);
+>>>>>>> Stashed changes
 
   return (
     <View style={styles.container}>
@@ -420,6 +495,71 @@ export default function PlayJourney({navigation, route}) {
             {!loading && (
               <View style={styles.mapView}>
                 {initialRegion && (
+                  // <MapView
+                  //   ref={mapRef}
+                  //   style={StyleSheet.absoluteFillObject}
+                  //   initialRegion={initialRegion}
+                  //   // onLayout={handleMapLayout}
+                  //   mapType={mapType}>
+                  //   <Polyline
+                  //     coordinates={coordinates}
+                  //     strokeColor="#0158AF"
+                  //     strokeWidth={3}
+                  //   />
+                  //   {currentPosition && (
+                  //     <Marker.Animated
+                  //       coordinate={{
+                  //         latitude: currentPosition.latitude,
+                  //         longitude: currentPosition.longitude,
+                  //       }}>
+                  //       <View style={styles.markerContainer}>
+                  //         <View style={styles.addressContainer}>
+                  //           <Text style={styles.kmText}>
+                  //             {`${Math.floor(
+                  //               currentPosition.speed * 1.852,
+                  //             )} km/h`}
+                  //           </Text>
+                  //           <Text style={styles.kmText}>
+                  //             {`${moment(currentPosition.time)
+                  //               .utcOffset(330)
+                  //               .format('D MMM YYYY, h:mm A')}`}
+                  //           </Text>
+                  //         </View>
+                  //         <View style={styles.arrowBottom} />
+                  //         <View style={styles.truckIconContainer}>
+                  //           <TruckNavigationIcon
+                  //             size={50}
+                  //             course={currentPosition.course}
+                  //           />
+                  //         </View>
+                  //       </View>
+                  //     </Marker.Animated>
+                  //   )}
+                  //   {gpsStopsData?.map((stop, index) => (
+                  //     <Marker
+                  //       key={`stop-${index}`}
+                  //       ref={el => (markerRefs.current[index] = el)}
+                  //       coordinate={{
+                  //         latitude: stop.latitude,
+                  //         longitude: stop.longitude,
+                  //       }}
+                  //       onPress={() => handleMarkerPress(stop, index)}>
+                  //       <View style={styles.markerContainer}>
+                  //         <View style={styles.addressContainer}>
+                  //           <Text style={styles.kmText}>
+                  //             {fullAddressCustomId === stop.positionId
+                  //               ? fullAddressData
+                  //               : stop.address || 'Click below to Show Address'}
+                  //           </Text>
+                  //         </View>
+                  //         <View style={styles.arrowBottom} />
+                  //         <View style={styles.truckIconContainer}>
+                  //           <StopsIcon size={40} number={index + 1} />
+                  //         </View>
+                  //       </View>
+                  //     </Marker>
+                  //   ))}
+                  // </MapView>
                   <MapView
                     ref={mapRef}
                     style={StyleSheet.absoluteFillObject}
@@ -430,6 +570,7 @@ export default function PlayJourney({navigation, route}) {
                       strokeColor="blue"
                       strokeWidth={3}
                     />
+<<<<<<< Updated upstream
 
                     {currentPosition && (
                       <Marker
@@ -505,6 +646,16 @@ export default function PlayJourney({navigation, route}) {
                         </View>
                       </Marker>
                     ))}
+=======
+                    <Marker.Animated
+                      coordinate={carPosition}
+                      title="Vehicle is on the move"
+                      rotation={carPosition.heading}
+                      anchor={{x: 0.5, y: 0.5}}>
+                      {/* <TruckNavigationIcon size={50} /> */}
+                      <VehicleIcon width={50} height={50} />
+                    </Marker.Animated>
+>>>>>>> Stashed changes
                   </MapView>
                 )}
                 <TouchableOpacity

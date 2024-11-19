@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, {useState, useEffect, useMemo, useRef} from 'react';
 import {
   View,
@@ -46,6 +47,28 @@ const PlayJourneyNew = ({navigation, route}) => {
   useTrackScreenTime('PlayJourneyNew');
   const {deviceId, from, to, name, item} = route.params;
   const {t} = useTranslation();
+=======
+import React, {useState, useEffect} from 'react';
+import {View, Button, Animated, Easing} from 'react-native';
+import MapView, {Marker, Polyline} from 'react-native-maps';
+import VehicleIcon from '../../../assets/SVG/svg/VehicleIcon';
+import routeData from './routeData.json';
+
+const PlayJourneyNew = () => {
+  const [routeCoordinates] = useState(
+    routeData.map(item => ({
+      latitude: item.latitude,
+      longitude: item.longitude,
+      course: item.course,
+    })),
+  );
+
+  const [carPosition, setCarPosition] = useState({
+    latitude: routeCoordinates[0]?.latitude || 0,
+    longitude: routeCoordinates[0]?.longitude || 0,
+    heading: routeCoordinates[0]?.course || 0,
+  });
+>>>>>>> Stashed changes
   const [isPlaying, setIsPlaying] = useState(false);
   const [mapType, setMapType] = useState('standard');
   const [sliderValue, setSliderValue] = useState(0);
@@ -54,6 +77,7 @@ const PlayJourneyNew = ({navigation, route}) => {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [currentStopIndex, setCurrentStopIndex] = useState(0);
   const [followVehicle, setFollowVehicle] = useState(false);
+<<<<<<< Updated upstream
   const [currentStop, setCurrentStop] = useState(null);
   // console.log(44444, data);
 
@@ -549,6 +573,131 @@ const PlayJourneyNew = ({navigation, route}) => {
           </View>
         </>
       )}
+=======
+  const mapRef = React.useRef(null);
+  const animation = useState(new Animated.Value(0))[0];
+
+  // Function to calculate region that fits the polyline
+  const calculateBoundingRegion = () => {
+    let minLat = Infinity,
+      maxLat = -Infinity,
+      minLon = Infinity,
+      maxLon = -Infinity;
+
+    routeCoordinates.forEach(point => {
+      minLat = Math.min(minLat, point.latitude);
+      maxLat = Math.max(maxLat, point.latitude);
+      minLon = Math.min(minLon, point.longitude);
+      maxLon = Math.max(maxLon, point.longitude);
+    });
+
+    const latitudeDelta = maxLat - minLat + 0.1; // Adding a little padding
+    const longitudeDelta = maxLon - minLon + 0.1; // Adding a little padding
+
+    return {
+      latitude: (minLat + maxLat) / 2,
+      longitude: (minLon + maxLon) / 2,
+      latitudeDelta,
+      longitudeDelta,
+    };
+  };
+
+  // Zoom to polyline on map load
+  useEffect(() => {
+    if (mapRef.current) {
+      const region = calculateBoundingRegion();
+      mapRef.current.animateToRegion(region, 1000); // Animate to the calculated region
+    }
+  }, [routeCoordinates]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 100000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      animation.stopAnimation();
+    }
+  }, [isPlaying]);
+
+  useEffect(() => {
+    animation.addListener(({value}) => {
+      const totalSegments = routeCoordinates.length - 1;
+      const currentSegmentIndex = Math.floor(value * totalSegments);
+      const nextSegmentIndex = currentSegmentIndex + 1;
+
+      if (nextSegmentIndex < routeCoordinates.length) {
+        const start = routeCoordinates[currentSegmentIndex];
+        const end = routeCoordinates[nextSegmentIndex];
+        const segmentProgress = (value * totalSegments) % 1;
+        const newPosition = {
+          latitude:
+            start.latitude + (end.latitude - start.latitude) * segmentProgress,
+          longitude:
+            start.longitude +
+            (end.longitude - start.longitude) * segmentProgress,
+          heading: start.course,
+        };
+
+        setCarPosition(newPosition);
+        if (followVehicle && mapRef.current) {
+          mapRef.current.animateToRegion(
+            {
+              latitude: newPosition.latitude,
+              longitude: newPosition.longitude,
+              latitudeDelta: 0.1,
+              longitudeDelta: 0.1,
+            },
+            3000,
+          );
+        }
+      }
+    });
+  }, [animation, followVehicle, routeCoordinates]);
+
+  return (
+    <View style={{flex: 1}}>
+      <MapView
+        ref={mapRef}
+        style={{flex: 1}}
+        initialRegion={{
+          latitude: routeCoordinates[0]?.latitude || 0,
+          longitude: routeCoordinates[0]?.longitude || 0,
+          latitudeDelta: 1,
+          longitudeDelta: 1,
+        }}>
+        <Polyline
+          coordinates={routeCoordinates.map(point => ({
+            latitude: point.latitude,
+            longitude: point.longitude,
+          }))}
+          strokeWidth={5}
+          strokeColor="blue"
+        />
+        <Marker
+          coordinate={carPosition}
+          title="Car is zooming!"
+          rotation={carPosition.heading}
+          anchor={{x: 0.5, y: 0.5}}>
+          <VehicleIcon width={40} height={40} />
+        </Marker>
+      </MapView>
+      <View style={{position: 'absolute', bottom: 30}}>
+        <Button
+          title={isPlaying ? 'Pause Journey' : 'Play Journey'}
+          onPress={() => setIsPlaying(!isPlaying)}
+        />
+      </View>
+      <View style={{position: 'absolute', bottom: 30, left: '40%'}}>
+        <Button
+          title={followVehicle ? 'Stop Following Vehicle' : 'Follow Vehicle'}
+          onPress={() => setFollowVehicle(!followVehicle)}
+        />
+      </View>
+>>>>>>> Stashed changes
     </View>
   );
 };

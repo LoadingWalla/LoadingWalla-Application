@@ -20,8 +20,15 @@ import {useTranslation} from 'react-i18next';
 import styles from './style';
 import VehicleIconSvg from '../../assets/SVG/svg/VehicleIconSvg';
 
+<<<<<<< Updated upstream
 const LATITUDE_DELTA = 0.09;
 const LONGITUDE_DELTA = 0.09;
+=======
+const {width, height} = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.1;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+>>>>>>> Stashed changes
 
 const MapComponent = React.memo(
   ({
@@ -136,7 +143,12 @@ const MapComponent = React.memo(
             rotation={initialRegion.course}
             anchor={{x: 0.5, y: 0.5}}
             ref={markerRef}>
+<<<<<<< Updated upstream
             <VehicleIconSvg width={50} height={50} />
+=======
+            {/* <ActiveLocation size={40} course={50} /> */}
+            <TruckNavigationIcon size={40} />
+>>>>>>> Stashed changes
             <Callout tooltip>
               <View style={styles.calloutView}>
                 <Text style={styles.calloutText}>

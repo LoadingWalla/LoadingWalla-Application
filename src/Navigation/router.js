@@ -1200,8 +1200,8 @@ const Navigation = ({language}) => {
       />
       <Stack.Screen
         name="PlayJourney"
-        // component={PlayJourney}
-        component={PlayJourneyNew}
+        component={PlayJourney}
+        // component={PlayJourneyNew}
         options={({route}) => ({
           headerShown: true,
           headerTitleAlign: 'left',
